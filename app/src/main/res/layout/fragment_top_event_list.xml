@@ -1,0 +1,17 @@
+<!-- res/layout/fragment_top_event_list.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <android.widget.ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        tools:listitem="@layout/home_page_top_event"
+        android:background="@drawable/home_page_group_border"
+        android:padding="9dp"
+        />
+
+</LinearLayout>
