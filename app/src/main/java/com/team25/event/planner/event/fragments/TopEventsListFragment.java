@@ -6,43 +6,40 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.team25.event.planner.R;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentTopEventListBinding;
 import com.team25.event.planner.event.adapters.TopEventsListAdapter;
 import com.team25.event.planner.model.Event;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
-public class TopEventListFragment extends ListFragment {
+public class TopEventsListFragment extends ListFragment {
 
+    private RecyclerView recyclerView;
     private TopEventsListAdapter adapter;
+    private ArrayList<Event> topEvents;
     private static final String ARG_PARAM = "param";
-    private ArrayList<Event> mProducts;
-    private FragmentTopEventListBinding binding;
 
-    public static TopEventListFragment newInstance(ArrayList<Event> events){
-        TopEventListFragment fragment = new TopEventListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, events);
-        fragment.setArguments(args);
-        return fragment;
+    public TopEventsListFragment() {
+        // Required empty public constructor
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.i("ShopApp", "onCreateView Products List Fragment");
-        binding = FragmentTopEventListBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-        return root;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the fragment layout
+        return inflater.inflate(R.layout.fragment_top_event_list, container, false);
     }
 
     @Override
@@ -50,21 +47,19 @@ public class TopEventListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         Log.i("ShopApp", "onCreate Products List Fragment");
         if (getArguments() != null) {
-            mProducts = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new TopEventsListAdapter(getActivity(), mProducts);
+            topEvents = getArguments().getParcelableArrayList(ARG_PARAM);
+            adapter = new TopEventsListAdapter(getActivity(), topEvents);
             setListAdapter(adapter);
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
 
-    @Override
-    public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        // Handle the click on item at 'position'
+
+    public static TopEventsListFragment newInstance(ArrayList<Event> events){
+        TopEventsListFragment fragment = new TopEventsListFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(ARG_PARAM, events);
+        fragment.setArguments(args);
+        return fragment;
     }
 }

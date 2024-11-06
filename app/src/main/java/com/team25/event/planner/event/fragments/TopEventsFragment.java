@@ -1,66 +1,88 @@
 package com.team25.event.planner.event.fragments;
 
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 
-import com.team25.event.planner.R;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.team25.event.planner.FragmentTransition;
+import com.team25.event.planner.databinding.FragmentHomePageBaseBinding;
+import com.team25.event.planner.databinding.FragmentTopEventListBinding;
+import com.team25.event.planner.databinding.FragmentTopEventsBinding;
+import com.team25.event.planner.model.Event;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link TopEventsFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
  */
 public class TopEventsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ArrayList<Event> events = new ArrayList<Event>();
+    private FragmentTopEventsBinding binding;
+    int currentSelectedIndex;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public TopEventsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TopEventsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TopEventsFragment newInstance(String param1, String param2) {
-        TopEventsFragment fragment = new TopEventsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public static TopEventsFragment newInstance() {
+        return new TopEventsFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_top_events, container, false);
+
+        prepareEventList(events);
+        binding = FragmentTopEventsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.i("SADASDASDASD", String.valueOf(currentSelectedIndex));
+        FragmentTransition.to(TopEventsListFragment.newInstance(events), requireActivity(), false, binding.topEventsContainer.getId());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    private void prepareEventList(ArrayList<Event> events){
+        events.clear();
+        events.add(new Event(1, "Concert", "Stefan", new Date()));
+        events.add(new Event(2, "Concert", "Petar", new Date()));
+        events.add(new Event(3, "Concert", "Milos", new Date()));
+        events.add(new Event(4, "Concert", "Nikola", new Date()));
+        events.add(new Event(5, "Concert", "Milan", new Date()));
     }
 }

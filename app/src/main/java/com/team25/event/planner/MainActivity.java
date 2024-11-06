@@ -2,23 +2,28 @@ package com.team25.event.planner;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.team25.event.planner.databinding.ActivityMainBinding;
+import com.team25.event.planner.event.fragments.TopEventsFragment;
+import com.team25.event.planner.event.fragments.TopEventsListFragment;
+import com.team25.event.planner.home.HomePageBaseFragment;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        if (savedInstanceState == null) {
+            // Load TopEventsFragment dynamically
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_frame_container, new HomePageBaseFragment())
+                    .commit();
+        }
     }
 }
