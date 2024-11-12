@@ -1,24 +1,64 @@
 package com.team25.event.planner;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.material.navigation.NavigationView;
+import com.team25.event.planner.product_service.fragments.OwnerHomePage;
+import com.team25.event.planner.product_service.fragments.ServiceContainerFragment;
 
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+
+
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawerLayout = findViewById(R.id.main);
+        navigationView = findViewById(R.id.owner_nav_menu);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.Open, R.string.Close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        if(savedInstanceState == null){
+            getSupportFragmentManager()
+                    .beginTransaction().
+                    replace(R.id.main_layout, new ServiceContainerFragment())
+                    .commit();
+            navigationView.setCheckedItem(R.id.Home);
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.Home){
+            getSupportFragmentManager()
+                    .beginTransaction().
+                    replace(R.id.main_layout, new ServiceContainerFragment())
+                    .commit();
+        }else if(item.getItemId() == R.id.profile){
+            getSupportFragmentManager()
+                    .beginTransaction().
+                    replace(R.id.main_layout, new OwnerHomePage())
+                    .commit();
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
