@@ -14,4 +14,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_message_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="120dp"
+        android:clickable="true"
+        android:backgroundTint="@color/primary"
+
+         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
