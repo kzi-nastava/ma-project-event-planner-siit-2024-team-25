@@ -12,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.team25.event.planner.product_service.fragments.OwnerHomePage;
+import com.team25.event.planner.product_service.fragments.ProfilFragment;
 import com.team25.event.planner.product_service.fragments.ServiceContainerFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(savedInstanceState == null){
             getSupportFragmentManager()
                     .beginTransaction().
-                    replace(R.id.main_layout, new ServiceContainerFragment())
+                    replace(R.id.main_layout, new OwnerHomePage())
                     .commit();
             navigationView.setCheckedItem(R.id.Home);
         }
@@ -50,15 +51,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(item.getItemId() == R.id.Home){
             getSupportFragmentManager()
                     .beginTransaction().
-                    replace(R.id.main_layout, new ServiceContainerFragment())
+                    replace(R.id.main_layout, new OwnerHomePage())
                     .commit();
         }else if(item.getItemId() == R.id.profile){
             getSupportFragmentManager()
                     .beginTransaction().
-                    replace(R.id.main_layout, new OwnerHomePage())
+                    replace(R.id.main_layout, new ProfilFragment())
                     .commit();
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }else{
+            super.onBackPressed();
+        }
+
     }
 }

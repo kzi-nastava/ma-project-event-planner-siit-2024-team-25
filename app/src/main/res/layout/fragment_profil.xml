@@ -3,15 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".product_service.fragments.ServiceContainerFragment"
-    android:id="@+id/service_container">
+    tools:context=".product_service.fragments.ProfilFragment">
 
-    <ScrollView
-
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-    </ScrollView>
+        android:layout_height="match_parent"
+        android:text="hello_profil_owner_fragment"
+        />
 
 </FrameLayout>

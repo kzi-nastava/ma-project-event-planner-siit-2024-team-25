@@ -2,6 +2,8 @@ package com.team25.event.planner.product_service.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -9,24 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.databinding.FragmentOwnerHomePageBinding;
 
 
 public class OwnerHomePage extends Fragment {
-
+    private FragmentOwnerHomePageBinding binding;
 
     public OwnerHomePage() {
         // Required empty public constructor
     }
 
-
-    public static OwnerHomePage newInstance(String param1, String param2) {
-        OwnerHomePage fragment = new OwnerHomePage();
-        Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +31,17 @@ public class OwnerHomePage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_owner_home_page, container, false);
+        binding = FragmentOwnerHomePageBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState == null) {
+            getChildFragmentManager().beginTransaction()
+                    .replace(binding.scrollServices.getId(), new ServiceContainerFragment())
+                    .commit();
+        }
     }
 }

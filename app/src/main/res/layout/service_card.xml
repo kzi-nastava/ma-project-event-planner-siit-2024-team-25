@@ -9,13 +9,13 @@
     <ImageView
         android:id="@+id/imageViewService"
         android:layout_width="299dp"
-        android:layout_height="254dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         tools:srcCompat="@tools:sample/avatars" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="311dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -33,10 +33,25 @@
             android:layout_height="84dp"
             android:text="TextView" />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="183dp"
-            android:layout_height="wrap_content"
-            android:text="Button" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="76dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/edit_icon" />
+
+            <ImageButton
+                android:id="@+id/imageButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/delete_icon" />
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

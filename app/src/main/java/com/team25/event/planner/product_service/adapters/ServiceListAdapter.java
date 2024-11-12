@@ -60,7 +60,7 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         TextView productDescription = convertView.findViewById(R.id.descriptionService);
 
         if(service != null){
-//            imageView.setImageResource(service.getImageURL());
+            imageView.setImageResource(R.drawable.profile_icon);
             productTitle.setText(service.getName());
             productDescription.setText(service.getDescription());
             productCard.setOnClickListener(v -> {
