@@ -5,13 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <android.widget.ListView
+    <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        tools:listitem="@layout/home_page_top_event"
+        android:layout_height="363dp"
         android:background="@drawable/home_page_group_border"
         android:padding="9dp"
-        />
+        tools:listitem="@layout/home_page_top_event" />
 
 </LinearLayout>

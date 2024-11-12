@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Optional Title for the Fragment -->
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
@@ -16,7 +15,6 @@
         android:gravity="center"
         android:textColor="#FB8C00"/>
 
-    <!-- Container for loading TopEventsListFragment -->
     <ScrollView
         android:id="@+id/topEventsContainer"
         android:layout_width="match_parent"

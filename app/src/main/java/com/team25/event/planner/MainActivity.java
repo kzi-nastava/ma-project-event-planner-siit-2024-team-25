@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            // Load TopEventsFragment dynamically
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.main_frame_container, new HomePageBaseFragment())
                     .commit();

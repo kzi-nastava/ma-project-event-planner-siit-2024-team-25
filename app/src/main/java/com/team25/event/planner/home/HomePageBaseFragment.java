@@ -1,5 +1,6 @@
 package com.team25.event.planner.home;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,21 +8,21 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentHomePageBaseBinding;
 import com.team25.event.planner.databinding.FragmentTopEventsBinding;
+import com.team25.event.planner.event.fragments.EventsFragment;
 import com.team25.event.planner.event.fragments.TopEventsFragment;
 import com.team25.event.planner.event.fragments.TopEventsListFragment;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomePageBaseFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class HomePageBaseFragment extends Fragment {
 
 
+    private  Button eventButton;
+    private Button psButton;
     private FragmentHomePageBaseBinding binding;
     public HomePageBaseFragment() {
     }
@@ -35,6 +36,8 @@ public class HomePageBaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
 
+
+
     }
 
     @Override
@@ -45,15 +48,64 @@ public class HomePageBaseFragment extends Fragment {
         return binding.getRoot();
     }
 
+
+    private void eventButtonClick(){
+        getChildFragmentManager().beginTransaction()
+                .replace(binding.homeContainer.getId(), new EventsFragment())
+                .commit();
+
+        eventButton.setBackgroundColor(0);
+        eventButton.setOnClickListener(null);
+        psButton.setBackgroundColor(getResources().getColor(R.color.primary));
+
+        psButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                psButtonClick();
+
+            }
+        });
+    }
+
+
+    private void psButtonClick(){
+        psButton.setBackgroundColor(0);
+        psButton.setOnClickListener(null);
+        eventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eventButtonClick();
+            }
+        });
+        eventButton.setBackgroundColor(getResources().getColor(R.color.primary));
+    }
+
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Load the TopEventsListFragment dynamically
         if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
-                    .replace(binding.scrollHomePageContainer.getId(), new TopEventsFragment())
+                    .replace(binding.homeTopContainer.getId(), new TopEventsFragment())
                     .commit();
         }
+
+        eventButton = binding.eventButton;
+        psButton = binding.psButton;
+
+        eventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eventButtonClick();
+            }
+        });
+
+        psButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                psButtonClick();
+            }
+        });
+
     }
 }

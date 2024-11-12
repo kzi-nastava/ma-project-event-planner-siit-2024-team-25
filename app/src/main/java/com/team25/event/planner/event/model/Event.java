@@ -1,4 +1,4 @@
-package com.team25.event.planner.model;
+package com.team25.event.planner.event.model;
 
 
 import android.os.Parcel;

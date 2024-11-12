@@ -2,31 +2,24 @@ package com.team25.event.planner.event.fragments;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.team25.event.planner.R;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
-import com.team25.event.planner.databinding.FragmentTopEventListBinding;
 import com.team25.event.planner.event.adapters.TopEventsListAdapter;
-import com.team25.event.planner.model.Event;
+import com.team25.event.planner.event.model.Event;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 public class TopEventsListFragment extends ListFragment {
 
-    private RecyclerView recyclerView;
     private TopEventsListAdapter adapter;
     private ArrayList<Event> topEvents;
     private static final String ARG_PARAM = "param";

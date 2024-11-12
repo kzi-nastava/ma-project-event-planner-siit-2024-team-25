@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.HomePageBaseFragment">
+    tools:context=".home.HomePageBaseFragment"
+    tools:showIn="@layout/activity_home_base">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,14 +60,70 @@
                 />
         </LinearLayout>
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:id="@+id/scroll_home_page_container"
-            >
-        </RelativeLayout>
-    </LinearLayout>
+            android:layout_height="match_parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:id="@+id/scroll_home_page_container">
 
+                    <FrameLayout
+                        android:id="@+id/home_top_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+
+                <FrameLayout
+                    android:id="@+id/home_container_nav"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/home_top_container"
+
+                    >
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:ignore="UselessParent">
+
+                        <Button
+                            android:id="@+id/event_button"
+                            android:layout_width="170dp"
+                            android:layout_height="55dp"
+                            android:layout_alignParentStart="true"
+                            android:text="EVENTS" />
+
+                        <Button
+                            android:id="@+id/ps_button"
+                            android:layout_width="170dp"
+                            android:layout_height="55dp"
+                            android:layout_alignParentEnd="true"
+                            android:text="PRODUCTS &amp; SERVICES"
+                            />
+                    </RelativeLayout>
+                </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/home_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/home_container_nav"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:paddingBottom="20dp"/>
+
+
+
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
