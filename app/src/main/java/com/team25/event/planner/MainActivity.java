@@ -5,8 +5,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.team25.event.planner.databinding.ActivityMainBinding;
-import com.team25.event.planner.event.fragments.TopEventsFragment;
-import com.team25.event.planner.event.fragments.TopEventsListFragment;
 import com.team25.event.planner.home.HomePageBaseFragment;
 
 

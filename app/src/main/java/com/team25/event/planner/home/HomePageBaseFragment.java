@@ -12,10 +12,9 @@ import android.widget.Button;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentHomePageBaseBinding;
-import com.team25.event.planner.databinding.FragmentTopEventsBinding;
 import com.team25.event.planner.event.fragments.EventsFragment;
 import com.team25.event.planner.event.fragments.TopEventsFragment;
-import com.team25.event.planner.event.fragments.TopEventsListFragment;
+import com.team25.event.planner.offering.fragments.TopOfferingsFragment;
 
 
 public class HomePageBaseFragment extends Fragment {
@@ -35,15 +34,12 @@ public class HomePageBaseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         binding = FragmentHomePageBaseBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -86,7 +82,8 @@ public class HomePageBaseFragment extends Fragment {
 
         if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
-                    .replace(binding.homeTopContainer.getId(), new TopEventsFragment())
+                    .replace(binding.homeTopEvents.getId(), new TopEventsFragment())
+                    .replace(binding.homeTopOffers.getId(), new TopOfferingsFragment())
                     .commit();
         }
 
