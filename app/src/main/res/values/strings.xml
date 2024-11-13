@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Event Planner</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="login">Login</string>
+    <string name="signup">Signup</string>
+    <string name="navbar_header_title">Event Planner 🗓</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Closed</string>
+    <string name="nav_subtitle_default">Please sign in to access full app functionality</string>
 </resources>
