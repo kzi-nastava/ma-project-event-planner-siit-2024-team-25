@@ -9,4 +9,7 @@
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Closed</string>
     <string name="nav_subtitle_default">Please sign in to access full app functionality</string>
+    <string name="email">Email</string>
+    <string name="login_title">Log in to start using Event Planner</string>
+    <string name="password">Password</string>
 </resources>
