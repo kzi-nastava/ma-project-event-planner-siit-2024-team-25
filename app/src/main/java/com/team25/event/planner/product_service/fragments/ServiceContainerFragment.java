@@ -38,6 +38,8 @@ public class ServiceContainerFragment extends Fragment {
                              Bundle savedInstanceState) {
         prepareServiceList(services);
         binding = FragmentServiceContainerBinding.inflate(inflater,container,false);
+
+
         return binding.getRoot();
     }
 

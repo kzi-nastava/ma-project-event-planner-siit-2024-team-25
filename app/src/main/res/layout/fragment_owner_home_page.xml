@@ -3,14 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:id="@+id/mainOwnerMain"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white">
 
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".product_service.fragments.OwnerHomePage">
+    tools:context=".product_service.fragments.OwnerHomePage"
+    android:id="@+id/mainOwner">
 
 
     <LinearLayout
@@ -27,15 +30,15 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="text"
-            android:text="Service name" />
+            android:hint="Service name" />
 
         <ImageButton
             android:id="@+id/imageButton"
             android:layout_width="53dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/white"
-            android:src="@drawable/filter_icon" />
+            android:src="@drawable/filter_icon"
+            android:background="@color/white"/>
 
         <ImageButton
             android:id="@+id/imageButton2"
@@ -43,7 +46,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/white"
-            android:src="@drawable/search_svgrepo_com" />
+            android:src="@drawable/search_svgrepo_com"
+            />
     </LinearLayout>
 
     <LinearLayout

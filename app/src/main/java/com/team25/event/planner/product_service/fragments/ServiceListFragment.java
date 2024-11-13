@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.product_service.adapters.ServiceListAdapter;
@@ -45,6 +46,8 @@ public class ServiceListFragment extends ListFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("ShopApp", "onCreate Products List Fragment");
+
+
         if (getArguments() != null) {
             services = getArguments().getParcelableArrayList(ARG_PARAM);
             adapter = new ServiceListAdapter(getActivity(), services);

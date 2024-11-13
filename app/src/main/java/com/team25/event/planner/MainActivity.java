@@ -2,6 +2,8 @@ package com.team25.event.planner;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -37,10 +39,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+
+
         if(savedInstanceState == null){
             getSupportFragmentManager()
                     .beginTransaction().
-                    replace(R.id.main_layout, new OwnerHomePage())
+                    replace(R.id.main_layout, new OwnerHomePage()).addToBackStack("homepageOwner")
                     .commit();
             navigationView.setCheckedItem(R.id.Home);
         }

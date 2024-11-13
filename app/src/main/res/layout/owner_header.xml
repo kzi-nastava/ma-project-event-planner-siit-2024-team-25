@@ -2,17 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/design_default_color_primary_dark">
+    android:background="@color/design_default_color_primary_dark"
+    android:paddingBottom="30dp">
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         >
-        <ImageView
-            android:src="@drawable/back_icon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
+
 
 
             <LinearLayout
@@ -25,9 +23,19 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Home page"
+                    android:text="Event planner"
                     android:textColor="@color/white"
+                    android:paddingTop="20dp"
                     android:textSize="40dp">
+
+                </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Enjoy"
+                    android:textColor="@color/white"
+                    android:alpha="0.4"
+                    android:textSize="25dp">
 
                 </TextView>
             </LinearLayout>

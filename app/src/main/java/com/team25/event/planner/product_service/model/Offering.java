@@ -2,10 +2,8 @@ package com.team25.event.planner.product_service.model;
 
 import com.team25.event.planner.product_service.enums.ProductServiceType;
 
-import java.util.ArrayList;
 
-
-public abstract class ProductService  {
+public abstract class Offering {
 
     protected long id;
     protected String name;
@@ -17,10 +15,10 @@ public abstract class ProductService  {
     protected boolean isAvailable;
     protected ProductServiceType status;
 
-    public ProductService(){}
+    public Offering(){}
 
-    public ProductService(long id, String name, String description, double price, double discount, int imageURL,
-                          boolean isVisible, boolean isAvailable, ProductServiceType status){
+    public Offering(long id, String name, String description, double price, double discount, int imageURL,
+                    boolean isVisible, boolean isAvailable, ProductServiceType status){
         this.id = id;
         this.name = name;
         this.description = description;

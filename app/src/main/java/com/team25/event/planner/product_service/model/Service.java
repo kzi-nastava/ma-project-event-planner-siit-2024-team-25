@@ -9,9 +9,8 @@ import com.team25.event.planner.product_service.enums.ProductServiceType;
 import com.team25.event.planner.product_service.enums.ReservationType;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
-public class Service extends ProductService implements Parcelable {
+public class Service extends Offering implements Parcelable {
     private String specifics;
     private int duration;
     private LocalDateTime reservationDate;
