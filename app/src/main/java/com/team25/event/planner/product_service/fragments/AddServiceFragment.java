@@ -81,6 +81,28 @@ public class AddServiceFragment extends DialogFragment {
         SeekBar seekBar2 = binding.priceSeekBar2;
         TextView seekBarValue2 = binding.seekBarValue2;
 
+        SeekBar duration = binding.durationValue;
+        TextView durationText = binding.durationTimeText;
+
+        duration.setProgress(0);
+        duration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                durationText.setText(String.valueOf(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         seekBar2.setProgress(0);
 
         seekBar2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -128,9 +150,7 @@ public class AddServiceFragment extends DialogFragment {
 
 
         buttonDate = binding.buttonDate;
-        buttonTime = binding.buttonTime;
         TextView textView = binding.cancelationDateText;
-        TextView textView2 = binding.durationTimeText;
 
         // Datum Picker
         buttonDate.setOnClickListener(v -> {
@@ -157,29 +177,7 @@ public class AddServiceFragment extends DialogFragment {
             datePickerDialog.show();
         });
 
-        // Vreme Picker
-        buttonTime.setOnClickListener(v -> {
-            // Pronađite trenutni sat i minut
-            Calendar calendar = Calendar.getInstance();
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            int minute = calendar.get(Calendar.MINUTE);
 
-            // Kreirajte TimePickerDialog
-            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                    (view, hourOfDay, minute1) -> {
-                        // Formatirajte odabrano vreme
-                        String time = "Selected Time: " + hourOfDay + ":" + String.format("%02d", minute1); // Format za minut (dva broja)
-
-                        // Prikazivanje vremena u TextView
-                        textView2.setText(time);  // Postavite vreme u TextView
-
-                        // (Opcionalno) Prikazivanje vremena u Toast-u
-                        Toast.makeText(getContext(), time, Toast.LENGTH_SHORT).show();
-                    }, hour, minute, true);  // true za 24-časovni format
-
-            // Prikazivanje TimePickerDialog
-            timePickerDialog.show();
-        });
      return binding.getRoot();
     }
 }
