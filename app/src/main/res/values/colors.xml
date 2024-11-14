@@ -40,5 +40,10 @@
     <color name="bg_dark_surface">#241604</color>
 
     <!-- MENU STATES -->
-    <color name="menu_item_dark_color_state">#E5DDD8</color>  <!-- Added for dark theme -->
+    <color name="menu_item_dark_color_state">#E5DDD8</color>
+
+    <!-- IMAGE PICKER -->
+    <color name="ucrop_color_toolbar">@color/primary_orange_700</color>
+    <color name="ucrop_color_statusbar">@color/primary_orange_900</color>
+    <color name="ucrop_color_widget_active">@color/primary_orange_700</color>
 </resources>
