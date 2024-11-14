@@ -10,10 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentHomePageBaseBinding;
 import com.team25.event.planner.event.fragments.EventsFragment;
 import com.team25.event.planner.event.fragments.TopEventsFragment;
+import com.team25.event.planner.event.fragments.TopEventsListFragment;
 import com.team25.event.planner.offering.fragments.TopOfferingsFragment;
 
 
@@ -46,13 +48,13 @@ public class HomePageBaseFragment extends Fragment {
 
 
     private void eventButtonClick(){
-        getChildFragmentManager().beginTransaction()
-                .replace(binding.homeContainer.getId(), new EventsFragment())
-                .commit();
-
+        FragmentTransition.to(new EventsFragment(), requireActivity(), false, binding.homeContainer.getId());
         eventButton.setBackgroundColor(0);
         eventButton.setOnClickListener(null);
+        eventButton.setTextColor(getResources().getColor(R.color.primary));
         psButton.setBackgroundColor(getResources().getColor(R.color.primary));
+        psButton.setTextColor(getResources().getColor(R.color.white));
+
 
         psButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -64,14 +66,16 @@ public class HomePageBaseFragment extends Fragment {
 
 
     private void psButtonClick(){
-        psButton.setBackgroundColor(0);
-        psButton.setOnClickListener(null);
         eventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 eventButtonClick();
             }
         });
+        psButton.setOnClickListener(null);
+        psButton.setBackgroundColor(0);
+        psButton.setTextColor(getResources().getColor(R.color.primary));
+        eventButton.setTextColor(getResources().getColor(R.color.white));
         eventButton.setBackgroundColor(getResources().getColor(R.color.primary));
     }
 
@@ -87,8 +91,13 @@ public class HomePageBaseFragment extends Fragment {
                     .commit();
         }
 
+
         eventButton = binding.eventButton;
         psButton = binding.psButton;
+        eventButton.setBackgroundColor(getResources().getColor(R.color.primary));
+        psButton.setBackgroundColor(getResources().getColor(R.color.primary));
+        eventButton.setTextColor(getResources().getColor(R.color.white));
+        psButton.setTextColor(getResources().getColor(R.color.white));
 
         eventButton.setOnClickListener(new View.OnClickListener() {
             @Override

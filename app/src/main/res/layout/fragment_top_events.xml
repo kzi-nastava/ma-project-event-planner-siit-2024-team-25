@@ -9,11 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Top 5 Events"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:textAlignment="center"
         android:padding="16dp"
         android:gravity="center"
-        android:textColor="#FB8C00"/>
+        android:textColor="@color/primary"/>
 
     <ScrollView
         android:id="@+id/topEventsContainer"

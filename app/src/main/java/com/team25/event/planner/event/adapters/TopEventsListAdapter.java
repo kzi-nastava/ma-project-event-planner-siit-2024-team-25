@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,10 +72,11 @@ public class TopEventsListAdapter extends ArrayAdapter<Event>{
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.home_page_top_event,
                     parent, false);
         }
-        MaterialCardView eventCard = convertView.findViewById(R.id.product_card_item);
+        MaterialCardView eventCard = convertView.findViewById(R.id.top_event_card_item);
         TextView eventName = convertView.findViewById(R.id.top_event_name);
         TextView eventOrganizer = convertView.findViewById(R.id.top_event_organizer);
         TextView eventDate = convertView.findViewById(R.id.top_event_date);
+        ImageView eventIcon = convertView.findViewById(R.id.top_offer_picture);
 
         if(event != null){
             eventName.setText(event.getName());
@@ -83,8 +85,26 @@ public class TopEventsListAdapter extends ArrayAdapter<Event>{
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
             String formattedDate = dateFormat.format(event.getDate());
             eventDate.setText(formattedDate);
+            eventIcon.setImageResource(R.drawable.ic_heart);
+
+
+            boolean[] isClicked = {false};
+            eventIcon.setOnClickListener(v -> {
+                isClicked[0] = !isClicked[0];
+                if(isClicked[0]){
+                    eventIcon.setImageResource(R.drawable.ic_heart_red);
+                    Toast.makeText(getContext(), "You add " + event.getName() +
+                            " to your favourite list", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    eventIcon.setImageResource(R.drawable.ic_heart);
+                    Toast.makeText(getContext(), "You remove " + event.getName() +
+                            " from your favourite list", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
             eventCard.setOnClickListener(v -> {
-                // Handle click on the item at 'position'
                 Log.i("ShopApp", "Clicked: " + event.getName() + ", id: " +
                         event.getId());
                 Toast.makeText(getContext(), "Clicked: " + event.getName() +
