@@ -15,30 +15,30 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.card.MaterialCardView;
 import com.team25.event.planner.R;
-import com.team25.event.planner.event.model.Event;
+import com.team25.event.planner.event.model.EventCard;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class HomeEventListAdapter extends ArrayAdapter<Event> {
+public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
 
-    private ArrayList<Event> events;
+    private ArrayList<EventCard> eventCards;
 
-    public HomeEventListAdapter(Context context, ArrayList<Event> events) {
-        super(context, R.layout.home_page_top_event, events);
-        this.events = events;
+    public HomeEventListAdapter(Context context, ArrayList<EventCard> eventCards) {
+        super(context, R.layout.home_page_top_event, eventCards);
+        this.eventCards = eventCards;
     }
 
     @Override
     public int getCount() {
-        return events.size();
+        return eventCards.size();
     }
 
 
     @Nullable
     @Override
-    public Event getItem(int position) {
-        return events.get(position);
+    public EventCard getItem(int position) {
+        return eventCards.get(position);
     }
 
 
@@ -50,7 +50,7 @@ public class HomeEventListAdapter extends ArrayAdapter<Event> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Event event = getItem(position);
+        EventCard event = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.home_page_event_card,
                     parent, false);

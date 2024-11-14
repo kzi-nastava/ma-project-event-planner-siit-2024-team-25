@@ -16,23 +16,23 @@ import androidx.annotation.Nullable;
 import com.google.android.material.card.MaterialCardView;
 import com.team25.event.planner.R;
 
-import com.team25.event.planner.event.model.Event;
+import com.team25.event.planner.event.model.EventCard;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class TopEventsListAdapter extends ArrayAdapter<Event>{
+public class TopEventsListAdapter extends ArrayAdapter<EventCard>{
 
-    private ArrayList<Event> events;
+    private ArrayList<EventCard> eventCards;
 
-    public TopEventsListAdapter(Context context, ArrayList<Event> events) {
-        super(context, R.layout.home_page_top_event, events);
-        this.events = events;
+    public TopEventsListAdapter(Context context, ArrayList<EventCard> eventCards) {
+        super(context, R.layout.home_page_top_event, eventCards);
+        this.eventCards = eventCards;
     }
 
     @Override
     public int getCount() {
-        return events.size();
+        return eventCards.size();
     }
 
     /*
@@ -40,8 +40,8 @@ public class TopEventsListAdapter extends ArrayAdapter<Event>{
      * */
     @Nullable
     @Override
-    public Event getItem(int position) {
-        return events.get(position);
+    public EventCard getItem(int position) {
+        return eventCards.get(position);
     }
 
     /*
@@ -67,7 +67,7 @@ public class TopEventsListAdapter extends ArrayAdapter<Event>{
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Event event = getItem(position);
+        EventCard event = getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.home_page_top_event,
                     parent, false);

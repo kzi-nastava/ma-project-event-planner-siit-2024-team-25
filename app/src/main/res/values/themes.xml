@@ -2,16 +2,15 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.EventPlanner" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+         <item name="colorPrimary">@color/primary</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorButtonNormal">@color/white</item>
+        <item name="rippleColor">@color/white</item>
     </style>
 
     <style name="Theme.EventPlanner" parent="Base.Theme.EventPlanner" />
 
-    <style name="TransparentBottomSheetDialogTheme" parent="Theme.Design.NoActionBar">
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
 
     <style name="DatePicker" parent="Theme.MaterialComponents.Light">
         <item name="colorAccent"> @color/primary</item>
@@ -19,6 +18,24 @@
 
     <style name="TimePicker" parent="Theme.MaterialComponents.Light">
         <item name="colorAccent"> @color/primary</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        ...
+        <item name="spinnerStyle">@style/MySpinner</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="Theme.AppCompat">
+        ...
+        <item name="spinnerStyle">@style/MySpinner.Dark</item>
+    </style>
+
+    <style name="MySpinner" parent="Base.Widget.AppCompat.Spinner">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+    </style>
+
+    <style name="MySpinner.Dark" parent="MySpinner">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
     </style>
 
 </resources>

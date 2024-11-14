@@ -26,7 +26,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             tools:context=".fragments.products.ProductsPageFragment"
-            android:backgroundTint="@color/primary"
             >
             <LinearLayout
                 android:id="@+id/linear1"
@@ -35,16 +34,14 @@
                 android:orientation="horizontal"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:backgroundTint="@color/primary">
+                android:layout_marginTop="10dp">
 
-                <com.google.android.material.search.SearchBar
-                    android:id="@+id/search_text"
-                    app:queryHint="Search"
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/searchView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
-
+                    android:layout_height="wrap_content"
+                    android:iconifiedByDefault="false"
+                    android:background="@drawable/home_page_group_border" />
 
             </LinearLayout>
             <LinearLayout
@@ -67,7 +64,6 @@
                     android:backgroundTint="@color/primary"
                     android:textColor="@color/white"
                     android:onClick="@{() -> filterViewModel.showFilter()}"
-                    app:rippleColor="@color/white"
                     />
 
 
@@ -80,7 +76,6 @@
                     tools:ignore="TextContrastCheck"
                     android:backgroundTint="@color/primary"
                     android:textColor="@color/white"
-                    app:rippleColor="@color/white"
                     android:onClick="@{() -> sortViewModel.showSort()}"
                     />
             </LinearLayout>
@@ -138,7 +133,6 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/events"
                                     android:textColor="@color/white"
-                                    app:rippleColor="@color/white"
                                     android:backgroundTint="@color/primary"
                                     />
 
@@ -148,7 +142,6 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/products_amp_services"
                                     android:textColor="@color/white"
-                                    app:rippleColor="@color/white"
                                     android:backgroundTint="@color/primary" />
 
                             </com.google.android.material.button.MaterialButtonToggleGroup>

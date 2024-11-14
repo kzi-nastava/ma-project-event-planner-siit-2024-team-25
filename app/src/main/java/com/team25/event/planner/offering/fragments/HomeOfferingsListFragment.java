@@ -2,7 +2,6 @@ package com.team25.event.planner.offering.fragments;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 
 import android.view.LayoutInflater;
@@ -10,11 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.team25.event.planner.R;
-import com.team25.event.planner.event.adapters.HomeEventListAdapter;
-import com.team25.event.planner.event.fragments.HomeEventsListFragment;
-import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.offering.adapters.HomeOfferingListAdapter;
-import com.team25.event.planner.offering.model.Offering;
+import com.team25.event.planner.offering.model.OfferingCard;
 
 import java.util.ArrayList;
 
@@ -22,7 +18,7 @@ public class HomeOfferingsListFragment extends ListFragment {
 
 
     private static final String ARG_PARAM = "param";
-    private ArrayList<Offering> offerings;
+    private ArrayList<OfferingCard> offeringCards;
     private HomeOfferingListAdapter adapter;
 
 
@@ -31,10 +27,10 @@ public class HomeOfferingsListFragment extends ListFragment {
     }
 
 
-    public static HomeOfferingsListFragment newInstance(ArrayList<Offering> offerings) {
+    public static HomeOfferingsListFragment newInstance(ArrayList<OfferingCard> offeringCards) {
         HomeOfferingsListFragment fragment = new HomeOfferingsListFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, offerings);
+        args.putParcelableArrayList(ARG_PARAM, offeringCards);
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,8 +39,8 @@ public class HomeOfferingsListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.offerings = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new HomeOfferingListAdapter(getActivity(), offerings);
+            this.offeringCards = getArguments().getParcelableArrayList(ARG_PARAM);
+            adapter = new HomeOfferingListAdapter(getActivity(), offeringCards);
             setListAdapter(adapter);
         }
     }

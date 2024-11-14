@@ -1,6 +1,5 @@
 package com.team25.event.planner.offering.adapters;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,31 +13,30 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.card.MaterialCardView;
 import com.team25.event.planner.R;
-import com.team25.event.planner.offering.model.Offering;
+import com.team25.event.planner.offering.model.OfferingCard;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class TopOfferingsListAdapter extends ArrayAdapter<Offering> {
+public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
 
 
-    private ArrayList<Offering> offerings;
+    private ArrayList<OfferingCard> offeringCards;
 
-    public TopOfferingsListAdapter(Context context, ArrayList<Offering> events) {
+    public TopOfferingsListAdapter(Context context, ArrayList<OfferingCard> events) {
         super(context, R.layout.home_page_top_event, events);
-        this.offerings = events;
+        this.offeringCards = events;
     }
 
     @Override
     public int getCount() {
-        return offerings.size();
+        return offeringCards.size();
     }
 
     @Nullable
     @Override
-    public Offering getItem(int position) {
-        return offerings.get(position);
+    public OfferingCard getItem(int position) {
+        return offeringCards.get(position);
     }
 
     @Override
@@ -49,7 +47,7 @@ public class TopOfferingsListAdapter extends ArrayAdapter<Offering> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Offering offering = getItem(position);
+        OfferingCard offeringCard = getItem(position);
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.home_page_top_offer,
                     parent, false);
@@ -60,12 +58,12 @@ public class TopOfferingsListAdapter extends ArrayAdapter<Offering> {
         TextView offerPrice = convertView.findViewById(R.id.top_offer_price);
         ImageView offerIcon = convertView.findViewById(R.id.top_offer_picture);
 
-        if(offering != null){
-            offerName.setText(offering.getName());
-            offerOwner.setText(offering.getOwner());
+        if(offeringCard != null){
+            offerName.setText(offeringCard.getName());
+            offerOwner.setText(offeringCard.getOwner());
 
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-            String formattedPrice = currencyFormatter.format(offering.getPrice());
+            String formattedPrice = currencyFormatter.format(offeringCard.getPrice());
             String formattedDate = formattedPrice;
             offerPrice.setText(formattedDate);
             offerIcon.setImageResource(R.drawable.ic_heart);
@@ -75,20 +73,20 @@ public class TopOfferingsListAdapter extends ArrayAdapter<Offering> {
                 isClicked[0] = !isClicked[0];
                 if(isClicked[0]){
                     offerIcon.setImageResource(R.drawable.ic_heart_red);
-                    Toast.makeText(getContext(), "You add " + offering.getName() +
+                    Toast.makeText(getContext(), "You add " + offeringCard.getName() +
                             " to your favourite list", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     offerIcon.setImageResource(R.drawable.ic_heart);
-                    Toast.makeText(getContext(), "You remove " + offering.getName() +
+                    Toast.makeText(getContext(), "You remove " + offeringCard.getName() +
                             " from your favourite list", Toast.LENGTH_SHORT).show();
                 }
             });
 
 
             offerCard.setOnClickListener(v -> {
-                Toast.makeText(getContext(), "Clicked: " + offering.getName() +
-                        ", id: " + offering.getId(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Clicked: " + offeringCard.getName() +
+                        ", id: " + offeringCard.getId(), Toast.LENGTH_SHORT).show();
             });
         }
 

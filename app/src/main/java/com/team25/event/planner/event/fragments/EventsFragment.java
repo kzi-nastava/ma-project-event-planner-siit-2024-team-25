@@ -4,16 +4,13 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.team25.event.planner.FragmentTransition;
-import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentEventsBinding;
-import com.team25.event.planner.databinding.FragmentTopEventsBinding;
-import com.team25.event.planner.event.model.Event;
+import com.team25.event.planner.event.model.EventCard;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +18,7 @@ import java.util.Date;
 
 public class EventsFragment extends Fragment {
 
-    private ArrayList<Event> events = new ArrayList<Event>();
+    private ArrayList<EventCard> eventCards = new ArrayList<EventCard>();
     private FragmentEventsBinding binding;
     int currentSelectedIndex;
 
@@ -33,7 +30,7 @@ public class EventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        prepareEventList(events);
+        prepareEventList(eventCards);
         binding = FragmentEventsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -46,9 +43,7 @@ public class EventsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.i("SADASDASDASD", String.valueOf(currentSelectedIndex));
-        FragmentTransition.to(HomeEventsListFragment.newInstance(events), requireActivity(), false, binding.EventsContainer.getId());
+        FragmentTransition.toRight(HomeEventsListFragment.newInstance(eventCards), requireActivity(), false, binding.EventsContainer.getId());
     }
 
     @Override
@@ -57,17 +52,17 @@ public class EventsFragment extends Fragment {
         binding = null;
     }
 
-    private void prepareEventList(ArrayList<Event> events) {
-        events.clear();
-        events.add(new Event(1, "Concert", "Stefan", new Date()));
-        events.add(new Event(2, "Concert", "Petar", new Date()));
-        events.add(new Event(3, "Concert", "Milos", new Date()));
-        events.add(new Event(4, "Concert", "Nikola", new Date()));
-        events.add(new Event(5, "Concert", "Milan", new Date()));
-        events.add(new Event(11, "Concert", "Stefan", new Date()));
-        events.add(new Event(21, "Concert", "Petar", new Date()));
-        events.add(new Event(31, "Concert", "Milos", new Date()));
-        events.add(new Event(41, "Concert", "Nikola", new Date()));
-        events.add(new Event(51, "Concert", "Milan", new Date()));
+    private void prepareEventList(ArrayList<EventCard> eventCards) {
+        eventCards.clear();
+        eventCards.add(new EventCard(1, "Concert", "Stefan", new Date()));
+        eventCards.add(new EventCard(2, "Concert", "Petar", new Date()));
+        eventCards.add(new EventCard(3, "Concert", "Milos", new Date()));
+        eventCards.add(new EventCard(4, "Concert", "Nikola", new Date()));
+        eventCards.add(new EventCard(5, "Concert", "Milan", new Date()));
+        eventCards.add(new EventCard(11, "Concert", "Stefan", new Date()));
+        eventCards.add(new EventCard(21, "Concert", "Petar", new Date()));
+        eventCards.add(new EventCard(31, "Concert", "Milos", new Date()));
+        eventCards.add(new EventCard(41, "Concert", "Nikola", new Date()));
+        eventCards.add(new EventCard(51, "Concert", "Milan", new Date()));
     }
 }

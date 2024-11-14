@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
-import androidx.recyclerview.widget.RecyclerView;
+
 import com.team25.event.planner.R;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,16 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.team25.event.planner.event.adapters.TopEventsListAdapter;
-import com.team25.event.planner.event.model.Event;
+import com.team25.event.planner.event.model.EventCard;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class TopEventsListFragment extends ListFragment {
 
     private TopEventsListAdapter adapter;
-    private ArrayList<Event> topEvents;
+    private ArrayList<EventCard> topEventCards;
     private static final String ARG_PARAM = "param";
 
     public TopEventsListFragment() {
@@ -40,18 +39,18 @@ public class TopEventsListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         Log.i("ShopApp", "onCreate Products List Fragment");
         if (getArguments() != null) {
-            topEvents = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new TopEventsListAdapter(getActivity(), topEvents);
+            topEventCards = getArguments().getParcelableArrayList(ARG_PARAM);
+            adapter = new TopEventsListAdapter(getActivity(), topEventCards);
             setListAdapter(adapter);
         }
     }
 
 
 
-    public static TopEventsListFragment newInstance(ArrayList<Event> events){
+    public static TopEventsListFragment newInstance(ArrayList<EventCard> eventCards){
         TopEventsListFragment fragment = new TopEventsListFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, events);
+        args.putParcelableArrayList(ARG_PARAM, eventCards);
         fragment.setArguments(args);
         return fragment;
     }

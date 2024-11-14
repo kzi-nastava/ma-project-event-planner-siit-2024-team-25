@@ -5,20 +5,20 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class Offering implements Parcelable {
+public class OfferingCard implements Parcelable {
     private int id;
     private String name;
     private double price;
     private String owner;
 
-    public Offering(int id, String name, double price, String owner) {
+    public OfferingCard(int id, String name, double price, String owner) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.owner = owner;
     }
 
-    protected Offering(Parcel in) {
+    protected OfferingCard(Parcel in) {
         id = in.readInt();
         name = in.readString();
         price = in.readDouble();
@@ -73,15 +73,15 @@ public class Offering implements Parcelable {
         dest.writeString(owner);
     }
 
-    public static final Creator<Offering> CREATOR = new Creator<Offering>() {
+    public static final Creator<OfferingCard> CREATOR = new Creator<OfferingCard>() {
         @Override
-        public Offering createFromParcel(Parcel in) {
-            return new Offering(in);
+        public OfferingCard createFromParcel(Parcel in) {
+            return new OfferingCard(in);
         }
 
         @Override
-        public Offering[] newArray(int size) {
-            return new Offering[size];
+        public OfferingCard[] newArray(int size) {
+            return new OfferingCard[size];
         }
     };
 }

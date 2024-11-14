@@ -12,17 +12,16 @@ import android.view.ViewGroup;
 import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.databinding.FragmentTopOfferingsBinding;
 import com.team25.event.planner.event.fragments.TopEventsFragment;
-import com.team25.event.planner.offering.model.Offering;
-import com.team25.event.planner.offering.model.Product;
-import com.team25.event.planner.offering.model.Service;
+import com.team25.event.planner.offering.model.OfferingCard;
+import com.team25.event.planner.offering.model.ProductCard;
+import com.team25.event.planner.offering.model.ServiceCard;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class TopOfferingsFragment extends Fragment {
 
-    private ArrayList<Offering> offers = new ArrayList<Offering>();
+    private ArrayList<OfferingCard> offers = new ArrayList<OfferingCard>();
     private FragmentTopOfferingsBinding binding;
     int currentSelectedIndex;
 
@@ -58,12 +57,12 @@ public class TopOfferingsFragment extends Fragment {
         binding = null;
     }
 
-    private void prepareOffersList(ArrayList<Offering> Offering){
+    private void prepareOffersList(ArrayList<OfferingCard> OfferingCard){
         offers.clear();
-        offers.add(new Service(1, "service 1", 1200, "Stefan"));
-        offers.add(new Product(2, "Product 2", 1200, "Stefan"));
-        offers.add(new Service(3, "service 3", 1200, "Stefan"));
-        offers.add(new Service(4, "service 4", 1200, "Stefan"));
-        offers.add(new Product(5, "Product 5", 1200, "Stefan"));
+        offers.add(new ServiceCard(1, "service 1", 1200, "Stefan"));
+        offers.add(new ProductCard(2, "Product 2", 1200, "Stefan"));
+        offers.add(new ServiceCard(3, "service 3", 1200, "Stefan"));
+        offers.add(new ServiceCard(4, "service 4", 1200, "Stefan"));
+        offers.add(new ProductCard(5, "Product 5", 1200, "Stefan"));
     }
 }

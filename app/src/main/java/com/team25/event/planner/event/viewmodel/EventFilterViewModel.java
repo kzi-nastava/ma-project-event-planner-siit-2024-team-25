@@ -18,47 +18,25 @@ public class EventFilterViewModel extends ViewModel implements IFilterViewModel 
 
     @Override
     public void setFilter(Context context, View view){
-        filterDialog = new BottomSheetDialog(context, R.style.TransparentBottomSheetDialogTheme);
+        filterDialog = new BottomSheetDialog(context);
         filterDialog.setContentView(view);
     }
 
     @Override
     public void showFilter(){
 
+        if(filterDialog != null){
+            String[] options = {"Option 1", "Option 2", "Option 3"};
+            Spinner eventTypeSpinner = filterDialog.findViewById(R.id.event_type_filter);
+            Spinner PrivacyTypeSpinner = filterDialog.findViewById(R.id.privacy_type_filter);
 
-        String[] options = {"Option 1", "Option 2", "Option 3"};
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(filterDialog.getContext(), android.R.layout.simple_spinner_item, options);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-
-        Spinner eventTypeSpinner = filterDialog.findViewById(R.id.event_type_filter);
-        Spinner PrivacyTypeSpinner = filterDialog.findViewById(R.id.privacy_type_filter);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(filterDialog.getContext(), android.R.layout.simple_spinner_item, options){
-            @Override
-            public View getView(int position, View convertView, android.view.ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                ((android.widget.TextView) view).setTextColor(filterDialog.getContext().getResources().getColor(R.color.primary));
-                return view;
-            }
-
-            @Override
-            public View getDropDownView(int position, View convertView, android.view.ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                ((android.widget.TextView) view).setTextColor(filterDialog.getContext().getResources().getColor(R.color.white));
-                return view;
-            }
-        };
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        if(eventTypeSpinner != null && PrivacyTypeSpinner != null){
             eventTypeSpinner.setAdapter(adapter);
             PrivacyTypeSpinner.setAdapter(adapter);
-        }
 
 
-        filterDialog.show();
-
-
-        if(filterDialog != null){
             filterDialog.show();
         }
     }

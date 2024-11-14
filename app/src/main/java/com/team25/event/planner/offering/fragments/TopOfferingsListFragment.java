@@ -12,14 +12,14 @@ import android.widget.ListView;
 
 import com.team25.event.planner.databinding.FragmentTopOfferingsListBinding;
 import com.team25.event.planner.offering.adapters.TopOfferingsListAdapter;
-import com.team25.event.planner.offering.model.Offering;
+import com.team25.event.planner.offering.model.OfferingCard;
 import java.util.ArrayList;
 
 public class TopOfferingsListFragment extends Fragment {
 
     private FragmentTopOfferingsListBinding binding;
     private TopOfferingsListAdapter adapter;
-    private ArrayList<Offering> topOffers;
+    private ArrayList<OfferingCard> topOffers;
     private static final String ARG_PARAM = "param";
 
     public TopOfferingsListFragment() {
@@ -47,7 +47,7 @@ public class TopOfferingsListFragment extends Fragment {
         }
     }
 
-    public static TopOfferingsListFragment newInstance(ArrayList<Offering> offers) {
+    public static TopOfferingsListFragment newInstance(ArrayList<OfferingCard> offers) {
         TopOfferingsListFragment fragment = new TopOfferingsListFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_PARAM, offers);

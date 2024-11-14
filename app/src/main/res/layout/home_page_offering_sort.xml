@@ -68,7 +68,6 @@
                 android:layout_marginStart="200dp"
                 android:backgroundTint="@color/primary"
                 android:textColor="@color/white"
-                app:rippleColor="@color/white"
                 android:text="@string/sort" />
         </LinearLayout>
     </LinearLayout>

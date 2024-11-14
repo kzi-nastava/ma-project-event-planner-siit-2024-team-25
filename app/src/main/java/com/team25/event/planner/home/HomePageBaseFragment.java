@@ -54,11 +54,6 @@ public class HomePageBaseFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         _binding = FragmentHomePageBaseBinding.inflate(inflater, container, false);
-        homePageFilterViewModel = new ViewModelProvider(this).get(EventFilterViewModel.class);
-        _binding.setFilterViewModel(homePageFilterViewModel);
-
-        homePageSortViewModel = new ViewModelProvider(this).get(EventSortViewModel.class);
-        _binding.setSortViewModel(homePageSortViewModel);
         _binding.setLifecycleOwner(this);
 
         return _binding.getRoot();
@@ -80,6 +75,12 @@ public class HomePageBaseFragment extends Fragment {
 
             }
         });
+        homePageFilterViewModel = new ViewModelProvider(this).get(EventFilterViewModel.class);
+        _binding.setFilterViewModel(homePageFilterViewModel);
+
+        homePageSortViewModel = new ViewModelProvider(this).get(EventSortViewModel.class);
+        _binding.setSortViewModel(homePageSortViewModel);
+
         View dialogView = getLayoutInflater().inflate(R.layout.home_page_event_filter, null);
         homePageFilterViewModel.setFilter(requireActivity(), dialogView);
         View sortView = getLayoutInflater().inflate(R.layout.home_page_event_sort, null);

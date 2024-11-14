@@ -23,8 +23,7 @@
             android:backgroundTint="@color/primary"
             app:icon="@drawable/ic_left"
             app:iconGravity="start"
-            app:iconTint="@color/white"
-            app:rippleColor="@color/white"/>
+            app:iconTint="@color/white" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/offering_page"
@@ -32,8 +31,7 @@
             android:layout_height="wrap_content"
             android:text="1"
             android:backgroundTint="@color/primary"
-            android:textColor="@color/white"
-            app:rippleColor="@color/white"/>
+            android:textColor="@color/white" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/offering_next"
@@ -43,7 +41,6 @@
             app:icon="@drawable/ic_right"
             app:iconGravity="end"
             app:iconTint="@color/white"
-            app:rippleColor="@color/white"
             />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>

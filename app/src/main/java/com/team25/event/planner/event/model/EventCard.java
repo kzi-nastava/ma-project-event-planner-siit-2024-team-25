@@ -8,28 +8,28 @@ import androidx.annotation.NonNull;
 
 import java.util.Date;
 
-public class Event implements Parcelable {
+public class EventCard implements Parcelable {
 
     private int id;
     private String name;
     private String organizer;
     private Date date;
 
-    protected Event(Parcel in) {
+    protected EventCard(Parcel in) {
         id = in.readInt();
         name = in.readString();
         organizer = in.readString();
     }
 
-    public static final Creator<Event> CREATOR = new Creator<Event>() {
+    public static final Creator<EventCard> CREATOR = new Creator<EventCard>() {
         @Override
-        public Event createFromParcel(Parcel in) {
-            return new Event(in);
+        public EventCard createFromParcel(Parcel in) {
+            return new EventCard(in);
         }
 
         @Override
-        public Event[] newArray(int size) {
-            return new Event[size];
+        public EventCard[] newArray(int size) {
+            return new EventCard[size];
         }
     };
 
@@ -65,7 +65,7 @@ public class Event implements Parcelable {
         this.date = date;
     }
 
-    public Event(int id, String name, String organizer, Date date) {
+    public EventCard(int id, String name, String organizer, Date date) {
         this.id = id;
         this.name = name;
         this.organizer = organizer;

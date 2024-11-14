@@ -2,7 +2,6 @@ package com.team25.event.planner.event.fragments;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 
 import android.view.LayoutInflater;
@@ -11,8 +10,7 @@ import android.view.ViewGroup;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.event.adapters.HomeEventListAdapter;
-import com.team25.event.planner.event.adapters.TopEventsListAdapter;
-import com.team25.event.planner.event.model.Event;
+import com.team25.event.planner.event.model.EventCard;
 
 import java.util.ArrayList;
 
@@ -20,7 +18,7 @@ public class HomeEventsListFragment extends ListFragment {
 
 
     private static final String ARG_PARAM = "param";
-    private ArrayList<Event> events;
+    private ArrayList<EventCard> eventCards;
     private HomeEventListAdapter adapter;
 
 
@@ -29,10 +27,10 @@ public class HomeEventsListFragment extends ListFragment {
     }
 
 
-    public static HomeEventsListFragment newInstance(ArrayList<Event> events) {
+    public static HomeEventsListFragment newInstance(ArrayList<EventCard> eventCards) {
         HomeEventsListFragment fragment = new HomeEventsListFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, events);
+        args.putParcelableArrayList(ARG_PARAM, eventCards);
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,8 +39,8 @@ public class HomeEventsListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.events = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new HomeEventListAdapter(getActivity(), events);
+            this.eventCards = getArguments().getParcelableArrayList(ARG_PARAM);
+            adapter = new HomeEventListAdapter(getActivity(), eventCards);
             setListAdapter(adapter);
         }
     }

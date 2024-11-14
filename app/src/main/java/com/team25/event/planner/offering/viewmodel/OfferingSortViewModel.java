@@ -17,7 +17,7 @@ public class OfferingSortViewModel extends ViewModel implements ISortViewModel {
     }
 
     public void setSort(Context context, View view){
-        sortDialog = new BottomSheetDialog(context, R.style.TransparentBottomSheetDialogTheme);
+        sortDialog = new BottomSheetDialog(context);
         sortDialog.setContentView(view);
     }
 
@@ -30,28 +30,13 @@ public class OfferingSortViewModel extends ViewModel implements ISortViewModel {
             Spinner typeSpinner = sortDialog.findViewById(R.id.offering_sort_type);
             Spinner categorySpinner = sortDialog.findViewById(R.id.offering_sort_category);
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(sortDialog.getContext(), android.R.layout.simple_spinner_item, options){
-                @Override
-                public View getView(int position, View convertView, android.view.ViewGroup parent) {
-                    View view = super.getView(position, convertView, parent);
-                    ((android.widget.TextView) view).setTextColor(sortDialog.getContext().getResources().getColor(R.color.primary));
-                    return view;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, android.view.ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    ((android.widget.TextView) view).setTextColor(sortDialog.getContext().getResources().getColor(R.color.white));
-                    return view;
-                }
-            };
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(sortDialog.getContext(), android.R.layout.simple_spinner_item, options);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
             if(typeSpinner != null && categorySpinner != null){
                 typeSpinner.setAdapter(adapter);
                 categorySpinner.setAdapter(adapter);
             }
-
 
             sortDialog.show();
         }
