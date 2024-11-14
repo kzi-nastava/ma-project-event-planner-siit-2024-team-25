@@ -6,4 +6,17 @@
     <string name="sort">SORT</string>
     <string name="events">EVENTS</string>
     <string name="products_amp_services"><![CDATA[PRODUCTS & SERVICES]]></string>
+    <string name="event_filter">Event filter</string>
+    <string name="event_type">Event type</string>
+    <string name="privacy_type">Privacy type</string>
+    <string name="number_of_participants">Number of participants</string>
+    <string name="country">Country</string>
+    <string name="city">City</string>
+    <string name="start_date">Start date</string>
+    <string name="start_time">Start time</string>
+    <string name="end_date">End date</string>
+    <string name="end_time">End time</string>
+    <string name="sort_category">Sort category</string>
+    <string name="sort_type">Sort type</string>
+    <string name="event_sort">Event sort</string>
 </resources>

@@ -7,6 +7,9 @@ android {
     viewBinding {
         enabled = true
     }
+    buildFeatures {
+        dataBinding true
+    }
 
     namespace 'com.team25.event.planner'
     compileSdk 34

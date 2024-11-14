@@ -1,151 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".home.HomePageBaseFragment"
-    tools:showIn="@layout/activity_home_base">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <data>
+        <variable
+            name="filterViewModel"
+            type="com.team25.event.planner.home.viewmodel.HomePageFilterViewModel" />
+
+        <variable
+            name="sortViewModel"
+            type="com.team25.event.planner.home.viewmodel.HomePageSortViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".fragments.products.ProductsPageFragment"
-        android:backgroundTint="@color/primary"
-        >
-        <LinearLayout
-            android:id="@+id/linear1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:backgroundTint="@color/primary">
+        tools:context=".home.HomePageBaseFragment"
+        tools:showIn="@layout/activity_home_base">
 
-            <com.google.android.material.search.SearchBar
-                android:id="@+id/search_text"
-                app:queryHint="Search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-        </LinearLayout>
+
         <LinearLayout
-            android:id="@+id/linear2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".fragments.products.ProductsPageFragment"
+            android:backgroundTint="@color/primary"
             >
-
-            <Button
-                android:id="@+id/filter_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.7"
-                android:text="@string/filter"
-                tools:ignore="TextContrastCheck"
-                android:backgroundTint="@color/primary"
-                android:textColor="@color/white"/>
-
-
-            <Button
-                android:id="@+id/sort_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.7"
-                android:text="@string/sort"
-                tools:ignore="TextContrastCheck"
-                android:backgroundTint="@color/primary"
-                android:textColor="@color/white"/>
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
+                android:id="@+id/linear1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:id="@+id/scroll_home_page_container">
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/primary">
 
-
-                <FrameLayout
-                    android:id="@+id/home_top_events"
+                <com.google.android.material.search.SearchBar
+                    android:id="@+id/search_text"
+                    app:queryHint="Search"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                >
+
+                <Button
+                    android:id="@+id/filter_button"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:layout_weight="0.7"
+                    android:text="@string/filter"
+                    tools:ignore="TextContrastCheck"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@color/white"
+                    android:onClick="@{() -> filterViewModel.showFilter()}"
+                    app:rippleColor="@color/white"
+                    />
 
-                <FrameLayout
-                    android:id="@+id/home_top_offers"
-                    android:layout_width="match_parent"
+
+                <Button
+                    android:id="@+id/sort_button"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/home_top_events"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    android:layout_weight="0.7"
+                    android:text="@string/sort"
+                    tools:ignore="TextContrastCheck"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@color/white"
+                    app:rippleColor="@color/white"
+                    android:onClick="@{() -> sortViewModel.showSort()}"
+                    />
+            </LinearLayout>
 
-
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/home_container_nav"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/home_top_offers"
-                    >
+                    android:layout_margin="10dp"
+                    android:id="@+id/scroll_home_page_container">
 
-
-                        <com.google.android.material.button.MaterialButtonToggleGroup
-                            android:id="@+id/toggle_button_group"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-
-                            >
-
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/event_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/events"
-                                android:textColor="@color/white"
-                                app:rippleColor="@color/white"
-                                android:backgroundTint="@color/primary"
-                                />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/ps_button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/products_amp_services"
-                                android:textColor="@color/white"
-                                app:rippleColor="@color/white"
-                                android:backgroundTint="@color/primary" />
-
-                        </com.google.android.material.button.MaterialButtonToggleGroup>
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <FrameLayout
-                        android:id="@+id/home_container"
+                        android:id="@+id/home_top_events"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:layout_constraintTop_toBottomOf="@id/home_container_nav"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:paddingBottom="20dp"/>
+                        app:layout_constraintEnd_toEndOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <FrameLayout
+                        android:id="@+id/home_top_offers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/home_top_events"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/home_container_nav"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/home_top_offers"
+                        >
+
+
+                            <com.google.android.material.button.MaterialButtonToggleGroup
+                                android:id="@+id/toggle_button_group"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+
+                                >
+
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/event_button"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/events"
+                                    android:textColor="@color/white"
+                                    app:rippleColor="@color/white"
+                                    android:backgroundTint="@color/primary"
+                                    />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/ps_button"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/products_amp_services"
+                                    android:textColor="@color/white"
+                                    app:rippleColor="@color/white"
+                                    android:backgroundTint="@color/primary" />
+
+                            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <FrameLayout
+                            android:id="@+id/home_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:layout_constraintTop_toBottomOf="@id/home_container_nav"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:paddingBottom="20dp"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
