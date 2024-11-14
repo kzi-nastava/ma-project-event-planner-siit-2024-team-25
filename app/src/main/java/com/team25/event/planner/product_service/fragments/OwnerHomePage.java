@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import java.util.List;
 
 public class OwnerHomePage extends Fragment {
     private FragmentOwnerHomePageBinding binding;
+    private NavController navController;
 
 
     public OwnerHomePage() {
@@ -43,7 +46,7 @@ public class OwnerHomePage extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentOwnerHomePageBinding.inflate(inflater, container, false);
-
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         return binding.getRoot();
     }
 
@@ -54,7 +57,7 @@ public class OwnerHomePage extends Fragment {
         binding.floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransition.to(new ServiceAddForm(),requireActivity(),true,R.id.main_layout);
+                navController.navigate(R.id.action_ownerHomePage_to_serviceAddForm);
             }
         });
 

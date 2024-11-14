@@ -38,5 +38,6 @@
     <string name="registration_successful">Registration Successful!</string>
     <string name="registration_success_description">Your account has been created successfully. Please login to continue.</string>
     <string name="choose_profile_picture">Choose profile picture</string>
+    <string name="owner_page">Owner page</string>
 
 </resources>

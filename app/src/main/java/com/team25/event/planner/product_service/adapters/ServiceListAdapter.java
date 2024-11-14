@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.R;
@@ -29,10 +31,13 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
     private ArrayList<Service> aServices;
     private FragmentActivity fragmentActivity;
 
+    private NavController navController;
+
     public ServiceListAdapter(Context context, ArrayList<Service> services, FragmentActivity fragmentActivity){
         super(context, R.layout.service_card, services);
         aServices = services;
         this.fragmentActivity = fragmentActivity;
+        navController = Navigation.findNavController(fragmentActivity, R.id.nav_host_fragment);
     }
 
     ///Returns number of elements list
@@ -73,11 +78,7 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
             @Override
             public void onClick(View v) {// Define the fragment you want to open
 
-                // Replace the current fragment with the new one
-                fragmentActivity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.main_layout, new ServiceAddForm()) // Replace with your container's ID
-                        .addToBackStack(null) // Optional: add to back stack if needed
-                        .commit();
+                navController.navigate(R.id.action_ownerHomePage_to_serviceAddForm);
             }
         });
 

@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,12 +26,15 @@ import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewMod
 public class SecondPageCreatingServiceFragment extends Fragment {
 
     private SecondPageCreatingViewModel mViewModel;
+    private NavController navController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         FragmentSecondPageCreatingBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_second_page_creating, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
+
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 
         mViewModel= new ViewModelProvider(this).get(SecondPageCreatingViewModel.class);
         binding.setViewModel(mViewModel);
@@ -59,10 +64,7 @@ public class SecondPageCreatingServiceFragment extends Fragment {
     public void setObservers(){
         mViewModel.secondToThird.observe(getViewLifecycleOwner(), navigate -> {
             if (navigate != null && navigate) {
-                // Zamenjujemo fragment kada dođe signal
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.addService, new FinishPageCreateingCerviceFragment())  // ID kontejnera za fragmente
-                        .commit();
+                navController.navigate(R.id.action_secondPageCreatingServiceFragment_to_finishPageCreateingCerviceFragment);
 
                 mViewModel.secondToThird.setValue(false);
             }
@@ -70,10 +72,7 @@ public class SecondPageCreatingServiceFragment extends Fragment {
 
         mViewModel.secondToFirst.observe(getViewLifecycleOwner(), navigate -> {
             if (navigate != null && navigate) {
-                // Zamenjujemo fragment kada dođe signal
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.main_layout, new ServiceAddForm())  // ID kontejnera za fragmente
-                        .commit();
+                navController.navigateUp();
 
                 mViewModel.secondToFirst.setValue(false);
             }

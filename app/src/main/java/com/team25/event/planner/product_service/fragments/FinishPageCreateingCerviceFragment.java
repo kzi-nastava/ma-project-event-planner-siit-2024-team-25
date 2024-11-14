@@ -9,6 +9,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +28,8 @@ public class FinishPageCreateingCerviceFragment extends Fragment {
 
     private FinishPageCreateingCerviceViewModel mViewModel;
 
+    private NavController navController;
+
     public static FinishPageCreateingCerviceFragment newInstance() {
         return new FinishPageCreateingCerviceFragment();
     }
@@ -34,6 +39,8 @@ public class FinishPageCreateingCerviceFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         FragmentFinishPageCreateingCerviceBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_finish_page_createing_cervice, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
+
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 
         mViewModel= new ViewModelProvider(this).get(FinishPageCreateingCerviceViewModel.class);
         binding.setViewModel(mViewModel);
@@ -61,17 +68,15 @@ public class FinishPageCreateingCerviceFragment extends Fragment {
 
                 alertDialog.show();
 
-
                 mViewModel.toFinish.setValue(false);
-                FragmentTransition.to(new OwnerHomePage(),requireActivity(),true,R.id.main_layout);
+
+                navController.navigate(R.id.ownerHomePage, null, new NavOptions.Builder()
+                        .setPopUpTo(R.id.ownerHomePage, false).build());
             }
         });
         mViewModel.toSecond.observe(getViewLifecycleOwner(), navigate -> {
             if (navigate != null && navigate) {
-
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.addService, new SecondPageCreatingServiceFragment())  // ID kontejnera za fragmente
-                        .commit();
+                navController.navigateUp();
                 mViewModel.toSecond.setValue(false);
 
             }
