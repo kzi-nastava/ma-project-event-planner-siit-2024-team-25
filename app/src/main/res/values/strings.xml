@@ -19,4 +19,12 @@
     <string name="sort_category">Sort category</string>
     <string name="sort_type">Sort type</string>
     <string name="event_sort">Event sort</string>
+    <string name="sans_serif">sans-serif</string>
+    <string name="product_services_filter"><![CDATA[Products & services filter]]></string>
+    <string name="price">Price</string>
+    <string name="category">Category</string>
+    <string name="duration">Duration (min)</string>
+    <string name="available">Available</string>
+    <string name="description">Description</string>
+    <string name="products_services_sort"><![CDATA[Products & services sort]]></string>
 </resources>

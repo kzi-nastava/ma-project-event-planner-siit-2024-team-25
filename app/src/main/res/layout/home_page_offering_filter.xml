@@ -18,18 +18,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:text="@string/event_filter"
+                android:fontFamily="@string/sans_serif"
+                android:text="@string/product_services_filter"
                 android:textColor="@color/primary"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/imageView"
+                app:layout_constraintEnd_toStartOf="@+id/offering_filter_button"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/offering_filter_button"
                 android:layout_width="30dp"
                 android:layout_height="27dp"
                 android:background="@color/primary"
@@ -57,7 +57,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_margin="2dp"
-                android:background="@color/white">
+                android:background="@color/white"
+                tools:ignore="UseSwitchCompatOrMaterialXml">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -68,7 +69,7 @@
                     android:layout_marginBottom="4dp"/>
 
                 <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/event_type_filter"
+                    android:id="@+id/offering_event_type_filter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
@@ -77,13 +78,13 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/privacy_type"
+                    android:text="@string/category"
                     android:textSize="16sp"
                     android:textColor="@color/primary"
                     android:layout_marginBottom="4dp"/>
 
                 <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/privacy_type_filter"
+                    android:id="@+id/offering_category_filter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
@@ -92,12 +93,13 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/number_of_participants"
+                    android:text="@string/price"
                     android:textSize="16sp"
                     android:textColor="@color/primary"
                     android:layout_marginBottom="4dp"/>
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/offering_price_filter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
@@ -106,12 +108,13 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/country"
+                    android:text="Discount"
                     android:textSize="16sp"
                     android:textColor="@color/primary"
                     android:layout_marginBottom="4dp"/>
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/offering_discount_filter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
@@ -120,16 +123,32 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/city"
+                    android:text="@string/description"
                     android:textSize="16sp"
                     android:textColor="@color/primary"
                     android:layout_marginBottom="4dp"/>
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/offering_description_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/duration"
+                    android:textSize="16sp"
+                    android:textColor="@color/primary"
+                    android:layout_marginBottom="4dp"/>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/offering_duration_filter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
                     android:layout_marginBottom="12dp"/>
+
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -140,11 +159,11 @@
                     android:layout_marginBottom="4dp"/>
 
                 <DatePicker
+                    android:id="@+id/offering_start_date_filter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:theme="@style/DatePicker"
                     android:layout_marginBottom="12dp"
-                    android:background="@color/white" />
+                    android:theme="@style/DatePicker"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -155,10 +174,10 @@
                     android:layout_marginBottom="4dp"/>
 
                 <TimePicker
+                    android:id="@+id/offering_start_time_filter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
-                    android:layout_marginBottom="12dp"
                     android:theme="@style/TimePicker"/>
 
                 <TextView
@@ -170,6 +189,7 @@
                     android:layout_marginBottom="4dp"/>
 
                 <DatePicker
+                    android:id="@+id/offering_end_date_filter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -184,6 +204,7 @@
                     android:layout_marginBottom="4dp"/>
 
                 <TimePicker
+                    android:id="@+id/offering_end_time_filter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"

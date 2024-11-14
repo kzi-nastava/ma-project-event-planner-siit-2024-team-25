@@ -6,11 +6,11 @@
     <data>
         <variable
             name="filterViewModel"
-            type="com.team25.event.planner.home.viewmodel.HomePageFilterViewModel" />
+            type="com.team25.event.planner.IFilterViewModel" />
 
         <variable
             name="sortViewModel"
-            type="com.team25.event.planner.home.viewmodel.HomePageSortViewModel" />
+            type="com.team25.event.planner.ISortViewModel" />
     </data>
 
 
@@ -44,6 +44,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     />
+
+
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/linear2"

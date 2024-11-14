@@ -9,25 +9,31 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.team25.event.planner.FragmentTransition;
+import com.team25.event.planner.IFilterViewModel;
+import com.team25.event.planner.ISortViewModel;
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentHomePageBaseBinding;
 import com.team25.event.planner.event.fragments.EventsFragment;
 import com.team25.event.planner.event.fragments.TopEventsFragment;
-import com.team25.event.planner.home.viewmodel.HomePageFilterViewModel;
-import com.team25.event.planner.home.viewmodel.HomePageSortViewModel;
+import com.team25.event.planner.event.viewmodel.EventFilterViewModel;
+import com.team25.event.planner.event.viewmodel.EventSortViewModel;
 import com.team25.event.planner.offering.fragments.HomeOfferingsFragment;
 import com.team25.event.planner.offering.fragments.TopOfferingsFragment;
+import com.team25.event.planner.offering.viewmodel.OfferingFilterViewModel;
+import com.team25.event.planner.offering.viewmodel.OfferingSortViewModel;
 
 
 public class HomePageBaseFragment extends Fragment {
 
     private  Button _eventButton;
     private Button _psButton;
-    public HomePageFilterViewModel homePageFilterViewModel;
-    public HomePageSortViewModel homePageSortViewModel;
+    public IFilterViewModel homePageFilterViewModel;
+    public ISortViewModel homePageSortViewModel;
     private FragmentHomePageBaseBinding _binding;
     public HomePageBaseFragment() {
 
@@ -48,13 +54,13 @@ public class HomePageBaseFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         _binding = FragmentHomePageBaseBinding.inflate(inflater, container, false);
-        homePageFilterViewModel = new ViewModelProvider(this).get(HomePageFilterViewModel.class);
+        homePageFilterViewModel = new ViewModelProvider(this).get(EventFilterViewModel.class);
         _binding.setFilterViewModel(homePageFilterViewModel);
 
-        homePageSortViewModel = new ViewModelProvider(this).get(HomePageSortViewModel.class);
+        homePageSortViewModel = new ViewModelProvider(this).get(EventSortViewModel.class);
         _binding.setSortViewModel(homePageSortViewModel);
-
         _binding.setLifecycleOwner(this);
+
         return _binding.getRoot();
     }
 
@@ -75,9 +81,9 @@ public class HomePageBaseFragment extends Fragment {
             }
         });
         View dialogView = getLayoutInflater().inflate(R.layout.home_page_event_filter, null);
-        homePageFilterViewModel.setEventFilter(requireActivity(), dialogView);
+        homePageFilterViewModel.setFilter(requireActivity(), dialogView);
         View sortView = getLayoutInflater().inflate(R.layout.home_page_event_sort, null);
-        homePageSortViewModel.setEventSort(requireActivity(), sortView);
+        homePageSortViewModel.setSort(requireActivity(), sortView);
     }
 
 
@@ -91,6 +97,17 @@ public class HomePageBaseFragment extends Fragment {
                 eventButtonClick();
             }
         });
+
+        homePageFilterViewModel = new ViewModelProvider(this).get(OfferingFilterViewModel.class);
+        _binding.setFilterViewModel(homePageFilterViewModel);
+
+        homePageSortViewModel = new ViewModelProvider(this).get(OfferingSortViewModel.class);
+        _binding.setSortViewModel(homePageSortViewModel);
+
+        View dialogView = getLayoutInflater().inflate(R.layout.home_page_offering_filter, null);
+        homePageFilterViewModel.setFilter(requireActivity(), dialogView);
+        View sortView = getLayoutInflater().inflate(R.layout.home_page_offering_sort, null);
+        homePageSortViewModel.setSort(requireActivity(), sortView);
 
     }
 
