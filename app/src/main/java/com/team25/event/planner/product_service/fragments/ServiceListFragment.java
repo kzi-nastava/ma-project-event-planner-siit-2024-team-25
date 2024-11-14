@@ -50,8 +50,9 @@ public class ServiceListFragment extends ListFragment {
 
         if (getArguments() != null) {
             services = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new ServiceListAdapter(getActivity(), services);
+            adapter = new ServiceListAdapter(getActivity(), services, requireActivity());
             setListAdapter(adapter);
+            //recyclerView.setAdapter(adapter);
         }
     }
 

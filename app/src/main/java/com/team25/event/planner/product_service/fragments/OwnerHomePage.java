@@ -14,8 +14,10 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentOwnerHomePageBinding;
+import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +54,7 @@ public class OwnerHomePage extends Fragment {
         binding.floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddServiceFragment fullScreenFragment = new AddServiceFragment();
-                fullScreenFragment.show(getParentFragmentManager(), "FullScreenFragment");
+                FragmentTransition.to(new ServiceAddForm(),requireActivity(),true,R.id.main_layout);
             }
         });
 
