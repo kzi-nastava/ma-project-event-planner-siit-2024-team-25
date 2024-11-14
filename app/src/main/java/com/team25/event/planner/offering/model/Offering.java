@@ -10,14 +10,12 @@ public class Offering implements Parcelable {
     private String name;
     private double price;
     private String owner;
-    private String description;
 
-    public Offering(int id, String name, double price, String owner, String description) {
+    public Offering(int id, String name, double price, String owner) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.owner = owner;
-        this.description = description;
     }
 
     protected Offering(Parcel in) {
@@ -25,7 +23,6 @@ public class Offering implements Parcelable {
         name = in.readString();
         price = in.readDouble();
         owner = in.readString();
-        description = in.readString();
     }
 
 
@@ -62,13 +59,6 @@ public class Offering implements Parcelable {
         this.owner = owner;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     @Override
     public int describeContents() {

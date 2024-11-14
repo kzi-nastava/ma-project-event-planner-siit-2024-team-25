@@ -10,7 +10,7 @@
     app:strokeColor="@android:color/darker_gray"
     app:cornerRadius="8dp"
     android:elevation="4dp"
-    android:id="@+id/offer_card_item"
+    android:id="@+id/top_offer_card_item"
     android:background="@color/white">
 
     <LinearLayout

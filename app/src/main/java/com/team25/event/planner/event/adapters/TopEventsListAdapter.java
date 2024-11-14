@@ -76,7 +76,7 @@ public class TopEventsListAdapter extends ArrayAdapter<Event>{
         TextView eventName = convertView.findViewById(R.id.top_event_name);
         TextView eventOrganizer = convertView.findViewById(R.id.top_event_organizer);
         TextView eventDate = convertView.findViewById(R.id.top_event_date);
-        ImageView eventIcon = convertView.findViewById(R.id.top_offer_picture);
+        ImageView eventIcon = convertView.findViewById(R.id.top_event_picture);
 
         if(event != null){
             eventName.setText(event.getName());

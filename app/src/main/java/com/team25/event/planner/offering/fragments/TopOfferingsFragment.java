@@ -60,10 +60,10 @@ public class TopOfferingsFragment extends Fragment {
 
     private void prepareOffersList(ArrayList<Offering> Offering){
         offers.clear();
-        offers.add(new Service(1, "service 1", 1200, "Stefan", "opis 1 "));
-        offers.add(new Product(2, "Product 2", 1200, "Stefan","opis 2 "));
-        offers.add(new Service(3, "service 3", 1200, "Stefan", "opis 3 "));
-        offers.add(new Service(4, "service 4", 1200, "Stefan", "opis 4 "));
-        offers.add(new Product(5, "Product 5", 1200, "Stefan", "opis 5 "));
+        offers.add(new Service(1, "service 1", 1200, "Stefan"));
+        offers.add(new Product(2, "Product 2", 1200, "Stefan"));
+        offers.add(new Service(3, "service 3", 1200, "Stefan"));
+        offers.add(new Service(4, "service 4", 1200, "Stefan"));
+        offers.add(new Product(5, "Product 5", 1200, "Stefan"));
     }
 }

@@ -2,4 +2,8 @@
     <string name="app_name">Event Planner</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="filter">FILTER</string>
+    <string name="sort">SORT</string>
+    <string name="events">EVENTS</string>
+    <string name="products_amp_services"><![CDATA[PRODUCTS & SERVICES]]></string>
 </resources>

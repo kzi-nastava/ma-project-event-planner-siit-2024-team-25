@@ -10,7 +10,7 @@
     app:strokeColor="@android:color/darker_gray"
     app:cornerRadius="8dp"
     android:elevation="4dp"
-    android:id="@+id/top_event_card_item"
+    android:id="@+id/home_offering_card_item"
     android:background="@color/white">
 
     <LinearLayout
@@ -18,10 +18,10 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:layout_weight="1"
-        android:background="@color/primary">
+        android:background="@color/secondary">
 
         <ImageView
-            android:id="@+id/top_event_picture"
+            android:id="@+id/home_offering_picture"
             android:layout_width="80dp"
             android:layout_height="68dp"
             android:layout_marginEnd="5dp"
@@ -32,12 +32,11 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/primary">
+            android:background="@color/secondary">
 
 
             <TextView
-
-                android:id="@+id/top_event_name"
+                android:id="@+id/home_offering_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -50,25 +49,25 @@
                 />
 
             <TextView
-                android:id="@+id/top_event_organizer"
+                android:id="@+id/home_offering_owner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/top_event_name"
+                android:layout_below="@id/home_offering_name"
                 android:layout_alignParentLeft="true"
                 android:layout_marginBottom="4dp"
-                android:layout_toLeftOf="@id/top_event_date"
-                android:textColor="@android:color/darker_gray"
+                android:layout_toLeftOf="@id/home_offering_price"
+                android:textColor="@android:color/white"
                 android:textSize="12sp"
                 android:textStyle="italic"
                 android:paddingLeft="10dp"/>
 
             <TextView
-                android:id="@+id/top_event_date"
+                android:id="@+id/home_offering_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/top_event_name"
+                android:layout_below="@id/home_offering_name"
                 android:layout_alignParentRight="true"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@android:color/white"
                 android:textSize="12sp"
                 android:textStyle="italic"
                 android:paddingRight="10dp"/>

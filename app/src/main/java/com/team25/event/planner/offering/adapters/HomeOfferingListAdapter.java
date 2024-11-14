@@ -1,6 +1,6 @@
 package com.team25.event.planner.offering.adapters;
+
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +17,14 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.offering.model.Offering;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class TopOfferingsListAdapter extends ArrayAdapter<Offering> {
+public class HomeOfferingListAdapter extends ArrayAdapter<Offering> {
 
 
     private ArrayList<Offering> offerings;
 
-    public TopOfferingsListAdapter(Context context, ArrayList<Offering> events) {
+    public HomeOfferingListAdapter(Context context, ArrayList<Offering> events) {
         super(context, R.layout.home_page_top_event, events);
         this.offerings = events;
     }
@@ -51,14 +50,14 @@ public class TopOfferingsListAdapter extends ArrayAdapter<Offering> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Offering offering = getItem(position);
         if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.home_page_top_offer,
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.home_page_offering_card,
                     parent, false);
         }
-        MaterialCardView offerCard = convertView.findViewById(R.id.top_offer_card_item);
-        TextView offerName = convertView.findViewById(R.id.top_offer_name);
-        TextView offerOwner = convertView.findViewById(R.id.top_offer_owner);
-        TextView offerPrice = convertView.findViewById(R.id.top_offer_price);
-        ImageView offerIcon = convertView.findViewById(R.id.top_offer_picture);
+        MaterialCardView offerCard = convertView.findViewById(R.id.home_offering_card_item);
+        TextView offerName = convertView.findViewById(R.id.home_offering_name);
+        TextView offerOwner = convertView.findViewById(R.id.home_offering_owner);
+        TextView offerPrice = convertView.findViewById(R.id.home_offering_price);
+        ImageView offerIcon = convertView.findViewById(R.id.home_offering_picture);
 
         if(offering != null){
             offerName.setText(offering.getName());

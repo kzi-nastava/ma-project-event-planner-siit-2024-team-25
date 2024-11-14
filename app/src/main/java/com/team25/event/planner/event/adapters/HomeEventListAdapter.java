@@ -56,10 +56,10 @@ public class HomeEventListAdapter extends ArrayAdapter<Event> {
                     parent, false);
         }
         MaterialCardView eventCard = convertView.findViewById(R.id.event_card_item);
-        TextView eventName = convertView.findViewById(R.id.top_event_name);
-        TextView eventOrganizer = convertView.findViewById(R.id.top_event_organizer);
-        TextView eventDate = convertView.findViewById(R.id.top_event_date);
-        ImageView eventIcon = convertView.findViewById(R.id.top_offer_picture);
+        TextView eventName = convertView.findViewById(R.id.home_event_name);
+        TextView eventOrganizer = convertView.findViewById(R.id.home_event_organizer);
+        TextView eventDate = convertView.findViewById(R.id.home_event_date);
+        ImageView eventIcon = convertView.findViewById(R.id.home_event_picture);
 
         eventIcon.setImageResource(R.drawable.ic_heart);
         boolean[] isClicked = {false};

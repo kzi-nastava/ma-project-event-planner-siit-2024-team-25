@@ -43,25 +43,25 @@
             >
 
             <Button
-                android:id="@+id/btnFilters"
+                android:id="@+id/filter_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.7"
-                android:text="Filter"
+                android:text="@string/filter"
                 tools:ignore="TextContrastCheck"
                 android:backgroundTint="@color/primary"
                 android:textColor="@color/white"/>
 
 
-            <Spinner
-                android:id="@+id/btnSort"
+            <Button
+                android:id="@+id/sort_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="0.3"
-                android:text="Sort"
-                android:contentDescription="Sort"
-                />
+                android:layout_weight="0.7"
+                android:text="@string/sort"
+                tools:ignore="TextContrastCheck"
+                android:backgroundTint="@color/primary"
+                android:textColor="@color/white"/>
         </LinearLayout>
 
         <ScrollView
@@ -107,6 +107,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
+
                             >
 
 
@@ -114,15 +115,20 @@
                                 android:id="@+id/event_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="EVENTS"
-                                android:textColor="@color/white" />
+                                android:text="@string/events"
+                                android:textColor="@color/white"
+                                app:rippleColor="@color/white"
+                                android:backgroundTint="@color/primary"
+                                />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/ps_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="PRODUCTS &amp; SERVICES"
-                                android:textColor="@color/white" />
+                                android:text="@string/products_amp_services"
+                                android:textColor="@color/white"
+                                app:rippleColor="@color/white"
+                                android:backgroundTint="@color/primary" />
 
                         </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -132,7 +138,7 @@
                     <FrameLayout
                         android:id="@+id/home_container"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         app:layout_constraintTop_toBottomOf="@id/home_container_nav"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
