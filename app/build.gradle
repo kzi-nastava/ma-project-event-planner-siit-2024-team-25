@@ -51,6 +51,10 @@ dependencies {
 
     implementation libs.phonemoji
 
+    implementation libs.lottie
+
+    implementation libs.imagepicker
+
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
