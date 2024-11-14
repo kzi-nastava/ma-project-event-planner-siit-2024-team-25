@@ -13,5 +13,8 @@
         android:id="@id/nav_graph_registration"
         android:icon="@drawable/ic_person_add_alt_1"
         android:title="@string/signup" />
+    <item
+        android:id="@id/ownerHomePage"
+        android:title="@string/owner_page"/>
 
 </menu>

@@ -20,6 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.team25.event.planner.databinding.ActivityMainBinding;
 
+
 public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private ActivityMainBinding binding;
@@ -27,9 +28,21 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private AppBarConfiguration appBarConfiguration;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*setContentView(R.layout.activity_main);
+
+        if (savedInstanceState == null) {
+            // Load TopEventsFragment dynamically
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_frame_container, new OwnerPageBaseFragment())
+                    .commit();
+        }*/
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
@@ -112,5 +125,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
+
     }
 }

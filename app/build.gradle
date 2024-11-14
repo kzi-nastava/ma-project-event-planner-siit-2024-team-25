@@ -3,6 +3,9 @@ plugins {
 }
 
 android {
+    viewBinding {
+        enable = true
+    }
     namespace 'com.team25.event.planner'
     compileSdk 34
 
@@ -40,6 +43,13 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
 
+    implementation libs.legacy.support.v4
+    implementation libs.recyclerview
+
+    implementation libs.espresso.core
+    implementation libs.datastore.core.android
+
+
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
 
@@ -61,4 +71,5 @@ dependencies {
 
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok
+
 }

@@ -27,4 +27,35 @@
             app:destination="@id/nav_graph_registration" />
     </fragment>
     <include app:graph="@navigation/nav_graph_registration" />
+    <fragment
+        android:id="@+id/ownerHomePage"
+        android:name="com.team25.event.planner.product_service.fragments.OwnerHomePage"
+        android:label="OwnerHomePage" >
+        <action
+            android:id="@+id/action_ownerHomePage_to_serviceAddForm"
+            app:destination="@id/serviceAddForm" />
+    </fragment>
+    <fragment
+        android:id="@+id/serviceAddForm"
+        android:name="com.team25.event.planner.product_service.fragments.ServiceAddForm"
+        android:label="fragment_service_add_form"
+        tools:layout="@layout/fragment_service_add_form" >
+        <action
+            android:id="@+id/action_serviceAddForm_to_secondPageCreatingServiceFragment"
+            app:destination="@id/secondPageCreatingServiceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/secondPageCreatingServiceFragment"
+        android:name="com.team25.event.planner.product_service.fragments.SecondPageCreatingServiceFragment"
+        android:label="fragment_second_page_creating"
+        tools:layout="@layout/fragment_second_page_creating" >
+        <action
+            android:id="@+id/action_secondPageCreatingServiceFragment_to_finishPageCreateingCerviceFragment"
+            app:destination="@id/finishPageCreateingCerviceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/finishPageCreateingCerviceFragment"
+        android:name="com.team25.event.planner.product_service.fragments.FinishPageCreateingCerviceFragment"
+        android:label="fragment_finish_page_createing_cervice"
+        tools:layout="@layout/fragment_finish_page_createing_cervice" />
 </navigation>
