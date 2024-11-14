@@ -2,4 +2,48 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- PRIMARY -->
+    <color name="primary_orange_900">#8F4D00</color>
+    <color name="primary_orange_700">#FB8C00</color>
+    <color name="primary_orange_500">#FFAE40</color>
+    <color name="primary_orange_300">#FFE7BB</color>
+
+    <!-- SECONDARY -->
+    <color name="secondary_cyan_900">#006064</color>
+    <color name="secondary_cyan_700">#0097A7</color>
+    <color name="secondary_cyan_500">#00BCD4</color>
+    <color name="secondary_cyan_300">#B2EBF2</color>
+
+    <!-- TEXT -->
+    <color name="text_900">#1A1714</color>
+    <color name="text_800">#2D251F</color>
+    <color name="text_700">#4D413A</color>
+    <color name="text_600">#7A6B62</color>
+    <color name="text_500">#A69589</color>
+    <color name="text_400">#D2C8C1</color>
+    <color name="text_300">#E5DDD8</color>
+
+    <!-- ACCENT COLORS -->
+    <color name="accent_red">#D32F2F</color>
+    <color name="accent_red_light">#FF8A80</color>
+    <color name="accent_orange">#F57C00</color>
+    <color name="accent_green">#388E3C</color>
+    <color name="accent_blue">#1976D2</color>
+    <color name="accent_yellow">#FBC02D</color>
+
+    <!-- BG -->
+    <color name="bg_dark">#2F2515</color>
+    <color name="bg_orange">#C17337</color>
+    <color name="bg_light_primary">#FFF4E6</color>
+    <color name="bg_dark_primary">#170d00</color>
+    <color name="bg_dark_surface">#241604</color>
+
+    <!-- MENU STATES -->
+    <color name="menu_item_dark_color_state">#E5DDD8</color>
+
+    <!-- IMAGE PICKER -->
+    <color name="ucrop_color_toolbar">@color/primary_orange_700</color>
+    <color name="ucrop_color_statusbar">@color/primary_orange_900</color>
+    <color name="ucrop_color_widget_active">@color/primary_orange_700</color>
 </resources>

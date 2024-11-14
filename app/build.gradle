@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    viewBinding{
+    viewBinding {
         enable = true
     }
     namespace 'com.team25.event.planner'
@@ -29,6 +29,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+
     buildFeatures {
         viewBinding true
         dataBinding true
@@ -41,16 +42,33 @@ dependencies {
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
+
     implementation libs.legacy.support.v4
     implementation libs.recyclerview
-    implementation libs.lifecycle.livedata.ktx
-    implementation libs.lifecycle.viewmodel.ktx
+
     implementation libs.espresso.core
     implementation libs.datastore.core.android
-    implementation libs.projectlombok.lombok
+
+
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
+
+    implementation libs.lifecycle.viewmodel.ktx
+    implementation libs.lifecycle.livedata.ktx
+
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+
+    implementation libs.phonemoji
+
+    implementation libs.lottie
+
+    implementation libs.imagepicker
+
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok
 
