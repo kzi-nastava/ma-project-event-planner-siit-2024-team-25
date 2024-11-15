@@ -10,44 +10,35 @@ import android.view.ViewGroup;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.event.adapters.HomeEventListAdapter;
-import com.team25.event.planner.event.model.EventCard;
-
-import java.util.ArrayList;
+import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 
 public class HomeEventsListFragment extends ListFragment {
-
-
-    private static final String ARG_PARAM = "param";
-    private ArrayList<EventCard> eventCards;
     private HomeEventListAdapter adapter;
-
+    private HomeEventViewModel homeEventViewModel;
 
     public HomeEventsListFragment() {
-        // Required empty public constructor
     }
 
+    private HomeEventsListFragment(HomeEventViewModel homeEventViewModel) {
+        this.homeEventViewModel = homeEventViewModel;
+    }
 
-    public static HomeEventsListFragment newInstance(ArrayList<EventCard> eventCards) {
-        HomeEventsListFragment fragment = new HomeEventsListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, eventCards);
-        fragment.setArguments(args);
-        return fragment;
+    public static HomeEventsListFragment newInstance(HomeEventViewModel homeEventViewModel) {
+        return new HomeEventsListFragment(homeEventViewModel);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            this.eventCards = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new HomeEventListAdapter(getActivity(), eventCards);
-            setListAdapter(adapter);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        homeEventViewModel.events.observe(getViewLifecycleOwner(), (eventCards -> {
+            adapter = new HomeEventListAdapter(getActivity(), eventCards);
+            setListAdapter(adapter);
+        }));
         return inflater.inflate(R.layout.fragment_home_events_list, container, false);
     }
 }

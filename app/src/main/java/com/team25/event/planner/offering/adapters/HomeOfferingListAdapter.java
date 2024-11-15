@@ -18,13 +18,14 @@ import com.team25.event.planner.offering.model.OfferingCard;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
 
 
-    private ArrayList<OfferingCard> offeringCards;
+    private List<OfferingCard> offeringCards;
 
-    public HomeOfferingListAdapter(Context context, ArrayList<OfferingCard> events) {
+    public HomeOfferingListAdapter(Context context, List<OfferingCard> events) {
         super(context, R.layout.home_page_top_event, events);
         this.offeringCards = events;
     }

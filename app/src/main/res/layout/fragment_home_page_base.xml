@@ -3,25 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="filterViewModel"
-            type="com.team25.event.planner.IFilterViewModel" />
-
-        <variable
-            name="sortViewModel"
-            type="com.team25.event.planner.ISortViewModel" />
-    </data>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".home.HomePageBaseFragment"
+        tools:context=".home.fragments.HomePageBaseFragment"
         tools:showIn="@layout/activity_home_base">
 
 
+
+
+
         <LinearLayout
+            android:id="@+id/linear_layout_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -63,7 +57,6 @@
                     tools:ignore="TextContrastCheck"
                     android:backgroundTint="@color/primary"
                     android:textColor="@color/white"
-                    android:onClick="@{() -> filterViewModel.showFilter()}"
                     />
 
 
@@ -76,7 +69,6 @@
                     tools:ignore="TextContrastCheck"
                     android:backgroundTint="@color/primary"
                     android:textColor="@color/white"
-                    android:onClick="@{() -> sortViewModel.showSort()}"
                     />
             </LinearLayout>
 
@@ -161,5 +153,20 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>
         </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_message_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="40dp"
+            android:clickable="true"
+            android:backgroundTint="@color/white"
+            android:theme="@style/Base.Theme.EventPlanner"
+            app:queryHint="Search"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

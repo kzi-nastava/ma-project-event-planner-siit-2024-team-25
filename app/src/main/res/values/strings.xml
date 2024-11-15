@@ -24,6 +24,45 @@
     <string name="category">Category</string>
     <string name="duration">Duration (min)</string>
     <string name="available">Available</string>
-    <string name="description">Description</string>
     <string name="products_services_sort"><![CDATA[Products & services sort]]></string>
+
+    <string name="Open">Open</string>
+    <string name="Close">Close</string>
+
+    <string name="home">Home</string>
+    <string name="login">Login</string>
+    <string name="signup">Signup</string>
+    <string name="navbar_header_title">Event Planner 🗓</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Closed</string>
+    <string name="nav_subtitle_default">Please sign in to access full app functionality</string>
+    <string name="email">Email</string>
+    <string name="login_title">Log in to start using Event Planner</string>
+    <string name="password">Password</string>
+    <string name="event_organizer">Event organizer</string>
+    <string name="role_choice_title">Choose your role</string>
+    <string name="vendor">Product/Service Provider</string>
+    <string name="go_to_login">Go to login</string>
+    <string name="personal_information">Personal information</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="select_profile_picture">Select Profile Picture</string>
+    <string name="profile_picture_preview">Profile picture preview</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="next">Next</string>
+    <string name="register_organizer_title">Additional information</string>
+    <string name="address">Address</string>
+    <string name="phone_number">Phone number</string>
+    <string name="finish">Finish</string>
+    <string name="register_vendor_title">Company information</string>
+    <string name="description">Description</string>
+    <string name="back">Back</string>
+    <string name="registration_successful">Registration Successful!</string>
+    <string name="registration_success_description">Your account has been created successfully. Please login to continue.</string>
+    <string name="choose_profile_picture">Choose profile picture</string>
+    <string name="owner_page">Owner page</string>
+    <string name="all">All</string>
+    <string name="services">Services</string>
+    <string name="products">Products</string>
+
 </resources>

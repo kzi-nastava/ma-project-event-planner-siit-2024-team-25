@@ -2,7 +2,6 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +45,7 @@
                     android:layout_marginBottom="4dp"/>
 
                 <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/sort_category"
+                    android:id="@+id/event_sort_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
@@ -61,7 +60,7 @@
                     android:layout_marginBottom="4dp"/>
 
                 <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/sort_type"
+                    android:id="@+id/event_sort_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary"
@@ -73,6 +72,7 @@
                     android:layout_marginStart="200dp"
                     android:backgroundTint="@color/primary"
                     android:textColor="@color/white"
+                    android:id="@+id/event_sort_button"
                     android:text="@string/sort" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

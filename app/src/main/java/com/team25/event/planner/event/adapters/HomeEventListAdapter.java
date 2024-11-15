@@ -19,12 +19,13 @@ import com.team25.event.planner.event.model.EventCard;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
 
-    private ArrayList<EventCard> eventCards;
+    private List<EventCard> eventCards;
 
-    public HomeEventListAdapter(Context context, ArrayList<EventCard> eventCards) {
+    public HomeEventListAdapter(Context context, List<EventCard> eventCards) {
         super(context, R.layout.home_page_top_event, eventCards);
         this.eventCards = eventCards;
     }

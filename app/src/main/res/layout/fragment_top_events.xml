@@ -12,8 +12,7 @@
         android:textSize="25sp"
         android:textAlignment="center"
         android:padding="16dp"
-        android:gravity="center"
-        android:textColor="@color/primary"/>
+        android:gravity="center" />
 
     <ScrollView
         android:id="@+id/topEventsContainer"

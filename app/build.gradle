@@ -3,7 +3,6 @@ plugins {
 }
 
 android {
-
     viewBinding {
         enabled = true
     }
@@ -36,6 +35,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
 }
 
@@ -47,7 +47,29 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.legacy.support.v4
     implementation libs.recyclerview
+    implementation libs.espresso.core
+    implementation libs.datastore.core.android
+
+
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
+
+    implementation libs.lifecycle.viewmodel.ktx
+
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+
+    implementation libs.phonemoji
+
+    implementation libs.lottie
+
+    implementation libs.imagepicker
+
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
+
 }

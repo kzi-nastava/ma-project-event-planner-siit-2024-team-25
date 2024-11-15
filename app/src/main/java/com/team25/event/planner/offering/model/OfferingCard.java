@@ -5,18 +5,16 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
 public class OfferingCard implements Parcelable {
     private int id;
     private String name;
     private double price;
     private String owner;
-
-    public OfferingCard(int id, String name, double price, String owner) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.owner = owner;
-    }
 
     protected OfferingCard(Parcel in) {
         id = in.readInt();
@@ -25,39 +23,6 @@ public class OfferingCard implements Parcelable {
         owner = in.readString();
     }
 
-
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 
 
     @Override

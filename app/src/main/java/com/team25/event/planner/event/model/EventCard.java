@@ -8,6 +8,12 @@ import androidx.annotation.NonNull;
 
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+
+@Data
+@AllArgsConstructor
 public class EventCard implements Parcelable {
 
     private int id;
@@ -32,45 +38,6 @@ public class EventCard implements Parcelable {
             return new EventCard[size];
         }
     };
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getOrganizer() {
-        return organizer;
-    }
-
-    public void setOrganizer(String organizer) {
-        this.organizer = organizer;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public EventCard(int id, String name, String organizer, Date date) {
-        this.id = id;
-        this.name = name;
-        this.organizer = organizer;
-        this.date = date;
-    }
 
     @Override
     public int describeContents() {
