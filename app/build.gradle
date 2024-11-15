@@ -6,6 +6,15 @@ android {
     viewBinding {
         enable = true
     }
+
+    dataBinding {
+        enabled = true
+    }
+
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
     namespace 'com.team25.event.planner'
     compileSdk 34
 
@@ -30,10 +39,7 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
 
-    buildFeatures {
-        viewBinding true
-        dataBinding true
-    }
+
 }
 
 dependencies {

@@ -16,44 +16,38 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.R;
-import com.team25.event.planner.databinding.FragmentFinishPageCreateingCerviceBinding;
-import com.team25.event.planner.databinding.FragmentSecondPageCreatingBinding;
-import com.team25.event.planner.product_service.viewModels.FinishPageCreateingCerviceViewModel;
-import com.team25.event.planner.product_service.viewModels.SecondPageCreatingViewModel;
+import com.team25.event.planner.databinding.FragmentFinishPageCreatingServiceBinding;
+import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewModel;
 
-public class FinishPageCreateingCerviceFragment extends Fragment {
+public class FinishPageCreatingServiceFragment extends Fragment {
 
-    private FinishPageCreateingCerviceViewModel mViewModel;
+    private ServiceAddFormViewModel mViewModel;
 
     private NavController navController;
 
-    public static FinishPageCreateingCerviceFragment newInstance() {
-        return new FinishPageCreateingCerviceFragment();
+    public static FinishPageCreatingServiceFragment newInstance() {
+        return new FinishPageCreatingServiceFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        FragmentFinishPageCreateingCerviceBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_finish_page_createing_cervice, container, false);
+        FragmentFinishPageCreatingServiceBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_finish_page_creating_service, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
-
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-
-        mViewModel= new ViewModelProvider(this).get(FinishPageCreateingCerviceViewModel.class);
+        mViewModel= new ViewModelProvider(this).get(ServiceAddFormViewModel.class);
         binding.setViewModel(mViewModel);
+
+        if(getArguments() != null){
+            TextView textView = binding.EditOrCreateServiceText;
+            textView.setText(R.string.edit_the_service);
+        }
 
         setObservers();
         return binding.getRoot();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(FinishPageCreateingCerviceViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     public void setObservers(){

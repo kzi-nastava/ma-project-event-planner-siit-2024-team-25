@@ -2,35 +2,29 @@ package com.team25.event.planner.product_service.adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
-import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.R;
-import com.team25.event.planner.product_service.fragments.ServiceAddForm;
 import com.team25.event.planner.product_service.model.Service;
-
 import java.util.ArrayList;
 
 public class ServiceListAdapter extends ArrayAdapter<Service> {
     private ArrayList<Service> aServices;
     private FragmentActivity fragmentActivity;
-
     private NavController navController;
 
     public ServiceListAdapter(Context context, ArrayList<Service> services, FragmentActivity fragmentActivity){
@@ -39,7 +33,6 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         this.fragmentActivity = fragmentActivity;
         navController = Navigation.findNavController(fragmentActivity, R.id.nav_host_fragment);
     }
-
     ///Returns number of elements list
     @Override
     public int getCount() {
@@ -77,8 +70,9 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {// Define the fragment you want to open
-
-                navController.navigate(R.id.action_ownerHomePage_to_serviceAddForm);
+                Bundle bundle = new Bundle();
+                bundle.putString("key",productTitle.getText().toString());
+                navController.navigate(R.id.action_ownerHomePage_to_serviceAddForm,bundle);
             }
         });
 
@@ -92,13 +86,9 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
                             Toast.makeText(getContext(), "Deleted: " + service.getName(), Toast.LENGTH_SHORT).show();
                         })
                         .setNegativeButton("No", (dialog, which) -> {
-                            // Code to execute when the "No" button is clicked
-                            dialog.dismiss(); // Close the dialog
+                            dialog.dismiss();
                         })
-
-
                         .create();
-
                 alertDialog.show();
             }
         });

@@ -2,6 +2,10 @@ package com.team25.event.planner.core;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.widget.SeekBar;
+import android.widget.Toast;
+
 
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.LiveData;
@@ -45,4 +49,34 @@ public class BindingAdapters {
             }
         });
     }
+
+
+    @BindingAdapter(value = {"app:onSeeking"})
+    public static void onProgressChanged(SeekBar seekBar, final OnProgressChanged seeking
+                                         ) {
+        if (seeking != null) {
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    seeking.onSeeking(seekBar, progress);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+        }
+    }
+    public interface OnProgressChanged {
+        void onSeeking(SeekBar seekBar, Integer progress);
+
+    }
+
 }
