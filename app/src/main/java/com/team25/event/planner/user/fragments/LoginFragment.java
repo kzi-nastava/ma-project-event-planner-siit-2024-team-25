@@ -33,11 +33,11 @@ public class LoginFragment extends Fragment {
     }
 
     private void setupObservers() {
-//        viewModel.loggedIn.observe(getViewLifecycleOwner(), loggedIn -> {
-//            if (loggedIn) {
-//                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-//                navController.navigate(R.id.action_homeFragment_to_loginFragment);
-//            }
-//        });
+        viewModel.loggedIn.observe(getViewLifecycleOwner(), loggedIn -> {
+            if (loggedIn) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+                navController.navigate(R.id.action_loginFragment_to_homeFragment);
+            }
+        });
     }
 }

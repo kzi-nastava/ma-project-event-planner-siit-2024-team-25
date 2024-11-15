@@ -21,10 +21,10 @@
 
         <!-- Surface and background colors -->
         <item name="android:colorBackground">@color/primary_dark</item>
-        <item name="colorSurface">@color/primary_dark</item>
-        <item name="colorSurfaceVariant">@color/primary_dark</item>
-        <item name="colorOnSurface">@color/primary_dark</item>
-        <item name="colorOnSurfaceVariant">@color/primary</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorSurfaceVariant">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnSurfaceVariant">@color/white</item>
 
         <!-- Status bar and navigation bar -->
         <item name="android:statusBarColor">@color/primary_dark</item>

@@ -12,6 +12,7 @@
         android:name="com.team25.event.planner.home.fragments.HomePageBaseFragment"
         android:label="Event Planner"
         tools:layout="@layout/fragment_home_page_base" >
+
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
