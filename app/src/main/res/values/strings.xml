@@ -1,6 +1,30 @@
 <resources>
     <string name="app_name">Event Planner</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="filter">FILTER</string>
+    <string name="sort">SORT</string>
+    <string name="events">EVENTS</string>
+    <string name="products_amp_services"><![CDATA[PRODUCTS & SERVICES]]></string>
+    <string name="event_filter">Event filter</string>
+    <string name="event_type">Event type</string>
+    <string name="privacy_type">Privacy type</string>
+    <string name="number_of_participants">Number of participants</string>
+    <string name="country">Country</string>
+    <string name="city">City</string>
+    <string name="start_date">Start date</string>
+    <string name="start_time">Start time</string>
+    <string name="end_date">End date</string>
+    <string name="end_time">End time</string>
+    <string name="sort_category">Sort category</string>
+    <string name="sort_type">Sort type</string>
+    <string name="event_sort">Event sort</string>
+    <string name="sans_serif">sans-serif</string>
+    <string name="product_services_filter"><![CDATA[Products & services filter]]></string>
+    <string name="price">Price</string>
+    <string name="category">Category</string>
+    <string name="duration">Duration (min)</string>
+    <string name="available">Available</string>
+    <string name="products_services_sort"><![CDATA[Products & services sort]]></string>
 
     <string name="Open">Open</string>
     <string name="Close">Close</string>
@@ -27,8 +51,6 @@
     <string name="last_name">Last name</string>
     <string name="next">Next</string>
     <string name="register_organizer_title">Additional information</string>
-    <string name="country">Country</string>
-    <string name="city">City</string>
     <string name="address">Address</string>
     <string name="phone_number">Phone number</string>
     <string name="finish">Finish</string>
@@ -39,6 +61,7 @@
     <string name="registration_success_description">Your account has been created successfully. Please login to continue.</string>
     <string name="choose_profile_picture">Choose profile picture</string>
     <string name="owner_page">Owner page</string>
+
     <string name="price">Price($)</string>
     <string name="creating_a_service">Creating a service</string>
     <string name="name">Name</string>
@@ -55,5 +78,10 @@
     <string name="nextPage">Next</string>
     <string name="cancel">Cancel</string>
     <string name="edit_the_service">Edit the service</string>
+
+    <string name="all">All</string>
+    <string name="services">Services</string>
+    <string name="products">Products</string>
+
 
 </resources>

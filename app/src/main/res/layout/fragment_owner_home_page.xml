@@ -71,5 +71,6 @@
         android:clickable="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/baseline_add_circle_24" />
+        android:src="@drawable/baseline_add_circle_24"
+        android:backgroundTint="@color/white"/>
 </RelativeLayout>

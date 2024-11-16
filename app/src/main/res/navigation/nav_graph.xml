@@ -5,14 +5,14 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
+
+
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.team25.event.planner.home.fragments.HomeFragment"
+        android:name="com.team25.event.planner.home.fragments.HomePageBaseFragment"
         android:label="Event Planner"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+        tools:layout="@layout/fragment_home_page_base" >
+
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -58,4 +58,5 @@
         android:name="com.team25.event.planner.product_service.fragments.FinishPageCreatingServiceFragment"
         android:label="fragment_finish_page_createing_cervice"
         tools:layout="@layout/fragment_finish_page_creating_service" />
+
 </navigation>

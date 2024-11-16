@@ -2,17 +2,17 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.EventPlanner" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Color scheme -->
-        <item name="colorPrimary">@color/primary_orange_500</item>
-        <item name="colorPrimaryVariant">@color/primary_orange_700</item>
-        <item name="colorPrimaryContainer">@color/primary_orange_900</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_medium</item>
+        <item name="colorPrimaryContainer">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/text_900</item>
-        <item name="colorOnPrimaryContainer">@color/white</item>
+        <item name="colorOnPrimaryContainer">@color/primary</item>
 
         <item name="colorSecondary">@color/secondary_cyan_500</item>
         <item name="colorSecondaryVariant">@color/secondary_cyan_700</item>
         <item name="colorSecondaryContainer">@color/secondary_cyan_900</item>
         <item name="colorOnSecondary">@color/text_900</item>
-        <item name="colorOnSecondaryContainer">@color/white</item>
+        <item name="colorOnSecondaryContainer">@color/primary</item>
 
         <item name="colorError">@color/accent_red_light</item>
         <item name="colorErrorContainer">#422B2B</item>
@@ -20,28 +20,30 @@
         <item name="colorOnErrorContainer">@color/accent_red_light</item>
 
         <!-- Surface and background colors -->
-        <item name="android:colorBackground">@color/bg_dark</item>
-        <item name="colorSurface">@color/bg_dark_surface</item>
-        <item name="colorSurfaceVariant">@color/primary_orange_900</item>
+        <item name="android:colorBackground">@color/primary_dark</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorSurfaceVariant">@color/white</item>
         <item name="colorOnSurface">@color/white</item>
-        <item name="colorOnSurfaceVariant">@color/text_300</item>
+        <item name="colorOnSurfaceVariant">@color/white</item>
 
         <!-- Status bar and navigation bar -->
-        <item name="android:statusBarColor">@color/bg_dark</item>
-        <item name="android:navigationBarColor">@color/bg_dark</item>~
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:navigationBarColor">@color/primary_dark</item>~
         <item name="android:windowLightNavigationBar">false</item>
 
         <!-- Navigation drawer-->
         <item name="colorNavigationItem">@color/menu_item_dark_color_state</item>
-        <item name="colorNavigationItemSelected">@color/primary_orange_300</item>
+        <item name="colorNavigationItemSelected">@color/primary</item>
 
         <!-- Ripple effect -->
-        <item name="colorControlHighlight">@color/primary_orange_700</item>
-        <item name="colorControlActivated">@color/primary_orange_300</item>
+        <item name="colorControlHighlight">@color/primary_dark</item>
+        <item name="colorControlActivated">@color/primary_light</item>
 
         <!-- Text appearances -->
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/text_300</item>
         <item name="android:textColorSecondary">@color/text_300</item>
         <item name="android:textColorHint">@color/text_500</item>
     </style>
+
+
 </resources>
