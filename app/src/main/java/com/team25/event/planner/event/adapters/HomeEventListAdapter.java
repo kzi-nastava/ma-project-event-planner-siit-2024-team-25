@@ -61,6 +61,8 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
         TextView eventOrganizer = convertView.findViewById(R.id.home_event_organizer);
         TextView eventDate = convertView.findViewById(R.id.home_event_date);
         ImageView eventIcon = convertView.findViewById(R.id.home_event_picture);
+        ImageView eventLocationImage = convertView.findViewById(R.id.home_event_location_image);
+        TextView eventLocation = convertView.findViewById(R.id.home_event_location);
 
         eventIcon.setImageResource(R.drawable.ic_heart);
         boolean[] isClicked = {false};
@@ -86,6 +88,8 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
             String formattedDate = dateFormat.format(event.getDate());
             eventDate.setText(formattedDate);
+            eventLocation.setText(event.getLocation());
+            eventLocationImage.setImageResource(R.drawable.ic_location_city);
             eventCard.setOnClickListener(v -> {
                 // Handle click on the item at 'position'
                 Log.i("ShopApp", "Clicked: " + event.getName() + ", id: " +

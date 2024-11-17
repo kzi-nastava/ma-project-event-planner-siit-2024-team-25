@@ -15,6 +15,7 @@ public class OfferingCard implements Parcelable {
     private String name;
     private double price;
     private String owner;
+    private double rating;
 
     protected OfferingCard(Parcel in) {
         id = in.readInt();
@@ -36,6 +37,7 @@ public class OfferingCard implements Parcelable {
         dest.writeString(name);
         dest.writeDouble(price);
         dest.writeString(owner);
+        dest.writeDouble(rating);
     }
 
     public static final Creator<OfferingCard> CREATOR = new Creator<OfferingCard>() {

@@ -15,7 +15,7 @@
         <item name="colorOnPrimaryContainer">@color/primary</item>
 
 
-        <item name="colorError">@color/primary</item>
+        <item name="colorError">@color/accent_red</item>
         <item name="colorErrorContainer">#FFEDEB</item>
         <item name="colorOnError">@color/white</item>
         <item name="colorOnErrorContainer">@color/primary</item>
@@ -52,8 +52,7 @@
     <style name="Theme.EventPlanner.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/primary_extra_light</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash</item>
-        <item name="android:tint">@color/primary</item>
-        <item name="postSplashScreenTheme">@style/Theme.EventPlanner</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.EventPlanner</item>
     </style>
 
 

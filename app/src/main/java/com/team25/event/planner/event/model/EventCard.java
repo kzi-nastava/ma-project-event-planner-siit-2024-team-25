@@ -20,11 +20,13 @@ public class EventCard implements Parcelable {
     private String name;
     private String organizer;
     private Date date;
+    private String location;
 
     protected EventCard(Parcel in) {
         id = in.readInt();
         name = in.readString();
         organizer = in.readString();
+        location = in.readString();
     }
 
     public static final Creator<EventCard> CREATOR = new Creator<EventCard>() {
@@ -49,5 +51,6 @@ public class EventCard implements Parcelable {
         dest.writeInt(id);
         dest.writeString(name);
         dest.writeString(organizer);
+        dest.writeString(location);
     }
 }

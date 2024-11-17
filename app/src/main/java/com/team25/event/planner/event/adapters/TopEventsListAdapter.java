@@ -35,35 +35,17 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard>{
         return eventCards.size();
     }
 
-    /*
-     * Ova metoda vraca pojedinacan element na osnovu pozicije
-     * */
     @Nullable
     @Override
     public EventCard getItem(int position) {
         return eventCards.get(position);
     }
 
-    /*
-     * Ova metoda vraca jedinstveni identifikator, za adaptere koji prikazuju
-     * listu ili niz, pozicija je dovoljno dobra. Naravno mozemo iskoristiti i
-     * jedinstveni identifikator objekta, ako on postoji.
-     * */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
-    /*
-     * Ova metoda popunjava pojedinacan element ListView-a podacima.
-     * Ako adapter cuva listu od n elemenata, adapter ce u petlji ici
-     * onoliko puta koliko getCount() vrati. Prilikom svake iteracije
-     * uzece java objekat sa odredjene poziciuje (model) koji cuva podatke,
-     * i layout koji treba da prikaze te podatke (view) npr R.layout.product_card.
-     * Kada adapter ima model i view, prosto ce uzeti podatke iz modela,
-     * popuniti view podacima i poslati listview da prikaze, i nastavice
-     * sledecu iteraciju.
-     * */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -77,6 +59,8 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard>{
         TextView eventOrganizer = convertView.findViewById(R.id.top_event_organizer);
         TextView eventDate = convertView.findViewById(R.id.top_event_date);
         ImageView eventIcon = convertView.findViewById(R.id.top_event_picture);
+        ImageView eventLocationImage = convertView.findViewById(R.id.top_event_location_image);
+        TextView eventLocation = convertView.findViewById(R.id.top_event_location);
 
         if(event != null){
             eventName.setText(event.getName());
@@ -86,6 +70,8 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard>{
             String formattedDate = dateFormat.format(event.getDate());
             eventDate.setText(formattedDate);
             eventIcon.setImageResource(R.drawable.ic_heart);
+            eventLocation.setText(event.getLocation());
+            eventLocationImage.setImageResource(R.drawable.ic_location_city);
 
 
             boolean[] isClicked = {false};

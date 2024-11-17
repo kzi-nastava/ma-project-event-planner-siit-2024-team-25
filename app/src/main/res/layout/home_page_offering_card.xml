@@ -62,10 +62,31 @@
                 android:paddingLeft="10dp"/>
 
             <TextView
+                android:id="@+id/home_offer_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@id/home_offering_owner"
+                android:layout_alignParentLeft="true"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:paddingLeft="10dp"/>
+
+            <ImageView
+                android:id="@+id/home_offer_star_image"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_below="@id/home_offering_owner"
+                android:contentDescription="Offering image"
+                android:layout_toRightOf="@id/home_offer_rating"
+                android:scaleType="fitStart"
+                />
+
+            <TextView
                 android:id="@+id/home_offering_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/home_offering_name"
+                android:layout_below="@id/home_offering_owner"
                 android:layout_alignParentRight="true"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"

@@ -57,6 +57,8 @@ public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
         TextView offerOwner = convertView.findViewById(R.id.top_offer_owner);
         TextView offerPrice = convertView.findViewById(R.id.top_offer_price);
         ImageView offerIcon = convertView.findViewById(R.id.top_offer_picture);
+        TextView offerRating = convertView.findViewById(R.id.top_offer_rating);
+        ImageView starImage = convertView.findViewById(R.id.top_offer_star_image);
 
         if(offeringCard != null){
             offerName.setText(offeringCard.getName());
@@ -64,9 +66,14 @@ public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
 
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
             String formattedPrice = currencyFormatter.format(offeringCard.getPrice());
-            String formattedDate = formattedPrice;
-            offerPrice.setText(formattedDate);
+            offerPrice.setText(formattedPrice);
             offerIcon.setImageResource(R.drawable.ic_heart);
+
+            NumberFormat ratingFormatter = NumberFormat.getNumberInstance();
+            ratingFormatter.setMinimumFractionDigits(1);
+            String formattedRating = ratingFormatter.format(offeringCard.getRating());
+            offerRating.setText(formattedRating);
+            starImage.setImageResource(R.drawable.ic_star);
 
             boolean[] isClicked = {false};
             offerIcon.setOnClickListener(v -> {
