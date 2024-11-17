@@ -2,6 +2,8 @@ package com.team25.event.planner.product_service.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -22,6 +24,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +46,14 @@ public class FinishPageCreatingServiceFragment extends Fragment {
     private static final int PERMISSION_REQUEST_CODE = 101;
     ShapeableImageView BSelectImage;
     ImageView IVPreviewImage;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private ActivityResultLauncher<Intent> galleryLauncher;
 
     public static FinishPageCreatingServiceFragment newInstance() {
         return new FinishPageCreatingServiceFragment();
     }
+
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -56,6 +63,8 @@ public class FinishPageCreatingServiceFragment extends Fragment {
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         mViewModel= new ViewModelProvider(this).get(ServiceAddFormViewModel.class);
         binding.setViewModel(mViewModel);
+
+
 
         if(getArguments() != null){
             TextView textView = binding.EditOrCreateServiceText;
@@ -68,12 +77,29 @@ public class FinishPageCreatingServiceFragment extends Fragment {
         BSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageChooser();
+                //imageChooser();
             }
         });
 
         setObservers();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        galleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Uri selectedImageUri = result.getData().getData();
+
+                        if (selectedImageUri != null) {
+                            IVPreviewImage.setImageURI(selectedImageUri);
+                        }
+                    }
+                }
+        );
     }
 
     public void setObservers(){
@@ -107,11 +133,15 @@ public class FinishPageCreatingServiceFragment extends Fragment {
             );
         } else*/
         {
-            Intent i = new Intent();
-            i.setType("image/*");
-            i.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
-        }
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            if (intent.resolveActivity(requireContext().getPackageManager()) != null) {
+                galleryLauncher.launch(intent);
+            } else {
+                Log.e("GalleryIntent", "No suitable app to handle the intent.");
+            }
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            galleryLauncher.launch(Intent.createChooser(intent, "Select Picture"));}
     }
 
     @Override
@@ -126,19 +156,5 @@ public class FinishPageCreatingServiceFragment extends Fragment {
             }
         }
     }
-    // this function is triggered when user
-    // selects the image from the imageChooser
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    IVPreviewImage.setImageURI(selectedImageUri);
-                }else{
-                    Toast.makeText(getContext(), "You did not select any picture", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
+
 }

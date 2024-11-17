@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 import lombok.Builder;
 import lombok.Data;
@@ -113,29 +114,27 @@ public class ServiceAddFormViewModel extends ViewModel {
 
     private void showDatePicker(final Context context, final MutableLiveData<String> dateLiveData) {
         Calendar calendar = Calendar.getInstance();
-        int year;
-        int month;
-        int dayOfMonth;
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Log.d("TAG", "showDatePicker: " + dateLiveData.getValue().isEmpty());
-        if(!dateLiveData.getValue().isEmpty()){
-            try{
-                Date date = dateFormat.parse(dateLiveData.getValue());
-                calendar.setTime(date);
-                dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                month = calendar.get(Calendar.MONTH); // Meseci su 0-indeksirani
-                year = calendar.get(Calendar.YEAR);
-            }catch (Exception e){
-                year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH);
-                dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-            }
+        if(dateLiveData.getValue()!=null){
+            if(!dateLiveData.getValue().isEmpty()){
+                try{
+                    Date date = dateFormat.parse(dateLiveData.getValue());
+                    calendar.setTime(date);
+                    dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                    month = calendar.get(Calendar.MONTH);
+                    year = calendar.get(Calendar.YEAR);
+                }catch (Exception e){
+                    year = calendar.get(Calendar.YEAR);
+                    month = calendar.get(Calendar.MONTH);
+                    dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                }
 
-        }else{
-            year = calendar.get(Calendar.YEAR);
-            month = calendar.get(Calendar.MONTH);
-            dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+            }
         }
+
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(context, (view, year1, month1, dayOfMonth1) -> {
             String date = dayOfMonth1 + "/" + (month1 + 1) + "/" + year1;
