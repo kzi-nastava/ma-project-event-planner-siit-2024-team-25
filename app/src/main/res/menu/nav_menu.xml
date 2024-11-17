@@ -15,6 +15,7 @@
         android:title="@string/signup" />
     <item
         android:id="@id/ownerHomePage"
+        android:icon="@drawable/profile_icon"
         android:title="@string/owner_page"/>
 
 </menu>
