@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.2"
+coreSplashscreenVersion = "1.0.1"
 imagepicker = "2.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -24,6 +25,7 @@ navigationUi = "2.8.4"
 phonemoji = "1.5.2"
 
 [libraries]
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreenVersion" }
 imagepicker = { module = "com.github.dhaval2404:imagepicker", version.ref = "imagepicker" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.EventPlanner" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Color scheme -->
@@ -45,5 +45,10 @@
         <item name="android:textColorHint">@color/text_500</item>
     </style>
 
-
+    <style name="Theme.EventPlanner.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/primary_dark</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash_white</item>
+        <item name="android:tint">@color/white</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.EventPlanner</item>
+    </style>
 </resources>
