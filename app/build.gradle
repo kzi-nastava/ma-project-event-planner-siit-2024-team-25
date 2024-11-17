@@ -64,9 +64,7 @@ dependencies {
 
     compileOnly libs.lombok
     annotationProcessor libs.lombok
-
     implementation libs.phonemoji
-
     implementation libs.lottie
 
     implementation libs.imagepicker
