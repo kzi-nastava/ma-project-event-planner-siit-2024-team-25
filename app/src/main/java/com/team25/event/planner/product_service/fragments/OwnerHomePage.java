@@ -7,20 +7,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentOwnerHomePageBinding;
-import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewModel;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,17 +29,14 @@ public class OwnerHomePage extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentOwnerHomePageBinding.inflate(inflater, container, false);
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         return binding.getRoot();
@@ -53,15 +45,12 @@ public class OwnerHomePage extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         binding.floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navController.navigate(R.id.action_ownerHomePage_to_serviceAddForm);
             }
         });
-
-
 
         binding.imageButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -92,7 +81,7 @@ public class OwnerHomePage extends Fragment {
                 spinner2.setAdapter(adapter2);
 
                 bottomSheetDialog.setContentView(dialogView);
-                Button cancelButton = dialogView.findViewById(R.id.button); // Zamenite sa tačnim ID-jem vašeg cancel dugmeta
+                Button cancelButton = dialogView.findViewById(R.id.button);
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -55,9 +55,8 @@
     </fragment>
     <fragment
         android:id="@+id/finishPageCreateingCerviceFragment"
-        android:name="com.team25.event.planner.product_service.fragments.FinishPageCreateingCerviceFragment"
+        android:name="com.team25.event.planner.product_service.fragments.FinishPageCreatingServiceFragment"
         android:label="fragment_finish_page_createing_cervice"
-        tools:layout="@layout/fragment_finish_page_createing_cervice" />
-
+        tools:layout="@layout/fragment_finish_page_creating_service" />
 
 </navigation>
