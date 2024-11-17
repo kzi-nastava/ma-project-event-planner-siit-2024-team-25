@@ -15,7 +15,7 @@
         <item name="colorOnPrimaryContainer">@color/primary</item>
 
 
-        <item name="colorError">@color/primary</item>
+        <item name="colorError">@color/accent_red</item>
         <item name="colorErrorContainer">#FFEDEB</item>
         <item name="colorOnError">@color/white</item>
         <item name="colorOnErrorContainer">@color/primary</item>
