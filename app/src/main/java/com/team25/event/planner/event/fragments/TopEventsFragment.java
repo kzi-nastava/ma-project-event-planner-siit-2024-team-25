@@ -59,10 +59,10 @@ public class TopEventsFragment extends Fragment {
 
     private void prepareEventList(ArrayList<EventCard> eventCards){
         eventCards.clear();
-        eventCards.add(new EventCard(1, "Concert", "Stefan", new Date()));
-        eventCards.add(new EventCard(2, "Concert", "Petar", new Date()));
-        eventCards.add(new EventCard(3, "Concert", "Milos", new Date()));
-        eventCards.add(new EventCard(4, "Concert", "Nikola", new Date()));
-        eventCards.add(new EventCard(5, "Concert", "Milan", new Date()));
+        eventCards.add(new EventCard(1, "Concert", "Stefan", new Date(), "Uzice"));
+        eventCards.add(new EventCard(2, "Concert", "Petar", new Date(), "Uzice"));
+        eventCards.add(new EventCard(3, "Concert", "Milos", new Date(),"Uzice"));
+        eventCards.add(new EventCard(4, "Concert", "Nikola", new Date(),"Uzice"));
+        eventCards.add(new EventCard(5, "Concert", "Milan", new Date(),"Uzice"));
     }
 }

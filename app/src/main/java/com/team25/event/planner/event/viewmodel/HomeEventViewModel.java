@@ -19,16 +19,16 @@ public class HomeEventViewModel extends ViewModel {
     public HomeEventViewModel(){
 
         List<EventCard> eventCards = new ArrayList<>();
-        eventCards.add(new EventCard(1, "Concert", "Stefan", new Date()));
-        eventCards.add(new EventCard(2, "Concert", "Petar", new Date()));
-        eventCards.add(new EventCard(3, "Concert", "Milos", new Date()));
-        eventCards.add(new EventCard(4, "Concert", "Nikola", new Date()));
-        eventCards.add(new EventCard(5, "Concert", "Milan", new Date()));
-        eventCards.add(new EventCard(1, "Concert", "Stefan", new Date()));
-        eventCards.add(new EventCard(2, "Concert", "Petar", new Date()));
-        eventCards.add(new EventCard(3, "Concert", "Milos", new Date()));
-        eventCards.add(new EventCard(4, "Concert", "Nikola", new Date()));
-        eventCards.add(new EventCard(5, "Concert", "Milan", new Date()));
+        eventCards.add(new EventCard(1, "Concert", "Stefan", new Date(), "Uzice"));
+        eventCards.add(new EventCard(2, "Concert", "Petar", new Date(), "Uzice"));
+        eventCards.add(new EventCard(3, "Concert", "Milos", new Date(),"Uzice"));
+        eventCards.add(new EventCard(4, "Concert", "Nikola", new Date(),"Uzice"));
+        eventCards.add(new EventCard(5, "Concert", "Milan", new Date(),"Uzice"));
+        eventCards.add(new EventCard(6, "Concert", "Stefan", new Date(),"Uzice"));
+        eventCards.add(new EventCard(7, "Concert", "Petar", new Date(),"Uzice"));
+        eventCards.add(new EventCard(8, "Concert", "Milos", new Date(),"Uzice"));
+        eventCards.add(new EventCard(9, "Concert", "Nikola", new Date(),"Uzice"));
+        eventCards.add(new EventCard(10, "Concert", "Milan", new Date(),"Uzice"));
         _events.setValue(eventCards);
     }
 
