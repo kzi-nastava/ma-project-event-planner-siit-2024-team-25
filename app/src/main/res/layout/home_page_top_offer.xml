@@ -23,7 +23,7 @@
         <ImageView
             android:id="@+id/top_offer_picture"
             android:layout_width="80dp"
-            android:layout_height="68dp"
+            android:layout_height="70dp"
             android:layout_marginEnd="5dp"
             android:background="@color/primary"
             android:contentDescription="Offering image"
@@ -36,7 +36,6 @@
 
 
             <TextView
-
                 android:id="@+id/top_offer_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -51,27 +50,48 @@
 
             <TextView
                 android:id="@+id/top_offer_owner"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/top_offer_name"
                 android:layout_alignParentLeft="true"
                 android:layout_marginBottom="4dp"
-                android:layout_toLeftOf="@id/top_offer_price"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="12sp"
                 android:textStyle="italic"
                 android:paddingLeft="10dp"/>
 
+
+            <TextView
+                android:id="@+id/top_offer_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@id/top_offer_owner"
+                android:layout_alignParentLeft="true"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:paddingLeft="10dp"/>
+
+            <ImageView
+                android:id="@+id/top_offer_star_image"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_below="@id/top_offer_owner"
+                android:contentDescription="Offering image"
+                android:layout_toRightOf="@id/top_offer_rating"
+                android:scaleType="fitStart"
+                />
+
             <TextView
                 android:id="@+id/top_offer_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/top_offer_name"
+                android:layout_below="@id/top_offer_owner"
                 android:layout_alignParentRight="true"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="12sp"
                 android:textStyle="italic"
-                android:paddingRight="10dp"/>
+                android:paddingRight="20dp"/>
         </RelativeLayout>
     </LinearLayout>
 

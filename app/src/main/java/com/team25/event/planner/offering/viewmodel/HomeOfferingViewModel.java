@@ -28,16 +28,16 @@ public class HomeOfferingViewModel extends ViewModel {
     public HomeOfferingViewModel(){
 
         List<OfferingCard> offeringCards = new ArrayList<>();
-        offeringCards.add(new ProductCard(1, "Product 1", 17500, "Stefan"));
-        offeringCards.add(new ProductCard(2, "Product 2", 17500, "Stefan"));
-        offeringCards.add(new ProductCard(3, "Product 3", 17500, "Stefan"));
-        offeringCards.add(new ProductCard(4, "Product 4", 17500, "Stefan"));
-        offeringCards.add(new ProductCard(5, "Product 5", 17500, "Stefan"));
-        offeringCards.add(new ServiceCard(6, "Service 1", 17500, "Stefan"));
-        offeringCards.add(new ServiceCard(7, "Service 2", 17500, "Stefan"));
-        offeringCards.add(new ServiceCard(8, "Service 3", 17500, "Stefan"));
-        offeringCards.add(new ServiceCard(9, "Service 4", 17500, "Stefan"));
-        offeringCards.add(new ServiceCard(10, "Service 5", 17500, "Stefan"));
+        offeringCards.add(new ProductCard(1, "Product 1", 17500, "Stefan", 5));
+        offeringCards.add(new ProductCard(2, "Product 2", 17500, "Stefan", 5));
+        offeringCards.add(new ProductCard(3, "Product 3", 17500, "Stefan",5));
+        offeringCards.add(new ProductCard(4, "Product 4", 17500, "Stefan", 5));
+        offeringCards.add(new ProductCard(5, "Product 5", 17500, "Stefan", 5));
+        offeringCards.add(new ServiceCard(6, "Service 1", 17500, "Stefan", 5));
+        offeringCards.add(new ServiceCard(7, "Service 2", 17500, "Stefan",5));
+        offeringCards.add(new ServiceCard(8, "Service 3", 17500, "Stefan",5));
+        offeringCards.add(new ServiceCard(9, "Service 4", 17500, "Stefan",5));
+        offeringCards.add(new ServiceCard(10, "Service 5", 17500, "Stefan",5));
         _offerings.setValue(offeringCards);
     }
 

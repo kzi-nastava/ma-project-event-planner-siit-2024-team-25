@@ -9,7 +9,7 @@
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="363dp"
+        android:layout_height="373.5dp"
         android:background="@drawable/home_page_group_border"
         android:padding="9dp"
         tools:listitem="@layout/home_page_top_offer"
