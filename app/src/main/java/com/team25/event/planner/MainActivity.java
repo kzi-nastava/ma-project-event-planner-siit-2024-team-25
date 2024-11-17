@@ -1,24 +1,121 @@
 package com.team25.event.planner;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.splashscreen.SplashScreen;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
+import com.team25.event.planner.databinding.ActivityMainBinding;
+
 
 public class MainActivity extends AppCompatActivity {
+    private NavController navController;
+    private ActivityMainBinding binding;
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+
+        SplashScreen.installSplashScreen(this);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+
+        setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        setSupportActionBar(binding.topAppBar);
+
+        drawer = binding.getRoot();
+        actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this, drawer,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        );
+        drawer.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    if (navController.getCurrentDestination() != null
+                            && navController.getCurrentDestination().getId() == R.id.homeFragment) {
+                        finish();
+                    } else {
+                        navController.popBackStack();
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
+            int id = navDestination.getId();
+
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
+            if (id == R.id.homeFragment) {
+                // Show drawer toggle only on the home fragment
+                actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            } else {
+                // Show back button on other fragments
+                actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                // Set a click listener on the navigation icon to handle the back action
+                actionBarDrawerToggle.setToolbarNavigationClickListener(v -> {
+                    if (MainActivity.this.navController.getCurrentBackStackEntry() != null) {
+                        MainActivity.this.navController.popBackStack();
+                    }
+                });
+            }
+        });
+
+        appBarConfiguration = new AppBarConfiguration.Builder(R.id.homeFragment).setOpenableLayout(drawer).build();
+
+        NavigationUI.setupWithNavController(binding.navView, navController);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
+
     }
 }

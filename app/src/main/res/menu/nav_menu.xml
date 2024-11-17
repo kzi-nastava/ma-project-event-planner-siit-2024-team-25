@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home" />
+    <item
+        android:id="@id/loginFragment"
+        android:icon="@drawable/ic_login"
+        android:title="@string/login" />
+    <item
+        android:id="@id/nav_graph_registration"
+        android:icon="@drawable/ic_person_add_alt_1"
+        android:title="@string/signup" />
+    <item
+        android:id="@id/ownerHomePage"
+        android:icon="@drawable/profile_icon"
+        android:title="@string/owner_page"/>
+
+</menu>

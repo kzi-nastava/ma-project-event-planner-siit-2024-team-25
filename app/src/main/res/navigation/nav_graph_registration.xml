@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_registration"
+    app:startDestination="@id/registerRoleFragment">
+
+    <fragment
+        android:id="@+id/registerRoleFragment"
+        android:name="com.team25.event.planner.user.fragments.register.RegisterRoleFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register_role" >
+        <action
+            android:id="@+id/action_registerRoleFragment_to_registerGeneralInfoFragment"
+            app:destination="@id/registerGeneralInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerGeneralInfoFragment"
+        android:name="com.team25.event.planner.user.fragments.register.RegisterGeneralInfoFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register_general_info" >
+        <action
+            android:id="@+id/action_registerGeneralInfoFragment_to_registerOrganizerFragment"
+            app:destination="@id/registerOrganizerFragment" />
+        <action
+            android:id="@+id/action_registerGeneralInfoFragment_to_registerVendorFragment"
+            app:destination="@id/registerVendorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerOrganizerFragment"
+        android:name="com.team25.event.planner.user.fragments.register.RegisterOrganizerFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register_organizer" >
+        <action
+            android:id="@+id/action_registerOrganizerFragment_to_registerSuccessFragment"
+            app:destination="@id/registerSuccessFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerSuccessFragment"
+        android:name="com.team25.event.planner.user.fragments.register.RegisterSuccessFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register_success" />
+    <fragment
+        android:id="@+id/registerVendorFragment"
+        android:name="com.team25.event.planner.user.fragments.register.RegisterVendorFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register_vendor" >
+        <action
+            android:id="@+id/action_registerVendorFragment_to_registerSuccessFragment"
+            app:destination="@id/registerSuccessFragment" />
+    </fragment>
+</navigation>

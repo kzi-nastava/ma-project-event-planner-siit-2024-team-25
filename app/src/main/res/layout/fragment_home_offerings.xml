@@ -1,0 +1,55 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/offering_pagination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/OfferingsContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/white"
+        >
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/offering_prev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary"
+            app:icon="@drawable/ic_left"
+            app:iconGravity="start"
+            app:iconTint="@color/white" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/offering_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/offering_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary"
+            app:icon="@drawable/ic_right"
+            app:iconGravity="end"
+            app:iconTint="@color/white"
+            />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <ScrollView
+        android:id="@+id/OfferingsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/offering_pagination" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
