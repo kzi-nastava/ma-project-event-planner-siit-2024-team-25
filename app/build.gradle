@@ -54,6 +54,7 @@ dependencies {
     implementation libs.espresso.core
     implementation libs.datastore.core.android
 
+    implementation libs.androidx.core.splashscreen
 
     implementation libs.navigation.fragment
     implementation libs.navigation.ui

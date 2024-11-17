@@ -1,8 +1,8 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.EventPlanner" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-         <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimary">@color/primary</item>
         <item name="colorAccent">@color/white</item>
         <item name="colorSecondary">@color/secondary</item>
         <item name="colorButtonNormal">@color/white</item>
@@ -49,12 +49,20 @@
     <style name="Theme.EventPlanner" parent="Base.Theme.EventPlanner" />
 
 
+    <style name="Theme.EventPlanner.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/primary_extra_light</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_splash</item>
+        <item name="android:tint">@color/primary</item>
+        <item name="postSplashScreenTheme">@style/Theme.EventPlanner</item>
+    </style>
+
+
     <style name="DatePicker" parent="Theme.MaterialComponents.Light">
-        <item name="colorAccent"> @color/primary</item>
+        <item name="colorAccent">@color/primary</item>
     </style>
 
     <style name="TimePicker" parent="Theme.MaterialComponents.Light">
-        <item name="colorAccent"> @color/primary</item>
+        <item name="colorAccent">@color/primary</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
