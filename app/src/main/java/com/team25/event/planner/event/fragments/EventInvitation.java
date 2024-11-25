@@ -11,15 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentEventInvitationBinding;
 import com.team25.event.planner.event.adapters.EventInvitationsListAdapter;
 import com.team25.event.planner.event.viewmodel.EventInvitationViewModel;
 
 public class
 EventInvitation extends Fragment {
-
 
     private FragmentEventInvitationBinding binding;
     private EventInvitationsListAdapter adapter;
@@ -47,6 +46,7 @@ EventInvitation extends Fragment {
             eventName = getArguments().getString("name");
             eventId = getArguments().getLong("id");
             eventInvitationViewModel = new EventInvitationViewModel(eventId);
+
         }
     }
 
@@ -56,13 +56,20 @@ EventInvitation extends Fragment {
 
         binding = FragmentEventInvitationBinding.inflate(inflater, container, false);
         binding.titleTextView.setText(String.format("Email invitations for %s", eventName));
+        binding.setViewModel(eventInvitationViewModel);
+        binding.setLifecycleOwner(this);
         listView = binding.emailListView;
-
         eventInvitationViewModel.emails.observe(getViewLifecycleOwner(), (emails -> {
             NavController navController = Navigation.findNavController(requireView());
             adapter = new EventInvitationsListAdapter(requireContext(), emails, navController);
             listView.setAdapter(adapter);
         }));
+
+        eventInvitationViewModel.toastMessage.observe(getViewLifecycleOwner(), message -> {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        });
+
+
         return binding.getRoot();
     }
 }

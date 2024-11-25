@@ -64,6 +64,7 @@ public class EventInvitationsListAdapter extends ArrayAdapter<String> {
         if(email != null){
             emailText.setText(email);
             deleteImage.setImageResource(R.drawable.delete_icon);
+
         }
 
         return convertView;
