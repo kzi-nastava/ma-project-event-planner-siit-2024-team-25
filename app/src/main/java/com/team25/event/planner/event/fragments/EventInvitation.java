@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentEventInvitationBinding;
 import com.team25.event.planner.event.adapters.EventInvitationsListAdapter;
 import com.team25.event.planner.event.viewmodel.EventInvitationViewModel;
@@ -60,8 +61,7 @@ EventInvitation extends Fragment {
         binding.setLifecycleOwner(this);
         listView = binding.emailListView;
         eventInvitationViewModel.emails.observe(getViewLifecycleOwner(), (emails -> {
-            NavController navController = Navigation.findNavController(requireView());
-            adapter = new EventInvitationsListAdapter(requireContext(), emails, navController);
+            adapter = new EventInvitationsListAdapter(requireContext(), emails);
             listView.setAdapter(adapter);
         }));
 
@@ -69,6 +69,12 @@ EventInvitation extends Fragment {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
         });
 
+        eventInvitationViewModel.closeFragmentEvent.observe(getViewLifecycleOwner(), shouldClose -> {
+            if (shouldClose != null && shouldClose) {
+                NavController navController = Navigation.findNavController(requireView());
+                navController.navigate(R.id.action_eventInvitation_to_homeFragment);
+            }
+        });
 
         return binding.getRoot();
     }

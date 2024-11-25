@@ -65,5 +65,9 @@
         android:id="@+id/eventInvitation"
         android:name="com.team25.event.planner.event.fragments.EventInvitation"
         android:label="Send invitations"
-        tools:layout="@layout/fragment_event_invitation" />
+        tools:layout="@layout/fragment_event_invitation" >
+        <action
+            android:id="@+id/action_eventInvitation_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

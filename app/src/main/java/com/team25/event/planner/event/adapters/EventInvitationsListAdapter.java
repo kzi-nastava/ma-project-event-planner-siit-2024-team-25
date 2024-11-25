@@ -26,7 +26,7 @@ public class EventInvitationsListAdapter extends ArrayAdapter<String> {
 
     private List<String> emails;
 
-    public EventInvitationsListAdapter(Context context, List<String> emails, NavController navController) {
+    public EventInvitationsListAdapter(Context context, List<String> emails) {
         super(context, R.layout.event_invitation_email, emails);
         this.emails = emails;
     }

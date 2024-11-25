@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- ScrollView to make content scrollable -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -24,7 +23,6 @@
                 android:orientation="vertical"
                 tools:context=".event.fragments.EventInvitation">
 
-                <!-- Title TextView -->
                 <TextView
                     android:id="@+id/titleTextView"
                     android:layout_width="match_parent"
@@ -37,7 +35,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
-                <!-- Container for email input and add button -->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/container"
                     android:layout_width="match_parent"
@@ -83,7 +80,6 @@
                         android:onClick="@{() -> viewModel.addEmail()}" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <!-- ListView for emails (no ScrollView) -->
                 <ListView
                     android:id="@+id/email_list_view"
                     android:layout_width="match_parent"
@@ -93,13 +89,13 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"/>
+                    android:layout_marginRight="5dp"
+                    />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 
-        <!-- Send emails button in the bottom-right corner -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/send_emails"
             android:layout_width="wrap_content"
@@ -109,7 +105,8 @@
             app:tint="@color/primary"
             android:backgroundTint="@color/white"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="40dp"/>
+            android:layout_marginBottom="40dp"
+            android:onClick="@{() -> viewModel.sendEmails()}"/>
 
     </FrameLayout>
 

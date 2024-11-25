@@ -13,7 +13,8 @@ import java.util.List;
 
 public class EventInvitationViewModel {
     private Long eventId;
-
+    private final MutableLiveData<Boolean> _closeFragmentEvent = new MutableLiveData<>();
+    public final LiveData<Boolean> closeFragmentEvent = _closeFragmentEvent;
     private final MutableLiveData<String> _toastMessage = new MutableLiveData<>();
     public final LiveData<String> toastMessage = _toastMessage;
     private final MutableLiveData<List<String>> _emails = new MutableLiveData<>(new ArrayList<>());
@@ -47,7 +48,11 @@ public class EventInvitationViewModel {
     }
 
     public void sendEmails(){
+        List<String> currentEmails = new ArrayList<>();
+        _emails.setValue(currentEmails);
+        _toastMessage.setValue("Invitations for event was sent");
 
+        _closeFragmentEvent.setValue(true);
     }
 
     private boolean validateEmail() {
