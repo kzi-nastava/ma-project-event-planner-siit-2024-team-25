@@ -1,6 +1,8 @@
 package com.team25.event.planner.event.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +14,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.card.MaterialCardView;
+import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.R;
+import com.team25.event.planner.event.fragments.EventInvitation;
 import com.team25.event.planner.event.model.EventCard;
 
 import java.text.SimpleDateFormat;
@@ -24,10 +31,12 @@ import java.util.List;
 public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
 
     private List<EventCard> eventCards;
+    private NavController navController;
 
-    public HomeEventListAdapter(Context context, List<EventCard> eventCards) {
-        super(context, R.layout.home_page_top_event, eventCards);
+    public HomeEventListAdapter(Context context, List<EventCard> eventCards, NavController navController) {
+        super(context, R.layout.home_page_event_card, eventCards);
         this.eventCards = eventCards;
+        this.navController = navController;
     }
 
     @Override
@@ -96,6 +105,16 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
                         event.getId());
                 Toast.makeText(getContext(), "Clicked: " + event.getName() +
                         ", id: " + event.getId(), Toast.LENGTH_SHORT).show();
+            });
+
+            eventCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {// Define the fragment you want to open
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name",event.getName());
+                    bundle.putLong("id",event.getId());
+                    navController.navigate(R.id.action_homeFragment_to_eventInvitation,bundle);
+                }
             });
         }
 

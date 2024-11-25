@@ -72,6 +72,7 @@ public class ServiceListAdapter extends ArrayAdapter<Service> {
             public void onClick(View v) {// Define the fragment you want to open
                 Bundle bundle = new Bundle();
                 bundle.putString("key",productTitle.getText().toString());
+                Log.d("NavController", "Trenutna destinacija: " + navController.getCurrentDestination());
                 navController.navigate(R.id.action_ownerHomePage_to_serviceAddForm,bundle);
             }
         });

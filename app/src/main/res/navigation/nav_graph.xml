@@ -12,7 +12,9 @@
         android:name="com.team25.event.planner.home.fragments.HomePageBaseFragment"
         android:label="Event Planner"
         tools:layout="@layout/fragment_home_page_base" >
-
+        <action
+            android:id="@+id/action_homeFragment_to_eventInvitation"
+            app:destination="@id/eventInvitation" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -59,4 +61,9 @@
         android:label="fragment_finish_page_createing_cervice"
         tools:layout="@layout/fragment_finish_page_creating_service" />
 
+    <fragment
+        android:id="@+id/eventInvitation"
+        android:name="com.team25.event.planner.event.fragments.EventInvitation"
+        android:label="Send invitations"
+        tools:layout="@layout/fragment_event_invitation" />
 </navigation>

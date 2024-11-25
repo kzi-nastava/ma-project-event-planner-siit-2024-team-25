@@ -3,6 +3,8 @@ package com.team25.event.planner.event.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.ListFragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,9 +37,11 @@ public class HomeEventsListFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        homeEventViewModel.events.observe(getViewLifecycleOwner(), (eventCards -> {
-            adapter = new HomeEventListAdapter(getActivity(), eventCards);
-            setListAdapter(adapter);
+
+            homeEventViewModel.events.observe(getViewLifecycleOwner(), (eventCards -> {
+                NavController navController = Navigation.findNavController(requireView());
+                adapter = new HomeEventListAdapter(requireContext(), eventCards, navController);
+                setListAdapter(adapter);
         }));
         return inflater.inflate(R.layout.fragment_home_events_list, container, false);
     }
