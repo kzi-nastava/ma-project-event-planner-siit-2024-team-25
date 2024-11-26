@@ -81,6 +81,10 @@
     <string name="all">All</string>
     <string name="services">Services</string>
     <string name="products">Products</string>
+    <string name="maximum_participants">Maximum participants</string>
+    <string name="max_price">Max price</string>
+    <string name="min_price">Min price</string>
+    <string name="duration_min">Duration (min)</string>
 
 
 </resources>
