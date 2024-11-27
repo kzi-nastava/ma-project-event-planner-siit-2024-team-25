@@ -43,8 +43,14 @@ public class EventInvitationViewModel {
         }
     }
 
-    public void deleteEmail(){
+    public void deleteEmail(String email){
+        List<String> currentEmails = new ArrayList<>(_emails.getValue());
+        currentEmails.remove(email);
+        _emails.setValue(currentEmails);
 
+        _toastMessage.setValue("You remove: " + email);
+
+        this.email.setValue(null);
     }
 
     public void sendEmails(){

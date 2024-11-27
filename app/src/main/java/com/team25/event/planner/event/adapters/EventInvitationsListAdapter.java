@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 
 import com.google.android.material.card.MaterialCardView;
@@ -25,6 +27,9 @@ import java.util.List;
 public class EventInvitationsListAdapter extends ArrayAdapter<String> {
 
     private List<String> emails;
+
+    private final MutableLiveData<String> _deleteEmail = new MutableLiveData<>();
+    public final LiveData<String> deleteEmail = _deleteEmail;
 
     public EventInvitationsListAdapter(Context context, List<String> emails) {
         super(context, R.layout.event_invitation_email, emails);
@@ -66,6 +71,10 @@ public class EventInvitationsListAdapter extends ArrayAdapter<String> {
             deleteImage.setImageResource(R.drawable.delete_icon);
 
         }
+
+        deleteImage.setOnClickListener(v -> {
+            _deleteEmail.setValue(email);
+        });
 
         return convertView;
     }

@@ -63,10 +63,14 @@ EventInvitation extends Fragment {
         eventInvitationViewModel.emails.observe(getViewLifecycleOwner(), (emails -> {
             adapter = new EventInvitationsListAdapter(requireContext(), emails);
             listView.setAdapter(adapter);
+
+            adapter.deleteEmail.observe(getViewLifecycleOwner(), message -> {
+                eventInvitationViewModel.deleteEmail(message);
+            });
         }));
 
         eventInvitationViewModel.toastMessage.observe(getViewLifecycleOwner(), message -> {
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
         });
 
         eventInvitationViewModel.closeFragmentEvent.observe(getViewLifecycleOwner(), shouldClose -> {
@@ -75,6 +79,8 @@ EventInvitation extends Fragment {
                 navController.navigate(R.id.action_eventInvitation_to_homeFragment);
             }
         });
+
+
 
         return binding.getRoot();
     }
