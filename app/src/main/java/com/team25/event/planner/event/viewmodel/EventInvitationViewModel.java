@@ -1,0 +1,76 @@
+package com.team25.event.planner.event.viewmodel;
+
+import android.widget.Toast;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.team25.event.planner.core.Validation;
+import com.team25.event.planner.user.viewmodels.LoginViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class EventInvitationViewModel {
+    private Long eventId;
+    private final MutableLiveData<Boolean> _closeFragmentEvent = new MutableLiveData<>();
+    public final LiveData<Boolean> closeFragmentEvent = _closeFragmentEvent;
+    private final MutableLiveData<String> _toastMessage = new MutableLiveData<>();
+    public final LiveData<String> toastMessage = _toastMessage;
+    private final MutableLiveData<List<String>> _emails = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<String>> emails = _emails;
+
+    private final MutableLiveData<LoginViewModel.ErrorUiState> _errors = new MutableLiveData<>();
+    public final LiveData<LoginViewModel.ErrorUiState> errors = _errors;
+
+    public final MutableLiveData<String> email = new MutableLiveData<>();
+
+    public EventInvitationViewModel(Long eventId){
+        this.eventId = eventId;
+        List<String> newEmails = new ArrayList<>();
+        _emails.setValue(newEmails);
+    }
+
+    public void addEmail(){
+        if(validateEmail()){
+            List<String> currentEmails = new ArrayList<>(_emails.getValue());
+            currentEmails.add(email.getValue());
+            _emails.setValue(currentEmails);
+
+            _toastMessage.setValue("You added: " + email.getValue());
+
+            email.setValue(null);
+        }
+    }
+
+    public void deleteEmail(String email){
+        List<String> currentEmails = new ArrayList<>(_emails.getValue());
+        currentEmails.remove(email);
+        _emails.setValue(currentEmails);
+
+        _toastMessage.setValue("You remove: " + email);
+
+        this.email.setValue(null);
+    }
+
+    public void sendEmails(){
+        List<String> currentEmails = new ArrayList<>();
+        _emails.setValue(currentEmails);
+        _toastMessage.setValue("Invitations for event was sent");
+
+        _closeFragmentEvent.setValue(true);
+    }
+
+    private boolean validateEmail() {
+        boolean isValid = true;
+        LoginViewModel.ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = LoginViewModel.ErrorUiState.builder();
+
+        if (!Validation.isValidEmail(email.getValue())) {
+            errorUiStateBuilder.email("Please enter a valid email.");
+            isValid = false;
+        }
+
+        _errors.setValue(errorUiStateBuilder.build());
+        return isValid;
+    }
+}

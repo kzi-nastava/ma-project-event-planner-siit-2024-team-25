@@ -15,12 +15,6 @@ import com.team25.event.planner.event.model.EventCard;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TopEventsFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
 public class TopEventsFragment extends Fragment {
 
     private ArrayList<EventCard> eventCards = new ArrayList<EventCard>();
