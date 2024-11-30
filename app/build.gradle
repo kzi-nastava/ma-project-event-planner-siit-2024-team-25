@@ -76,4 +76,7 @@ dependencies {
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok
 
+    implementation libs.retrofit
+    implementation libs.converter.gson
+
 }
