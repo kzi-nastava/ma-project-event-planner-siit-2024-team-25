@@ -10,26 +10,23 @@ import android.view.ViewGroup;
 
 import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.databinding.FragmentTopEventsBinding;
-import com.team25.event.planner.event.model.EventCard;
+import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 
-import java.util.ArrayList;
-import java.util.Date;
 
 public class TopEventsFragment extends Fragment {
 
-    private ArrayList<EventCard> eventCards = new ArrayList<EventCard>();
+    private HomeEventViewModel _homeEventViewModel;
     private FragmentTopEventsBinding binding;
     int currentSelectedIndex;
 
-    public static TopEventsFragment newInstance() {
-        return new TopEventsFragment();
+    public TopEventsFragment(HomeEventViewModel homeEventViewModel){
+        _homeEventViewModel = homeEventViewModel;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        prepareEventList(eventCards);
         binding = FragmentTopEventsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -42,21 +39,12 @@ public class TopEventsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        FragmentTransition.to(TopEventsListFragment.newInstance(eventCards), requireActivity(), false, binding.topEventsContainer.getId());
+        FragmentTransition.to(TopEventsListFragment.newInstance(_homeEventViewModel), requireActivity(), false, binding.topEventsContainer.getId());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    private void prepareEventList(ArrayList<EventCard> eventCards){
-        eventCards.clear();
-        eventCards.add(new EventCard(1, "Concert", "Stefan", new Date(), "Uzice"));
-        eventCards.add(new EventCard(2, "Concert", "Petar", new Date(), "Uzice"));
-        eventCards.add(new EventCard(3, "Concert", "Milos", new Date(),"Uzice"));
-        eventCards.add(new EventCard(4, "Concert", "Nikola", new Date(),"Uzice"));
-        eventCards.add(new EventCard(5, "Concert", "Milan", new Date(),"Uzice"));
     }
 }

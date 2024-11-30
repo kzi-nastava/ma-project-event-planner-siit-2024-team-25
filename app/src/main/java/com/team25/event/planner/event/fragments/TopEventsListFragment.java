@@ -4,15 +4,16 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.team25.event.planner.R;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.team25.event.planner.event.adapters.TopEventsListAdapter;
 import com.team25.event.planner.event.model.EventCard;
+import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 
 import java.util.ArrayList;
 
@@ -21,37 +22,35 @@ public class TopEventsListFragment extends ListFragment {
 
     private TopEventsListAdapter adapter;
     private ArrayList<EventCard> topEventCards;
+    private HomeEventViewModel homeEventViewModel;
     private static final String ARG_PARAM = "param";
 
-    public TopEventsListFragment() {
-        // Required empty public constructor
+    private TopEventsListFragment(HomeEventViewModel homeEventViewModel) {
+        this.homeEventViewModel = homeEventViewModel;
+    }
+
+    public static TopEventsListFragment newInstance(HomeEventViewModel homeEventViewModel) {
+        return new TopEventsListFragment(homeEventViewModel);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the fragment layout
+        homeEventViewModel.topEvents.observe(getViewLifecycleOwner(), (eventCards -> {
+            adapter = new TopEventsListAdapter(requireContext(), eventCards);
+            setListAdapter(adapter);
+        }));
         return inflater.inflate(R.layout.fragment_top_event_list, container, false);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("ShopApp", "onCreate Products List Fragment");
+        homeEventViewModel = new ViewModelProvider(requireActivity()).get(HomeEventViewModel.class);
         if (getArguments() != null) {
             topEventCards = getArguments().getParcelableArrayList(ARG_PARAM);
             adapter = new TopEventsListAdapter(getActivity(), topEventCards);
             setListAdapter(adapter);
         }
-    }
-
-
-
-    public static TopEventsListFragment newInstance(ArrayList<EventCard> eventCards){
-        TopEventsListFragment fragment = new TopEventsListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, eventCards);
-        fragment.setArguments(args);
-        return fragment;
     }
 }
