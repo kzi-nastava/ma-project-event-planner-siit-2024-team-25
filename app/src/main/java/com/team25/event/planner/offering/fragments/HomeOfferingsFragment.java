@@ -28,10 +28,6 @@ public class HomeOfferingsFragment extends Fragment {
     private HomeOfferingViewModel homeOfferingViewModel;
     private FragmentEventsBinding binding;
 
-    public static TopEventsFragment newInstance() {
-        return new TopEventsFragment();
-    }
-
     public HomeOfferingsFragment(HomeOfferingViewModel homeOfferingViewModel){
         this.homeOfferingViewModel = homeOfferingViewModel;
     }

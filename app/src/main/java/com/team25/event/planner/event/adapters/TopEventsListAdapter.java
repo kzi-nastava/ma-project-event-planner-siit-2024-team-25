@@ -19,13 +19,16 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.event.model.EventCard;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TopEventsListAdapter extends ArrayAdapter<EventCard>{
 
-    private ArrayList<EventCard> eventCards;
+    private List<EventCard> eventCards;
 
-    public TopEventsListAdapter(Context context, ArrayList<EventCard> eventCards) {
+    public TopEventsListAdapter(Context context, List<EventCard> eventCards) {
         super(context, R.layout.home_page_top_event, eventCards);
         this.eventCards = eventCards;
     }
@@ -58,20 +61,29 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard>{
         TextView eventName = convertView.findViewById(R.id.top_event_name);
         TextView eventOrganizer = convertView.findViewById(R.id.top_event_organizer);
         TextView eventDate = convertView.findViewById(R.id.top_event_date);
+        TextView eventTime = convertView.findViewById(R.id.top_event_time);
         ImageView eventIcon = convertView.findViewById(R.id.top_event_picture);
         ImageView eventLocationImage = convertView.findViewById(R.id.top_event_location_image);
         TextView eventLocation = convertView.findViewById(R.id.top_event_location);
 
         if(event != null){
             eventName.setText(event.getName());
-            eventOrganizer.setText(event.getOrganizer());
+            eventOrganizer.setText(event.getOrganizerName());
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-            String formattedDate = dateFormat.format(event.getDate());
+
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+            String formattedDate = event.getStartDateTime().format(dateFormatter);
+            String formattedTime = event.getStartDateTime().format(timeFormatter);
+
             eventDate.setText(formattedDate);
+            eventTime.setText(formattedTime);
+
+
             eventIcon.setImageResource(R.drawable.ic_heart);
-            eventLocation.setText(event.getLocation());
-            eventLocationImage.setImageResource(R.drawable.ic_location_city);
+            eventLocation.setText(event.getCountry() + ", " + event.getCity());
+            eventLocationImage.setImageResource(R.drawable.ic_location);
 
 
             boolean[] isClicked = {false};

@@ -25,10 +25,6 @@ public class TopOfferingsFragment extends Fragment {
     private FragmentTopOfferingsBinding binding;
     int currentSelectedIndex;
 
-    public static TopEventsFragment newInstance() {
-        return new TopEventsFragment();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
