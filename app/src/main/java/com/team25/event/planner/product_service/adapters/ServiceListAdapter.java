@@ -21,13 +21,14 @@ import androidx.navigation.Navigation;
 import com.team25.event.planner.R;
 import com.team25.event.planner.product_service.model.Service;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ServiceListAdapter extends ArrayAdapter<Service> {
-    private ArrayList<Service> aServices;
+    private List<Service> aServices;
     private FragmentActivity fragmentActivity;
     private NavController navController;
 
-    public ServiceListAdapter(Context context, ArrayList<Service> services, FragmentActivity fragmentActivity){
+    public ServiceListAdapter(Context context, List<Service> services, FragmentActivity fragmentActivity){
         super(context, R.layout.service_card, services);
         aServices = services;
         this.fragmentActivity = fragmentActivity;

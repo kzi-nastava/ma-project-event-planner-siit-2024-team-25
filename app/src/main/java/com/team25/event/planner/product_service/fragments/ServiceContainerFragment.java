@@ -8,15 +8,19 @@ import android.view.ViewGroup;
 import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.databinding.FragmentServiceContainerBinding;
 import com.team25.event.planner.product_service.model.Service;
+import com.team25.event.planner.product_service.model.ServiceCard;
+import com.team25.event.planner.product_service.viewModels.ServiceCardsViewModel;
+
 import java.util.ArrayList;
 
 public class ServiceContainerFragment extends Fragment {
     private FragmentServiceContainerBinding binding;
+    private ServiceCardsViewModel serviceCardsViewModel;
 
     private ArrayList<Service> services = new ArrayList<Service>();
 
     public ServiceContainerFragment() {
-        // Required empty public constructor
+        serviceCardsViewModel = new ServiceCardsViewModel();
     }
 
     @Override
@@ -36,7 +40,7 @@ public class ServiceContainerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        FragmentTransition.to(ServiceListFragment.newInstance(services), requireActivity(), false, binding.serviceContainer.getId());
+        FragmentTransition.to(ServiceListFragment.newInstance(serviceCardsViewModel), requireActivity(), false, binding.serviceContainer.getId());
     }
 
     private void prepareServiceList(ArrayList<Service> services){
