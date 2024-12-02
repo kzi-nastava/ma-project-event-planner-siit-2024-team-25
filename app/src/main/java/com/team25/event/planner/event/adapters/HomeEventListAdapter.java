@@ -91,21 +91,21 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
 
 
         if (event != null) {
-            eventName.setText(event.getName());
-            eventOrganizer.setText(event.getOrganizer());
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-            String formattedDate = dateFormat.format(event.getDate());
-            eventDate.setText(formattedDate);
-            eventLocation.setText(event.getLocation());
-            eventLocationImage.setImageResource(R.drawable.ic_location_city);
-            eventCard.setOnClickListener(v -> {
-                // Handle click on the item at 'position'
-                Log.i("ShopApp", "Clicked: " + event.getName() + ", id: " +
-                        event.getId());
-                Toast.makeText(getContext(), "Clicked: " + event.getName() +
-                        ", id: " + event.getId(), Toast.LENGTH_SHORT).show();
-            });
+//            eventName.setText(event.getName());
+//            eventOrganizer.setText(event.getOrganizer());
+//
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+//            String formattedDate = dateFormat.format(event.getDate());
+//            eventDate.setText(formattedDate);
+//            eventLocation.setText(event.getLocation());
+//            eventLocationImage.setImageResource(R.drawable.ic_location_city);
+//            eventCard.setOnClickListener(v -> {
+//                // Handle click on the item at 'position'
+//                Log.i("ShopApp", "Clicked: " + event.getName() + ", id: " +
+//                        event.getId());
+//                Toast.makeText(getContext(), "Clicked: " + event.getName() +
+//                        ", id: " + event.getId(), Toast.LENGTH_SHORT).show();
+//            });
 
             eventCard.setOnClickListener(new View.OnClickListener() {
                 @Override

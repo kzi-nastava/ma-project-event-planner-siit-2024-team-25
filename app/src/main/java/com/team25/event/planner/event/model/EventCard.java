@@ -6,7 +6,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,17 +17,23 @@ import lombok.Data;
 @AllArgsConstructor
 public class EventCard implements Parcelable {
 
-    private int id;
+    private Long id;
     private String name;
-    private String organizer;
-    private Date date;
-    private String location;
+    private String description;
+    private LocalDateTime startDateTime;
+    private String city;
+    private String country;
+    private String organizerName;
 
     protected EventCard(Parcel in) {
-        id = in.readInt();
+        id = in.readLong();
         name = in.readString();
-        organizer = in.readString();
-        location = in.readString();
+        description = in.readString();
+        organizerName = in.readString();
+        country = in.readString();
+        city = in.readString();
+        startDateTime = LocalDateTime.parse(in.readString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME); // Parsiranje u LocalDateTime
+
     }
 
     public static final Creator<EventCard> CREATOR = new Creator<EventCard>() {
@@ -48,9 +55,12 @@ public class EventCard implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeLong(id);
         dest.writeString(name);
-        dest.writeString(organizer);
-        dest.writeString(location);
+        dest.writeString(organizerName);
+        dest.writeString(description);
+        dest.writeString(country);
+        dest.writeString(city);
+        dest.writeString(startDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)); // Formatiranje LocalDateTime u String
     }
 }
