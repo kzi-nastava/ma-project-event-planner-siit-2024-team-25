@@ -40,6 +40,7 @@ public class TopEventsListFragment extends ListFragment {
             adapter = new TopEventsListAdapter(requireContext(), eventCards);
             setListAdapter(adapter);
         }));
+        homeEventViewModel.getTopEvents();
         return inflater.inflate(R.layout.fragment_top_event_list, container, false);
     }
 

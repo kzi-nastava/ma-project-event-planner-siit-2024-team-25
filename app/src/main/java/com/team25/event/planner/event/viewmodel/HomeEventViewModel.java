@@ -31,24 +31,52 @@ public class HomeEventViewModel extends ViewModel {
     public final LiveData<List<EventCard>> events = _events;
     private final MutableLiveData<List<EventCard>> _topEvents = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<EventCard>> topEvents = _topEvents;
+
+    private final MutableLiveData<Integer> _currentPage = new MutableLiveData<>();
+    public final LiveData<Integer> currentPage = _currentPage;
     public final MutableLiveData<String> country = new MutableLiveData<>();
+
+
     public HomeEventViewModel(){
-
-        List<EventCard> eventCards = new ArrayList<>();
-//        eventCards.add(new EventCard(1, "Concert", "Stefan", new Date(), "Uzice"));
-//        eventCards.add(new EventCard(2, "Concert", "Petar", new Date(), "Uzice"));
-//        eventCards.add(new EventCard(3, "Concert", "Milos", new Date(),"Uzice"));
-//        eventCards.add(new EventCard(4, "Concert", "Nikola", new Date(),"Uzice"));
-//        eventCards.add(new EventCard(5, "Concert", "Milan", new Date(),"Uzice"));
-//        eventCards.add(new EventCard(6, "Concert", "Stefan", new Date(),"Uzice"));
-//        eventCards.add(new EventCard(7, "Concert", "Petar", new Date(),"Uzice"));
-//        eventCards.add(new EventCard(8, "Concert", "Milos", new Date(),"Uzice"));
-//        eventCards.add(new EventCard(9, "Concert", "Nikola", new Date(),"Uzice"));
-//        eventCards.add(new EventCard(10, "Concert", "Milan", new Date(),"Uzice"));
-        _events.setValue(eventCards);
-
-        getTopEvents();
+        _currentPage.setValue(0);
     }
+
+
+
+    public void getAllEvents(){
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ConnectiongParams.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+
+        EventApi eventApi = retrofit.create(EventApi.class);
+        Call<Page<EventCard>> call = eventApi.getAllEvents(currentPage.getValue());
+
+        call.enqueue(new Callback<Page<EventCard>>() {
+            @Override
+            public void onResponse(Call<Page<EventCard>> call, Response<Page<EventCard>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _events.setValue(response.body().getContent());
+                    _currentPage.setValue(response.body().getTotalPages());
+                } else {
+                    Log.e("HomeEventViewModel", "Failed to fetch top events");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Page<EventCard>> call, Throwable t) {
+                Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
+
+            }
+
+        });
+    }
+
 
     public void getTopEvents(){
         Gson gson = new GsonBuilder()
@@ -61,7 +89,7 @@ public class HomeEventViewModel extends ViewModel {
                 .build();
 
         String countryValue = country.getValue() != null ? country.getValue() : "";
-        String cityValue = ""; // Replace with your logic to get the city
+        String cityValue = "";
 
         EventApi eventApi = retrofit.create(EventApi.class);
         Call<Page<EventCard>> call = eventApi.getTopEvents(countryValue, cityValue);
@@ -75,13 +103,10 @@ public class HomeEventViewModel extends ViewModel {
                     Log.e("HomeEventViewModel", "Failed to fetch top events");
                 }
             }
-
             @Override
             public void onFailure(Call<Page<EventCard>> call, Throwable t) {
                 Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
-
             }
-
         });
     }
 
