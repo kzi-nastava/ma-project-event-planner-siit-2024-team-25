@@ -34,6 +34,8 @@ public class HomeEventViewModel extends ViewModel {
 
     private final MutableLiveData<Integer> _currentPage = new MutableLiveData<>();
     public final LiveData<Integer> currentPage = _currentPage;
+    private final MutableLiveData<Integer> _totalPage = new MutableLiveData<>();
+    public final LiveData<Integer> totalPage = _totalPage;
     public final MutableLiveData<String> country = new MutableLiveData<>();
 
 
@@ -62,7 +64,7 @@ public class HomeEventViewModel extends ViewModel {
             public void onResponse(Call<Page<EventCard>> call, Response<Page<EventCard>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     _events.setValue(response.body().getContent());
-                    _currentPage.setValue(response.body().getTotalPages());
+                    _totalPage.setValue(response.body().getTotalPages());
                 } else {
                     Log.e("HomeEventViewModel", "Failed to fetch top events");
                 }
@@ -75,6 +77,20 @@ public class HomeEventViewModel extends ViewModel {
             }
 
         });
+    }
+
+    public void getNextPage(){
+        if(_currentPage.getValue()+1<_totalPage.getValue()){
+            this._currentPage.setValue(this._currentPage.getValue()+1);
+            this.getAllEvents();
+        }
+    }
+
+    public void getPreviousPage(){
+        if(_currentPage.getValue() > 0){
+            this._currentPage.setValue(this._currentPage.getValue()-1);
+            this.getAllEvents();
+        }
     }
 
 
