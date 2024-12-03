@@ -14,4 +14,9 @@ public interface EventApi {
             @Query("country") String country,
             @Query("city") String city
     );
+
+    @GET("/api/events/all")
+    Call<Page<EventCard>> getAllEvents(
+            @Query("page") int page
+    );
 }

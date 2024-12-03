@@ -1,10 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
 }
+def getIpAddress() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty("ip_address");
+
+}
 
 android {
     viewBinding {
         enabled = true
+
     }
 
 
@@ -15,6 +22,7 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding true
+        buildConfig = true
     }
 
     namespace 'com.team25.event.planner'
@@ -26,7 +34,7 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
+        buildConfigField "String", "BASE_URL", "\""+getIpAddress()+"\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
