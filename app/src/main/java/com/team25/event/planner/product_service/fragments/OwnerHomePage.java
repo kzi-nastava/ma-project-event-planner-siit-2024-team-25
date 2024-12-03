@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentOwnerHomePageBinding;
+import com.team25.event.planner.product_service.adapters.ServiceCardsAdapter;
 import com.team25.event.planner.product_service.viewModels.ServiceCardsViewModel;
 
 import java.util.ArrayList;
@@ -44,7 +45,6 @@ public class OwnerHomePage extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentOwnerHomePageBinding.inflate(inflater, container, false);
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-        serviceCardsViewModel.getServices();
         return binding.getRoot();
     }
 
@@ -57,7 +57,7 @@ public class OwnerHomePage extends Fragment {
                 navController.navigate(R.id.action_ownerHomePage_to_serviceAddForm);
             }
         });
-        serviceCardsViewModel.getServices();
+
         binding.imageButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -76,27 +76,40 @@ public class OwnerHomePage extends Fragment {
                 spinner.setAdapter(adapter);
 
                 Spinner spinner2 = dialogView.findViewById(R.id.spinner2);
-                options.clear();
-                options.add("Select an event type");
-                options.add("event type 1");
-                options.add("event type 3");
-                options.add("event type 2");
+                List<String> options2 = new ArrayList<>();
+                options2.add("Select an event type");
+                options2.add("event type 1");
+                options2.add("event type 3");
+                options2.add("event type 2");
 
-                ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, options);
+                ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, options2);
                 adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner2.setAdapter(adapter2);
 
                 bottomSheetDialog.setContentView(dialogView);
                 Button cancelButton = dialogView.findViewById(R.id.button);
+                Button filterButton = dialogView.findViewById(R.id.saveFilterButton);
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         bottomSheetDialog.dismiss();
                     }
                 });
+                filterButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        serviceCardsViewModel.setupFilter();
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+                binding.seacrhButton2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        serviceCardsViewModel.setupFilter();
+                    }
+                });
                 bottomSheetDialog.show();
             }
-
         });
 
         if (savedInstanceState == null) {
@@ -104,12 +117,11 @@ public class OwnerHomePage extends Fragment {
                     .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel))
                     .commit();
         }
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        serviceCardsViewModel.getServices();
     }
+
 }

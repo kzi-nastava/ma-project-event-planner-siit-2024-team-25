@@ -26,9 +26,7 @@ import java.util.List;
 
 public class ServiceListFragment extends ListFragment {
     private ServiceCardsAdapter adapter;
-    private List<ServiceCard> services;
     private ServiceCardsViewModel serviceCardsViewModel;
-    private static final String ARG_PARAM = "param";
 
     public ServiceListFragment(ServiceCardsViewModel vm) {
         this.serviceCardsViewModel = vm;
@@ -42,13 +40,9 @@ public class ServiceListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         serviceCardsViewModel = new ViewModelProvider(requireActivity()).get(ServiceCardsViewModel.class);
-        serviceCardsViewModel.getServices();
-        if (getArguments() != null) {
-            services = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new ServiceCardsAdapter(getActivity(), services);
-            setListAdapter(adapter);
-            adapter.notifyDataSetChanged();
-        }
+        serviceCardsViewModel.filterServices();
+
+
         setObserves();
         return inflater.inflate(R.layout.fragment_service_list, container, false);
     }
@@ -61,7 +55,7 @@ public class ServiceListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        serviceCardsViewModel.getServices();
+        //serviceCardsViewModel.filterServices();
     }
 
     public void setObserves(){
@@ -70,5 +64,6 @@ public class ServiceListFragment extends ListFragment {
             setListAdapter(adapter);
             adapter.notifyDataSetChanged();
         }));
+
     }
 }
