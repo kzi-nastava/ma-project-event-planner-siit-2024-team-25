@@ -134,7 +134,6 @@
                                 android:id="@+id/SpecificInput"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                app:errorText="@{viewModel.errors.specifics}"
                                 android:hint="@string/specific">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -183,7 +182,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="16dp"
                                 android:max="100"
-                                android:progress="@{viewModel.discount}"
+                                android:progress="@={viewModel.discount}"
                                 app:onSeeking="@{viewModel::onSeeking}" />
 
                             <LinearLayout

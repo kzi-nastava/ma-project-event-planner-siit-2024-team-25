@@ -42,6 +42,9 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentFinishPageCreatingServiceBinding;
 import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FinishPageCreatingServiceFragment extends Fragment {
 
     private ServiceAddFormViewModel mViewModel;
@@ -126,22 +129,23 @@ public class FinishPageCreatingServiceFragment extends Fragment {
     public void setObservers(){
         mViewModel.toFinish.observe(getViewLifecycleOwner(), navigate -> {
             if (navigate != null && navigate) {
-                /*AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-                        .setTitle("New service")
-                        .setMessage("You are successfully added a new service!")
-                        .create();
-                alertDialog.show();*/
                 mViewModel.createService();
-                mViewModel.toFinish.setValue(false);
-                navController.navigate(R.id.action_finishPageCreateingCerviceFragment_to_ownerHomePage);
             }
         });
         mViewModel.toSecond.observe(getViewLifecycleOwner(), navigate -> {
             if (navigate != null && navigate) {
                 navController.navigateUp();
                 mViewModel.toSecond.setValue(false);
-
             }
+        });
+        mViewModel.errorMessageFromServer.observe(getViewLifecycleOwner(), errorMessage -> {
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Information")
+                    .setMessage(errorMessage)
+                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                    .show();
+            mViewModel.toFinish.setValue(false);
+            navController.navigate(R.id.action_finishPageCreateingCerviceFragment_to_ownerHomePage);
         });
     }
 
@@ -153,7 +157,14 @@ public class FinishPageCreatingServiceFragment extends Fragment {
             Uri fileUri = data != null ? data.getData() : null;
             if (fileUri != null) {
                 addImageToContainer(fileUri);
-                //viewModel.profilePicture.postValue(fileUri);
+                List<String> img = mViewModel.images.getValue();
+                if(img==null){
+                    img = new ArrayList<>();
+                }else {
+                    img = new ArrayList<>(img);
+                }
+                img.add(String.valueOf(fileUri));
+                mViewModel.images.postValue(img);
             }
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(requireContext(), ImagePicker.getError(data), Toast.LENGTH_SHORT).show();

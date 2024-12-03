@@ -121,7 +121,7 @@
                                     android:layout_height="wrap_content"
                                     android:inputType="text"
                                     android:text="@={viewModel.categoryInput}"
-                                    android:enabled="@{viewModel.categoryInputEnabled}"/>
+                                    android:enabled="@{viewModel.categoryInputEnabled}" />
 
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
@@ -267,9 +267,10 @@
                         </LinearLayout>
 
 
-                        <com.google.android.material.textview.MaterialTextView
+                        <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/chooseEventTypes"
                             android:text="Choose event types for the service"
                             android:layout_gravity="center"
                             android:layout_marginTop="15dp"/>
@@ -291,88 +292,23 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Option 1"
-                                    android:textColor="@android:color/black"
-                                    android:checked="@={viewModel.option1}"/>
+                                    android:textColor="@android:color/black"/>
 
                                 <com.google.android.material.checkbox.MaterialCheckBox
                                     android:id="@+id/checkbox_option2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Option 2"
-                                    android:textColor="@android:color/black"
-                                    android:checked="@={viewModel.option2}"/>
+                                    android:textColor="@android:color/black"/>
 
                                 <com.google.android.material.checkbox.MaterialCheckBox
                                     android:id="@+id/checkbox_option3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Option 3"
-                                    android:textColor="@android:color/black"
-                                    android:checked="@={viewModel.option3}"/>
-
-                                <com.google.android.material.checkbox.MaterialCheckBox
-                                    android:id="@+id/checkbox_option4"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 4"
                                     android:textColor="@android:color/black"/>
 
-                                <com.google.android.material.checkbox.MaterialCheckBox
 
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-
-                                <!-- Add more checkboxes as needed -->
 
                             </LinearLayout>
                         </ScrollView>
