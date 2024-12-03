@@ -46,17 +46,7 @@ public class HomeEventViewModel extends ViewModel {
 
 
     public void getAllEvents(){
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectiongParams.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-
-        EventApi eventApi = retrofit.create(EventApi.class);
+        EventApi eventApi = ConnectiongParams.eventApi;
         Call<Page<EventCard>> call = eventApi.getAllEvents(currentPage.getValue());
 
         call.enqueue(new Callback<Page<EventCard>>() {
@@ -95,19 +85,11 @@ public class HomeEventViewModel extends ViewModel {
 
 
     public void getTopEvents(){
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectiongParams.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
 
         String countryValue = country.getValue() != null ? country.getValue() : "";
         String cityValue = "";
 
-        EventApi eventApi = retrofit.create(EventApi.class);
+        EventApi eventApi = ConnectiongParams.eventApi;
         Call<Page<EventCard>> call = eventApi.getTopEvents(countryValue, cityValue);
 
         call.enqueue(new Callback<Page<EventCard>>() {
