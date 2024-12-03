@@ -25,12 +25,10 @@ public class ServiceCardsViewModel extends ViewModel {
     public final LiveData<List<ServiceCard>> services = _services;
 
     public ServiceCardsViewModel(){
-        List<ServiceCard> serviceCards = new ArrayList<>();
-        getServices();
 
     }
 
-    private void getServices(){
+    public void getServices(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ConnectiongParams.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -45,13 +43,13 @@ public class ServiceCardsViewModel extends ViewModel {
                 if (response.isSuccessful() && response.body() != null) {
                     _services.setValue(response.body().getContent());
                 } else {
-                    Log.e("ServiceCardsViewModel", "Error fetching top events: ");
+                    Log.e("ServiceCardsViewModel", "Error fetching services: ");
                 }
             }
 
             @Override
             public void onFailure(Call<Page<ServiceCard>> call, Throwable t) {
-                Log.e("ServiceCardsViewModel", "Error fetching top events: " + t.getMessage());
+                Log.e("ServiceCardsViewModel", "Error fetching services: " + t.getMessage());
             }
         });
     }

@@ -23,16 +23,20 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentFinishPageCreatingServiceBinding;
@@ -44,8 +48,9 @@ public class FinishPageCreatingServiceFragment extends Fragment {
     private NavController navController;
     private static final int SELECT_PICTURE = 200;
     private static final int PERMISSION_REQUEST_CODE = 101;
-    ShapeableImageView BSelectImage;
+    private FragmentFinishPageCreatingServiceBinding binding;
     ImageView IVPreviewImage;
+    private LinearLayout imageContainer;
     private static final int PICK_IMAGE_REQUEST = 1;
     private ActivityResultLauncher<Intent> galleryLauncher;
 
@@ -58,61 +63,77 @@ public class FinishPageCreatingServiceFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        FragmentFinishPageCreatingServiceBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_finish_page_creating_service, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_finish_page_creating_service, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-        mViewModel= new ViewModelProvider(this).get(ServiceAddFormViewModel.class);
+        mViewModel = new ViewModelProvider(
+                NavHostFragment.findNavController(this).getViewModelStoreOwner(R.id.nav_graph)
+        ).get(ServiceAddFormViewModel.class);
+        imageContainer = binding.imageContainer;
         binding.setViewModel(mViewModel);
 
-
+        ImageButton btnAddImage = binding.btnAddImage;
+        btnAddImage.setOnClickListener(view -> {
+            ImagePicker.with(this)
+                    .cropSquare()
+                    .compress(1024) // max size 1MB
+                    .createIntent((intent) -> {
+                        startForProfileImageResult.launch(intent);
+                        return null;
+                    });
+        });
 
         if(getArguments() != null){
             TextView textView = binding.EditOrCreateServiceText;
             textView.setText(R.string.edit_the_service);
         }
 
-        BSelectImage = binding.BSelectImage;
-        IVPreviewImage = binding.IVPreviewImage;
-
-        BSelectImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //imageChooser();
-            }
-        });
-
         setObservers();
         return binding.getRoot();
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        galleryLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        Uri selectedImageUri = result.getData().getData();
+    }
 
-                        if (selectedImageUri != null) {
-                            IVPreviewImage.setImageURI(selectedImageUri);
-                        }
-                    }
-                }
+    private void addImageToContainer(Uri imageUri) {
+        ShapeableImageView imageView = new ShapeableImageView(requireContext());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
         );
+        params.setMargins(16, 16, 16, 16); // Margin između slika
+        imageView.setLayoutParams(params);
+
+        imageView.setImageURI(imageUri);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setPadding(4, 4, 4, 4);
+
+        imageView.setShapeAppearanceModel(
+                imageView.getShapeAppearanceModel()
+                        .toBuilder()
+                        .setAllCornerSizes(50)
+                        .build()
+        );
+
+
+        imageContainer.addView(imageView);
     }
 
     public void setObservers(){
         mViewModel.toFinish.observe(getViewLifecycleOwner(), navigate -> {
             if (navigate != null && navigate) {
-                AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                /*AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                         .setTitle("New service")
                         .setMessage("You are successfully added a new service!")
                         .create();
-                alertDialog.show();
+                alertDialog.show();*/
+                mViewModel.createService();
                 mViewModel.toFinish.setValue(false);
-                navController.navigate(R.id.ownerHomePage, null, new NavOptions.Builder()
-                        .setPopUpTo(R.id.ownerHomePage, false).build());
+                navController.navigate(R.id.action_finishPageCreateingCerviceFragment_to_ownerHomePage);
             }
         });
         mViewModel.toSecond.observe(getViewLifecycleOwner(), navigate -> {
@@ -124,37 +145,20 @@ public class FinishPageCreatingServiceFragment extends Fragment {
         });
     }
 
-    void imageChooser() {
-        /*if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    PERMISSION_REQUEST_CODE
-            );
-        } else*/
-        {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            if (intent.resolveActivity(requireContext().getPackageManager()) != null) {
-                galleryLauncher.launch(intent);
-            } else {
-                Log.e("GalleryIntent", "No suitable app to handle the intent.");
-            }
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            galleryLauncher.launch(Intent.createChooser(intent, "Select Picture"));}
-    }
+    private final ActivityResultLauncher<Intent> startForProfileImageResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        int resultCode = result.getResultCode();
+        Intent data = result.getData();
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                imageChooser();
-            } else {
-                Toast.makeText(requireContext(), "Permission denied. Unable to access images.", Toast.LENGTH_SHORT).show();
+        if (resultCode == Activity.RESULT_OK) {
+            Uri fileUri = data != null ? data.getData() : null;
+            if (fileUri != null) {
+                addImageToContainer(fileUri);
+                //viewModel.profilePicture.postValue(fileUri);
             }
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(requireContext(), ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
         }
-    }
+    });
+
 
 }

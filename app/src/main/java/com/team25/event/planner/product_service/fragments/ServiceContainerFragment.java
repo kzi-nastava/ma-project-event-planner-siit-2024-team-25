@@ -19,8 +19,8 @@ public class ServiceContainerFragment extends Fragment {
 
     private ArrayList<Service> services = new ArrayList<Service>();
 
-    public ServiceContainerFragment() {
-        serviceCardsViewModel = new ServiceCardsViewModel();
+    public ServiceContainerFragment(ServiceCardsViewModel vm) {
+        serviceCardsViewModel = vm;
     }
 
     @Override
@@ -31,9 +31,7 @@ public class ServiceContainerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        prepareServiceList(services);
         binding = FragmentServiceContainerBinding.inflate(inflater,container,false);
-
         return binding.getRoot();
     }
 
@@ -43,11 +41,4 @@ public class ServiceContainerFragment extends Fragment {
         FragmentTransition.to(ServiceListFragment.newInstance(serviceCardsViewModel), requireActivity(), false, binding.serviceContainer.getId());
     }
 
-    private void prepareServiceList(ArrayList<Service> services){
-        services.clear();
-        services.add(new Service(1L, "Music", "Milos",1));
-        services.add(new Service(2L, "Music", "Milos",1));
-        services.add(new Service(3L, "Music", "Milos",1));
-        services.add(new Service(4L, "Music", "Milos",1));
-    }
 }

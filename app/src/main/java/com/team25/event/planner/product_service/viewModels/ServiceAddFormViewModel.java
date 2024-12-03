@@ -11,13 +11,16 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
 import com.team25.event.planner.product_service.enums.ReservationType;
 import com.team25.event.planner.product_service.model.Service;
+import com.team25.event.planner.product_service.model.ServiceCard;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import lombok.Builder;
@@ -26,12 +29,15 @@ import lombok.Data;
 public class ServiceAddFormViewModel extends ViewModel {
 
     private ArrayList<Service> services = new ArrayList<Service>();
+    private ServiceCreateRequestDTO serviceCreateRequestDTO;
 
-    public final MutableLiveData<String> name = new MutableLiveData<>();
-    public final MutableLiveData<String> description = new MutableLiveData<>();
+    public final MutableLiveData<String> name = new MutableLiveData<>("");
+    public String nameService;
+    public final MutableLiveData<String> description = new MutableLiveData<>("");
     public final MutableLiveData<String> specifics = new MutableLiveData<>();
+    private final MutableLiveData<String> priceString = new MutableLiveData<>();
     public final MutableLiveData<Integer> price = new MutableLiveData<>();
-    public final MutableLiveData<Integer> discount = new MutableLiveData<>();
+    public final MutableLiveData<Integer> discount = new MutableLiveData<>(0);
     //public final MutableLiveData<String> images = new MutableLiveData<>();
     public final MutableLiveData<String> eventTypes = new MutableLiveData<>();
     public final MutableLiveData<Boolean> option1 = new MutableLiveData<>();
@@ -39,24 +45,30 @@ public class ServiceAddFormViewModel extends ViewModel {
     public final MutableLiveData<Boolean> option3 = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isVisible = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isAvailable = new MutableLiveData<>();
-    public final MutableLiveData<String> reservationDate = new MutableLiveData<>(null);
-    public final MutableLiveData<String> cancelDate = new MutableLiveData<>(null);
+    public final MutableLiveData<Integer> reservationDeadline = new MutableLiveData<>(0);
+    public final MutableLiveData<Integer> cancelDeadline = new MutableLiveData<>(0);
     public final MutableLiveData<ReservationType> confirmationType = new MutableLiveData<>();
     public final MutableLiveData<Boolean> confirmationTypeToggle = new MutableLiveData<>();
     public final MutableLiveData<String> categoryInput = new MutableLiveData<>();
     public final MutableLiveData<Boolean> categoryInputEnabled = new MutableLiveData<>();
-    public final MutableLiveData<Integer> duration = new MutableLiveData<>();
-    public final MutableLiveData<Integer> minArrangement = new MutableLiveData<>();
-    public final MutableLiveData<Integer> maxArrangement = new MutableLiveData<>();
+    public final MutableLiveData<Integer> duration = new MutableLiveData<>(0);
+    public final MutableLiveData<Integer> minArrangement = new MutableLiveData<>(0);
+    public final MutableLiveData<Integer> maxArrangement = new MutableLiveData<>(0);
 
     @Data
     @Builder(toBuilder = true)
     public static class ErrorUiState {
         private final String name;
-        private final String reservationDate;
-        private final String cancelDate;
-        private final int discount;
-        private final int price;
+        private final String description;
+        private final Double price;
+        private final Integer discount;
+        private final String specifics;
+        /* visible, available, confirmation type
+        private final Integer duration;
+        private final Integer minArr;
+        private final Integer maxArr;
+        private final Integer reservationDeadline;
+        private final Integer cancellationDeadline;*/
     }
 
     private final MutableLiveData<ErrorUiState> _errors = new MutableLiveData<>();
@@ -101,57 +113,54 @@ public class ServiceAddFormViewModel extends ViewModel {
             maxArrangement.setValue(seekParams);
         }else if(seekBar.getId() == R.id.priceSeekBar2){
             discount.setValue(seekParams);
+        }else if(seekBar.getId() == R.id.cancellationSeekbar){
+            cancelDeadline.setValue(seekParams);
+        }else if(seekBar.getId() == R.id.reservationSeekbar){
+            reservationDeadline.setValue(seekParams);
         }
     }
 
-    public void onChooseCancellationDate(View v) {
-        showDatePicker(v.getContext(), cancelDate);
-    }
-
-    public void onChooseReservationDate(View v) {
-        showDatePicker(v.getContext(), reservationDate);
-    }
-
-    private void showDatePicker(final Context context, final MutableLiveData<String> dateLiveData) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        if(dateLiveData.getValue()!=null){
-            if(!dateLiveData.getValue().isEmpty()){
-                try{
-                    Date date = dateFormat.parse(dateLiveData.getValue());
-                    calendar.setTime(date);
-                    dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                    month = calendar.get(Calendar.MONTH);
-                    year = calendar.get(Calendar.YEAR);
-                }catch (Exception e){
-                    year = calendar.get(Calendar.YEAR);
-                    month = calendar.get(Calendar.MONTH);
-                    dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                }
-
+    public boolean validateInputNumber(String text) {
+        if (text != null && !text.isEmpty()) {
+            try {
+                int number = Integer.parseInt(text);
+                price.setValue(number);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
             }
+        } else {
+            return false;
+        }
+    }
+    public boolean validateForm(){
+        String name = this.name.getValue();
+        String description = this.description.getValue();
+        //Double price = Double.valueOf(this.price.getValue());
+
+        ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = ErrorUiState.builder();
+        boolean isValid = true;
+
+        if (name == null || name.isBlank()) {
+            errorUiStateBuilder.name("Name is required.");
+            isValid = false;
+        }
+        if (description == null || description.isBlank()) {
+            errorUiStateBuilder.description("Description is required.");
+            isValid = false;
         }
 
+        _errors.setValue(errorUiStateBuilder.build());
+        return isValid;
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(context, (view, year1, month1, dayOfMonth1) -> {
-            String date = dayOfMonth1 + "/" + (month1 + 1) + "/" + year1;
-            dateLiveData.setValue(date);  // Update the LiveData
-        }, year, month, dayOfMonth);
-
-        datePickerDialog.show();
     }
 
     public void findService(Integer idService){
-        name.setValue("Name 1");
+        name.postValue("sss");
         description.setValue("Description 1");
         specifics.setValue("Specifics 1");
         price.setValue(100);
         discount.setValue(15);
-        cancelDate.setValue("20/12/2024");
-        reservationDate.setValue("10/12/2024");
         confirmationType.setValue(ReservationType.AUTOMATIC);
         isVisible.setValue(true);
         isAvailable.setValue(true);
@@ -178,5 +187,24 @@ public class ServiceAddFormViewModel extends ViewModel {
 
     public void restart(){
         categoryInputEnabled.setValue(true);
+    }
+    public void createService(){
+
+        serviceCreateRequestDTO = new ServiceCreateRequestDTO();
+        serviceCreateRequestDTO.setName(name.getValue());
+        serviceCreateRequestDTO.setDescription(description.getValue());
+        serviceCreateRequestDTO.setPrice(12);
+        serviceCreateRequestDTO.setDiscount(5.0);
+        serviceCreateRequestDTO.setImages(List.of("https://example.com/images/party1.jpg", "https://example.com/images/party2.jpg"));
+        serviceCreateRequestDTO.setVisible(true);
+        serviceCreateRequestDTO.setAvailable(true);
+        serviceCreateRequestDTO.setSpecifics("Includes DJ services, lighting setup, and custom decorations.");
+        serviceCreateRequestDTO.setReservationType(ReservationType.MANUAL); // Pretpostavka da je `ReservationType` enum
+        serviceCreateRequestDTO.setDuration(180);
+        serviceCreateRequestDTO.setReservationDeadline(48);
+        serviceCreateRequestDTO.setCancellationDeadline(24);
+        serviceCreateRequestDTO.setEventTypesIDs(List.of(1L, 2L, 3L)); // Pretpostavka da su ovo ID-jevi event tipova
+        serviceCreateRequestDTO.setOfferingCategoryID(1L); // Pretpostavka da je ovo ID kategorije
+        serviceCreateRequestDTO.setOwnerId(11L);
     }
 }

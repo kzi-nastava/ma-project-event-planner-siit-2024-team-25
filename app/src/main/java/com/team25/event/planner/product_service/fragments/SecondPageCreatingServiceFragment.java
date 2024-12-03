@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,14 +31,17 @@ public class SecondPageCreatingServiceFragment extends Fragment {
     private NavController navController;
     private ToggleButton toggleButton;
     private ViewSwitcher viewSwitcher;
+    private FragmentSecondPageCreatingBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        FragmentSecondPageCreatingBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_second_page_creating, container, false);
+         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_second_page_creating, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-        mViewModel= new ViewModelProvider(this).get(ServiceAddFormViewModel.class);
+        mViewModel = new ViewModelProvider(
+                NavHostFragment.findNavController(this).getViewModelStoreOwner(R.id.nav_graph)
+        ).get(ServiceAddFormViewModel.class);
         binding.setViewModel(mViewModel);
 
         toggleButton = binding.toggleButton;

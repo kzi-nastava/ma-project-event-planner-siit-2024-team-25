@@ -16,22 +16,27 @@ import android.widget.Spinner;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentOwnerHomePageBinding;
+import com.team25.event.planner.product_service.viewModels.ServiceCardsViewModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class OwnerHomePage extends Fragment {
+    private ServiceCardsViewModel serviceCardsViewModel;
     private FragmentOwnerHomePageBinding binding;
     private NavController navController;
 
 
     public OwnerHomePage() {
-        // Required empty public constructor
+
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        serviceCardsViewModel = new ServiceCardsViewModel();
     }
 
     @Override
@@ -39,6 +44,7 @@ public class OwnerHomePage extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentOwnerHomePageBinding.inflate(inflater, container, false);
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+        serviceCardsViewModel.getServices();
         return binding.getRoot();
     }
 
@@ -51,7 +57,7 @@ public class OwnerHomePage extends Fragment {
                 navController.navigate(R.id.action_ownerHomePage_to_serviceAddForm);
             }
         });
-
+        serviceCardsViewModel.getServices();
         binding.imageButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -85,7 +91,6 @@ public class OwnerHomePage extends Fragment {
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Zatvorite BottomSheetDialog
                         bottomSheetDialog.dismiss();
                     }
                 });
@@ -96,9 +101,15 @@ public class OwnerHomePage extends Fragment {
 
         if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
-                    .replace(binding.scrollServices.getId(), new ServiceContainerFragment())
+                    .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel))
                     .commit();
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        serviceCardsViewModel.getServices();
     }
 }
