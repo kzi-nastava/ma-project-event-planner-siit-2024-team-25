@@ -16,11 +16,17 @@ import java.util.ArrayList;
 public class ServiceContainerFragment extends Fragment {
     private FragmentServiceContainerBinding binding;
     private ServiceCardsViewModel serviceCardsViewModel;
+    private boolean filter;
+    private String searchName;
+    private String searchPrice;
+    private Boolean searchAvailable;
 
-    private ArrayList<Service> services = new ArrayList<Service>();
-
-    public ServiceContainerFragment(ServiceCardsViewModel vm) {
+    public ServiceContainerFragment(ServiceCardsViewModel vm, boolean filter, String name, String price, Boolean a) {
         serviceCardsViewModel = vm;
+        this.filter = filter;
+        this.searchName = name;
+        this.searchPrice = price;
+        this.searchAvailable = a;
     }
 
     @Override
@@ -38,7 +44,7 @@ public class ServiceContainerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        FragmentTransition.to(ServiceListFragment.newInstance(serviceCardsViewModel), requireActivity(), false, binding.serviceContainer.getId());
+        FragmentTransition.to(ServiceListFragment.newInstance(serviceCardsViewModel,filter, searchName, searchPrice, searchAvailable), requireActivity(), false, binding.serviceContainer.getId());
     }
 
 }

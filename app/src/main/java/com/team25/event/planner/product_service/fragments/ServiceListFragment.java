@@ -27,21 +27,32 @@ import java.util.List;
 public class ServiceListFragment extends ListFragment {
     private ServiceCardsAdapter adapter;
     private ServiceCardsViewModel serviceCardsViewModel;
+    private boolean filter;
+    private String nameFilter;
+    private String priceFilter;
+    private Boolean availableFilter;
 
-    public ServiceListFragment(ServiceCardsViewModel vm) {
+    public ServiceListFragment(ServiceCardsViewModel vm, boolean f, String n, String p, Boolean a) {
         this.serviceCardsViewModel = vm;
+        this.filter = f;
+        this.nameFilter = n;
+        this.priceFilter = p;
+        this.availableFilter = a;
     }
-    public static ServiceListFragment newInstance(ServiceCardsViewModel vm){
+    public static ServiceListFragment newInstance(ServiceCardsViewModel vm, boolean f, String n, String p, Boolean a){
 
-        return new ServiceListFragment(vm);
+        return new ServiceListFragment(vm,f,n,p,a);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         serviceCardsViewModel = new ViewModelProvider(requireActivity()).get(ServiceCardsViewModel.class);
-        serviceCardsViewModel.filterServices();
-
+        if(filter){
+            serviceCardsViewModel.setupFilter(nameFilter, priceFilter, availableFilter);
+        }else{
+            serviceCardsViewModel.filterServices();
+        }
 
         setObserves();
         return inflater.inflate(R.layout.fragment_service_list, container, false);

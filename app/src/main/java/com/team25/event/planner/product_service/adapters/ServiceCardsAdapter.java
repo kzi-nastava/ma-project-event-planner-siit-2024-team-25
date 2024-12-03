@@ -1,5 +1,6 @@
 package com.team25.event.planner.product_service.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ public class ServiceCardsAdapter extends ArrayAdapter<ServiceCard> {
         return super.getItemId(position);
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -55,6 +57,7 @@ public class ServiceCardsAdapter extends ArrayAdapter<ServiceCard> {
         ImageView imageView = convertView.findViewById(R.id.imageViewService);
         TextView productTitle = convertView.findViewById(R.id.nameService);
         TextView productDescription = convertView.findViewById(R.id.descriptionService);
+        TextView priceText = convertView.findViewById(R.id.priceService);
         ImageButton editButton = convertView.findViewById(R.id.editButton);
         ImageButton deleteButton = convertView.findViewById(R.id.deleteButton);
 
@@ -62,6 +65,7 @@ public class ServiceCardsAdapter extends ArrayAdapter<ServiceCard> {
             imageView.setImageResource(R.drawable.profile_icon);
             productTitle.setText(serviceCard.getName());
             productDescription.setText(serviceCard.getDescription());
+            priceText.setText(serviceCard.getPrice().toString() + "e");
             productCard.setOnClickListener(v -> {
                 Log.i("ShopApp", "Clicked: " + serviceCard.getName() + ", id: " +
                         serviceCard.getId());

@@ -78,17 +78,24 @@ public class ServiceCardsViewModel extends ViewModel {
         }
     }
 
-    public void setupFilter(){
-        filterDTO.setName("hhh");
-        filterDTO.setAvailable(isAvailable.getValue());
-        //filterDTO.setOwnerId(11L);
-        if(!Objects.equals(priceString.getValue(), "")){
-            if(validateInputNumber(priceString.getValue())){
-                filterDTO.setPrice(price.getValue());
-            }else{
-                filterDTO.setPrice(0.0);
+    public void setupFilter(String nameF, String pf, Boolean availableF){
+        if(Objects.equals(nameF, "")){
+            filterDTO.setName(null);
+        }else{
+            filterDTO.setName(nameF);
+        }
+
+        filterDTO.setAvailable(availableF);
+        if(pf!=null){
+            if(!Objects.equals(pf, "")){
+                if(validateInputNumber(pf)){
+                    filterDTO.setPrice(Double.parseDouble(pf));
+                }else{
+                    filterDTO.setPrice(0.0);
+                }
             }
         }
+
         filterServices();
     }
     public void filterServices(){
@@ -96,6 +103,7 @@ public class ServiceCardsViewModel extends ViewModel {
         Map<String, String> queryMap = buildQueryMap(filterDTO);
 
         getServices(queryMap);
+
     }
 
 
@@ -113,6 +121,9 @@ public class ServiceCardsViewModel extends ViewModel {
             public void onResponse(Call<Page<ServiceCard>> call, Response<Page<ServiceCard>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     _services.setValue(response.body().getContent());
+                    filterDTO.setName(null);
+                    filterDTO.setAvailable(null);
+                    filterDTO.setPrice(null);
                 } else {
                     Log.e("ServiceCardsViewModel", "Error fetching services: ");
                 }
