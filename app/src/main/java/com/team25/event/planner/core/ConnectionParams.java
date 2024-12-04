@@ -1,7 +1,6 @@
 package com.team25.event.planner.core;
 
 
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.team25.event.planner.BuildConfig;
@@ -12,11 +11,11 @@ import java.time.LocalDateTime;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ConnectiongParams {
+public class ConnectionParams {
     public static final String BASE_URL = BuildConfig.BASE_URL;
 
 
-    private static Gson gson = new GsonBuilder()
+    private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
             .create();
 
