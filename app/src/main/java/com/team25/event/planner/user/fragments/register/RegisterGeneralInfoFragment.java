@@ -25,6 +25,8 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentRegisterGeneralInfoBinding;
 import com.team25.event.planner.user.viewmodels.RegisterViewModel;
 
+import java.io.File;
+
 public class RegisterGeneralInfoFragment extends Fragment {
     private FragmentRegisterGeneralInfoBinding binding;
     private RegisterViewModel viewModel;
@@ -93,7 +95,7 @@ public class RegisterGeneralInfoFragment extends Fragment {
             if (fileUri != null) {
                 binding.ivProfilePic.setImageTintList(null);
                 binding.ivProfilePic.setImageURI(fileUri);
-                viewModel.profilePicture.postValue(fileUri);
+                viewModel.profilePicture.postValue(new File(fileUri.getPath()));
             } else {
                 binding.ivProfilePic.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_person));
             }
