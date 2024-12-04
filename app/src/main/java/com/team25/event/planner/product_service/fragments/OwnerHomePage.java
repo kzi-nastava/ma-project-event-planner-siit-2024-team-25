@@ -12,26 +12,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentOwnerHomePageBinding;
+import com.team25.event.planner.product_service.adapters.ServiceCardsAdapter;
+import com.team25.event.planner.product_service.viewModels.ServiceCardsViewModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class OwnerHomePage extends Fragment {
+    private ServiceCardsViewModel serviceCardsViewModel;
     private FragmentOwnerHomePageBinding binding;
     private NavController navController;
 
-
     public OwnerHomePage() {
-        // Required empty public constructor
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        serviceCardsViewModel = new ServiceCardsViewModel();
     }
 
     @Override
@@ -58,6 +64,16 @@ public class OwnerHomePage extends Fragment {
                 BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity(), R.style.FullScreenBottomSheetDialog);
                 View dialogView = getLayoutInflater().inflate(R.layout.fragment_filter_service, null);
 
+                Spinner spinner3 = dialogView.findViewById(R.id.spinnerAvailable);
+                List<String> op = new ArrayList<>();
+                op.add("Available: ALL");
+                op.add("Available: YES");
+                op.add("Available: NO");
+
+                ArrayAdapter<String> adapter3 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, op);
+                adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner3.setAdapter(adapter3);
+
                 Spinner spinner = dialogView.findViewById(R.id.spinner);
                 List<String> options = new ArrayList<>();
                 options.add("Select a category"); // Placeholder
@@ -70,35 +86,77 @@ public class OwnerHomePage extends Fragment {
                 spinner.setAdapter(adapter);
 
                 Spinner spinner2 = dialogView.findViewById(R.id.spinner2);
-                options.clear();
-                options.add("Select an event type");
-                options.add("event type 1");
-                options.add("event type 3");
-                options.add("event type 2");
+                List<String> options2 = new ArrayList<>();
+                options2.add("Select an event type");
+                options2.add("event type 1");
+                options2.add("event type 3");
+                options2.add("event type 2");
 
-                ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, options);
+                ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, options2);
                 adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner2.setAdapter(adapter2);
 
                 bottomSheetDialog.setContentView(dialogView);
                 Button cancelButton = dialogView.findViewById(R.id.button);
+                Button filterButton = dialogView.findViewById(R.id.saveFilterButton);
+                ImageButton searchButton = binding.seacrhButton2;
+                EditText text = dialogView.findViewById(R.id.priceFilter);
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Zatvorite BottomSheetDialog
                         bottomSheetDialog.dismiss();
+
+                    }
+                });
+                filterButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+
+                        getChildFragmentManager().beginTransaction()
+                                .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,true, binding.searchText.getText().toString()
+                                ,text.getText().toString(),getAvailable(spinner3)))
+                                .commit();
+
+                    }
+                });
+                searchButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getChildFragmentManager().beginTransaction()
+                                .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,true, binding.searchText.getText().toString(),null,null))
+                                .commit();
+                        text.setText("");
                     }
                 });
                 bottomSheetDialog.show();
             }
-
         });
 
         if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
-                    .replace(binding.scrollServices.getId(), new ServiceContainerFragment())
+                    .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,false, null,null, null))
                     .commit();
         }
-
     }
+
+    private Boolean getAvailable(Spinner spinner){
+        String selectedOption = spinner.getSelectedItem().toString();
+        if(selectedOption.equals("Available: ALL")){
+            return null;
+        }else if(selectedOption.equals("Available: YES")){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getChildFragmentManager().beginTransaction()
+                .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,false,null,null,null))
+                .commit();
+    }
+
 }
