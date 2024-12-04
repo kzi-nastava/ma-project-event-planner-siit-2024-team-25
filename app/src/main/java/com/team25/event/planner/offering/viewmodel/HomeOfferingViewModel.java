@@ -92,6 +92,19 @@ public class HomeOfferingViewModel extends ViewModel {
     }
 
 
+    public void getNextPage(){
+        if(this._currentPage.getValue()+1 < this._totalPage.getValue()){
+            this._currentPage.setValue(this._currentPage.getValue()+1);
+            this.getAllOfferings();
+        }
+    }
+
+    public void getPreviousPage(){
+        if(this._currentPage.getValue() > 0){
+            this._currentPage.setValue(this._currentPage.getValue()-1);
+            this.getAllOfferings();
+        }
+    }
     public void filter() {
 
     }

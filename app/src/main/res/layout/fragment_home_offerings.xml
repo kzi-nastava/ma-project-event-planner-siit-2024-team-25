@@ -31,7 +31,9 @@
                 android:backgroundTint="@color/primary"
                 app:icon="@drawable/ic_left"
                 app:iconGravity="start"
-                app:iconTint="@color/white" />
+                app:iconTint="@color/white"
+                android:onClick="@{ () -> viewModel.getPreviousPage()}"
+                />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/offering_page"
@@ -50,6 +52,7 @@
                 app:icon="@drawable/ic_right"
                 app:iconGravity="end"
                 app:iconTint="@color/white"
+                android:onClick="@{ () -> viewModel.getNextPage()}"
                 />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
