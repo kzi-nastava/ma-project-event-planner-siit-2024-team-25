@@ -38,11 +38,12 @@ public class HomeEventsListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-            homeEventViewModel.events.observe(getViewLifecycleOwner(), (eventCards -> {
+        homeEventViewModel.events.observe(getViewLifecycleOwner(), (eventCards -> {
                 NavController navController = Navigation.findNavController(requireView());
                 adapter = new HomeEventListAdapter(requireContext(), eventCards, navController);
                 setListAdapter(adapter);
         }));
+        homeEventViewModel.getAllEvents();
         return inflater.inflate(R.layout.fragment_home_events_list, container, false);
     }
 }

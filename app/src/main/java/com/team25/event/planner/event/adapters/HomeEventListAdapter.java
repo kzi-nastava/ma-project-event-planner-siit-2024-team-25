@@ -25,6 +25,7 @@ import com.team25.event.planner.event.fragments.EventInvitation;
 import com.team25.event.planner.event.model.EventCard;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +70,7 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
         TextView eventName = convertView.findViewById(R.id.home_event_name);
         TextView eventOrganizer = convertView.findViewById(R.id.home_event_organizer);
         TextView eventDate = convertView.findViewById(R.id.home_event_date);
+        TextView eventTime = convertView.findViewById(R.id.home_event_time);
         ImageView eventIcon = convertView.findViewById(R.id.home_event_picture);
         ImageView eventLocationImage = convertView.findViewById(R.id.home_event_location_image);
         TextView eventLocation = convertView.findViewById(R.id.home_event_location);
@@ -91,25 +93,28 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
 
 
         if (event != null) {
-//            eventName.setText(event.getName());
-//            eventOrganizer.setText(event.getOrganizer());
-//
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-//            String formattedDate = dateFormat.format(event.getDate());
-//            eventDate.setText(formattedDate);
-//            eventLocation.setText(event.getLocation());
-//            eventLocationImage.setImageResource(R.drawable.ic_location_city);
-//            eventCard.setOnClickListener(v -> {
-//                // Handle click on the item at 'position'
-//                Log.i("ShopApp", "Clicked: " + event.getName() + ", id: " +
-//                        event.getId());
-//                Toast.makeText(getContext(), "Clicked: " + event.getName() +
-//                        ", id: " + event.getId(), Toast.LENGTH_SHORT).show();
-//            });
+            eventName.setText(event.getName());
+            eventOrganizer.setText(event.getOrganizerName());
+
+
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+            String formattedDate = event.getStartDateTime().format(dateFormatter);
+            String formattedTime = event.getStartDateTime().format(timeFormatter);
+
+            eventDate.setText(formattedDate);
+            eventTime.setText(formattedTime);
+
+
+            eventIcon.setImageResource(R.drawable.ic_heart);
+            eventLocation.setText(event.getCountry() + ", " + event.getCity());
+            eventLocationImage.setImageResource(R.drawable.ic_location);
+
 
             eventCard.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {// Define the fragment you want to open
+                public void onClick(View v) {
                     Bundle bundle = new Bundle();
                     bundle.putString("name",event.getName());
                     bundle.putLong("id",event.getId());
