@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.team25.event.planner.BuildConfig;
 import com.team25.event.planner.event.api.EventApi;
+import com.team25.event.planner.offering.Api.OfferingApi;
 
 import java.time.LocalDateTime;
 
@@ -26,5 +27,7 @@ public class ConnectiongParams {
             .build();
 
     public static EventApi eventApi = retrofit.create(EventApi.class);
+
+    public static OfferingApi offeringApi = retrofit.create(OfferingApi.class);
 
 }
