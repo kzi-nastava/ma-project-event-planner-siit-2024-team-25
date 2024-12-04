@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
             android:backgroundTint="?attr/colorPrimary"
-            android:onClick="@{() -> viewModel.onRoleChoiceNext(com.team25.event.planner.user.model.UserRole.Vendor)}"
+            android:onClick="@{() -> viewModel.onRoleChoiceNext(com.team25.event.planner.user.model.UserRole.Owner)}"
             android:text="@string/vendor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
