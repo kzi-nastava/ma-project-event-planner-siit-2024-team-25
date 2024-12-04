@@ -18,15 +18,10 @@ import java.util.ArrayList;
 
 public class HomeOfferingsListFragment extends ListFragment {
     private HomeOfferingListAdapter adapter;
-    private HomeOfferingViewModel homeOfferingViewModel;
-
-
-    public HomeOfferingsListFragment() {
-        // Required empty public constructor
-    }
+    private HomeOfferingViewModel _homeOfferingViewModel;
 
     private HomeOfferingsListFragment(HomeOfferingViewModel homeOfferingViewModel) {
-        this.homeOfferingViewModel = homeOfferingViewModel;
+        this._homeOfferingViewModel = homeOfferingViewModel;
     }
 
 
@@ -37,18 +32,17 @@ public class HomeOfferingsListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        homeOfferingViewModel.offerings.observe(getViewLifecycleOwner(), (offerings -> {
+        _homeOfferingViewModel.allOfferings.observe(getViewLifecycleOwner(), (offerings -> {
             adapter = new HomeOfferingListAdapter(getActivity(), offerings);
             setListAdapter(adapter);
         }));
+        _homeOfferingViewModel.getAllOfferings();
         return inflater.inflate(R.layout.fragment_home_offerings_list, container, false);
     }
 }

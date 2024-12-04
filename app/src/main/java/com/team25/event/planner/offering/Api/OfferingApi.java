@@ -14,4 +14,9 @@ public interface OfferingApi {
             @Query("country") String country,
             @Query("city") String city
     );
+
+    @GET("/api/offerings/")
+    Call<Page<OfferingCard>> getAllOfferings(
+            @Query("page") int page
+    );
 }
