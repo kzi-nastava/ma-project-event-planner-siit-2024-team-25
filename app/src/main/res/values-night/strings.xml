@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancelation_deadline">Cancelation deadline</string>
+    <string name="cancellation_deadline">cancellation_deadline</string>
+    <string name="reservation_deadline">Reservation deadline</string>
+    <string name="service_name">Service name</string>
+</resources>

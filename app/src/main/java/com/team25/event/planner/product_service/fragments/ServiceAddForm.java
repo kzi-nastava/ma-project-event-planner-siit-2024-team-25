@@ -8,6 +8,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,33 +23,44 @@ import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewMod
 public class ServiceAddForm extends Fragment {
     private ServiceAddFormViewModel mViewModel;
     private NavController navController;
+    private FragmentServiceAddFormBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        FragmentServiceAddFormBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_service_add_form, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_service_add_form, container, false);
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-        mViewModel= new ViewModelProvider(this).get(ServiceAddFormViewModel.class);
+        mViewModel = new ViewModelProvider(
+                NavHostFragment.findNavController(this).getViewModelStoreOwner(R.id.nav_graph)
+        ).get(ServiceAddFormViewModel.class);
         binding.setViewModel(mViewModel);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
         if(getArguments() != null){
             TextView textView = binding.EditOrCreateServiceText;
             textView.setText(R.string.edit_the_service);
             mViewModel.findService(1);
-            /*String productId = getArguments() != null ? getArguments().getString("productId") : null;*/
         }
 
-        binding.setLifecycleOwner(this);
         setObservers(getArguments());
         return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setObservers(getArguments());
     }
 
     public void setObservers(Bundle argumentsBundle){
         mViewModel.firstToSecond.observe(getViewLifecycleOwner(), navigate -> {
             if (navigate != null && navigate) {
-                navController.navigate(R.id.action_serviceAddForm_to_secondPageCreatingServiceFragment, argumentsBundle);
+                if(mViewModel.validateForm()){
+                    navController.navigate(R.id.action_serviceAddForm_to_secondPageCreatingServiceFragment, argumentsBundle);
 
-                mViewModel.firstToSecond.setValue(false);
+                    mViewModel.firstToSecond.setValue(false);
+                }
+
             }
         });
 
@@ -56,6 +70,7 @@ public class ServiceAddForm extends Fragment {
                 mViewModel.cancelClicked.setValue(false);
             }
         });
+
     }
 
 }

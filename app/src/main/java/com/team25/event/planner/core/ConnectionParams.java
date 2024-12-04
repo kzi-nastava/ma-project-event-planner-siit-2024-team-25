@@ -15,7 +15,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ConnectionParams {
     public static final String BASE_URL = BuildConfig.BASE_URL;
 
-
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
             .create();
