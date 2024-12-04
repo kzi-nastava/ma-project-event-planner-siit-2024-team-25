@@ -64,7 +64,7 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
 
         if(offeringCard != null){
             offerName.setText(offeringCard.getName());
-            offerOwner.setText(offeringCard.getOwner());
+            offerOwner.setText(offeringCard.getOwnerName());
 
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
             String formattedPrice = currencyFormatter.format(offeringCard.getPrice());

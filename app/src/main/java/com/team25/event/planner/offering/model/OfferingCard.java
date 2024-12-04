@@ -14,14 +14,14 @@ public class OfferingCard implements Parcelable {
     private int id;
     private String name;
     private double price;
-    private String owner;
+    private String ownerName;
     private double rating;
 
     protected OfferingCard(Parcel in) {
         id = in.readInt();
         name = in.readString();
         price = in.readDouble();
-        owner = in.readString();
+        ownerName = in.readString();
     }
 
 
@@ -36,7 +36,7 @@ public class OfferingCard implements Parcelable {
         dest.writeInt(id);
         dest.writeString(name);
         dest.writeDouble(price);
-        dest.writeString(owner);
+        dest.writeString(ownerName);
         dest.writeDouble(rating);
     }
 

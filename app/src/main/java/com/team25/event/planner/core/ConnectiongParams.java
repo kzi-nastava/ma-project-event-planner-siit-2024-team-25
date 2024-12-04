@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.team25.event.planner.BuildConfig;
 import com.team25.event.planner.event.api.EventApi;
+import com.team25.event.planner.offering.Api.OfferingApi;
 
 import java.time.LocalDateTime;
 
@@ -13,8 +14,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ConnectiongParams {
-
-    public static final String BASE_URL = "http://192.168.1.102:8080";
 
     public static final String BASE_URL = BuildConfig.BASE_URL;
 
@@ -30,5 +29,6 @@ public class ConnectiongParams {
 
     public static EventApi eventApi = retrofit.create(EventApi.class);
 
+    public static OfferingApi offeringApi = retrofit.create(OfferingApi.class);
 
 }
