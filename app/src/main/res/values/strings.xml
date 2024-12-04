@@ -85,6 +85,9 @@
     <string name="max_price">Max price</string>
     <string name="min_price">Min price</string>
     <string name="duration_min">Duration (min)</string>
+    <string name="cancellation_deadline">Cancellation deadline</string>
+    <string name="reservation_deadline">Reservation deadline</string>
+    <string name="service_name">Service name</string>
 
 
 </resources>

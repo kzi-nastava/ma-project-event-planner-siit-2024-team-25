@@ -4,8 +4,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.team25.event.planner.databinding.FragmentFilterServiceBinding;
+import com.team25.event.planner.product_service.viewModels.ServiceCardsViewModel;
 
 public class FilterServiceFragment extends BottomSheetDialogFragment {
 
@@ -17,4 +22,5 @@ public class FilterServiceFragment extends BottomSheetDialogFragment {
         binding = FragmentFilterServiceBinding.inflate(inflater,container,false);
         return binding.getRoot();
     }
+
 }
