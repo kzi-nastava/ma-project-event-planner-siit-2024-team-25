@@ -39,6 +39,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewTitle" />
 
+        <TextView
+            android:id="@+id/textViewServerError"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/accent_red"
+            android:visibility="gone"
+            android:text="@{viewModel.serverError}"
+            app:layout_constraintTop_toBottomOf="@id/buttonNewEventType"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/recyclerViewEventTypes"
+            tools:text="Server error occurred. Please try again later." />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewEventTypes"
             android:layout_width="0dp"

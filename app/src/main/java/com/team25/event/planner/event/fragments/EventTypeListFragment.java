@@ -56,6 +56,15 @@ public class EventTypeListFragment extends Fragment {
         binding.recyclerViewEventTypes.setAdapter(adapter);
 
         viewModel.eventTypes.observe(getViewLifecycleOwner(), adapter::updateEventTypes);
+
+        viewModel.serverError.observe(getViewLifecycleOwner(), errorMessage -> {
+            if (errorMessage != null) {
+                binding.textViewServerError.setText(errorMessage);
+                binding.textViewServerError.setVisibility(View.VISIBLE);
+            } else {
+                binding.textViewServerError.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void setupListeners() {
