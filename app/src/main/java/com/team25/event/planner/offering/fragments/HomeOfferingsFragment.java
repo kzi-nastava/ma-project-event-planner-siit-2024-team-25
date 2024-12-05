@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class HomeOfferingsFragment extends Fragment {
 
     private HomeOfferingViewModel homeOfferingViewModel;
-    private FragmentEventsBinding binding;
+    private FragmentHomeOfferingsBinding binding;
 
     public HomeOfferingsFragment(HomeOfferingViewModel homeOfferingViewModel){
         this.homeOfferingViewModel = homeOfferingViewModel;
@@ -38,8 +38,9 @@ public class HomeOfferingsFragment extends Fragment {
 
 
 
-        binding = FragmentEventsBinding.inflate(inflater, container, false);
-
+        binding = FragmentHomeOfferingsBinding.inflate(inflater, container, false);
+        binding.setViewModel(homeOfferingViewModel);
+        binding.setLifecycleOwner(this);
         return binding.getRoot();
     }
 
@@ -51,7 +52,7 @@ public class HomeOfferingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        FragmentTransition.toRight(HomeOfferingsListFragment.newInstance(homeOfferingViewModel), requireActivity(), false, binding.EventsContainer.getId());
+        FragmentTransition.toRight(HomeOfferingsListFragment.newInstance(homeOfferingViewModel), requireActivity(), false, binding.offeringsContainer.getId());
     }
 
     @Override

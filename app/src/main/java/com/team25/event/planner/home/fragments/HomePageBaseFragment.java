@@ -240,7 +240,7 @@ public class HomePageBaseFragment extends Fragment {
         if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
                     .replace(_binding.homeTopEvents.getId(), new TopEventsFragment(_homeEventViewModel))
-                    .replace(_binding.homeTopOffers.getId(), new TopOfferingsFragment())
+                    .replace(_binding.homeTopOffers.getId(), new TopOfferingsFragment(_homeOfferingViewModel))
                     .commit();
         }
 

@@ -7,7 +7,7 @@
 
 
     <ListView
-        android:id="@+id/list"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="373.5dp"
         android:background="@drawable/home_page_group_border"

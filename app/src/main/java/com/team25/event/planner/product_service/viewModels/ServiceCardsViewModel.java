@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.team25.event.planner.core.ConnectiongParams;
+import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.product_service.api.ServiceApi;
 import com.team25.event.planner.product_service.dto.ServiceFilterDTO;
@@ -109,7 +109,7 @@ public class ServiceCardsViewModel extends ViewModel {
 
     public void getServices(Map<String, String> queryMap){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectiongParams.BASE_URL)
+                .baseUrl(ConnectionParams.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

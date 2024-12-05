@@ -16,14 +16,14 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.offering.model.OfferingCard;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
+import java.util.List;
 
 public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
 
 
-    private ArrayList<OfferingCard> offeringCards;
+    private List<OfferingCard> offeringCards;
 
-    public TopOfferingsListAdapter(Context context, ArrayList<OfferingCard> events) {
+    public TopOfferingsListAdapter(Context context, List<OfferingCard> events) {
         super(context, R.layout.home_page_top_event, events);
         this.offeringCards = events;
     }
@@ -62,7 +62,7 @@ public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
 
         if(offeringCard != null){
             offerName.setText(offeringCard.getName());
-            offerOwner.setText(offeringCard.getOwner());
+            offerOwner.setText(offeringCard.getOwnerName());
 
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
             String formattedPrice = currencyFormatter.format(offeringCard.getPrice());

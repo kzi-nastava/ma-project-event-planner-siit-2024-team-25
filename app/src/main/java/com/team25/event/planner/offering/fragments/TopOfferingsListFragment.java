@@ -4,6 +4,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.ListFragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,47 +14,52 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.team25.event.planner.databinding.FragmentTopOfferingsListBinding;
+import com.team25.event.planner.event.adapters.TopEventsListAdapter;
+import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 import com.team25.event.planner.offering.adapters.TopOfferingsListAdapter;
 import com.team25.event.planner.offering.model.OfferingCard;
+import com.team25.event.planner.offering.viewmodel.HomeOfferingViewModel;
+
 import java.util.ArrayList;
 
-public class TopOfferingsListFragment extends Fragment {
+public class TopOfferingsListFragment extends ListFragment {
 
     private FragmentTopOfferingsListBinding binding;
     private TopOfferingsListAdapter adapter;
-    private ArrayList<OfferingCard> topOffers;
+    private ArrayList<OfferingCard> _topOfferings;
+    private HomeOfferingViewModel _homeOfferingViewModel;
     private static final String ARG_PARAM = "param";
 
-    public TopOfferingsListFragment() {
+    public TopOfferingsListFragment(HomeOfferingViewModel homeOfferingViewModel) {
+        this._homeOfferingViewModel = homeOfferingViewModel;
+    }
+
+    public static TopOfferingsListFragment newInstance(HomeOfferingViewModel homeOfferingViewModel) {
+        return new TopOfferingsListFragment(homeOfferingViewModel);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        _homeOfferingViewModel.topOfferings.observe(getViewLifecycleOwner(), offeringCards -> {
+            adapter = new TopOfferingsListAdapter(getContext(), offeringCards);
+            setListAdapter(adapter);
+        });
+        _homeOfferingViewModel.getTopOfferings();
         binding = FragmentTopOfferingsListBinding.inflate(inflater, container, false);
-
-        ListView listView = binding.list;
-        adapter = new TopOfferingsListAdapter(getContext(), topOffers);
-        listView.setAdapter(adapter);
-
         return binding.getRoot();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("ShopApp", "onCreate Products List Fragment");
+        _homeOfferingViewModel = new ViewModelProvider(requireActivity()).get(HomeOfferingViewModel.class);
         if (getArguments() != null) {
-            topOffers = getArguments().getParcelableArrayList(ARG_PARAM);
-        } else {
-            topOffers = new ArrayList<>();
+            _topOfferings = getArguments().getParcelableArrayList(ARG_PARAM);
+            adapter = new TopOfferingsListAdapter(getActivity(), _topOfferings);
+            setListAdapter(adapter);
         }
     }
 
-    public static TopOfferingsListFragment newInstance(ArrayList<OfferingCard> offers) {
-        TopOfferingsListFragment fragment = new TopOfferingsListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, offers);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 }
