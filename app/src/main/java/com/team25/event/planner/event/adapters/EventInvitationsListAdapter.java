@@ -20,18 +20,18 @@ import androidx.navigation.NavController;
 import com.google.android.material.card.MaterialCardView;
 import com.team25.event.planner.R;
 import com.team25.event.planner.event.model.EventCard;
+import com.team25.event.planner.event.model.Invitation;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class EventInvitationsListAdapter extends ArrayAdapter<String> {
+public class EventInvitationsListAdapter extends ArrayAdapter<Invitation> {
 
-    private List<String> emails;
+    private List<Invitation> emails;
+    private final MutableLiveData<Invitation> _deleteEmail = new MutableLiveData<>();
+    public final LiveData<Invitation> deleteEmail = _deleteEmail;
 
-    private final MutableLiveData<String> _deleteEmail = new MutableLiveData<>();
-    public final LiveData<String> deleteEmail = _deleteEmail;
-
-    public EventInvitationsListAdapter(Context context, List<String> emails) {
+    public EventInvitationsListAdapter(Context context, List<Invitation> emails) {
         super(context, R.layout.event_invitation_email, emails);
         this.emails = emails;
     }
@@ -44,7 +44,7 @@ public class EventInvitationsListAdapter extends ArrayAdapter<String> {
 
     @Nullable
     @Override
-    public String getItem(int position) {
+    public Invitation getItem(int position) {
         return emails.get(position);
     }
 
@@ -57,7 +57,7 @@ public class EventInvitationsListAdapter extends ArrayAdapter<String> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        String email = getItem(position);
+        Invitation email = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.event_invitation_email,
                     parent, false);
@@ -67,7 +67,7 @@ public class EventInvitationsListAdapter extends ArrayAdapter<String> {
         ImageView deleteImage = convertView.findViewById(R.id.email_delete_icon);
 
         if(email != null){
-            emailText.setText(email);
+            emailText.setText(email.getGuestEmail());
             deleteImage.setImageResource(R.drawable.delete_icon);
 
         }

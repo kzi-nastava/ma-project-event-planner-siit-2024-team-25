@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.team25.event.planner.core.Validation;
+import com.team25.event.planner.event.model.Invitation;
 import com.team25.event.planner.user.viewmodels.LoginViewModel;
 
 import java.util.ArrayList;
@@ -17,8 +18,8 @@ public class EventInvitationViewModel {
     public final LiveData<Boolean> closeFragmentEvent = _closeFragmentEvent;
     private final MutableLiveData<String> _toastMessage = new MutableLiveData<>();
     public final LiveData<String> toastMessage = _toastMessage;
-    private final MutableLiveData<List<String>> _emails = new MutableLiveData<>(new ArrayList<>());
-    public final LiveData<List<String>> emails = _emails;
+    private final MutableLiveData<List<Invitation>> _emails = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<Invitation>> emails = _emails;
 
     private final MutableLiveData<LoginViewModel.ErrorUiState> _errors = new MutableLiveData<>();
     public final LiveData<LoginViewModel.ErrorUiState> errors = _errors;
@@ -27,14 +28,14 @@ public class EventInvitationViewModel {
 
     public EventInvitationViewModel(Long eventId){
         this.eventId = eventId;
-        List<String> newEmails = new ArrayList<>();
+        List<Invitation> newEmails = new ArrayList<>();
         _emails.setValue(newEmails);
     }
 
     public void addEmail(){
         if(validateEmail()){
-            List<String> currentEmails = new ArrayList<>(_emails.getValue());
-            currentEmails.add(email.getValue());
+            List<Invitation> currentEmails = new ArrayList<>(_emails.getValue());
+            currentEmails.add(new Invitation(email.getValue()));
             _emails.setValue(currentEmails);
 
             _toastMessage.setValue("You added: " + email.getValue());
@@ -43,21 +44,20 @@ public class EventInvitationViewModel {
         }
     }
 
-    public void deleteEmail(String email){
-        List<String> currentEmails = new ArrayList<>(_emails.getValue());
+    public void deleteEmail(Invitation email){
+        List<Invitation> currentEmails = new ArrayList<>(_emails.getValue());
         currentEmails.remove(email);
         _emails.setValue(currentEmails);
 
-        _toastMessage.setValue("You remove: " + email);
+        _toastMessage.setValue("You remove: " + email.getGuestEmail());
 
         this.email.setValue(null);
     }
 
     public void sendEmails(){
-        List<String> currentEmails = new ArrayList<>();
+        List<Invitation> currentEmails = new ArrayList<>();
         _emails.setValue(currentEmails);
         _toastMessage.setValue("Invitations for event was sent");
-
         _closeFragmentEvent.setValue(true);
     }
 

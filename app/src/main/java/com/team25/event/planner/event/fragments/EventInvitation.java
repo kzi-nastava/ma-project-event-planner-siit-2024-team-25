@@ -64,8 +64,8 @@ EventInvitation extends Fragment {
             adapter = new EventInvitationsListAdapter(requireContext(), emails);
             listView.setAdapter(adapter);
 
-            adapter.deleteEmail.observe(getViewLifecycleOwner(), message -> {
-                eventInvitationViewModel.deleteEmail(message);
+            adapter.deleteEmail.observe(getViewLifecycleOwner(), email -> {
+                eventInvitationViewModel.deleteEmail(email);
             });
         }));
 
@@ -79,9 +79,6 @@ EventInvitation extends Fragment {
                 navController.navigate(R.id.action_eventInvitation_to_homeFragment);
             }
         });
-
-
-
         return binding.getRoot();
     }
 }
