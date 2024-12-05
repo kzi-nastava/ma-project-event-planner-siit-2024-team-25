@@ -73,7 +73,7 @@ public class EventInvitationViewModel {
                 if (response.isSuccessful()) {
                     List<Invitation> currentEmails = new ArrayList<>();
                     _emails.setValue(currentEmails);
-                    _toastMessage.setValue("Invitations for event was sent");
+                    _toastMessage.setValue("Invitations for event were sent");
                     _closeFragmentEvent.setValue(true);
                 } else {
                     Log.e("API", "Error: " + response.code());
