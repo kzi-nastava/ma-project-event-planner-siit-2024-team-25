@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 import com.team25.event.planner.R;
-import com.team25.event.planner.core.ConnectiongParams;
+import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.product_service.api.ServiceApi;
 import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
@@ -231,7 +231,7 @@ public class ServiceAddFormViewModel extends ViewModel {
         serviceCreateRequestDTO.setImages(images.getValue());
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectiongParams.BASE_URL)
+                .baseUrl(ConnectionParams.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

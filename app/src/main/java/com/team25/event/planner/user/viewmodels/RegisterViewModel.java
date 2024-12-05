@@ -1,20 +1,42 @@
 package com.team25.event.planner.user.viewmodels;
 
-import android.net.Uri;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.gson.Gson;
+import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Validation;
+import com.team25.event.planner.core.model.ApiError;
+import com.team25.event.planner.user.api.BodyBuilder;
+import com.team25.event.planner.user.api.UserApi;
+import com.team25.event.planner.user.model.EventOrganizerInfo;
+import com.team25.event.planner.user.model.Location;
+import com.team25.event.planner.user.model.OwnerInfo;
+import com.team25.event.planner.user.model.RegisterRequest;
+import com.team25.event.planner.user.model.RegisterResponse;
 import com.team25.event.planner.user.model.UserRole;
 
+import java.io.File;
 import java.util.List;
 
 import lombok.Builder;
 import lombok.Data;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterViewModel extends ViewModel {
+    private final UserApi userApi;
+
+    public RegisterViewModel() {
+        this.userApi = ConnectionParams.userApi;
+    }
+
     public enum RegisterStep {
         RoleChoice, GeneralInfo, OrganizerSpecific, VendorSpecific, Success
     }
@@ -35,7 +57,7 @@ public class RegisterViewModel extends ViewModel {
     public final MutableLiveData<String> confirmPassword = new MutableLiveData<>();
     public final MutableLiveData<String> firstName = new MutableLiveData<>();
     public final MutableLiveData<String> lastName = new MutableLiveData<>();
-    public final MutableLiveData<Uri> profilePicture = new MutableLiveData<>();
+    public final MutableLiveData<File> profilePicture = new MutableLiveData<>();
 
     public final MutableLiveData<String> addressCountry = new MutableLiveData<>();
     public final MutableLiveData<String> addressCity = new MutableLiveData<>();
@@ -47,6 +69,9 @@ public class RegisterViewModel extends ViewModel {
 
     private final MutableLiveData<String> _roleChoiceError = new MutableLiveData<>();
     public final LiveData<String> roleChoiceError = _roleChoiceError;
+
+    private final MutableLiveData<String> _serverError = new MutableLiveData<>();
+    public final LiveData<String> serverError = _serverError;
 
     @Data
     @Builder(toBuilder = true)
@@ -91,7 +116,7 @@ public class RegisterViewModel extends ViewModel {
     public void onRoleChoiceNext(UserRole userRole) {
         if (userRole == null) {
             _roleChoiceError.postValue("Please select a user role.");
-        } else if (!userRole.equals(UserRole.EventOrganizer) && !userRole.equals(UserRole.Vendor)) {
+        } else if (!userRole.equals(UserRole.EVENT_ORGANIZER) && !userRole.equals(UserRole.OWNER)) {
             _roleChoiceError.postValue("Unsupported user type.");
         } else {
             _roleChoiceError.postValue(null);
@@ -108,7 +133,7 @@ public class RegisterViewModel extends ViewModel {
         if (validateGeneralInfoForm()) {
             UserRole userRole = this.userRole.getValue();
 
-            if (userRole != null && userRole.equals(UserRole.EventOrganizer)) {
+            if (userRole != null && userRole.equals(UserRole.EVENT_ORGANIZER)) {
                 _formStep.postValue(RegisterStep.OrganizerSpecific);
             } else {
                 _formStep.postValue(RegisterStep.VendorSpecific);
@@ -122,7 +147,6 @@ public class RegisterViewModel extends ViewModel {
         String confirmPassword = this.confirmPassword.getValue();
         String firstName = this.firstName.getValue();
         String lastName = this.lastName.getValue();
-        Uri profilePicture = this.profilePicture.getValue();
 
         GeneralInfoErrorUiState.GeneralInfoErrorUiStateBuilder errorUiStateBuilder = GeneralInfoErrorUiState.builder();
         boolean isValid = true;
@@ -172,7 +196,7 @@ public class RegisterViewModel extends ViewModel {
 
     public void onOrganizerSpecificNext() {
         if (validateOrganizerSpecificForm()) {
-            _formStep.postValue(RegisterStep.Success);
+            register();
         }
     }
 
@@ -219,7 +243,7 @@ public class RegisterViewModel extends ViewModel {
 
     public void onVendorSpecificNext() {
         if (validateVendorSpecificForm()) {
-            _formStep.postValue(RegisterStep.Success);
+            register();
         }
     }
 
@@ -272,5 +296,70 @@ public class RegisterViewModel extends ViewModel {
 
     public void onGoToLogin() {
         goToLogin.postValue(true);
+    }
+
+    public void register() {
+        RegisterRequest registerRequest = new RegisterRequest(
+                email.getValue(),
+                password.getValue(),
+                firstName.getValue(),
+                lastName.getValue(),
+                profilePicture.getValue(),
+                userRole.getValue(),
+                userRole.getValue() == UserRole.EVENT_ORGANIZER
+                        ? new EventOrganizerInfo(
+                        new Location(
+                                addressCountry.getValue(),
+                                addressCity.getValue(),
+                                address.getValue()
+                        ),
+                        phoneNumber.getValue()
+                )
+                        : null,
+                userRole.getValue() == UserRole.OWNER
+                        ? new OwnerInfo(
+                        null, // company name
+                        new Location(
+                                addressCountry.getValue(),
+                                addressCity.getValue(),
+                                address.getValue()
+                        ),
+                        phoneNumber.getValue(),
+                        description.getValue()
+                )
+                        : null
+        );
+
+        userApi.register(BodyBuilder.getRegisterFormData(registerRequest)).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<RegisterResponse> call,
+                    @NonNull Response<RegisterResponse> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _formStep.postValue(RegisterStep.Success);
+                } else {
+                    try (ResponseBody errorBody = response.errorBody()) {
+                        if (errorBody != null) {
+                            Gson gson = new Gson();
+                            ApiError apiError = gson.fromJson(errorBody.charStream(), ApiError.class);
+                            _serverError.postValue(apiError.getMessage());
+                            Log.e("RegisterViewModel", "Error: " + apiError.getMessage());
+                        } else {
+                            _serverError.postValue("Unknown error occurred");
+                        }
+                    } catch (Exception e) {
+                        Log.e("RegisterViewModel", "Error parsing response: " + e.getMessage());
+                        _serverError.postValue("Error parsing server response");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable t) {
+                Log.e("RegisterViewModel", "Network error on signup: " + t.getMessage());
+                _serverError.postValue("Network error");
+            }
+        });
     }
 }

@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
-import com.team25.event.planner.core.ConnectiongParams;
+import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.event.api.EventApi;
 import com.team25.event.planner.event.model.EventCard;
@@ -50,7 +50,7 @@ public class HomeOfferingViewModel extends ViewModel {
         String countryValue = country.getValue() != null ? country.getValue() : "";
         String cityValue = city.getValue() != null ? city.getValue() : "";
 
-        OfferingApi offeringApi = ConnectiongParams.offeringApi;
+        OfferingApi offeringApi = ConnectionParams.offeringApi;
         Call<Page<OfferingCard>> call = offeringApi.getTopOfferings(countryValue, cityValue);
 
         call.enqueue(new Callback<Page<OfferingCard>>() {
@@ -71,7 +71,7 @@ public class HomeOfferingViewModel extends ViewModel {
 
     public void getAllOfferings(){
 
-        OfferingApi offeringApi = ConnectiongParams.offeringApi;
+        OfferingApi offeringApi = ConnectionParams.offeringApi;
         Call<Page<OfferingCard>> call = offeringApi.getAllOfferings(_currentPage.getValue());
 
         call.enqueue(new Callback<Page<OfferingCard>>() {
