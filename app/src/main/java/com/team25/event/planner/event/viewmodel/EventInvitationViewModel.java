@@ -1,16 +1,25 @@
 package com.team25.event.planner.event.viewmodel;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.team25.event.planner.core.ConnectiongParams;
+import com.team25.event.planner.core.Page;
 import com.team25.event.planner.core.Validation;
+import com.team25.event.planner.event.api.EventApi;
+import com.team25.event.planner.event.model.EventCard;
 import com.team25.event.planner.event.model.Invitation;
 import com.team25.event.planner.user.viewmodels.LoginViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EventInvitationViewModel {
     private Long eventId;
@@ -55,10 +64,29 @@ public class EventInvitationViewModel {
     }
 
     public void sendEmails(){
-        List<Invitation> currentEmails = new ArrayList<>();
-        _emails.setValue(currentEmails);
-        _toastMessage.setValue("Invitations for event was sent");
-        _closeFragmentEvent.setValue(true);
+
+        EventApi eventApi = ConnectiongParams.eventApi;
+        Call<Void> call = eventApi.sendInvitations(eventId, emails.getValue());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    List<Invitation> currentEmails = new ArrayList<>();
+                    _emails.setValue(currentEmails);
+                    _toastMessage.setValue("Invitations for event was sent");
+                    _closeFragmentEvent.setValue(true);
+                } else {
+                    Log.e("API", "Error: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("API", "Error: " + t.getMessage());
+            }
+        });
+
+
     }
 
     private boolean validateEmail() {
