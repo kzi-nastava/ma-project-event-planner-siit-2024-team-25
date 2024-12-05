@@ -90,6 +90,11 @@
     <string name="service_name">Service name</string>
     <string name="event_types">Event types</string>
     <string name="new_event_type">New Event Type</string>
+    <string name="save">Save</string>
+    <string name="add_event_type">Add Event Type</string>
+    <string name="edit_event_type">Edit Event Type</string>
+    <string name="event_type_active">Event type active?</string>
+    <string name="offering_categories">Offering categories</string>
 
 
 </resources>

@@ -69,6 +69,8 @@ public class EventTypeListFragment extends Fragment {
 
     private void setupListeners() {
         binding.buttonNewEventType.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putLong(ID_ARG_NAME, -1L);
             navController.navigate(R.id.action_eventTypeListFragment_to_eventTypeFragment);
         });
     }

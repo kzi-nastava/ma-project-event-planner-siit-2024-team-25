@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class OfferingCategoryPreviewDTO {
-    private Long id;
-    private String name;
+    private final Long id;
+    private final String name;
 }
