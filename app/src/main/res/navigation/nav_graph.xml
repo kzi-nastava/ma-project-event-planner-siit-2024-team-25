@@ -6,12 +6,11 @@
     app:startDestination="@id/homeFragment">
 
 
-
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.team25.event.planner.home.fragments.HomePageBaseFragment"
         android:label="Event Planner"
-        tools:layout="@layout/fragment_home_page_base" >
+        tools:layout="@layout/fragment_home_page_base">
         <action
             android:id="@+id/action_homeFragment_to_eventInvitation"
             app:destination="@id/eventInvitation" />
@@ -20,7 +19,7 @@
         android:id="@+id/loginFragment"
         android:name="com.team25.event.planner.user.fragments.LoginFragment"
         android:label="Login"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -32,21 +31,21 @@
     <fragment
         android:id="@+id/ownerHomePage"
         android:name="com.team25.event.planner.product_service.fragments.OwnerHomePage"
-        android:label="OwnerHomePage" >
+        android:label="OwnerHomePage">
         <action
             android:id="@+id/action_ownerHomePage_to_serviceAddForm"
-            app:destination="@id/serviceAddForm"/>
+            app:destination="@id/serviceAddForm" />
     </fragment>
     <fragment
         android:id="@+id/serviceAddForm"
         android:name="com.team25.event.planner.product_service.fragments.ServiceAddForm"
         android:label="fragment_service_add_form"
-        tools:layout="@layout/fragment_service_add_form" >
+        tools:layout="@layout/fragment_service_add_form">
         <action
             android:id="@+id/action_serviceAddForm_to_secondPageCreatingServiceFragment"
             app:destination="@id/secondPageCreatingServiceFragment"
             app:popUpTo="@+id/serviceAddForm"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_serviceAddForm_to_ownerHomePage"
             app:destination="@id/ownerHomePage" />
@@ -55,42 +54,56 @@
         android:id="@+id/secondPageCreatingServiceFragment"
         android:name="com.team25.event.planner.product_service.fragments.SecondPageCreatingServiceFragment"
         android:label="fragment_second_page_creating"
-        tools:layout="@layout/fragment_second_page_creating" >
+        tools:layout="@layout/fragment_second_page_creating">
         <action
             android:id="@+id/action_secondPageCreatingServiceFragment_to_finishPageCreateingCerviceFragment"
             app:destination="@id/finishPageCreateingCerviceFragment"
             app:popUpTo="@+id/secondPageCreatingServiceFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_secondPageCreatingServiceFragment_to_serviceAddForm"
             app:destination="@id/serviceAddForm"
             app:popUpTo="@+id/secondPageCreatingServiceFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/finishPageCreateingCerviceFragment"
         android:name="com.team25.event.planner.product_service.fragments.FinishPageCreatingServiceFragment"
         android:label="fragment_finish_page_createing_cervice"
-        tools:layout="@layout/fragment_finish_page_creating_service" >
+        tools:layout="@layout/fragment_finish_page_creating_service">
         <action
             android:id="@+id/action_finishPageCreateingCerviceFragment_to_ownerHomePage"
             app:destination="@id/ownerHomePage"
             app:popUpTo="@+id/finishPageCreateingCerviceFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_finishPageCreateingCerviceFragment_to_secondPageCreatingServiceFragment"
             app:destination="@id/secondPageCreatingServiceFragment"
             app:popUpTo="@+id/finishPageCreateingCerviceFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
         android:id="@+id/eventInvitation"
         android:name="com.team25.event.planner.event.fragments.EventInvitation"
         android:label="Send invitations"
-        tools:layout="@layout/fragment_event_invitation" >
+        tools:layout="@layout/fragment_event_invitation">
         <action
             android:id="@+id/action_eventInvitation_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/eventTypeListFragment"
+        android:name="com.team25.event.planner.event.fragments.EventTypeListFragment"
+        android:label="fragment_event_type_list"
+        tools:layout="@layout/fragment_event_type_list">
+        <action
+            android:id="@+id/action_eventTypeListFragment_to_eventTypeFragment"
+            app:destination="@id/eventTypeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventTypeFragment"
+        android:name="com.team25.event.planner.event.fragments.EventTypeFragment"
+        android:label="fragment_event_type"
+        tools:layout="@layout/fragment_event_type" />
 </navigation>
