@@ -3,12 +3,14 @@ package com.team25.event.planner.home.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,6 +30,8 @@ import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 import com.team25.event.planner.offering.fragments.HomeOfferingsFragment;
 import com.team25.event.planner.offering.fragments.TopOfferingsFragment;
 import com.team25.event.planner.offering.viewmodel.HomeOfferingViewModel;
+
+import java.util.Calendar;
 
 
 public class HomePageBaseFragment extends Fragment {
@@ -58,6 +62,8 @@ public class HomePageBaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        _homeEventViewModel = new HomeEventViewModel();
+        _homeOfferingViewModel = new HomeOfferingViewModel();
 
     }
 
@@ -66,8 +72,6 @@ public class HomePageBaseFragment extends Fragment {
                              Bundle savedInstanceState) {
         _binding = FragmentHomePageBaseBinding.inflate(inflater, container, false);
         _binding.setLifecycleOwner(this);
-        _homeEventViewModel = new HomeEventViewModel();
-        _homeOfferingViewModel = new HomeOfferingViewModel();
         return _binding.getRoot();
     }
 
@@ -118,6 +122,7 @@ public class HomePageBaseFragment extends Fragment {
                 false
         );
         View eventView = homePageEventFilterBinding.getRoot();
+        homePageEventFilterBinding.setViewModel(_homeEventViewModel);
         _filterEventDialog = new BottomSheetDialog(getActivity());
         _filterEventDialog.setContentView(eventView);
 
@@ -127,13 +132,46 @@ public class HomePageBaseFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         eventTypeSpinner.setAdapter(adapter);
 
+        Calendar calendar = Calendar.getInstance();
+        long minDate = calendar.getTimeInMillis();
+        homePageEventFilterBinding.eventStartDate.setMinDate(minDate);
+        homePageEventFilterBinding.eventEndDate.setMinDate(minDate);
+
+        homePageEventFilterBinding.eventStartDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
+            String selectedDate = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+            _homeEventViewModel.selectedStartDate.setValue(selectedDate);
+        });
+
+        homePageEventFilterBinding.eventEndDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
+            String selectedDate = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+            _homeEventViewModel.selectedEndDate.setValue(selectedDate);
+        });
+
+        _binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                _homeEventViewModel.getAllEvents();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                _homeEventViewModel.name.setValue(newText);
+                if(newText.equals("")){
+                    _homeEventViewModel.getAllEvents();
+                }
+                return false;
+            }
+        });
+
+
         _filterButton.setOnClickListener(v -> {
             _filterEventDialog.show();
         });
 
         ImageView filter = homePageEventFilterBinding.imageView;
         filter.setOnClickListener(v -> {
-            _homeEventViewModel.filter();
+            _homeEventViewModel.getAllEvents();
             _filterEventDialog.dismiss();
         });
     }
@@ -150,22 +188,43 @@ public class HomePageBaseFragment extends Fragment {
         _sortEventDialog = new BottomSheetDialog(getActivity());
         _sortEventDialog.setContentView(eventView);
 
-        String[] options = {"Option 1", "Option 2", "Option 3"};
         Spinner eventSortCategory = _sortEventDialog.findViewById(R.id.event_sort_category);
         Spinner eventSortType = _sortEventDialog.findViewById(R.id.event_sort_type);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(_sortEventDialog.getContext(), android.R.layout.simple_spinner_item, options);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        eventSortCategory.setAdapter(adapter);
-        eventSortType.setAdapter(adapter);
+        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<String>(_sortEventDialog.getContext(), android.R.layout.simple_spinner_item, _homeEventViewModel.sortByMap.keySet().toArray(new String[0]));
+        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        eventSortCategory.setAdapter(sortByAdapter);
+
+        ArrayAdapter<String> sortCriteriaAdapter = new ArrayAdapter<String>(_sortEventDialog.getContext(), android.R.layout.simple_spinner_item, _homeEventViewModel.sortCriteriaMap.keySet().toArray(new String[0]));
+        sortCriteriaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        eventSortType.setAdapter(sortCriteriaAdapter);
 
         _sortButton.setOnClickListener(v -> {
             _sortEventDialog.show();
 
         });
 
+        homePageEventSortBinding.eventSortCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                _homeEventViewModel.selectedSortBy.setValue((String)parent.getItemAtPosition(position));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        homePageEventSortBinding.eventSortType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                _homeEventViewModel.selectedSortCriteria.setValue((String)parent.getItemAtPosition(position));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         Button sortEvent = homePageEventSortBinding.eventSortButton;
         sortEvent.setOnClickListener(v -> {
-            _homeEventViewModel.sort();
+            _homeEventViewModel.getAllEvents();
             _sortEventDialog.dismiss();
         });
     }
