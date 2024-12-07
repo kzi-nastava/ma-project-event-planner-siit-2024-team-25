@@ -2,6 +2,7 @@ package com.team25.event.planner.event.api;
 
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.event.model.EventCard;
+import com.team25.event.planner.event.model.EventFilterDTO;
 import com.team25.event.planner.event.model.Invitation;
 
 import java.util.List;

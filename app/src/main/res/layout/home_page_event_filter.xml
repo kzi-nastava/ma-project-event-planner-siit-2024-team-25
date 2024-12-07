@@ -38,6 +38,16 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
+                android:id="@+id/imageRestart"
+                android:layout_width="30dp"
+                android:layout_height="27dp"
+                android:background="@color/white"
+                android:src="@drawable/ic_restart"
+                app:layout_constraintEnd_toStartOf="@id/imageView"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+            <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="30dp"
                 android:layout_height="27dp"
@@ -94,7 +104,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@={viewModel.maxParticipantsString}"
+                        android:text="@={viewModel.eventFilterDTO.maxParticipantsString}"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,7 +118,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@={viewModel.country}"
+                        android:text="@={viewModel.eventFilterDTO.country}"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -122,7 +132,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@={viewModel.city}"
+                        android:text="@={viewModel.eventFilterDTO.city}"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -149,7 +159,8 @@
                     android:text="@string/start_time"
                     android:textSize="16sp"
                     android:textColor="@color/primary"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="4dp"
+                    />
 
                 <TimePicker
                     android:layout_width="match_parent"

@@ -31,6 +31,9 @@ import com.team25.event.planner.offering.fragments.HomeOfferingsFragment;
 import com.team25.event.planner.offering.fragments.TopOfferingsFragment;
 import com.team25.event.planner.offering.viewmodel.HomeOfferingViewModel;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 
@@ -138,15 +141,28 @@ public class HomePageBaseFragment extends Fragment {
         homePageEventFilterBinding.eventEndDate.setMinDate(minDate);
 
         homePageEventFilterBinding.eventStartDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
-            String selectedDate = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-            _homeEventViewModel.selectedStartDate.setValue(selectedDate);
+            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
+            _homeEventViewModel.eventFilterDTO.selectedStartDate.setValue(localDate);
         });
 
         homePageEventFilterBinding.eventEndDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
-            String selectedDate = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-            _homeEventViewModel.selectedEndDate.setValue(selectedDate);
+            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
+            _homeEventViewModel.eventFilterDTO.selectedEndDate.setValue(localDate);
         });
 
+        homePageEventFilterBinding.eventStartTime.setIs24HourView(true);
+        homePageEventFilterBinding.eventStartTime.setOnTimeChangedListener((view, hourOfDay, minute) -> {
+            LocalTime selectedTime = LocalTime.of(hourOfDay, minute);
+            _homeEventViewModel.eventFilterDTO.selectedStartTime.setValue(selectedTime);
+        });
+
+        homePageEventFilterBinding.eventEndTime.setIs24HourView(true);
+        homePageEventFilterBinding.eventEndTime.setOnTimeChangedListener((view, hourOfDay, minute) -> {
+            LocalTime selectedTime = LocalTime.of(hourOfDay, minute);
+            _homeEventViewModel.eventFilterDTO.selectedEndTime.setValue(selectedTime);
+        });
+
+        _binding.searchView.setQueryHint("Event name");
         _binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -156,8 +172,8 @@ public class HomePageBaseFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                _homeEventViewModel.name.setValue(newText);
-                if(newText.equals("")){
+                _homeEventViewModel.eventFilterDTO.name.setValue(newText);
+                if(newText.isEmpty()){
                     _homeEventViewModel.getAllEvents();
                 }
                 return false;
@@ -172,6 +188,12 @@ public class HomePageBaseFragment extends Fragment {
         ImageView filter = homePageEventFilterBinding.imageView;
         filter.setOnClickListener(v -> {
             _homeEventViewModel.getAllEvents();
+            _filterEventDialog.dismiss();
+        });
+
+        homePageEventFilterBinding.imageRestart.setOnClickListener(v -> {
+            _binding.searchView.setQuery("", false);
+            _homeEventViewModel.restartFilter();
             _filterEventDialog.dismiss();
         });
     }
@@ -190,23 +212,22 @@ public class HomePageBaseFragment extends Fragment {
 
         Spinner eventSortCategory = _sortEventDialog.findViewById(R.id.event_sort_category);
         Spinner eventSortType = _sortEventDialog.findViewById(R.id.event_sort_type);
-        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<String>(_sortEventDialog.getContext(), android.R.layout.simple_spinner_item, _homeEventViewModel.sortByMap.keySet().toArray(new String[0]));
+        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<>(_sortEventDialog.getContext(), android.R.layout.simple_spinner_item, _homeEventViewModel.eventFilterDTO.sortByMap.keySet().toArray(new String[0]));
         sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         eventSortCategory.setAdapter(sortByAdapter);
 
-        ArrayAdapter<String> sortCriteriaAdapter = new ArrayAdapter<String>(_sortEventDialog.getContext(), android.R.layout.simple_spinner_item, _homeEventViewModel.sortCriteriaMap.keySet().toArray(new String[0]));
+        ArrayAdapter<String> sortCriteriaAdapter = new ArrayAdapter<>(_sortEventDialog.getContext(), android.R.layout.simple_spinner_item, _homeEventViewModel.eventFilterDTO.sortCriteriaMap.keySet().toArray(new String[0]));
         sortCriteriaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         eventSortType.setAdapter(sortCriteriaAdapter);
 
         _sortButton.setOnClickListener(v -> {
             _sortEventDialog.show();
-
         });
 
         homePageEventSortBinding.eventSortCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                _homeEventViewModel.selectedSortBy.setValue((String)parent.getItemAtPosition(position));
+                _homeEventViewModel.eventFilterDTO.selectedSortBy.setValue((String)parent.getItemAtPosition(position));
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -215,7 +236,7 @@ public class HomePageBaseFragment extends Fragment {
         homePageEventSortBinding.eventSortType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                _homeEventViewModel.selectedSortCriteria.setValue((String)parent.getItemAtPosition(position));
+                _homeEventViewModel.eventFilterDTO.selectedSortCriteria.setValue((String)parent.getItemAtPosition(position));
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
