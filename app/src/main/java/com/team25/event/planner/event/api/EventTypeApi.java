@@ -1,6 +1,8 @@
 package com.team25.event.planner.event.api;
 
+import com.team25.event.planner.core.Page;
 import com.team25.event.planner.event.model.EventType;
+import com.team25.event.planner.event.model.EventTypePreviewDTO;
 import com.team25.event.planner.event.model.EventTypeRequest;
 
 import java.util.List;
@@ -24,4 +26,7 @@ public interface EventTypeApi {
 
     @PUT("/api/event-types/{id}")
     Call<EventType> updateEventType(@Path("id") Long id, @Body EventTypeRequest eventType);
+
+    @GET("/api/event-types/all")
+    Call<List<EventTypePreviewDTO>> getAllEventTypes();
 }

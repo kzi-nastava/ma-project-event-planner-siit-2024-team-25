@@ -22,6 +22,7 @@ public class EventFilterDTO {
     public MutableLiveData<LocalTime> selectedEndTime = new MutableLiveData<>();
     public final MutableLiveData<String> selectedSortBy = new MutableLiveData<>();
     public final MutableLiveData<String> selectedSortCriteria = new MutableLiveData<>();
+    public final MutableLiveData<EventTypePreviewDTO> selectedEventType = new MutableLiveData<>();
 
     public final Map<String, String> sortByMap = new HashMap<>();
     public final Map<String, String> sortCriteriaMap = new HashMap<>();
@@ -69,6 +70,9 @@ public class EventFilterDTO {
         if(this.selectedEndTime.getValue()!= null){
             String formattedTime = this.selectedEndTime.getValue().format(DateTimeFormatter.ISO_TIME);
             query.put("endTime", formattedTime);
+        }
+        if(this.selectedEventType.getValue()!= null){
+            query.put("eventTypeId", this.selectedEventType.getValue().id.toString());
         }
 
         if(this.selectedSortBy.getValue()!= null){

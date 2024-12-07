@@ -26,6 +26,7 @@ import com.team25.event.planner.databinding.HomePageOfferingFilterBinding;
 import com.team25.event.planner.databinding.HomePageOfferingSortBinding;
 import com.team25.event.planner.event.fragments.EventsFragment;
 import com.team25.event.planner.event.fragments.TopEventsFragment;
+import com.team25.event.planner.event.model.EventTypePreviewDTO;
 import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 import com.team25.event.planner.offering.fragments.HomeOfferingsFragment;
 import com.team25.event.planner.offering.fragments.TopOfferingsFragment;
@@ -34,6 +35,7 @@ import com.team25.event.planner.offering.viewmodel.HomeOfferingViewModel;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -129,11 +131,27 @@ public class HomePageBaseFragment extends Fragment {
         _filterEventDialog = new BottomSheetDialog(getActivity());
         _filterEventDialog.setContentView(eventView);
 
-        String[] options = {"Option 1", "Option 2", "Option 3"};
         Spinner eventTypeSpinner = _filterEventDialog.findViewById(R.id.event_type_filter);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(_filterEventDialog.getContext(), android.R.layout.simple_spinner_item, options);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        eventTypeSpinner.setAdapter(adapter);
+
+        _homeEventViewModel.allEventTypes.observe(getViewLifecycleOwner(),types ->{
+            ArrayAdapter<EventTypePreviewDTO> adapter = new ArrayAdapter<>(_filterEventDialog.getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(types));
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            eventTypeSpinner.setAdapter(adapter);
+        });
+        _homeEventViewModel.getEventTypes();
+
+        eventTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                EventTypePreviewDTO selectedType = (EventTypePreviewDTO) parent.getItemAtPosition(position);
+                _homeEventViewModel.eventFilterDTO.selectedEventType.setValue(selectedType);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
 
         Calendar calendar = Calendar.getInstance();
         long minDate = calendar.getTimeInMillis();

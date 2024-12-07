@@ -10,8 +10,11 @@ import androidx.lifecycle.ViewModel;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.event.api.EventApi;
+import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.event.model.EventCard;
 import com.team25.event.planner.event.model.EventFilterDTO;
+import com.team25.event.planner.event.model.EventTypePreviewDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,8 @@ public class HomeEventViewModel extends ViewModel {
     private final MutableLiveData<Integer> _totalPage = new MutableLiveData<>();
     public final LiveData<Integer> totalPage = _totalPage;
     public EventFilterDTO eventFilterDTO = new EventFilterDTO();
+    private final MutableLiveData<List<EventTypePreviewDTO>> _allEventTypes = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<EventTypePreviewDTO>> allEventTypes = _allEventTypes;
 
 
     public HomeEventViewModel() {
@@ -101,5 +106,26 @@ public class HomeEventViewModel extends ViewModel {
     public void restartFilter(){
         this.eventFilterDTO = new EventFilterDTO();
         this.getAllEvents();
+    }
+
+    public void getEventTypes() {
+        EventTypeApi eventTypeApi = ConnectionParams.eventTypeApi;
+        Call<List<EventTypePreviewDTO>> call = eventTypeApi.getAllEventTypes();
+
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<EventTypePreviewDTO>> call, @NonNull Response<List<EventTypePreviewDTO>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _allEventTypes.setValue(response.body());
+                } else {
+                    Log.e("HomeEventViewModel", "Failed to fetch top events");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<EventTypePreviewDTO>> call, @NonNull Throwable t) {
+                Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
+            }
+        });
     }
 }
