@@ -95,6 +95,7 @@
     <string name="edit_event_type">Edit Event Type</string>
     <string name="event_type_active">Event type active?</string>
     <string name="offering_categories">Offering categories</string>
+    <string name="offering_category">Offering category</string>
 
 
 </resources>

@@ -106,4 +106,10 @@
         android:name="com.team25.event.planner.event.fragments.EventTypeFragment"
         android:label="fragment_event_type"
         tools:layout="@layout/fragment_event_type" />
+
+    <fragment
+        android:id="@+id/offeringCategoryFragment"
+        android:name="com.team25.event.planner.offering.fragments.OfferingCategoryBaseFragment"
+        android:label="fragment_offering_category"
+        tools:layout="@layout/fragment_offering_category_base"/>
 </navigation>
