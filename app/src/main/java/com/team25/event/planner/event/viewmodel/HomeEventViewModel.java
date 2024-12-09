@@ -116,7 +116,9 @@ public class HomeEventViewModel extends ViewModel {
             @Override
             public void onResponse(@NonNull Call<List<EventTypePreviewDTO>> call, @NonNull Response<List<EventTypePreviewDTO>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    _allEventTypes.setValue(response.body());
+                    List<EventTypePreviewDTO> list = response.body();
+                    list.add(new EventTypePreviewDTO());
+                    _allEventTypes.setValue(list);
                 } else {
                     Log.e("HomeEventViewModel", "Failed to fetch top events");
                 }
