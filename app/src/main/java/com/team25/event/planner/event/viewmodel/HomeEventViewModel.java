@@ -2,6 +2,7 @@ package com.team25.event.planner.event.viewmodel;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -9,7 +10,10 @@ import androidx.lifecycle.ViewModel;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.event.api.EventApi;
+import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.event.model.EventCard;
+import com.team25.event.planner.event.model.EventFilterDTO;
+import com.team25.event.planner.event.model.EventTypePreviewDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,26 +29,26 @@ public class HomeEventViewModel extends ViewModel {
     public final LiveData<List<EventCard>> events = _events;
     private final MutableLiveData<List<EventCard>> _topEvents = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<EventCard>> topEvents = _topEvents;
-
     private final MutableLiveData<Integer> _currentPage = new MutableLiveData<>();
     public final LiveData<Integer> currentPage = _currentPage;
     private final MutableLiveData<Integer> _totalPage = new MutableLiveData<>();
     public final LiveData<Integer> totalPage = _totalPage;
-    public final MutableLiveData<String> country = new MutableLiveData<>();
+    public EventFilterDTO eventFilterDTO = new EventFilterDTO();
+    private final MutableLiveData<List<EventTypePreviewDTO>> _allEventTypes = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<EventTypePreviewDTO>> allEventTypes = _allEventTypes;
 
 
     public HomeEventViewModel() {
         _currentPage.setValue(0);
     }
 
-
     public void getAllEvents() {
         EventApi eventApi = ConnectionParams.eventApi;
-        Call<Page<EventCard>> call = eventApi.getAllEvents(currentPage.getValue());
+        Call<Page<EventCard>> call = eventApi.getAllEvents(currentPage.getValue(), this.eventFilterDTO.buildQuery());
 
-        call.enqueue(new Callback<Page<EventCard>>() {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<Page<EventCard>> call, Response<Page<EventCard>> response) {
+            public void onResponse(@NonNull Call<Page<EventCard>> call, @NonNull Response<Page<EventCard>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     _events.setValue(response.body().getContent());
                     _totalPage.setValue(response.body().getTotalPages());
@@ -54,11 +58,9 @@ public class HomeEventViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<Page<EventCard>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Page<EventCard>> call, @NonNull Throwable t) {
                 Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
-
             }
-
         });
     }
 
@@ -76,18 +78,17 @@ public class HomeEventViewModel extends ViewModel {
         }
     }
 
-
     public void getTopEvents() {
 
-        String countryValue = country.getValue() != null ? country.getValue() : "";
+        String countryValue = "";
         String cityValue = "";
 
         EventApi eventApi = ConnectionParams.eventApi;
         Call<Page<EventCard>> call = eventApi.getTopEvents(countryValue, cityValue);
 
-        call.enqueue(new Callback<Page<EventCard>>() {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<Page<EventCard>> call, Response<Page<EventCard>> response) {
+            public void onResponse(@NonNull Call<Page<EventCard>> call, @NonNull Response<Page<EventCard>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     _topEvents.setValue(response.body().getContent());
                 } else {
@@ -96,16 +97,35 @@ public class HomeEventViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<Page<EventCard>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Page<EventCard>> call, @NonNull Throwable t) {
                 Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
             }
         });
     }
 
-    public void filter() {
-
+    public void restartFilter(){
+        this.eventFilterDTO = new EventFilterDTO();
+        this.getAllEvents();
     }
 
-    public void sort() {
+    public void getEventTypes() {
+        EventTypeApi eventTypeApi = ConnectionParams.eventTypeApi;
+        Call<List<EventTypePreviewDTO>> call = eventTypeApi.getAllEventTypes();
+
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<EventTypePreviewDTO>> call, @NonNull Response<List<EventTypePreviewDTO>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _allEventTypes.setValue(response.body());
+                } else {
+                    Log.e("HomeEventViewModel", "Failed to fetch top events");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<EventTypePreviewDTO>> call, @NonNull Throwable t) {
+                Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
+            }
+        });
     }
 }

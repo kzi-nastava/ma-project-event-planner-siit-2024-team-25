@@ -6,7 +6,7 @@ import android.widget.Toast;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.team25.event.planner.core.ConnectiongParams;
+import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.core.Validation;
 import com.team25.event.planner.event.api.EventApi;
@@ -65,7 +65,7 @@ public class EventInvitationViewModel {
 
     public void sendEmails(){
 
-        EventApi eventApi = ConnectiongParams.eventApi;
+        EventApi eventApi = ConnectionParams.eventApi;
         Call<Void> call = eventApi.sendInvitations(eventId, emails.getValue());
         call.enqueue(new Callback<Void>() {
             @Override
