@@ -16,6 +16,7 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.offering.model.OfferingCategory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OfferingCategoryAdapter extends ArrayAdapter<OfferingCategory> {

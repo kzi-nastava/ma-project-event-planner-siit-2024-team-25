@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -16,9 +17,11 @@ import android.widget.ListView;
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentOfferingCategoryBaseBinding;
 import com.team25.event.planner.databinding.FragmentOwnerHomePageBinding;
+import com.team25.event.planner.event.viewmodel.EventTypeListViewModel;
 import com.team25.event.planner.offering.adapters.OfferingCategoryAdapter;
 import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.offering.model.OfferingCategoryType;
+import com.team25.event.planner.offering.viewmodel.OfferingCategoryViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ public class OfferingCategoryBaseFragment extends Fragment {
     private NavController navController;
     private FragmentOfferingCategoryBaseBinding binding;
     private OfferingCategoryAdapter adapter;
+    private OfferingCategoryViewModel offeringCategoryViewModel;
     private ListView listView;
 
     List<OfferingCategory> offeringCategories;
@@ -51,6 +55,9 @@ public class OfferingCategoryBaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentOfferingCategoryBaseBinding.inflate(inflater, container, false);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
+        offeringCategoryViewModel = new ViewModelProvider(this).get(OfferingCategoryViewModel.class);
+        binding.setViewModel(offeringCategoryViewModel);
         navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
         return binding.getRoot();
     }
@@ -60,17 +67,21 @@ public class OfferingCategoryBaseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = binding.list;
-        // mock
-        OfferingCategory offering1 = new OfferingCategory(1L, "Category 1", "Description 1", OfferingCategoryType.ACCEPTED);
-        OfferingCategory offering2 = new OfferingCategory(2L, "Category 2", "Description 2", OfferingCategoryType.PENDING);
-        OfferingCategory offering3 = new OfferingCategory(3L, "Category 3", "Description 3", OfferingCategoryType.ACCEPTED);
-        offeringCategories = new ArrayList<>();
-        offeringCategories.add(offering1);
-        offeringCategories.add(offering2);
-        offeringCategories.add(offering3);
-        //
 
-        adapter = new OfferingCategoryAdapter(requireContext(), offeringCategories);
-        listView.setAdapter(adapter);
+        setUpObservers();
+        //setUpListeners();
+
+        offeringCategoryViewModel.fetchOfferingCategories();
+    }
+
+    public void setUpObservers(){
+        offeringCategoryViewModel.allCategories.observe(getViewLifecycleOwner(), categories -> {
+            adapter = new OfferingCategoryAdapter(requireContext(), categories);
+            listView.setAdapter(adapter);
+        });
+    }
+
+    public void setUpListeners(){
+
     }
 }
