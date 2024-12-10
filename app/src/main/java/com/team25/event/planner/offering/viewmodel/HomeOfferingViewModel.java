@@ -110,7 +110,7 @@ public class HomeOfferingViewModel extends ViewModel {
 
     public void getAllServices(){
         OfferingApi offeringApi = ConnectionParams.offeringApi;
-        Call<Page<OfferingCard>> call = offeringApi.getAllOfferings(_currentPage.getValue(), this.offeringFilterDTO.buildQuery());
+        Call<Page<OfferingCard>> call = offeringApi.getAllServices(_currentPage.getValue(), this.offeringFilterDTO.buildQuery());
 
         call.enqueue(new Callback<>() {
             @Override
