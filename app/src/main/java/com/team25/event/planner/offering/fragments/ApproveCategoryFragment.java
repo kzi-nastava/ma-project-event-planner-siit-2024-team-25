@@ -16,15 +16,21 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentApproveCategoryBinding;
+import com.team25.event.planner.offering.model.OfferingCategory;
+import com.team25.event.planner.offering.viewmodel.OfferingCategoryViewModel;
 import com.team25.event.planner.offering.viewmodel.SubmittedCategoryViewModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class ApproveCategoryFragment extends Fragment {
@@ -32,9 +38,12 @@ public class ApproveCategoryFragment extends Fragment {
     private NavController navController;
     private FragmentApproveCategoryBinding binding;
     private SubmittedCategoryViewModel viewModel;
+    private OfferingCategoryViewModel offeringCategoryViewModel;
 
     private CheckBox checkBox;
     private Spinner spinner;
+    private HashMap<Integer,Long> createdCategories = new HashMap<>();
+    private Long acceptedOfferingCategoryId;
     private Boolean isUpdateCategory = true;
 
 
@@ -55,6 +64,7 @@ public class ApproveCategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentApproveCategoryBinding.inflate(inflater,container,false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
+        offeringCategoryViewModel = new ViewModelProvider(this).get(OfferingCategoryViewModel.class);
         viewModel = new ViewModelProvider(this).get(SubmittedCategoryViewModel.class);
         binding.setViewModel(viewModel);
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
@@ -73,30 +83,53 @@ public class ApproveCategoryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        setUpUI();
         setUpObservers();
         setUpListeners();
+        offeringCategoryViewModel.fetchOfferingCategories();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setUpUI();
+        setUpObservers();
+        setUpListeners();
+        offeringCategoryViewModel.fetchOfferingCategories();
     }
 
     public void setUpUI(){
         checkBox = binding.checkBox;
         spinner = binding.spinner;
-
-        // Populate the Spinner with sample data
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                Arrays.asList("Option 1", "Option 2", "Option 3")
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
     }
 
     public void setUpObservers(){
         viewModel.success.observe(getViewLifecycleOwner(), check ->{
-            if(check){
+            if(check &&navController.getCurrentDestination() != null&& navController.getCurrentDestination().getId() != R.id.submittedOfferingCategoryFragment){
                 navController.navigate(R.id.action_approveCategoryFragment_to_submittedOfferingCategoryFragment);
             }
+        });
+        offeringCategoryViewModel.allCategories.observe(getViewLifecycleOwner(), categories -> {
+            createdCategories.clear();
+            List<String> nameOfferingCategory = new ArrayList<>();
+            if(categories != null){
+                if(!categories.isEmpty()){
+                    Integer position = 0;
+                    for (OfferingCategory o:categories) {
+                        nameOfferingCategory.add(o.getName());
+                        createdCategories.put(position,o.getId());
+                        position++;
+                    }
+                }
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    nameOfferingCategory
+            );
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
         });
     }
 
@@ -113,12 +146,13 @@ public class ApproveCategoryFragment extends Fragment {
                 if(isUpdateCategory){
                     viewModel.updateOfferingCategory();
                 }else{
-                    // update changeOfferingsCategory
+                    viewModel.changeOfferingsCategory(acceptedOfferingCategoryId, createdCategories.size());
                 }
 
             }
         });
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            viewModel.validSpinner(1);
             if (isChecked) {
                 spinner.setVisibility(View.VISIBLE);
                 binding.nameInput.setEnabled(false);
@@ -129,6 +163,17 @@ public class ApproveCategoryFragment extends Fragment {
                 binding.nameInput.setEnabled(true);
                 binding.descriptionInput.setEnabled(true);
                 isUpdateCategory = true;
+            }
+        });
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                acceptedOfferingCategoryId = createdCategories.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }

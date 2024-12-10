@@ -15,6 +15,7 @@ import java.util.List;
 
 import lombok.Builder;
 import lombok.Data;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,16 +40,17 @@ public class SubmittedCategoryViewModel extends ViewModel {
     public static class ErrorUiState {
         private final String name;
         private final String description;
+        private final String createdCategory;
     }
-    private final MutableLiveData<OfferingCategoryViewModel.ErrorUiState> _errors = new MutableLiveData<>();
-    public final LiveData<OfferingCategoryViewModel.ErrorUiState> errors = _errors;
+    private final MutableLiveData<SubmittedCategoryViewModel.ErrorUiState> _errors = new MutableLiveData<>();
+    public final LiveData<SubmittedCategoryViewModel.ErrorUiState> errors = _errors;
 
 
     public boolean validateForm(){
         String name = this.name.getValue();
         String description = this.description.getValue();
 
-        OfferingCategoryViewModel.ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = OfferingCategoryViewModel.ErrorUiState.builder();
+        SubmittedCategoryViewModel.ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = SubmittedCategoryViewModel.ErrorUiState.builder();
         boolean isValid = true;
 
         if (name == null || name.isBlank()) {
@@ -63,6 +65,36 @@ public class SubmittedCategoryViewModel extends ViewModel {
         _errors.setValue(errorUiStateBuilder.build());
         return isValid;
     }
+    public boolean validSpinner(Integer size){
+        SubmittedCategoryViewModel.ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = SubmittedCategoryViewModel.ErrorUiState.builder();
+        boolean isValid = true;
+        if(size <= 0){
+            errorUiStateBuilder.createdCategory("There is no created category, you are not able to choose.");
+            isValid = false;
+        }
+        _errors.setValue(errorUiStateBuilder.build());
+        return isValid;
+    }
+
+    // id for offering, id submitted category, id already existed category = choose
+    public void changeOfferingsCategory(Long newCategoryId, Integer size){
+        if(validSpinner(size)){
+            offeringApi.updateOfferingsCategory(offeringId.getValue(),categoryId.getValue(),newCategoryId).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if(response.isSuccessful() && response.body()!=null){
+                        _success.postValue(true);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
+        }
+
+    }
 
     public void updateOfferingCategory(){
         if(validateForm()){
@@ -73,7 +105,9 @@ public class SubmittedCategoryViewModel extends ViewModel {
             offeringCategoryApi.editOfferingCategory(categoryId.getValue(),offeringCategory).enqueue(new Callback<OfferingCategory>() {
                 @Override
                 public void onResponse(Call<OfferingCategory> call, Response<OfferingCategory> response) {
-                    _success.postValue(true);
+                    if(response.isSuccessful() && response.body()!=null){
+                        _success.postValue(true);
+                    }
                 }
 
                 @Override
