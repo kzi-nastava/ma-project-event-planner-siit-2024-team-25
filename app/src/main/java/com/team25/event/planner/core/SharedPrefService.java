@@ -23,7 +23,7 @@ public class SharedPrefService {
     }
 
     public User getUser() {
-        String userJson = getString("user", null);
+        String userJson = getString(USER_KEY, null);
         if (userJson == null) {
             return null;
         }
