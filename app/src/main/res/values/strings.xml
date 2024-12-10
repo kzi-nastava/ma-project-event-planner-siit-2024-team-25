@@ -98,6 +98,7 @@
     <string name="my_products_services">My Products/Services</string>
     <string name="profile">Profile</string>
     <string name="notifications">Notifications</string>
+    <string name="log_out">Log out</string>
 
 
 </resources>
