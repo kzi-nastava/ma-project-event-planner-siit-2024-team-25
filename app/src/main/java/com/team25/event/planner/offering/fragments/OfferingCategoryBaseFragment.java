@@ -35,7 +35,6 @@ public class OfferingCategoryBaseFragment extends Fragment implements OnEditButt
     private OfferingCategoryViewModel offeringCategoryViewModel;
     private ListView listView;
 
-    List<OfferingCategory> offeringCategories;
 
     public OfferingCategoryBaseFragment() {
         // Required empty public constructor
@@ -89,6 +88,13 @@ public class OfferingCategoryBaseFragment extends Fragment implements OnEditButt
             adapter.setOnEditButtonClickListener(this);
             adapter.setOnDeleteButtonClickListener(this);
             listView.setAdapter(adapter);
+            if(categories.isEmpty()){
+                binding.infoTable.setText("There is no offering categories");
+                binding.infoTable.setVisibility(View.VISIBLE);
+            }else{
+                binding.infoTable.setText("");
+                binding.infoTable.setVisibility(View.GONE);
+            }
         });
 
         offeringCategoryViewModel.success.observe(getViewLifecycleOwner(), check ->{
@@ -103,6 +109,12 @@ public class OfferingCategoryBaseFragment extends Fragment implements OnEditButt
             @Override
             public void onClick(View v) {
                 navController.navigate(R.id.action_offeringCategoryFragment_to_createEditOfferingCategoryFragment);
+            }
+        });
+        binding.buttonOfferingCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_offeringCategoryFragment_to_submittedOfferingCategoryFragment);
             }
         });
     }

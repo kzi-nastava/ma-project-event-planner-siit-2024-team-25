@@ -1,39 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".offering.fragments.OfferingCategoryBaseFragment">
+    tools:context=".offering.fragments.SubmittedOfferingCategoryFragment">
     <data>
         <variable
             name="viewModel"
-            type="com.team25.event.planner.offering.viewmodel.OfferingCategoryViewModel" />
+            type="com.team25.event.planner.offering.viewmodel.SubmittedCategoryViewModel" />
     </data>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/titleOfferingCategory"
+            android:id="@+id/titleSubmittedOfferingCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Offering categories"
+            android:text="Submitted offering categories"
             android:textAlignment="center"
             android:textSize="30sp"
             android:textColor="@color/primary"
             android:padding="20sp"/>
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonOfferingCategory"
+            android:id="@+id/buttonSubmittedOfferingCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="View submitted offering categories"
+            android:text="View offering categories"
             android:layout_marginHorizontal="40sp"
             android:textColor="?attr/colorPrimary"
             style="@style/Widget.MaterialComponents.Button.TextButton"/>
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/infoTable"
+            android:id="@+id/infoTableSubmitted"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
@@ -44,24 +41,34 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:stretchColumns="1"
+            android:stretchColumns="2"
             android:layout_margin="20sp">
 
             <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Offering\n name"
+                    android:paddingLeft="10sp"
+                    android:paddingRight="10sp"
+                    android:paddingVertical="10sp"
+                    android:textColor="@color/white"
+                    android:background="@color/primary"/>
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Name"
-                    android:paddingRight="30sp"
+                    android:text="Category\n name"
                     android:paddingLeft="10sp"
+                    android:paddingRight="10sp"
                     android:paddingVertical="10sp"
                     android:textColor="@color/white"
                     android:background="@color/primary"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Description"
+                    android:text="Description\n"
                     android:paddingRight="10sp"
                     android:paddingLeft="10sp"
                     android:paddingVertical="10sp"
@@ -70,20 +77,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Edit"
+                    android:text="Approve\n"
                     android:paddingRight="10sp"
                     android:paddingVertical="10sp"
                     android:paddingLeft="10sp"
                     android:textColor="@color/white"
                     android:background="@color/primary"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Delete"
-                    android:paddingRight="10sp"
-                    android:paddingVertical="10sp"
-                    android:textColor="@color/white"
-                    android:background="@color/primary"/>
+
             </TableRow>
 
 
@@ -91,25 +91,10 @@
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/list_item_offering_category" />
+                tools:listitem="@layout/submitted_category_item" />
 
 
         </TableLayout>
     </LinearLayout>
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addCategoryButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:clickable="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/baseline_add_circle_24"
-            android:backgroundTint="@color/white"/>
-
-</RelativeLayout>
-
 
 </layout>
