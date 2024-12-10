@@ -69,7 +69,7 @@ public class OfferingCategoryBaseFragment extends Fragment {
         listView = binding.list;
 
         setUpObservers();
-        //setUpListeners();
+        setUpListeners();
 
         offeringCategoryViewModel.fetchOfferingCategories();
     }
@@ -82,6 +82,11 @@ public class OfferingCategoryBaseFragment extends Fragment {
     }
 
     public void setUpListeners(){
-
+        binding.addCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_offeringCategoryFragment_to_createEditOfferingCategoryFragment);
+            }
+        });
     }
 }

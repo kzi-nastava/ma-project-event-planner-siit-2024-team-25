@@ -96,6 +96,8 @@
     <string name="event_type_active">Event type active?</string>
     <string name="offering_categories">Offering categories</string>
     <string name="offering_category">Offering category</string>
+    <string name="create_new_category">Create new category</string>
+    <string name="create">Create</string>
 
 
 </resources>
