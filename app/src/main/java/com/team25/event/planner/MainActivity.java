@@ -14,11 +14,15 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.navigation.NavigationView;
+import com.team25.event.planner.core.SharedPrefService;
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.ActivityMainBinding;
 
 
@@ -71,6 +75,35 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         navController.popBackStack();
                     }
+                }
+            }
+        });
+
+        AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
+        SharedPrefService sharedPrefService = new SharedPrefService(this);
+        authViewModel.initialize(sharedPrefService);
+
+        authViewModel.user.observe(this, user -> {
+            NavigationView navView = binding.navView;
+            navView.getMenu().clear();
+
+            if (user == null) {
+                navView.inflateMenu(R.menu.unauthenticated_nav_menu);
+            } else {
+                switch (user.getUserRole()) {
+                    case REGULAR:
+                        navView.inflateMenu(R.menu.regular_nav_menu);
+                        break;
+                    case EVENT_ORGANIZER:
+                        navView.inflateMenu(R.menu.event_organizer_nav_menu);
+                        break;
+                    case OWNER:
+                        navView.inflateMenu(R.menu.owner_nav_menu);
+                        break;
+                    case ADMIN:
+                        navView.inflateMenu(R.menu.admin_nav_menu);
+                        break;
                 }
             }
         });
