@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.listeners.OnApproveButtonClickListener;
+import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
 import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.offering.model.SubmittedOfferingCategory;
 
@@ -20,9 +22,13 @@ import java.util.List;
 
 public class SubmittedCategoryAdapter extends ArrayAdapter<SubmittedOfferingCategory> {
     private List<SubmittedOfferingCategory> categories;
+    private OnApproveButtonClickListener approveButtonClickListener;
     public SubmittedCategoryAdapter(Context context, List<SubmittedOfferingCategory> offers){
         super(context, R.layout.submitted_category_item, offers);
         this.categories= offers;
+    }
+    public void setOnApproveButtonClickListener(OnApproveButtonClickListener listener) {
+        this.approveButtonClickListener = listener;
     }
 
     @Override
@@ -58,6 +64,12 @@ public class SubmittedCategoryAdapter extends ArrayAdapter<SubmittedOfferingCate
             offeringName.setText(category.getOfferingName());
             categoryName.setText(category.getCategoryName());
             description.setText(category.getDescription());
+
+            approveButton.setOnClickListener(v->{
+                if(approveButtonClickListener != null){
+                    approveButtonClickListener.onApproveButtonClick(category.getOfferingId(),category.getCategoryId());
+                }
+            });
         }
 
         return convertView;

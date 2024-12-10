@@ -15,13 +15,16 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.listeners.OnApproveButtonClickListener;
 import com.team25.event.planner.databinding.FragmentSubmittedOfferingCategoryBinding;
 import com.team25.event.planner.offering.adapters.SubmittedCategoryAdapter;
 import com.team25.event.planner.offering.viewmodel.OfferingCategoryViewModel;
 import com.team25.event.planner.offering.viewmodel.SubmittedCategoryViewModel;
 
-public class SubmittedOfferingCategoryFragment extends Fragment {
+public class SubmittedOfferingCategoryFragment extends Fragment implements OnApproveButtonClickListener {
 
+    public static final String OFFERING_ID_ARG_NAME = "offeringId";
+    public static final String OFFERING_CATEGORY_ID_ARG_NAME = "offeringCategoryId";
     private NavController navController;
     private FragmentSubmittedOfferingCategoryBinding binding;
     private SubmittedCategoryAdapter adapter;
@@ -76,6 +79,7 @@ public class SubmittedOfferingCategoryFragment extends Fragment {
     public void setUpObservers(){
         viewModel.submittedCategories.observe(getViewLifecycleOwner(), categories ->{
             adapter = new SubmittedCategoryAdapter(requireContext(),categories);
+            adapter.setOnApproveButtonClickListener(this);
             listView.setAdapter(adapter);
             if(categories.isEmpty()){
                 binding.infoTableSubmitted.setText("There is no submitted offering categories");
@@ -93,5 +97,13 @@ public class SubmittedOfferingCategoryFragment extends Fragment {
                 navController.navigate(R.id.action_submittedOfferingCategoryFragment_to_offeringCategoryFragment);
             }
         });
+    }
+
+    @Override
+    public void onApproveButtonClick(Long id, Long oldCategoryId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(OFFERING_ID_ARG_NAME, id);
+        bundle.putLong(OFFERING_CATEGORY_ID_ARG_NAME, oldCategoryId);
+        navController.navigate(R.id.action_submittedOfferingCategoryFragment_to_approveCategoryFragment, bundle);
     }
 }

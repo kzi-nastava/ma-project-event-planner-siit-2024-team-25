@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.offering.Api.OfferingApi;
+import com.team25.event.planner.offering.Api.OfferingCategoryApi;
+import com.team25.event.planner.offering.model.OfferingCategory;
+import com.team25.event.planner.offering.model.OfferingCategoryType;
 import com.team25.event.planner.offering.model.SubmittedOfferingCategory;
 
 import java.util.List;
@@ -18,10 +21,13 @@ import retrofit2.Response;
 
 public class SubmittedCategoryViewModel extends ViewModel {
     private final OfferingApi offeringApi = ConnectionParams.offeringApi;
+    private final OfferingCategoryApi offeringCategoryApi = ConnectionParams.offeringCategoryApi;
 
     private final MutableLiveData<List<SubmittedOfferingCategory>> _submittedCategories = new MutableLiveData<>();
     public final LiveData<List<SubmittedOfferingCategory>> submittedCategories = _submittedCategories;
 
+    public final MutableLiveData<Long> offeringId = new MutableLiveData<>();
+    public final MutableLiveData<Long> categoryId = new MutableLiveData<>();
     public final MutableLiveData<String> name = new MutableLiveData<>();
     public final MutableLiveData<String> description = new MutableLiveData<>();
     private final MutableLiveData<String> _serverError = new MutableLiveData<>();
@@ -58,6 +64,26 @@ public class SubmittedCategoryViewModel extends ViewModel {
         return isValid;
     }
 
+    public void updateOfferingCategory(){
+        if(validateForm()){
+            OfferingCategory offeringCategory = new OfferingCategory();
+            offeringCategory.setName(name.getValue());
+            offeringCategory.setDescription(description.getValue());
+            offeringCategory.setStatus(OfferingCategoryType.ACCEPTED);
+            offeringCategoryApi.editOfferingCategory(categoryId.getValue(),offeringCategory).enqueue(new Callback<OfferingCategory>() {
+                @Override
+                public void onResponse(Call<OfferingCategory> call, Response<OfferingCategory> response) {
+                    _success.postValue(true);
+                }
+
+                @Override
+                public void onFailure(Call<OfferingCategory> call, Throwable t) {
+
+                }
+            });
+        }
+    }
+
     public void fetchSubmittedCategories(){
         offeringApi.getSubmittedCategories().enqueue(new Callback<List<SubmittedOfferingCategory>>() {
             @Override
@@ -72,5 +98,26 @@ public class SubmittedCategoryViewModel extends ViewModel {
 
             }
         });
+    }
+
+    public void fetchSubmittedCategory(Long id){
+        offeringCategoryApi.getSubmittedOfferingCategory(id).enqueue(new Callback<OfferingCategory>() {
+            @Override
+            public void onResponse(Call<OfferingCategory> call, Response<OfferingCategory> response) {
+                if(response.isSuccessful() && response.body()!=null){
+                    fillForm(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OfferingCategory> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void fillForm(OfferingCategory body){
+        name.setValue(body.getName());
+        description.setValue(body.getDescription());
     }
 }

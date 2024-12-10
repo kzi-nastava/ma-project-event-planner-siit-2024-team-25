@@ -23,6 +23,8 @@ public interface OfferingCategoryApi {
     Call<List<OfferingCategory>> getOfferingCategories();
     @GET("api/offering-categories/{id}")
     Call<OfferingCategory> getOfferingCategory(@Path("id") Long id);
+    @GET("api/offering-categories/submitted/{id}")
+    Call<OfferingCategory> getSubmittedOfferingCategory(@Path("id") Long id);
     @POST("api/offering-categories/")
     Call<OfferingCategory> createOfferingCategory(@Body OfferingCategory offeringCategory);
     @PUT("api/offering-categories/{id}")
