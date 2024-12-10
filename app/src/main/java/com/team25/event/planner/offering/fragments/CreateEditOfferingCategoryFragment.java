@@ -1,5 +1,7 @@
 package com.team25.event.planner.offering.fragments;
 
+import static com.team25.event.planner.offering.fragments.OfferingCategoryBaseFragment.ID_ARG_NAME;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +25,7 @@ public class CreateEditOfferingCategoryFragment extends Fragment {
     private FragmentCreateEditOfferingCategoryBinding binding;
     private OfferingCategoryViewModel viewModel;
     private NavController navController;
+    private Boolean isEdit = false;
 
     public CreateEditOfferingCategoryFragment() {
         // Required empty public constructor
@@ -46,15 +49,28 @@ public class CreateEditOfferingCategoryFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(OfferingCategoryViewModel.class);
         binding.setViewModel(viewModel);
         navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
+
+        if(getArguments()!=null){
+            isEdit = true;
+            Long categoryId = getArguments().getLong(ID_ARG_NAME);
+            viewModel.setUpCategoryId(categoryId);
+        }
+
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        setUpUI();
         setUpObservers();
         setUpListeners();
+    }
+    public void setUpUI(){
+        if(isEdit){
+            binding.title.setText(R.string.update_offering_category);
+            binding.saveButton.setText(R.string.edit);
+        }
     }
 
     public void setUpObservers(){
@@ -76,7 +92,8 @@ public class CreateEditOfferingCategoryFragment extends Fragment {
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.createCategory();
+                viewModel.saveCategory(isEdit);
+
             }
         });
     }

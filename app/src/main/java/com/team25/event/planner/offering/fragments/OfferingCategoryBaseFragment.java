@@ -1,9 +1,11 @@
 package com.team25.event.planner.offering.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -15,19 +17,18 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
+import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
 import com.team25.event.planner.databinding.FragmentOfferingCategoryBaseBinding;
-import com.team25.event.planner.databinding.FragmentOwnerHomePageBinding;
-import com.team25.event.planner.event.viewmodel.EventTypeListViewModel;
 import com.team25.event.planner.offering.adapters.OfferingCategoryAdapter;
+import com.team25.event.planner.offering.dialogs.YesOrNoDialogFragment;
 import com.team25.event.planner.offering.model.OfferingCategory;
-import com.team25.event.planner.offering.model.OfferingCategoryType;
 import com.team25.event.planner.offering.viewmodel.OfferingCategoryViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class OfferingCategoryBaseFragment extends Fragment {
-
+public class OfferingCategoryBaseFragment extends Fragment implements OnEditButtonClickListener, OnDeleteButtonClickListener {
+    public static final String ID_ARG_NAME = "offeringCategoryId";
     private NavController navController;
     private FragmentOfferingCategoryBaseBinding binding;
     private OfferingCategoryAdapter adapter;
@@ -74,10 +75,26 @@ public class OfferingCategoryBaseFragment extends Fragment {
         offeringCategoryViewModel.fetchOfferingCategories();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setUpObservers();
+        setUpListeners();
+        offeringCategoryViewModel.fetchOfferingCategories();
+    }
+
     public void setUpObservers(){
         offeringCategoryViewModel.allCategories.observe(getViewLifecycleOwner(), categories -> {
             adapter = new OfferingCategoryAdapter(requireContext(), categories);
+            adapter.setOnEditButtonClickListener(this);
+            adapter.setOnDeleteButtonClickListener(this);
             listView.setAdapter(adapter);
+        });
+
+        offeringCategoryViewModel.success.observe(getViewLifecycleOwner(), check ->{
+            if(check){
+                offeringCategoryViewModel.fetchOfferingCategories();
+            }
         });
     }
 
@@ -88,5 +105,33 @@ public class OfferingCategoryBaseFragment extends Fragment {
                 navController.navigate(R.id.action_offeringCategoryFragment_to_createEditOfferingCategoryFragment);
             }
         });
+    }
+
+    @Override
+    public void onEditButtonClick(Long id) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(ID_ARG_NAME, id);
+        navController.navigate(R.id.action_offeringCategoryFragment_to_createEditOfferingCategoryFragment, bundle);
+    }
+
+    @Override
+    public void onDeleteButtonClick(Long id, String name) {
+        YesOrNoDialogFragment dialog = new YesOrNoDialogFragment(new YesOrNoDialogFragment.ConfirmDialogListener() {
+            @Override
+            public void onConfirm() {
+                offeringCategoryViewModel.deleteOfferingCategory(id);
+            }
+
+            @Override
+            public void onCancel() {
+            }
+
+            @Override
+            public void refresh() {
+                offeringCategoryViewModel.fetchOfferingCategories();
+            }
+        },name);
+
+        dialog.show(getParentFragmentManager(), "ConfirmDialogFragment");
     }
 }
