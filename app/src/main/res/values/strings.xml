@@ -95,6 +95,9 @@
     <string name="edit_event_type">Edit Event Type</string>
     <string name="event_type_active">Event type active?</string>
     <string name="offering_categories">Offering categories</string>
+    <string name="my_products_services">My Products/Services</string>
+    <string name="profile">Profile</string>
+    <string name="notifications">Notifications</string>
 
 
 </resources>
