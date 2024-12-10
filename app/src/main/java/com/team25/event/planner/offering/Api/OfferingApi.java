@@ -23,5 +23,11 @@ public interface OfferingApi {
             @QueryMap Map<String, Object> filter
     );
 
+    @GET("/api/products/all")
+    Call<Page<OfferingCard>> getAllProducts(
+            @Query("page") int page,
+            @QueryMap Map<String, Object> filter
+    );
+
 
 }

@@ -79,7 +79,7 @@
                 <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checkedButton="@{viewModel.selectedFilterId}"
+                    android:checkedButton="@={viewModel.selectedFilterId}"
                     >
 
                     <RadioButton
@@ -87,7 +87,6 @@
                         android:layout_height="wrap_content"
                         android:text="@string/all"
                         android:id="@+id/all_radio_button"
-
                         />
 
                     <RadioButton
