@@ -2,6 +2,9 @@ package com.team25.event.planner;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -20,7 +23,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
+import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.SharedPrefService;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.ActivityMainBinding;
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private AppBarConfiguration appBarConfiguration;
+    private AuthViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,34 +85,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         SharedPrefService sharedPrefService = new SharedPrefService(this);
         authViewModel.initialize(sharedPrefService);
 
-        authViewModel.user.observe(this, user -> {
-            NavigationView navView = binding.navView;
-            navView.getMenu().clear();
-
-            if (user == null) {
-                navView.inflateMenu(R.menu.unauthenticated_nav_menu);
-            } else {
-                switch (user.getUserRole()) {
-                    case REGULAR:
-                        navView.inflateMenu(R.menu.regular_nav_menu);
-                        break;
-                    case EVENT_ORGANIZER:
-                        navView.inflateMenu(R.menu.event_organizer_nav_menu);
-                        break;
-                    case OWNER:
-                        navView.inflateMenu(R.menu.owner_nav_menu);
-                        break;
-                    case ADMIN:
-                        navView.inflateMenu(R.menu.admin_nav_menu);
-                        break;
-                }
-            }
-        });
+        setupNavigationView();
     }
 
     @Override
@@ -149,6 +132,55 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
+    }
 
+    private void setupNavigationView() {
+        authViewModel.user.observe(this, user -> {
+            NavigationView navView = binding.navView;
+            navView.getMenu().clear();
+
+            View headerView = navView.getHeaderView(0);
+            TextView headerTitle = headerView.findViewById(R.id.header_title);
+            TextView headerSubtitle = headerView.findViewById(R.id.header_subtitle);
+            ImageView headerImage = headerView.findViewById(R.id.header_image);
+
+            if (user == null || user.getUserRole() == null) {
+                navView.inflateMenu(R.menu.unauthenticated_nav_menu);
+
+                headerTitle.setText(getString(R.string.navbar_header_title));
+                headerSubtitle.setText(getString(R.string.nav_subtitle_default));
+
+                Glide.with(this)
+                        .load(R.drawable.ic_person)
+                        .circleCrop()
+                        .into(headerImage);
+            } else {
+                switch (user.getUserRole()) {
+                    case REGULAR:
+                        navView.inflateMenu(R.menu.regular_nav_menu);
+                        break;
+                    case EVENT_ORGANIZER:
+                        navView.inflateMenu(R.menu.event_organizer_nav_menu);
+                        break;
+                    case OWNER:
+                        navView.inflateMenu(R.menu.owner_nav_menu);
+                        break;
+                    case ADMIN:
+                        navView.inflateMenu(R.menu.admin_nav_menu);
+                        break;
+                }
+
+                headerTitle.setText(user.getFullName());
+                headerSubtitle.setText(user.getEmail());
+
+                final String profilePicUrl = ConnectionParams.BASE_URL + "api/users/" + user.getUserId() + "/profile-picture";
+                Glide.with(this)
+                        .load(profilePicUrl)
+                        .placeholder(R.drawable.ic_person)
+                        .error(R.drawable.ic_person)
+                        .circleCrop()
+                        .into(headerImage);
+            }
+        });
     }
 }

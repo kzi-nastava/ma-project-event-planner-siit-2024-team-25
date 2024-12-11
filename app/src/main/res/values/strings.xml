@@ -99,6 +99,7 @@
     <string name="profile">Profile</string>
     <string name="notifications">Notifications</string>
     <string name="log_out">Log out</string>
+    <string name="profile_picture">Profile picture</string>
 
 
 </resources>

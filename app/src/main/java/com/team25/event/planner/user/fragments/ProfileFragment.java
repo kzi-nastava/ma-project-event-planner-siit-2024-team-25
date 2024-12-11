@@ -27,6 +27,7 @@ public class ProfileFragment extends Fragment {
 
         binding.logoutButton.setOnClickListener(v -> {
             authViewModel.clearUser();
+            authViewModel.clearJwt();
             navController.popBackStack();
         });
 

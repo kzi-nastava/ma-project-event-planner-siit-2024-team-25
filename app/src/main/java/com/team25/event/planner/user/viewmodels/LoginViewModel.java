@@ -94,7 +94,7 @@ public class LoginViewModel extends ViewModel {
                             loginResponse.getFullName(),
                             loginResponse.getRole()
                     ));
-                    // TODO: set jwt
+                    authViewModel.setJwt(loginResponse.getJwt());
                     clearFields();
                     _loggedIn.postValue(true);
                 } else {

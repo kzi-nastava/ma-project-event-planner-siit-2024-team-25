@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="160dp"
     android:background="?attr/colorPrimary"
     android:gravity="bottom"
     android:orientation="vertical"
     android:padding="16dp">
 
-<!--    <ImageView-->
-<!--        android:id="@+id/header_image"-->
-<!--        android:layout_width="72dp"-->
-<!--        android:layout_height="72dp"-->
-<!--        android:layout_gravity="center_horizontal"-->
-<!--        android:background="@drawable/circle_background"-->
-<!--        android:scaleType="centerCrop"-->
-<!--        android:src="@drawable/" />-->
+    <ImageView
+        android:id="@+id/header_image"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:layout_gravity="start"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/circle_background"
+        android:contentDescription="@string/profile_picture"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/header_title"
