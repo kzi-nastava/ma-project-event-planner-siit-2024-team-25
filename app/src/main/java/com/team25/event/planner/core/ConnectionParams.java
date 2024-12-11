@@ -36,4 +36,12 @@ public class ConnectionParams {
     public static OfferingApi offeringApi = retrofit.create(OfferingApi.class);
 
     public static EventTypeApi eventTypeApi = retrofit.create(EventTypeApi.class);
+
+    public static void resetServices() {
+        eventApi = retrofit.create(EventApi.class);
+        userApi = retrofit.create(UserApi.class);
+        loginApi = retrofit.create(LoginApi.class);
+        offeringApi = retrofit.create(OfferingApi.class);
+        eventTypeApi = retrofit.create(EventTypeApi.class);
+    }
 }

@@ -5,6 +5,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -25,10 +26,13 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
+import com.team25.event.planner.core.AuthInterceptor;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.SharedPrefService;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.ActivityMainBinding;
+
+import okhttp3.OkHttpClient;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         authViewModel.initialize(sharedPrefService);
 
         setupNavigationView();
+        setupAuthInterceptor();
     }
 
     @Override
@@ -181,6 +186,31 @@ public class MainActivity extends AppCompatActivity {
                         .circleCrop()
                         .into(headerImage);
             }
+        });
+    }
+
+    private void setupAuthInterceptor() {
+        authViewModel.jwt.observe(this, jwt -> {
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .addInterceptor(new AuthInterceptor(jwt, this::handleLogout))
+                    .build();
+
+            ConnectionParams.retrofit = ConnectionParams.retrofit.newBuilder()
+                    .client(okHttpClient).build();
+
+            ConnectionParams.resetServices();
+        });
+    }
+
+    private void handleLogout() {
+        runOnUiThread(() -> {
+            authViewModel.clearUser();
+            authViewModel.clearJwt();
+
+            Toast.makeText(this, "Session expired. Please log in again.", Toast.LENGTH_SHORT).show();
+
+            navController.popBackStack(R.id.homeFragment, false);
+            navController.navigate(R.id.loginFragment);
         });
     }
 }
