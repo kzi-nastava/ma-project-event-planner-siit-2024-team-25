@@ -7,6 +7,7 @@ import com.team25.event.planner.BuildConfig;
 import com.team25.event.planner.event.api.EventApi;
 import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.offering.Api.OfferingApi;
+import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.user.api.UserApi;
 
 import java.time.LocalDateTime;
@@ -33,4 +34,7 @@ public class ConnectionParams {
     public static OfferingApi offeringApi = retrofit.create(OfferingApi.class);
 
     public static EventTypeApi eventTypeApi = retrofit.create(EventTypeApi.class);
+
+    public static OfferingCategoryApi offeringCategoryApi = retrofit.create(OfferingCategoryApi.class);
+
 }
