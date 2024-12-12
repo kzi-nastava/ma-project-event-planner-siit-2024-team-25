@@ -1,16 +1,16 @@
 package com.team25.event.planner.event.fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.team25.event.planner.R;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.event.adapters.TopEventsListAdapter;
 import com.team25.event.planner.event.model.EventCard;
 import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
@@ -40,7 +40,12 @@ public class TopEventsListFragment extends ListFragment {
             adapter = new TopEventsListAdapter(requireContext(), eventCards);
             setListAdapter(adapter);
         }));
-        homeEventViewModel.getTopEvents();
+        AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        authViewModel.interceptorAdded.observe(getViewLifecycleOwner(), added -> {
+            if (added) {
+                homeEventViewModel.getTopEvents();
+            }
+        });
         return inflater.inflate(R.layout.fragment_top_event_list, container, false);
     }
 

@@ -26,13 +26,10 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
-import com.team25.event.planner.core.AuthInterceptor;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.SharedPrefService;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.ActivityMainBinding;
-
-import okhttp3.OkHttpClient;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -191,14 +188,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupAuthInterceptor() {
         authViewModel.jwt.observe(this, jwt -> {
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .addInterceptor(new AuthInterceptor(jwt, this::handleLogout))
-                    .build();
-
-            ConnectionParams.retrofit = ConnectionParams.retrofit.newBuilder()
-                    .client(okHttpClient).build();
-
-            ConnectionParams.resetServices();
+            ConnectionParams.setup(jwt, this::handleLogout);
+            authViewModel.setInterceptorAdded();
         });
     }
 
@@ -207,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             authViewModel.clearUser();
             authViewModel.clearJwt();
 
-            Toast.makeText(this, "Session expired. Please log in again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Session expired. Please log in again.", Toast.LENGTH_LONG).show();
 
             navController.popBackStack(R.id.homeFragment, false);
             navController.navigate(R.id.loginFragment);

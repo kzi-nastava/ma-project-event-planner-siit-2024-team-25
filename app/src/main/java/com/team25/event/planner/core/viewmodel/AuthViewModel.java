@@ -16,6 +16,9 @@ public class AuthViewModel extends ViewModel {
     private final MutableLiveData<String> _jwt = new MutableLiveData<>();
     public final LiveData<String> jwt = _jwt;
 
+    private final MutableLiveData<Boolean> _interceptorAdded = new MutableLiveData<>(false);
+    public final LiveData<Boolean> interceptorAdded = _interceptorAdded;
+
     private SharedPrefService sharedPrefService;
 
     public void initialize(SharedPrefService sharedPrefService) {
@@ -42,5 +45,11 @@ public class AuthViewModel extends ViewModel {
     public void clearJwt() {
         _jwt.postValue(null);
         sharedPrefService.clearKey(JWT_KEY);
+    }
+
+    public void setInterceptorAdded() {
+        if (interceptorAdded.getValue() == null || !interceptorAdded.getValue()) {
+            _interceptorAdded.postValue(true);
+        }
     }
 }

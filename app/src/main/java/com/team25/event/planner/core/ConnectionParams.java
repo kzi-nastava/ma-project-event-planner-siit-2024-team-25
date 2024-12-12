@@ -7,11 +7,13 @@ import com.team25.event.planner.BuildConfig;
 import com.team25.event.planner.event.api.EventApi;
 import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.offering.Api.OfferingApi;
+import com.team25.event.planner.product_service.api.ServiceApi;
 import com.team25.event.planner.user.api.LoginApi;
 import com.team25.event.planner.user.api.UserApi;
 
 import java.time.LocalDateTime;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -22,26 +24,40 @@ public class ConnectionParams {
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
             .create();
 
-    public static Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build();
+    public static Retrofit retrofit;
 
-    public static EventApi eventApi = retrofit.create(EventApi.class);
+    public static EventApi eventApi;
 
-    public static UserApi userApi = retrofit.create(UserApi.class);
+    public static UserApi userApi;
 
-    public static LoginApi loginApi = retrofit.create(LoginApi.class);
+    public static LoginApi loginApi;
 
-    public static OfferingApi offeringApi = retrofit.create(OfferingApi.class);
+    public static OfferingApi offeringApi;
 
-    public static EventTypeApi eventTypeApi = retrofit.create(EventTypeApi.class);
+    public static EventTypeApi eventTypeApi;
 
-    public static void resetServices() {
+    public static ServiceApi serviceApi;
+
+    public static void setup(String jwt, AuthInterceptor.LogoutHandler logoutHandler) {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new AuthInterceptor(jwt, logoutHandler))
+                .build();
+
+        ConnectionParams.retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(okHttpClient)
+                .build();
+
+        ConnectionParams.setupServices();
+    }
+
+    public static void setupServices() {
         eventApi = retrofit.create(EventApi.class);
         userApi = retrofit.create(UserApi.class);
         loginApi = retrofit.create(LoginApi.class);
         offeringApi = retrofit.create(OfferingApi.class);
         eventTypeApi = retrofit.create(EventTypeApi.class);
+        serviceApi = retrofit.create(ServiceApi.class);
     }
 }
