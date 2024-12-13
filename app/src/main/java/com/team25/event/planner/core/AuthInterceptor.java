@@ -31,12 +31,11 @@ public class AuthInterceptor implements Interceptor {
                 .header(HEADER_NAME, PREFIX + jwt)
                 .build();
 
-        try (Response response = chain.proceed(request)) {
-            if (response.code() == 401) {
-                logoutHandler.handleLogout();
-            }
-            return response;
+        Response response = chain.proceed(request);
+        if (response.code() == 401) {
+            logoutHandler.handleLogout();
         }
+        return response;
     }
 
     public interface LogoutHandler {
