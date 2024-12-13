@@ -1,34 +1,20 @@
 package com.team25.event.planner.product_service.viewModels;
 
-import android.app.DatePickerDialog;
-import android.content.Context;
-import android.util.Log;
-import android.view.View;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.gson.Gson;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.ConnectionParams;
-import com.team25.event.planner.core.Page;
 import com.team25.event.planner.product_service.api.ServiceApi;
 import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
 import com.team25.event.planner.product_service.enums.ReservationType;
-import com.team25.event.planner.product_service.model.ErrorResponse;
 import com.team25.event.planner.product_service.model.Service;
-import com.team25.event.planner.product_service.model.ServiceCard;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import lombok.Builder;
 import lombok.Data;
@@ -36,11 +22,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceAddFormViewModel extends ViewModel {
-    public   MutableLiveData<String> errorMessageFromServer = new MutableLiveData<>();
+    public MutableLiveData<String> errorMessageFromServer = new MutableLiveData<>();
 
     private ArrayList<Service> services = new ArrayList<Service>();
     private ServiceCreateRequestDTO serviceCreateRequestDTO;
@@ -91,18 +75,23 @@ public class ServiceAddFormViewModel extends ViewModel {
     public void FirstToSecond() {
         firstToSecond.setValue(true);
     }
+
     public void cancel() {
         cancelClicked.setValue(true);
     }
+
     public void SecondToThird() {
         secondToThird.setValue(true);
     }
+
     public void SecondToFirst() {
         secondToFirst.setValue(true);
     }
+
     public void Finish() {
         toFinish.setValue(true);
     }
+
     public void ToSecond() {
         toSecond.setValue(true);
     }
@@ -112,29 +101,30 @@ public class ServiceAddFormViewModel extends ViewModel {
             duration.setValue(seekParams);
         } else if (seekBar.getId() == R.id.minArrValue) {
             minArrangement.setValue(seekParams);
-        } else if(seekBar.getId() == R.id.maxArrValue) {
+        } else if (seekBar.getId() == R.id.maxArrValue) {
             maxArrangement.setValue(seekParams);
-        }else if(seekBar.getId() == R.id.priceSeekBar2){
+        } else if (seekBar.getId() == R.id.priceSeekBar2) {
             discount.setValue(seekParams);
-        }else if(seekBar.getId() == R.id.cancellationSeekbar){
+        } else if (seekBar.getId() == R.id.cancellationSeekbar) {
             cancelDeadline.setValue(seekParams);
-        }else if(seekBar.getId() == R.id.reservationSeekbar){
+        } else if (seekBar.getId() == R.id.reservationSeekbar) {
             reservationDeadline.setValue(seekParams);
         }
     }
 
     public boolean validateInputNumber(String text) {
 
-            try {
-                int number = Integer.parseInt(text);
-                price.setValue(number);
-                return true;
-            } catch (NumberFormatException e) {
-                return false;
-            }
+        try {
+            int number = Integer.parseInt(text);
+            price.setValue(number);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
 
     }
-    public boolean validateForm(){
+
+    public boolean validateForm() {
         String name = this.name.getValue();
         String description = this.description.getValue();
         String priceStringValue = this.priceString.getValue();
@@ -145,10 +135,10 @@ public class ServiceAddFormViewModel extends ViewModel {
         if (priceStringValue == null || priceStringValue.isBlank()) {
             errorUiStateBuilder.price("Price is required");
             isValid = false;
-        }else{
-            if(validateInputNumber(priceStringValue)){
+        } else {
+            if (validateInputNumber(priceStringValue)) {
                 price.setValue(Integer.valueOf(priceStringValue));
-            }else{
+            } else {
                 errorUiStateBuilder.price("Price must be a number");
                 isValid = false;
             }
@@ -168,7 +158,7 @@ public class ServiceAddFormViewModel extends ViewModel {
 
     }
 
-    public void findService(Integer idService){
+    public void findService(Integer idService) {
         name.postValue("sss");
         description.setValue("Description 1");
         specifics.setValue("Specifics 1");
@@ -180,7 +170,7 @@ public class ServiceAddFormViewModel extends ViewModel {
         syncFront();
     }
 
-    public void fillTheForm(){
+    public void fillTheForm() {
         duration.setValue(1);
         minArrangement.setValue(1);
         maxArrangement.setValue(5);
@@ -188,26 +178,27 @@ public class ServiceAddFormViewModel extends ViewModel {
         categoryInputEnabled.setValue(false);
     }
 
-    private void syncFront(){
-        if(confirmationType.getValue() == ReservationType.AUTOMATIC){
+    private void syncFront() {
+        if (confirmationType.getValue() == ReservationType.AUTOMATIC) {
             confirmationTypeToggle.setValue(true);
-        }else{
+        } else {
             confirmationTypeToggle.setValue(false);
         }
     }
 
-    public void restart(){
+    public void restart() {
         categoryInputEnabled.setValue(true);
     }
 
-    private ReservationType getReservationType(){
-        if(Boolean.TRUE.equals(confirmationTypeToggle.getValue())){
+    private ReservationType getReservationType() {
+        if (Boolean.TRUE.equals(confirmationTypeToggle.getValue())) {
             return ReservationType.AUTOMATIC;
-        }else{
+        } else {
             return ReservationType.MANUAL;
         }
     }
-    public void createService(){
+
+    public void createService() {
 
         serviceCreateRequestDTO = new ServiceCreateRequestDTO();
         serviceCreateRequestDTO.setName(name.getValue());
@@ -230,12 +221,7 @@ public class ServiceAddFormViewModel extends ViewModel {
 
         serviceCreateRequestDTO.setImages(images.getValue());
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectionParams.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ServiceApi serviceApi = retrofit.create(ServiceApi.class);
+        ServiceApi serviceApi = ConnectionParams.serviceApi;
         Call<ResponseBody> call = serviceApi.createService(serviceCreateRequestDTO);
         call.enqueue(new Callback<ResponseBody>() {
             @Override

@@ -1,16 +1,17 @@
 package com.team25.event.planner.event.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.ListFragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.ListFragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.event.adapters.HomeEventListAdapter;
 import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 
@@ -39,11 +40,18 @@ public class HomeEventsListFragment extends ListFragment {
                              Bundle savedInstanceState) {
 
         homeEventViewModel.events.observe(getViewLifecycleOwner(), (eventCards -> {
-                NavController navController = Navigation.findNavController(requireView());
-                adapter = new HomeEventListAdapter(requireContext(), eventCards, navController);
-                setListAdapter(adapter);
+            NavController navController = Navigation.findNavController(requireView());
+            adapter = new HomeEventListAdapter(requireContext(), eventCards, navController);
+            setListAdapter(adapter);
         }));
-        homeEventViewModel.getAllEvents();
+
+        AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        authViewModel.interceptorAdded.observe(getViewLifecycleOwner(), added -> {
+            if (added) {
+                homeEventViewModel.getAllEvents();
+            }
+        });
+
         return inflater.inflate(R.layout.fragment_home_events_list, container, false);
     }
 }

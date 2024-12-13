@@ -13,6 +13,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentLoginBinding;
 import com.team25.event.planner.user.viewmodels.LoginViewModel;
 
@@ -25,6 +26,10 @@ public class LoginFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+        AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        viewModel.setAuthViewModel(authViewModel);
+
         binding.setViewModel(viewModel);
 
         setupObservers();
