@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                     case OWNER:
                         navView.inflateMenu(R.menu.owner_nav_menu);
                         break;
-                    case ADMIN:
+                    case ADMINISTRATOR:
                         navView.inflateMenu(R.menu.admin_nav_menu);
                         break;
                 }
