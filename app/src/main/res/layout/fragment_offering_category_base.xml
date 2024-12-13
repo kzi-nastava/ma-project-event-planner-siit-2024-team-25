@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".offering.fragments.OfferingCategoryBaseFragment">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.team25.event.planner.offering.viewmodel.OfferingCategoryViewModel" />
+    </data>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/titleOfferingCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Offering categories"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:textColor="@color/primary"
+            android:padding="20sp"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonOfferingCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View submitted offering categories"
+            android:layout_marginHorizontal="40sp"
+            android:textColor="?attr/colorPrimary"
+            style="@style/Widget.MaterialComponents.Button.TextButton"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/infoTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:padding="20sp"
+            android:textColor="@color/primary"
+            />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1"
+            android:layout_margin="20sp">
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:paddingRight="30sp"
+                    android:paddingLeft="10sp"
+                    android:paddingVertical="10sp"
+                    android:textColor="@color/white"
+                    android:background="@color/primary"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:paddingRight="10sp"
+                    android:paddingLeft="10sp"
+                    android:paddingVertical="10sp"
+                    android:textColor="@color/white"
+                    android:background="@color/primary"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edit"
+                    android:paddingRight="10sp"
+                    android:paddingVertical="10sp"
+                    android:paddingLeft="10sp"
+                    android:textColor="@color/white"
+                    android:background="@color/primary"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delete"
+                    android:paddingRight="10sp"
+                    android:paddingVertical="10sp"
+                    android:textColor="@color/white"
+                    android:background="@color/primary"/>
+            </TableRow>
+
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/list_item_offering_category" />
+
+
+        </TableLayout>
+    </LinearLayout>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addCategoryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:clickable="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/baseline_add_circle_24"
+            android:backgroundTint="@color/white"/>
+
+</RelativeLayout>
+
+
+</layout>

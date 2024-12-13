@@ -16,4 +16,8 @@
         android:id="@id/eventTypeListFragment"
         android:icon="@drawable/ic_event_note"
         android:title="@string/event_types" />
+    <item
+        android:id="@+id/offeringCategoryFragment"
+        android:icon="@drawable/filter_icon"
+        android:title="@string/offering_category"/>
 </menu>

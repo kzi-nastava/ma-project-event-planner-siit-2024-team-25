@@ -7,6 +7,7 @@ import com.team25.event.planner.BuildConfig;
 import com.team25.event.planner.event.api.EventApi;
 import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.offering.Api.OfferingApi;
+import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.product_service.api.ServiceApi;
 import com.team25.event.planner.user.api.LoginApi;
 import com.team25.event.planner.user.api.UserApi;
@@ -38,6 +39,8 @@ public class ConnectionParams {
 
     public static ServiceApi serviceApi;
 
+    public static OfferingCategoryApi offeringCategoryApi;
+
     public static void setup(String jwt, AuthInterceptor.LogoutHandler logoutHandler) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new AuthInterceptor(jwt, logoutHandler))
@@ -59,5 +62,7 @@ public class ConnectionParams {
         offeringApi = retrofit.create(OfferingApi.class);
         eventTypeApi = retrofit.create(EventTypeApi.class);
         serviceApi = retrofit.create(ServiceApi.class);
+        offeringCategoryApi = retrofit.create(OfferingCategoryApi.class);
     }
+
 }

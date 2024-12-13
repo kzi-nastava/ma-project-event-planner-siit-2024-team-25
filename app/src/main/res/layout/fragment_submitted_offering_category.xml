@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".offering.fragments.SubmittedOfferingCategoryFragment">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.team25.event.planner.offering.viewmodel.SubmittedCategoryViewModel" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/titleSubmittedOfferingCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submitted offering categories"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:textColor="@color/primary"
+            android:padding="20sp"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSubmittedOfferingCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View offering categories"
+            android:layout_marginHorizontal="40sp"
+            android:textColor="?attr/colorPrimary"
+            style="@style/Widget.MaterialComponents.Button.TextButton"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/infoTableSubmitted"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:padding="20sp"
+            android:textColor="@color/primary"
+            />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="2"
+            android:layout_margin="20sp">
+
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Offering\n name"
+                    android:paddingLeft="10sp"
+                    android:paddingRight="10sp"
+                    android:paddingVertical="10sp"
+                    android:textColor="@color/white"
+                    android:background="@color/primary"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category\n name"
+                    android:paddingLeft="10sp"
+                    android:paddingRight="10sp"
+                    android:paddingVertical="10sp"
+                    android:textColor="@color/white"
+                    android:background="@color/primary"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description\n"
+                    android:paddingRight="10sp"
+                    android:paddingLeft="10sp"
+                    android:paddingVertical="10sp"
+                    android:textColor="@color/white"
+                    android:background="@color/primary"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Approve\n"
+                    android:paddingRight="10sp"
+                    android:paddingVertical="10sp"
+                    android:paddingLeft="10sp"
+                    android:textColor="@color/white"
+                    android:background="@color/primary"/>
+
+            </TableRow>
+
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/submitted_category_item" />
+
+
+        </TableLayout>
+    </LinearLayout>
+
+</layout>
