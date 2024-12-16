@@ -11,7 +11,9 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.event.model.EventTypePreviewDTO;
+import com.team25.event.planner.event.model.OfferingCategoryPreviewDTO;
 import com.team25.event.planner.offering.Api.OfferingApi;
+import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.offering.model.OfferingFilterDTO;
 
@@ -34,6 +36,8 @@ public class HomeOfferingViewModel extends ViewModel {
     public OfferingFilterDTO offeringFilterDTO = new OfferingFilterDTO();
     private final MutableLiveData<List<EventTypePreviewDTO>> _allEventTypes = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<EventTypePreviewDTO>> allEventTypes = _allEventTypes;
+    private final MutableLiveData<List<OfferingCategoryPreviewDTO>> _allOfferingCategories = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<OfferingCategoryPreviewDTO>> allOfferingCategories = _allOfferingCategories;
     public final MutableLiveData<Integer> selectedFilterId = new MutableLiveData<>();
     public final LiveData<Integer> totalPage = _totalPage;    public HomeOfferingViewModel(){
         _currentPage.setValue(0);
@@ -41,6 +45,28 @@ public class HomeOfferingViewModel extends ViewModel {
     }
 
 
+    public void getAllOfferingCategories(){
+        OfferingCategoryApi offeringApi = ConnectionParams.offeringCategoryApi;
+        Call<List<OfferingCategoryPreviewDTO>> call = offeringApi.getAllOfferingCategories();
+
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<OfferingCategoryPreviewDTO>> call, Response<List<OfferingCategoryPreviewDTO>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<OfferingCategoryPreviewDTO> result = response.body();
+                    result.add(0,new OfferingCategoryPreviewDTO(null,""));
+                    _allOfferingCategories.setValue(result);
+                } else {
+                    Log.e("HomeOfferingViewModel", "Failed to fetch offering categories");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<OfferingCategoryPreviewDTO>> call, Throwable t) {
+                Log.e("HomeOfferingViewModel", "Error fetching offering categories: " + t.getMessage());
+            }
+        });
+    }
     public void getTopOfferings(){
         String countryValue =  "";
         String cityValue =  "";
@@ -158,4 +184,6 @@ public class HomeOfferingViewModel extends ViewModel {
         this.offeringFilterDTO = new OfferingFilterDTO();
         this.getAllOfferings();
     }
+
+
 }

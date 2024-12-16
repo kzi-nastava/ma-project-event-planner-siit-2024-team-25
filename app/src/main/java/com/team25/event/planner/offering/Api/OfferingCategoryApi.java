@@ -1,5 +1,6 @@
 package com.team25.event.planner.offering.Api;
 
+import com.team25.event.planner.event.model.OfferingCategoryPreviewDTO;
 import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.offering.model.SubmittedOfferingCategory;
 
@@ -21,6 +22,8 @@ import retrofit2.http.Query;
 public interface OfferingCategoryApi {
     @GET("api/offering-categories/")
     Call<List<OfferingCategory>> getOfferingCategories();
+    @GET("api/offering-categories/all")
+    Call<List<OfferingCategoryPreviewDTO>> getAllOfferingCategories();
     @GET("api/offering-categories/{id}")
     Call<OfferingCategory> getOfferingCategory(@Path("id") Long id);
     @GET("api/offering-categories/submitted/{id}")

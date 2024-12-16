@@ -27,6 +27,7 @@ import com.team25.event.planner.databinding.HomePageOfferingSortBinding;
 import com.team25.event.planner.event.fragments.EventsFragment;
 import com.team25.event.planner.event.fragments.TopEventsFragment;
 import com.team25.event.planner.event.model.EventTypePreviewDTO;
+import com.team25.event.planner.event.model.OfferingCategoryPreviewDTO;
 import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 import com.team25.event.planner.offering.fragments.HomeOfferingsFragment;
 import com.team25.event.planner.offering.fragments.TopOfferingsFragment;
@@ -302,23 +303,22 @@ public class HomePageBaseFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        //TO DO - get all offering categories from backend
-        _homeOfferingViewModel.allEventTypes.observe(getViewLifecycleOwner(),types ->{
-            ArrayAdapter<EventTypePreviewDTO> adapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(types));
+        _homeOfferingViewModel.allOfferingCategories.observe(getViewLifecycleOwner(),types ->{
+            ArrayAdapter<OfferingCategoryPreviewDTO> adapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(types));
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             offeringCategoryFilter.setAdapter(adapter);
         });
+        _homeOfferingViewModel.getAllOfferingCategories();
 
         offeringCategoryFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                EventTypePreviewDTO selectedType = (EventTypePreviewDTO) parent.getItemAtPosition(position);
+                OfferingCategoryPreviewDTO selectedType = (OfferingCategoryPreviewDTO) parent.getItemAtPosition(position);
                 _homeOfferingViewModel.offeringFilterDTO.selectedCategoryType.setValue(selectedType);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 

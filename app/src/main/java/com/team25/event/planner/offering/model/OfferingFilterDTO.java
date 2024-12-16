@@ -3,6 +3,7 @@ package com.team25.event.planner.offering.model;
 import androidx.lifecycle.MutableLiveData;
 
 import com.team25.event.planner.event.model.EventTypePreviewDTO;
+import com.team25.event.planner.event.model.OfferingCategoryPreviewDTO;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,7 +18,7 @@ public class OfferingFilterDTO {
 
     public final MutableLiveData<String> name = new MutableLiveData<>();
     public final MutableLiveData<EventTypePreviewDTO> selectedEventType = new MutableLiveData<>();
-    public final MutableLiveData<EventTypePreviewDTO> selectedCategoryType = new MutableLiveData<>();
+    public final MutableLiveData<OfferingCategoryPreviewDTO> selectedCategoryType = new MutableLiveData<>();
     public final MutableLiveData<String> minPrice = new MutableLiveData<>();
     public final MutableLiveData<String> maxPrice = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isAvailable = new MutableLiveData<>();
