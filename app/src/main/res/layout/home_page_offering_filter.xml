@@ -77,10 +77,11 @@
                 tools:ignore="UseSwitchCompatOrMaterialXml">
 
                 <RadioGroup
+                    android:id="@+id/radio_buttons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checkedButton="@={viewModel.selectedFilterId}"
-                    >
+                >
 
                     <RadioButton
                         android:layout_width="wrap_content"
@@ -194,31 +195,6 @@
                     android:layout_height="1dp"
                     android:background="@color/primary"
                     android:layout_marginVertical="8dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/available"
-                        android:textSize="20sp"
-                        android:textColor="@color/primary"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginRight="25dp"
-                        android:paddingLeft="10dp"
-                        />
-
-                    <ToggleButton
-                        android:id="@+id/toggleButton3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textOff="NO"
-                        android:textOn="YES"
-                        android:checked="@={viewModel.offeringFilterDTO.isAvailable}"/>
-                </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -233,6 +209,73 @@
                         android:text="@={viewModel.offeringFilterDTO.description}"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:id="@+id/service_date_time"
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/start_date"
+                            android:textSize="16sp"
+                            android:textColor="@color/primary"
+                            android:layout_marginBottom="4dp"
+                            />
+                        <DatePicker
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:theme="@style/DatePicker"
+                            android:layout_marginBottom="12dp"
+                            android:background="@color/white"
+                            android:id="@+id/event_start_date"
+                            />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/start_time"
+                            android:textSize="16sp"
+                            android:textColor="@color/primary"
+                            android:layout_marginBottom="4dp"/>
+                        <TimePicker
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/primary"
+                            android:layout_marginBottom="12dp"
+                            android:theme="@style/TimePicker"
+                            android:id="@+id/event_start_time"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/end_date"
+                            android:textSize="16sp"
+                            android:textColor="@color/primary"
+                            android:layout_marginBottom="4dp"/>
+                        <DatePicker
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="12dp"
+                            android:theme="@style/DatePicker"
+                            android:id="@+id/event_end_date"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/end_time"
+                            android:textSize="16sp"
+                            android:textColor="@color/primary"
+                            android:layout_marginBottom="4dp"/>
+                        <TimePicker
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/primary"
+                            android:theme="@style/TimePicker"
+                            android:id="@+id/event_end_time"/>
+                    </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>

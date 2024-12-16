@@ -14,7 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.ViewSwitcher;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.FragmentTransition;
@@ -278,9 +280,18 @@ public class HomePageBaseFragment extends Fragment {
         );
         View offeringView = homePageOfferingFilterBinding.getRoot();
         homePageOfferingFilterBinding.setViewModel(_homeOfferingViewModel);
+        _homeOfferingViewModel.selectedFilterId.observe(getViewLifecycleOwner(), v -> {
+            if(v == R.id.services_radio_button){
+                homePageOfferingFilterBinding.serviceDateTime.setVisibility(View.VISIBLE);
+            }else {
+                homePageOfferingFilterBinding.serviceDateTime.setVisibility(View.GONE);
+            }
+        });
         _homeOfferingViewModel.selectedFilterId.setValue(R.id.all_radio_button);
         _filterOfferingDialog = new BottomSheetDialog(getActivity());
         _filterOfferingDialog.setContentView(offeringView);
+
+
 
         Spinner offeringEventTypeFilter = _filterOfferingDialog.findViewById(R.id.offering_event_type_filter);
         Spinner offeringCategoryFilter = _filterOfferingDialog.findViewById(R.id.offering_category_filter);
@@ -340,6 +351,33 @@ public class HomePageBaseFragment extends Fragment {
             }
         });
 
+        Calendar calendar = Calendar.getInstance();
+        long minDate = calendar.getTimeInMillis();
+        homePageOfferingFilterBinding.eventStartDate.setMinDate(minDate);
+        homePageOfferingFilterBinding.eventEndDate.setMinDate(minDate);
+
+        homePageOfferingFilterBinding.eventStartDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
+            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
+            _homeOfferingViewModel.offeringFilterDTO.selectedStartDate.setValue(localDate);
+        });
+
+        homePageOfferingFilterBinding.eventEndDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
+            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
+            _homeOfferingViewModel.offeringFilterDTO.selectedEndDate.setValue(localDate);
+        });
+
+        homePageOfferingFilterBinding.eventStartTime.setIs24HourView(true);
+        homePageOfferingFilterBinding.eventStartTime.setOnTimeChangedListener((view, hourOfDay, minute) -> {
+            LocalTime selectedTime = LocalTime.of(hourOfDay, minute);
+            _homeOfferingViewModel.offeringFilterDTO.selectedStartTime.setValue(selectedTime);
+        });
+
+        homePageOfferingFilterBinding.eventEndTime.setIs24HourView(true);
+        homePageOfferingFilterBinding.eventEndTime.setOnTimeChangedListener((view, hourOfDay, minute) -> {
+            LocalTime selectedTime = LocalTime.of(hourOfDay, minute);
+            _homeOfferingViewModel.offeringFilterDTO.selectedEndTime.setValue(selectedTime);
+        });
+
         ImageView filter = homePageOfferingFilterBinding.offeringFilterButton;
         filter.setOnClickListener(v -> {
             _homeOfferingViewModel.getOfferings();
@@ -349,6 +387,7 @@ public class HomePageBaseFragment extends Fragment {
         homePageOfferingFilterBinding.imageRestart.setOnClickListener(v -> {
             _binding.searchView.setQuery("", false);
             _homeOfferingViewModel.restartFilter();
+            homePageOfferingFilterBinding.radioButtons.clearCheck();
             _filterOfferingDialog.dismiss();
         });
 

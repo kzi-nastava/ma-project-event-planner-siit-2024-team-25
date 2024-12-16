@@ -34,14 +34,12 @@ public class HomeOfferingViewModel extends ViewModel {
     public final LiveData<Integer> currentPage = _currentPage;
     private final MutableLiveData<Integer> _totalPage = new MutableLiveData<>();
     public OfferingFilterDTO offeringFilterDTO = new OfferingFilterDTO();
-    private final MutableLiveData<List<EventTypePreviewDTO>> _allEventTypes = new MutableLiveData<>(new ArrayList<>());
-    public final LiveData<List<EventTypePreviewDTO>> allEventTypes = _allEventTypes;
     private final MutableLiveData<List<OfferingCategoryPreviewDTO>> _allOfferingCategories = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<OfferingCategoryPreviewDTO>> allOfferingCategories = _allOfferingCategories;
     public final MutableLiveData<Integer> selectedFilterId = new MutableLiveData<>();
-    public final LiveData<Integer> totalPage = _totalPage;    public HomeOfferingViewModel(){
+    public final LiveData<Integer> totalPage = _totalPage;
+    public HomeOfferingViewModel(){
         _currentPage.setValue(0);
-        offeringFilterDTO.isAvailable.setValue(true);
     }
 
 
@@ -184,6 +182,4 @@ public class HomeOfferingViewModel extends ViewModel {
         this.offeringFilterDTO = new OfferingFilterDTO();
         this.getAllOfferings();
     }
-
-
 }

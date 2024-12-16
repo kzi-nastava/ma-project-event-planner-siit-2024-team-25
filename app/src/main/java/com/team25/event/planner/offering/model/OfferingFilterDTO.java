@@ -21,10 +21,13 @@ public class OfferingFilterDTO {
     public final MutableLiveData<OfferingCategoryPreviewDTO> selectedCategoryType = new MutableLiveData<>();
     public final MutableLiveData<String> minPrice = new MutableLiveData<>();
     public final MutableLiveData<String> maxPrice = new MutableLiveData<>();
-    public final MutableLiveData<Boolean> isAvailable = new MutableLiveData<>();
     public final MutableLiveData<String> selectedSortBy = new MutableLiveData<>();
     public final MutableLiveData<String> selectedSortCriteria = new MutableLiveData<>();
     public final MutableLiveData<String> description = new MutableLiveData<>();
+    public MutableLiveData<LocalDate> selectedStartDate = new MutableLiveData<>();
+    public MutableLiveData<LocalDate> selectedEndDate = new MutableLiveData<>();
+    public MutableLiveData<LocalTime> selectedStartTime = new MutableLiveData<>();
+    public MutableLiveData<LocalTime> selectedEndTime = new MutableLiveData<>();
 
     public final Map<String, String> sortByMap = new HashMap<>();
     public final Map<String, String> sortCriteriaMap = new HashMap<>();
@@ -54,9 +57,6 @@ public class OfferingFilterDTO {
         if(this.maxPrice.getValue()!= null){
             query.put("maxPrice", this.maxPrice.getValue());
         }
-        if(this.isAvailable.getValue()!= null){
-            query.put("isAvailable", this.isAvailable.getValue());
-        }
         if(this.selectedEventType.getValue()!= null){
             if(this.selectedEventType.getValue().getId()!=null){
                 query.put("eventTypeId", this.selectedEventType.getValue().id.toString());
@@ -70,6 +70,22 @@ public class OfferingFilterDTO {
         }
         if(this.description.getValue()!= null){
             query.put("description", this.description.getValue().trim());
+        }
+        if(this.selectedStartDate.getValue()!= null){
+            String formattedDate = this.selectedStartDate.getValue().format(DateTimeFormatter.ISO_DATE);
+            query.put("startDate", formattedDate);
+        }
+        if(this.selectedEndDate.getValue()!= null){
+            String formattedDate = this.selectedEndDate.getValue().format(DateTimeFormatter.ISO_DATE);
+            query.put("endDate", formattedDate);
+        }
+        if(this.selectedStartTime.getValue()!= null){
+            String formattedTime = this.selectedStartTime.getValue().format(DateTimeFormatter.ISO_TIME);
+            query.put("startTime", formattedTime);
+        }
+        if(this.selectedEndTime.getValue()!= null){
+            String formattedTime = this.selectedEndTime.getValue().format(DateTimeFormatter.ISO_TIME);
+            query.put("endTime", formattedTime);
         }
         return query;
     }
