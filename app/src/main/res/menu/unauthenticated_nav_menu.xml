@@ -13,11 +13,4 @@
         android:id="@id/nav_graph_registration"
         android:icon="@drawable/ic_person_add_alt_1"
         android:title="@string/signup" />
-    <item
-        android:id="@id/ownerHomePage"
-        android:icon="@drawable/profile_icon"
-        android:title="@string/owner_page" />
-    <item
-        android:id="@id/eventTypeListFragment"
-        android:title="@string/event_types" />
 </menu>

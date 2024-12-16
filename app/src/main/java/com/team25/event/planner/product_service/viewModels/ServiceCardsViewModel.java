@@ -18,12 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceCardsViewModel extends ViewModel {
     public final MutableLiveData<String> name = new MutableLiveData<>();
@@ -38,8 +35,7 @@ public class ServiceCardsViewModel extends ViewModel {
     public ServiceFilterDTO filterDTO = new ServiceFilterDTO();
 
 
-
-    public ServiceCardsViewModel(){
+    public ServiceCardsViewModel() {
 
     }
 
@@ -78,19 +74,19 @@ public class ServiceCardsViewModel extends ViewModel {
         }
     }
 
-    public void setupFilter(String nameF, String pf, Boolean availableF){
-        if(Objects.equals(nameF, "")){
+    public void setupFilter(String nameF, String pf, Boolean availableF) {
+        if (Objects.equals(nameF, "")) {
             filterDTO.setName(null);
-        }else{
+        } else {
             filterDTO.setName(nameF);
         }
 
         filterDTO.setAvailable(availableF);
-        if(pf!=null){
-            if(!Objects.equals(pf, "")){
-                if(validateInputNumber(pf)){
+        if (pf != null) {
+            if (!Objects.equals(pf, "")) {
+                if (validateInputNumber(pf)) {
                     filterDTO.setPrice(Double.parseDouble(pf));
-                }else{
+                } else {
                     filterDTO.setPrice(0.0);
                 }
             }
@@ -98,7 +94,8 @@ public class ServiceCardsViewModel extends ViewModel {
 
         filterServices();
     }
-    public void filterServices(){
+
+    public void filterServices() {
 
         Map<String, String> queryMap = buildQueryMap(filterDTO);
 
@@ -107,13 +104,8 @@ public class ServiceCardsViewModel extends ViewModel {
     }
 
 
-    public void getServices(Map<String, String> queryMap){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ConnectionParams.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ServiceApi serviceApi = retrofit.create(ServiceApi.class);
+    public void getServices(Map<String, String> queryMap) {
+        ServiceApi serviceApi = ConnectionParams.serviceApi;
         Call<Page<ServiceCard>> call = serviceApi.getServices(queryMap);
 
         call.enqueue(new Callback<Page<ServiceCard>>() {

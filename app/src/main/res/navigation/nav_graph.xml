@@ -106,4 +106,52 @@
         android:name="com.team25.event.planner.event.fragments.EventTypeFragment"
         android:label="fragment_event_type"
         tools:layout="@layout/fragment_event_type" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.team25.event.planner.user.fragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/offeringCategoryFragment"
+        android:name="com.team25.event.planner.offering.fragments.OfferingCategoryBaseFragment"
+        android:label="fragment_offering_category"
+        tools:layout="@layout/fragment_offering_category_base">
+        <action
+            android:id="@+id/action_offeringCategoryFragment_to_createEditOfferingCategoryFragment"
+            app:destination="@id/createEditOfferingCategoryFragment" />
+        <action
+            android:id="@+id/action_offeringCategoryFragment_to_submittedOfferingCategoryFragment"
+            app:destination="@id/submittedOfferingCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEditOfferingCategoryFragment"
+        android:name="com.team25.event.planner.offering.fragments.CreateEditOfferingCategoryFragment"
+        android:label="fragment_create_edit_offering_category"
+        tools:layout="@layout/fragment_create_edit_offering_category" >
+        <action
+            android:id="@+id/action_createEditOfferingCategoryFragment_to_offeringCategoryFragment"
+            app:destination="@id/offeringCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/submittedOfferingCategoryFragment"
+        android:name="com.team25.event.planner.offering.fragments.SubmittedOfferingCategoryFragment"
+        android:label="fragment_submitted_offering_category"
+        tools:layout="@layout/fragment_submitted_offering_category" >
+        <action
+            android:id="@+id/action_submittedOfferingCategoryFragment_to_offeringCategoryFragment"
+            app:destination="@id/offeringCategoryFragment" />
+        <action
+            android:id="@+id/action_submittedOfferingCategoryFragment_to_approveCategoryFragment"
+            app:destination="@id/approveCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/approveCategoryFragment"
+        android:name="com.team25.event.planner.offering.fragments.ApproveCategoryFragment"
+        android:label="fragment_approve_category"
+        tools:layout="@layout/fragment_approve_category" >
+        <action
+            android:id="@+id/action_approveCategoryFragment_to_submittedOfferingCategoryFragment"
+            app:destination="@id/submittedOfferingCategoryFragment" />
+    </fragment>
 </navigation>

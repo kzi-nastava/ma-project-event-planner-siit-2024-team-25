@@ -95,6 +95,16 @@
     <string name="edit_event_type">Edit Event Type</string>
     <string name="event_type_active">Event type active?</string>
     <string name="offering_categories">Offering categories</string>
+    <string name="my_products_services">My Products/Services</string>
+    <string name="profile">Profile</string>
+    <string name="notifications">Notifications</string>
+    <string name="log_out">Log out</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="offering_category">Offering category</string>
+    <string name="create_new_category">Create new category</string>
+    <string name="create">Create</string>
+    <string name="update_offering_category">Update offering category</string>
+    <string name="edit">Edit</string>
 
 
 </resources>

@@ -1,21 +1,17 @@
 package com.team25.event.planner.offering.fragments;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.ListFragment;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.ListFragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentTopOfferingsListBinding;
-import com.team25.event.planner.event.adapters.TopEventsListAdapter;
-import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 import com.team25.event.planner.offering.adapters.TopOfferingsListAdapter;
 import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.offering.viewmodel.HomeOfferingViewModel;
@@ -45,7 +41,12 @@ public class TopOfferingsListFragment extends ListFragment {
             adapter = new TopOfferingsListAdapter(getContext(), offeringCards);
             setListAdapter(adapter);
         });
-        _homeOfferingViewModel.getTopOfferings();
+        AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        authViewModel.interceptorAdded.observe(getViewLifecycleOwner(), added -> {
+            if (added) {
+                _homeOfferingViewModel.getTopOfferings();
+            }
+        });
         binding = FragmentTopOfferingsListBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
