@@ -3,8 +3,10 @@ package com.team25.event.planner.core;
 import java.util.List;
 
 import lombok.Data;
+import lombok.Getter;
 
 @Data
+@Getter
 public class Page<T> {
     private List<T> content;
     private Pageable pageable;

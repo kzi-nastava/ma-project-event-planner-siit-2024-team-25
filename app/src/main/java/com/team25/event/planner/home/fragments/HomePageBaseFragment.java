@@ -14,7 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.ViewSwitcher;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.FragmentTransition;
@@ -27,6 +29,7 @@ import com.team25.event.planner.databinding.HomePageOfferingSortBinding;
 import com.team25.event.planner.event.fragments.EventsFragment;
 import com.team25.event.planner.event.fragments.TopEventsFragment;
 import com.team25.event.planner.event.model.EventTypePreviewDTO;
+import com.team25.event.planner.event.model.OfferingCategoryPreviewDTO;
 import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 import com.team25.event.planner.offering.fragments.HomeOfferingsFragment;
 import com.team25.event.planner.offering.fragments.TopOfferingsFragment;
@@ -276,26 +279,120 @@ public class HomePageBaseFragment extends Fragment {
                 false
         );
         View offeringView = homePageOfferingFilterBinding.getRoot();
-
+        homePageOfferingFilterBinding.setViewModel(_homeOfferingViewModel);
+        _homeOfferingViewModel.selectedFilterId.observe(getViewLifecycleOwner(), v -> {
+            if(v == R.id.services_radio_button){
+                homePageOfferingFilterBinding.serviceDateTime.setVisibility(View.VISIBLE);
+            }else {
+                homePageOfferingFilterBinding.serviceDateTime.setVisibility(View.GONE);
+            }
+        });
+        _homeOfferingViewModel.selectedFilterId.setValue(R.id.all_radio_button);
         _filterOfferingDialog = new BottomSheetDialog(getActivity());
         _filterOfferingDialog.setContentView(offeringView);
 
-        String[] options = {"Option 1", "Option 2", "Option 3"};
+
+
         Spinner offeringEventTypeFilter = _filterOfferingDialog.findViewById(R.id.offering_event_type_filter);
         Spinner offeringCategoryFilter = _filterOfferingDialog.findViewById(R.id.offering_category_filter);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, options);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        offeringEventTypeFilter.setAdapter(adapter);
-        offeringCategoryFilter.setAdapter(adapter);
 
-        _filterButton.setOnClickListener(v -> {
-            _filterOfferingDialog.show();
+
+        _homeEventViewModel.allEventTypes.observe(getViewLifecycleOwner(),types ->{
+            ArrayAdapter<EventTypePreviewDTO> adapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(types));
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            offeringEventTypeFilter.setAdapter(adapter);
+        });
+        _homeEventViewModel.getEventTypes();
+
+        offeringEventTypeFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                EventTypePreviewDTO selectedType = (EventTypePreviewDTO) parent.getItemAtPosition(position);
+                _homeOfferingViewModel.offeringFilterDTO.selectedEventType.setValue(selectedType);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        _homeOfferingViewModel.allOfferingCategories.observe(getViewLifecycleOwner(),types ->{
+            ArrayAdapter<OfferingCategoryPreviewDTO> adapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(types));
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            offeringCategoryFilter.setAdapter(adapter);
+        });
+        _homeOfferingViewModel.getAllOfferingCategories();
+
+        offeringCategoryFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                OfferingCategoryPreviewDTO selectedType = (OfferingCategoryPreviewDTO) parent.getItemAtPosition(position);
+                _homeOfferingViewModel.offeringFilterDTO.selectedCategoryType.setValue(selectedType);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        _binding.searchView.setQueryHint("Name");
+        _binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                _homeOfferingViewModel.getAllOfferings();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                _homeOfferingViewModel.offeringFilterDTO.name.setValue(newText);
+                if(newText.isEmpty()){
+                    _homeOfferingViewModel.getAllOfferings();
+                }
+                return false;
+            }
+        });
+
+        Calendar calendar = Calendar.getInstance();
+        long minDate = calendar.getTimeInMillis();
+        homePageOfferingFilterBinding.eventStartDate.setMinDate(minDate);
+        homePageOfferingFilterBinding.eventEndDate.setMinDate(minDate);
+
+        homePageOfferingFilterBinding.eventStartDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
+            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
+            _homeOfferingViewModel.offeringFilterDTO.selectedStartDate.setValue(localDate);
+        });
+
+        homePageOfferingFilterBinding.eventEndDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
+            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
+            _homeOfferingViewModel.offeringFilterDTO.selectedEndDate.setValue(localDate);
+        });
+
+        homePageOfferingFilterBinding.eventStartTime.setIs24HourView(true);
+        homePageOfferingFilterBinding.eventStartTime.setOnTimeChangedListener((view, hourOfDay, minute) -> {
+            LocalTime selectedTime = LocalTime.of(hourOfDay, minute);
+            _homeOfferingViewModel.offeringFilterDTO.selectedStartTime.setValue(selectedTime);
+        });
+
+        homePageOfferingFilterBinding.eventEndTime.setIs24HourView(true);
+        homePageOfferingFilterBinding.eventEndTime.setOnTimeChangedListener((view, hourOfDay, minute) -> {
+            LocalTime selectedTime = LocalTime.of(hourOfDay, minute);
+            _homeOfferingViewModel.offeringFilterDTO.selectedEndTime.setValue(selectedTime);
         });
 
         ImageView filter = homePageOfferingFilterBinding.offeringFilterButton;
         filter.setOnClickListener(v -> {
-            _homeOfferingViewModel.filter();
+            _homeOfferingViewModel.getOfferings();
             _filterOfferingDialog.dismiss();
+        });
+
+        homePageOfferingFilterBinding.imageRestart.setOnClickListener(v -> {
+            _binding.searchView.setQuery("", false);
+            _homeOfferingViewModel.restartFilter();
+            homePageOfferingFilterBinding.radioButtons.clearCheck();
+            _filterOfferingDialog.dismiss();
+        });
+
+        _filterButton.setOnClickListener(v -> {
+            _filterOfferingDialog.show();
         });
     }
 
@@ -311,22 +408,46 @@ public class HomePageBaseFragment extends Fragment {
         _sortOfferingDialog = new BottomSheetDialog(getActivity());
         _sortOfferingDialog.setContentView(offeringView);
 
-        String[] options = {"Option 1", "Option 2", "Option 3"};
         Spinner offeringSortCategory = _sortOfferingDialog.findViewById(R.id.offering_sort_category);
         Spinner offeringSortType = _sortOfferingDialog.findViewById(R.id.offering_sort_type);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(_sortOfferingDialog.getContext(), android.R.layout.simple_spinner_item, options);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        offeringSortCategory.setAdapter(adapter);
-        offeringSortType.setAdapter(adapter);
+        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<>(_sortOfferingDialog.getContext(), android.R.layout.simple_spinner_item, _homeOfferingViewModel.offeringFilterDTO.sortByMap.keySet().toArray(new String[0]));
+        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        offeringSortCategory.setAdapter(sortByAdapter);
+
+        ArrayAdapter<String> sortCriteriaAdapter = new ArrayAdapter<>(_sortOfferingDialog.getContext(), android.R.layout.simple_spinner_item, _homeOfferingViewModel.offeringFilterDTO.sortCriteriaMap.keySet().toArray(new String[0]));
+        sortCriteriaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        offeringSortType.setAdapter(sortCriteriaAdapter);
 
         _sortButton.setOnClickListener(v -> {
             _sortOfferingDialog.show();
 
         });
 
+
+        homePageOfferingSortBinding.offeringSortCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                _homeOfferingViewModel.offeringFilterDTO.selectedSortBy.setValue((String)parent.getItemAtPosition(position));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        homePageOfferingSortBinding.offeringSortType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                _homeOfferingViewModel.offeringFilterDTO.selectedSortCriteria.setValue((String)parent.getItemAtPosition(position));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+
         Button sort = homePageOfferingSortBinding.offeringSortButton;
         sort.setOnClickListener(v -> {
-            _homeOfferingViewModel.sort();
+            _homeOfferingViewModel.getOfferings();
             _sortOfferingDialog.dismiss();
         });
     }
