@@ -4,6 +4,9 @@ package com.team25.event.planner.core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.team25.event.planner.BuildConfig;
+import com.team25.event.planner.core.api.serialization.LocalDateAdapter;
+import com.team25.event.planner.core.api.serialization.LocalDateTimeAdapter;
+import com.team25.event.planner.core.api.serialization.LocalTimeAdapter;
 import com.team25.event.planner.event.api.EventApi;
 import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.offering.Api.OfferingApi;
@@ -12,7 +15,9 @@ import com.team25.event.planner.product_service.api.ServiceApi;
 import com.team25.event.planner.user.api.LoginApi;
 import com.team25.event.planner.user.api.UserApi;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -22,7 +27,9 @@ public class ConnectionParams {
     public static final String BASE_URL = BuildConfig.BASE_URL;
 
     private static final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer())
+            .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+            .registerTypeAdapter(LocalTime.class, new LocalTimeAdapter())
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .create();
 
     public static Retrofit retrofit;
