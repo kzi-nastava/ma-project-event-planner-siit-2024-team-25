@@ -1,8 +1,9 @@
 package com.team25.event.planner.event.api;
 
 import com.team25.event.planner.core.Page;
+import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.model.EventCard;
-import com.team25.event.planner.event.model.EventFilterDTO;
+import com.team25.event.planner.event.model.EventRequest;
 import com.team25.event.planner.event.model.Invitation;
 
 import java.util.List;
@@ -34,4 +35,7 @@ public interface EventApi {
             @Path("eventId") Long eventId,
             @Body List<Invitation> requestDTO
     );
+
+    @POST("/api/events")
+    Call<Event> createEvent(@Body EventRequest eventRequest);
 }
