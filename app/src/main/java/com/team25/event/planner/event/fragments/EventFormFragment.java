@@ -24,15 +24,16 @@ import com.team25.event.planner.event.viewmodel.EventFormViewModel;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class EventFormFragment extends Fragment {
     private FragmentEventFormBinding binding;
     private EventFormViewModel viewModel;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    private List<EventType> eventTypesList = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,12 +91,20 @@ public class EventFormFragment extends Fragment {
     }
 
     private void setupEventTypeSpinner(List<EventType> eventTypes) {
+        eventTypesList = new ArrayList<>(eventTypes);
+
+        List<String> displayList = new ArrayList<>();
+        displayList.add("All");
+
+        // Add all event type names
+        for (EventType eventType : eventTypes) {
+            displayList.add(eventType.getName());
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 requireContext(),
                 android.R.layout.simple_spinner_item,
-                eventTypes.stream()
-                        .map(EventType::getName)
-                        .collect(Collectors.toList())
+                displayList
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.eventTypeSpinner.setAdapter(adapter);
@@ -103,7 +112,11 @@ public class EventFormFragment extends Fragment {
         binding.eventTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                viewModel.selectedEventTypeId.setValue(eventTypes.get(position).getId());
+                if (position == 0) { // "All" selected
+                    viewModel.selectedEventTypeId.setValue(null);
+                } else {
+                    viewModel.selectedEventTypeId.setValue(eventTypesList.get(position - 1).getId());
+                }
             }
 
             @Override
