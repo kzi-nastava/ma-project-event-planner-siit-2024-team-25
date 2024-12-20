@@ -5,6 +5,9 @@ import com.team25.event.planner.user.model.Location;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import lombok.Data;
+
+@Data
 public class Event {
     private Long id;
     private EventTypePreviewDTO eventType;

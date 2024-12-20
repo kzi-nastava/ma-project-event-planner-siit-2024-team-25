@@ -35,7 +35,7 @@ public class ResponseCallback<T> implements Callback<T> {
 
     @Override
     public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
-        if (response.isSuccessful() && response.body() != null) {
+        if (response.isSuccessful() && (response.body() != null || response.code() == 204)) {
             successCallback.handle(response.body());
         } else {
             try (ResponseBody errorBody = response.errorBody()) {

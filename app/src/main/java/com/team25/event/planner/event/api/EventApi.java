@@ -1,6 +1,7 @@
 package com.team25.event.planner.event.api;
 
 import com.team25.event.planner.core.Page;
+import com.team25.event.planner.event.model.Activity;
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.model.EventCard;
 import com.team25.event.planner.event.model.EventRequest;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -38,4 +40,13 @@ public interface EventApi {
 
     @POST("/api/events")
     Call<Event> createEvent(@Body EventRequest eventRequest);
+
+    @GET("/api/events/{eventId}/agenda")
+    Call<List<Activity>> getAgenda(@Path("eventId") Long eventId);
+
+    @POST("/api/events/{eventId}/agenda")
+    Call<Activity> addActivity(@Path("eventId") Long eventId, @Body Activity activity);
+
+    @DELETE("/api/events/{eventId}/agenda/{activityId}")
+    Call<Void> removeActivity(@Path("eventId") Long eventId, @Path("activityId") Long activityId);
 }

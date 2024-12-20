@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentEventFormBinding;
@@ -85,7 +87,18 @@ public class EventFormFragment extends Fragment {
         viewModel.event.observe(getViewLifecycleOwner(), event -> {
             if (event != null) {
                 Toast.makeText(getContext(), R.string.event_created_success, Toast.LENGTH_SHORT).show();
-                // Optionally navigate back or to event details
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+
+                Bundle args = new Bundle();
+                args.putLong(EventArgumentNames.ID_ARG, event.getId());
+                args.putString(EventArgumentNames.NAME_ARG, event.getName());
+
+                if (event.getPrivacyType().equals(PrivacyType.PRIVATE)) {
+                    navController.navigate(R.id.action_eventFormFragment_to_eventInvitation, args);
+                } else {
+                    navController.navigate(R.id.action_eventFormFragment_to_agendaFragment, args);
+                }
             }
         });
     }
@@ -96,7 +109,6 @@ public class EventFormFragment extends Fragment {
         List<String> displayList = new ArrayList<>();
         displayList.add("All");
 
-        // Add all event type names
         for (EventType eventType : eventTypes) {
             displayList.add(eventType.getName());
         }

@@ -10,11 +10,7 @@
         android:id="@+id/homeFragment"
         android:name="com.team25.event.planner.home.fragments.HomePageBaseFragment"
         android:label="Event Planner"
-        tools:layout="@layout/fragment_home_page_base">
-        <action
-            android:id="@+id/action_homeFragment_to_eventInvitation"
-            app:destination="@id/eventInvitation" />
-    </fragment>
+        tools:layout="@layout/fragment_home_page_base" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.team25.event.planner.user.fragments.LoginFragment"
@@ -81,16 +77,6 @@
             app:destination="@id/secondPageCreatingServiceFragment"
             app:popUpTo="@+id/finishPageCreateingCerviceFragment"
             app:popUpToInclusive="true" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/eventInvitation"
-        android:name="com.team25.event.planner.event.fragments.EventInvitation"
-        android:label="Send invitations"
-        tools:layout="@layout/fragment_event_invitation">
-        <action
-            android:id="@+id/action_eventInvitation_to_homeFragment"
-            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventTypeListFragment"
@@ -166,6 +152,26 @@
     <fragment
         android:id="@+id/eventFormFragment"
         android:name="com.team25.event.planner.event.fragments.EventFormFragment"
-        android:label="fragment_event_form"
-        tools:layout="@layout/fragment_event_form" />
+        android:label="Create Event"
+        tools:layout="@layout/fragment_event_form">
+        <action
+            android:id="@+id/action_eventFormFragment_to_agendaFragment"
+            app:destination="@id/agendaFragment" />
+        <action
+            android:id="@+id/action_eventFormFragment_to_eventInvitation"
+            app:destination="@id/eventInvitation" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventInvitation"
+        android:name="com.team25.event.planner.event.fragments.EventInvitation"
+        android:label="Send invitations"
+        tools:layout="@layout/fragment_event_invitation">
+        <action
+            android:id="@+id/action_eventInvitation_to_agendaFragment"
+            app:destination="@id/agendaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/agendaFragment"
+        android:name="com.team25.event.planner.event.fragments.AgendaFragment"
+        android:label="Agenda" />
 </navigation>
