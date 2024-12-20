@@ -103,8 +103,12 @@ public class MainActivity extends AppCompatActivity {
             if (data != null) {
                 String path = data.getPath();
                 if (path != null && path.startsWith("/user/register/quick")) {
-                    navController.navigate(R.id.registerQuickFragment);
-                    navController.popBackStack(R.id.registerQuickFragment, false);
+                    String invitationCode = data.getQueryParameter("invitationCode");
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("invitationCode", invitationCode);
+
+                    navController.navigate(R.id.registerQuickFragment, bundle);
                 }
             }
         }

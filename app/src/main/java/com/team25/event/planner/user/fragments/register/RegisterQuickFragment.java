@@ -26,18 +26,21 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentRegisterGeneralInfoBinding;
 import com.team25.event.planner.databinding.FragmentRegisterQuickBinding;
 import com.team25.event.planner.user.model.UserRole;
+import com.team25.event.planner.user.viewmodels.RegisterQuickViewModel;
 import com.team25.event.planner.user.viewmodels.RegisterViewModel;
 
 import java.io.File;
 
 public class RegisterQuickFragment extends Fragment {
     private FragmentRegisterQuickBinding binding;
-    private RegisterViewModel _registerViewModel;
+    private RegisterQuickViewModel _registerQuickViewModel;
     private NavController navController;
+
+    private String invitationCode;
 
 
     public RegisterQuickFragment() {
-        _registerViewModel = new RegisterViewModel();
+        _registerQuickViewModel = new RegisterQuickViewModel();
     }
 
 
@@ -65,15 +68,32 @@ public class RegisterQuickFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+
         navController = Navigation.findNavController(view);
 
-        _registerViewModel = new ViewModelProvider(
+        _registerQuickViewModel = new ViewModelProvider(
                 navController.getViewModelStoreOwner(R.id.nav_graph)
-        ).get(RegisterViewModel.class);
+        ).get(RegisterQuickViewModel.class);
 
-        binding.setViewModel(_registerViewModel);
+        binding.setViewModel(_registerQuickViewModel);
 
         setupListeners();
+
+        binding.buttonClose.setOnClickListener(v -> {
+            navController.navigate(R.id.homeFragment);
+        });
+
+        Bundle args = getArguments();
+        if (args != null) {
+            invitationCode = args.getString("invitationCode");
+            _registerQuickViewModel.invitationCode.setValue(this.invitationCode);
+        }
+
+        //TO DO -> open event fragment
+        _registerQuickViewModel.eventId.observe(getViewLifecycleOwner(), id -> {
+            navController.navigate(R.id.homeFragment);
+        });
     }
 
     private void setupListeners() {
@@ -96,7 +116,7 @@ public class RegisterQuickFragment extends Fragment {
             if (fileUri != null) {
                 binding.ivProfilePic.setImageTintList(null);
                 binding.ivProfilePic.setImageURI(fileUri);
-                _registerViewModel.profilePicture.postValue(new File(fileUri.getPath()));
+                _registerQuickViewModel.profilePicture.postValue(new File(fileUri.getPath()));
             } else {
                 binding.ivProfilePic.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_person));
             }

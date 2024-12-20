@@ -16,6 +16,7 @@ import com.team25.event.planner.user.api.UserApi;
 import com.team25.event.planner.user.model.EventOrganizerInfo;
 import com.team25.event.planner.user.model.Location;
 import com.team25.event.planner.user.model.OwnerInfo;
+import com.team25.event.planner.user.model.RegisterQuickRequest;
 import com.team25.event.planner.user.model.RegisterQuickResponse;
 import com.team25.event.planner.user.model.RegisterRequest;
 import com.team25.event.planner.user.model.UserRole;
@@ -51,6 +52,8 @@ public class RegisterQuickViewModel extends ViewModel {
 
     private final MutableLiveData<Long> _eventId = new MutableLiveData<>();
     public final LiveData<Long> eventId = _eventId;
+
+    public final MutableLiveData<String> invitationCode = new MutableLiveData<>();
     private boolean validateGeneralInfoForm() {
         String email = this.email.getValue();
         String password = this.password.getValue();
@@ -101,17 +104,20 @@ public class RegisterQuickViewModel extends ViewModel {
     }
 
     public void registerQuick() {
-        RegisterRequest registerRequest = new RegisterRequest(
+        if(!this.validateGeneralInfoForm()){
+            return;
+        }
+        RegisterQuickRequest registerRequest = new RegisterQuickRequest(
                 email.getValue(),
                 password.getValue(),
                 firstName.getValue(),
                 lastName.getValue(),
                 profilePicture.getValue(),
                 UserRole.REGULAR,
-                null,null
+                invitationCode.getValue()
         );
 
-        userApi.registerQuick(BodyBuilder.getRegisterFormData(registerRequest)).enqueue(new Callback<>() {
+        userApi.registerQuick(registerRequest.buildBody()).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<RegisterQuickResponse> call,
@@ -119,7 +125,6 @@ public class RegisterQuickViewModel extends ViewModel {
             ) {
                 if (response.isSuccessful() && response.body() != null) {
                     _eventId.setValue(response.body().getEventId());
-                    Log.e("_eventId", "_eventId: " + _eventId.getValue());
                 } else {
                     try (ResponseBody errorBody = response.errorBody()) {
                         if (errorBody != null) {

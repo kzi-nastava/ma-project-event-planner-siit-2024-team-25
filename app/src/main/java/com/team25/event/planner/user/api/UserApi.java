@@ -1,5 +1,6 @@
 package com.team25.event.planner.user.api;
 
+import com.team25.event.planner.user.model.RegisterQuickRequest;
 import com.team25.event.planner.user.model.RegisterQuickResponse;
 import com.team25.event.planner.user.model.RegisterResponse;
 

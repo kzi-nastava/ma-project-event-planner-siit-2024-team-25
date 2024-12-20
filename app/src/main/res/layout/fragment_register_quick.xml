@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.team25.event.planner.user.viewmodels.RegisterViewModel" />
+            type="com.team25.event.planner.user.viewmodels.RegisterQuickViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -139,15 +139,6 @@
                 android:text="@={viewModel.lastName}" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--        <Button-->
-        <!--            android:id="@+id/buttonSelectImage"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="@string/select_profile_picture"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutLastName" />-->
-
         <TextView
             android:id="@+id/tv_profile_pic"
             style="@style/TextAppearance.Material3.BodyMedium"
@@ -200,25 +191,24 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonPrevious"
+                android:id="@+id/buttonClose"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="@string/Close"
-                android:onClick="@{() -> viewModel.onGeneralInfoBack()}"
                 app:layout_constraintEnd_toStartOf="@+id/buttonNext"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_add_other_option" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonNext"
+                android:id="@+id/buttonFinish"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="@string/finish"
-                android:onClick="@{() -> viewModel.onGeneralInfoNext()}"
+                android:onClick="@{() -> viewModel.registerQuick()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/buttonPrevious"
                 app:layout_constraintTop_toBottomOf="@+id/iv_add_other_option" />
