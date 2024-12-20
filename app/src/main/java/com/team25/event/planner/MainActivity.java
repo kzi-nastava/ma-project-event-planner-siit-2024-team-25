@@ -1,5 +1,7 @@
 package com.team25.event.planner;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,6 +96,20 @@ public class MainActivity extends AppCompatActivity {
         setupAuthInterceptor();
     }
 
+    private void handleIntent(Intent intent) {
+        if (intent != null && Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Uri data = intent.getData();
+
+            if (data != null) {
+                String path = data.getPath();
+                if (path != null && path.startsWith("/user/register/quick")) {
+                    navController.navigate(R.id.registerQuickFragment);
+                    navController.popBackStack(R.id.registerQuickFragment, false);
+                }
+            }
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -124,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupWithNavController(binding.navView, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        this.handleIntent(getIntent());
     }
 
     @Override

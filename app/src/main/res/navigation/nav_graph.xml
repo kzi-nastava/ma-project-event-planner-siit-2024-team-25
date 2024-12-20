@@ -154,4 +154,8 @@
             android:id="@+id/action_approveCategoryFragment_to_submittedOfferingCategoryFragment"
             app:destination="@id/submittedOfferingCategoryFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/registerQuickFragment"
+        android:name="com.team25.event.planner.user.fragments.register.RegisterQuickFragment"
+        android:label="Register" />
 </navigation>
