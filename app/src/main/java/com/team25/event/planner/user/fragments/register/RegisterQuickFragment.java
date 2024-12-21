@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentRegisterGeneralInfoBinding;
 import com.team25.event.planner.databinding.FragmentRegisterQuickBinding;
 import com.team25.event.planner.user.model.UserRole;
@@ -35,12 +36,14 @@ public class RegisterQuickFragment extends Fragment {
     private FragmentRegisterQuickBinding binding;
     private RegisterQuickViewModel _registerQuickViewModel;
     private NavController navController;
+    private Long _eventId;
 
     private String invitationCode;
 
 
     public RegisterQuickFragment() {
         _registerQuickViewModel = new RegisterQuickViewModel();
+        _eventId = -1l;
     }
 
 
@@ -76,6 +79,9 @@ public class RegisterQuickFragment extends Fragment {
                 navController.getViewModelStoreOwner(R.id.nav_graph)
         ).get(RegisterQuickViewModel.class);
 
+        AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        _registerQuickViewModel.setAuthViewModel(authViewModel);
+
         binding.setViewModel(_registerQuickViewModel);
 
         setupListeners();
@@ -92,7 +98,14 @@ public class RegisterQuickFragment extends Fragment {
 
         //TO DO -> open event fragment
         _registerQuickViewModel.eventId.observe(getViewLifecycleOwner(), id -> {
-            navController.navigate(R.id.homeFragment);
+            this._eventId = id;
+        });
+
+        _registerQuickViewModel.loggedIn.observe(getViewLifecycleOwner(), loggedIn ->{
+            if(loggedIn){
+                navController.navigate(R.id.homeFragment);
+                Toast.makeText(getContext(), "Event: " + this._eventId, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

@@ -26,10 +26,10 @@ public class RegisterQuickRequest {
     public RequestBody buildBody(){
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("email", email)
-                .addFormDataPart("password", password)
-                .addFormDataPart("firstName", firstName)
-                .addFormDataPart("lastName", lastName)
+                .addFormDataPart("email", email.trim())
+                .addFormDataPart("password", password.trim())
+                .addFormDataPart("firstName", firstName.trim())
+                .addFormDataPart("lastName", lastName.trim())
                 .addFormDataPart("userRole", userRole.toString())
                 .addFormDataPart("invitationCode", invitationCode);
 
