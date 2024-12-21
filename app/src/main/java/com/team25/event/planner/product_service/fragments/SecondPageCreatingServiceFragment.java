@@ -29,11 +29,16 @@ import android.widget.ViewSwitcher;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentSecondPageCreatingBinding;
+import com.team25.event.planner.event.model.EventType;
+import com.team25.event.planner.event.viewmodel.EventTypeListViewModel;
+import com.team25.event.planner.offering.model.OfferingCategory;
+import com.team25.event.planner.offering.viewmodel.OfferingCategoryViewModel;
 import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SecondPageCreatingServiceFragment extends Fragment {
 
@@ -43,9 +48,14 @@ public class SecondPageCreatingServiceFragment extends Fragment {
     private ViewSwitcher viewSwitcher;
     private FragmentSecondPageCreatingBinding binding;
     private Button showDialogButton;
+    private OfferingCategoryViewModel offeringCategoryViewModel;
+    private AutoCompleteTextView autoCompleteTextView;
+
+    private EventTypeListViewModel eventTypeListViewModel;
+
     // from event types vm getAll
-    private List<String> selectedItems = new ArrayList<>();
-    private List<String> allItems = Arrays.asList("Option 1", "Option 2", "Option 3", "Option 4");
+    private List<EventType> selectedItems = new ArrayList<>();
+    private List<EventType> allItems = new ArrayList<>();
 
 
     @Override
@@ -58,13 +68,14 @@ public class SecondPageCreatingServiceFragment extends Fragment {
                 NavHostFragment.findNavController(this).getViewModelStoreOwner(R.id.nav_graph)
         ).get(ServiceAddFormViewModel.class);
         binding.setViewModel(mViewModel);
+        offeringCategoryViewModel = new ViewModelProvider(this).get(OfferingCategoryViewModel.class);
+        eventTypeListViewModel = new ViewModelProvider(this).get(EventTypeListViewModel.class);
 
         toggleButton = binding.toggleButton;
         viewSwitcher = binding.viewSwitcher;
 
-        setOfferingCategories();
         showDialogButton = binding.chooseEventTypes;
-        showDialogButton.setOnClickListener(v -> showMultiChoiceDialog());
+
 
         if(getArguments() != null){
             TextView textView = binding.EditOrCreateServiceText;
@@ -76,29 +87,57 @@ public class SecondPageCreatingServiceFragment extends Fragment {
         }
 
         binding.setLifecycleOwner(this);
+
+
         setObservers(getArguments());
         setListeners();
+
+        autoCompleteTextView = binding.autocompleteDropdown;
+        offeringCategoryViewModel.allCategories.observe(getViewLifecycleOwner(), categories -> {
+            ArrayAdapter<OfferingCategory> adapter = new ArrayAdapter<>(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    categories
+            );
+            autoCompleteTextView.setAdapter(adapter);
+            autoCompleteTextView.setThreshold(0);
+            autoCompleteTextView.showDropDown();
+        });
+        autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
+            OfferingCategory selectedCategory = (OfferingCategory) parent.getItemAtPosition(position);
+            mViewModel.offeringCategoryId.setValue(selectedCategory.getId());
+        });
+        autoCompleteTextView.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+
+                mViewModel.offeringCategoryId.setValue(-1L);
+                mViewModel.offeringCategoryNewName.setValue(autoCompleteTextView.getText().toString());
+            }
+        });
+
+        eventTypeListViewModel.eventTypes.observe(getViewLifecycleOwner(), eventTypes -> {
+            allItems = eventTypes;
+        });
+
+        showDialogButton.setOnClickListener(v -> showMultiChoiceDialog());
+        offeringCategoryViewModel.fetchOfferingCategories();
+        eventTypeListViewModel.fetchEventTypes();
         return binding.getRoot();
     }
 
 
-    public void setOfferingCategories(){
-        // call vm to get every single category from db
-        String[] defaultCategories = {"Category 1", "Category 2", "Category 3", "Category 4"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, defaultCategories);
-        AutoCompleteTextView autoCompleteTextView = binding.autocompleteDropdown;
-        autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setThreshold(1);
-        autoCompleteTextView.showDropDown();
-    }
 
     private void showMultiChoiceDialog() {
         boolean[] checkedItems = new boolean[allItems.size()];
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         selectedItems.clear();
+        CharSequence[] itemNames = new CharSequence[allItems.size()];
+        for (int i = 0; i < allItems.size(); i++) {
+            itemNames[i] = allItems.get(i).getName(); // Prikazivanje samo imena
+        }
         builder.setTitle("Select Multiple Options")
-                .setMultiChoiceItems(allItems.toArray(new CharSequence[0]), checkedItems,
+                .setMultiChoiceItems(itemNames, checkedItems,
                         (dialog, which, isChecked) -> {
                             if (isChecked) {
                                 selectedItems.add(allItems.get(which));
@@ -106,23 +145,36 @@ public class SecondPageCreatingServiceFragment extends Fragment {
                                 selectedItems.remove(allItems.get(which));
                             }
                         })
-                .setPositiveButton("OK", (dialog, which) -> updateUI())
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("OK", (dialog, which) -> updateUI()) // Ažuriraj UI
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss()) // Zatvori dijalog
                 .show();
     }
 
 
     private void updateUI() {
-        String selectedText = TextUtils.join(", ", selectedItems);
-        Toast.makeText(requireContext(), "Selected items: " + selectedText, Toast.LENGTH_SHORT).show();
+        String selectedItemsString = selectedItems.stream()
+                .map(EventType::getName)
+                .collect(Collectors.joining(", "));
+
+        TextView selectedItemsTextView = binding.eventTypesTextView;
+        selectedItemsTextView.setText("Selected: " + selectedItemsString);
+
+        List<Long> selectedIds = selectedItems.stream()
+                .map(EventType::getId)
+                .collect(Collectors.toList());
+
+        mViewModel.eventTypeIds.setValue(selectedIds);
     }
 
     public void setObservers(Bundle argumentsBundle){
         mViewModel.secondToThird.observe(getViewLifecycleOwner(), navigate -> {
             if (navigate != null && navigate) {
-                navController.navigate(R.id.action_secondPageCreatingServiceFragment_to_finishPageCreateingCerviceFragment,argumentsBundle);
+                if(mViewModel.validateForm2()){
+                    navController.navigate(R.id.action_secondPageCreatingServiceFragment_to_finishPageCreateingCerviceFragment,argumentsBundle);
 
-                mViewModel.secondToThird.setValue(false);
+                    mViewModel.secondToThird.setValue(false);
+                }
+
             }
         });
 
@@ -137,8 +189,10 @@ public class SecondPageCreatingServiceFragment extends Fragment {
     public void setListeners(){
         toggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
+                mViewModel.toggle.setValue(true);
                 viewSwitcher.showNext();  // Switch to Layout 2
             } else {
+                mViewModel.toggle.setValue(false);
                 viewSwitcher.showPrevious();  // Switch to Layout 1
             }
         });

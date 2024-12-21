@@ -64,6 +64,8 @@ public class ServiceAddForm extends Fragment {
             }
         });
 
+
+
         mViewModel.cancelClicked.observe(getViewLifecycleOwner(), navigate -> {
             if (navigate != null && navigate) {
                 navController.navigateUp();

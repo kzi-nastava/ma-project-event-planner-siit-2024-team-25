@@ -113,7 +113,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Select or type category for the service"
-                                >
+
+                                app:errorText="@{viewModel.errors.offeringCategory}">
 
                                 <AutoCompleteTextView
                                     android:id="@+id/autocomplete_dropdown"
@@ -192,6 +193,7 @@
                                         android:layout_centerInParent="true"
                                         android:layout_marginBottom="16dp"
                                         android:max="24"
+                                        android:min="1"
                                         android:progress="@{viewModel.duration}"
                                         app:onSeeking="@{viewModel::onSeeking}"/>
                                 </LinearLayout>
@@ -202,6 +204,11 @@
                                     android:layout_height="wrap_content"
                                     android:padding="16dp"
                                     android:orientation="vertical">
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        app:errorText="@{viewModel.errors.arrangement}"/>
+
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -229,6 +236,7 @@
                                         android:layout_centerInParent="true"
                                         android:layout_marginBottom="16dp"
                                         android:max="24"
+                                        android:min="1"
                                         android:progress="@{viewModel.minArrangement}"
                                         app:onSeeking="@{viewModel::onSeeking}"/>
 
@@ -259,6 +267,7 @@
                                         android:layout_centerInParent="true"
                                         android:layout_marginBottom="16dp"
                                         android:max="24"
+                                        android:min="1"
                                         android:progress="@{viewModel.maxArrangement}"
                                         app:onSeeking="@{viewModel::onSeeking}"/>
                                 </LinearLayout>
@@ -274,6 +283,10 @@
                             android:text="Choose event types for the service"
                             android:layout_gravity="center"
                             android:layout_marginTop="15dp"/>
+                        <MultiAutoCompleteTextView
+                            android:id="@+id/eventTypesTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
                         <ScrollView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

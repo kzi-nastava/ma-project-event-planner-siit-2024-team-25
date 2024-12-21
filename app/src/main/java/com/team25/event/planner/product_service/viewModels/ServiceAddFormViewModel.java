@@ -15,6 +15,7 @@ import com.team25.event.planner.product_service.model.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.Builder;
 import lombok.Data;
@@ -49,6 +50,11 @@ public class ServiceAddFormViewModel extends ViewModel {
     public final MutableLiveData<Integer> duration = new MutableLiveData<>(0);
     public final MutableLiveData<Integer> minArrangement = new MutableLiveData<>(0);
     public final MutableLiveData<Integer> maxArrangement = new MutableLiveData<>(0);
+    public final MutableLiveData<Boolean> toggle = new MutableLiveData<>();
+    public final MutableLiveData<Long> offeringCategoryId = new MutableLiveData<>();
+    public final MutableLiveData<String> offeringCategoryNewName = new MutableLiveData<>();
+    public final MutableLiveData<List<Long>> eventTypeIds = new MutableLiveData<>();
+    public final MutableLiveData<Long> ownerId = new MutableLiveData<>(21L);
 
     @Data
     @Builder(toBuilder = true)
@@ -56,6 +62,10 @@ public class ServiceAddFormViewModel extends ViewModel {
         private final String name;
         private final String description;
         private final String price;
+        private final String arrangement;
+        private final String image;
+        private final String offeringCategory;
+        private final String eventType;
     }
 
     private final MutableLiveData<ErrorUiState> _errors = new MutableLiveData<>();
@@ -124,11 +134,56 @@ public class ServiceAddFormViewModel extends ViewModel {
 
     }
 
+    public boolean validateForm3(){
+
+        ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = ErrorUiState.builder();
+        boolean isValid = true;
+
+        if(images.getValue()==null || images.getValue().isEmpty()){
+            errorUiStateBuilder.image("You choose at least 1 image");
+            isValid = false;
+        }
+
+        _errors.setValue(errorUiStateBuilder.build());
+        return isValid;
+    }
+    public boolean validateForm2(){
+        Integer minArrangement = this.minArrangement.getValue();
+        Integer maxArrangement = this.maxArrangement.getValue();
+        Long offeringId = this.offeringCategoryId.getValue();
+        Boolean toggle = this.toggle.getValue();
+        ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = ErrorUiState.builder();
+        boolean isValid = true;
+        boolean check = false;
+        if(offeringId == null || Objects.equals(offeringCategoryNewName.getValue(), "")){
+            errorUiStateBuilder.offeringCategory("Offering category is required");
+            isValid = false;
+        }
+        if(Boolean.TRUE.equals(toggle)){
+            if(minArrangement == null || minArrangement == 0){
+                errorUiStateBuilder.arrangement("Minimum arrangement is required");
+                isValid = false;
+                check = true;
+            } else if (maxArrangement == null || maxArrangement == 0) {
+                errorUiStateBuilder.arrangement("Maximum arrangement is required");
+                isValid = false;
+                check = true;
+            }
+            if(!check){
+                if(minArrangement > maxArrangement){
+                    errorUiStateBuilder.arrangement("Maximum arrangement must be greater than minimum");
+                    isValid = false;
+                }
+            }
+        }
+        _errors.setValue(errorUiStateBuilder.build());
+        return isValid;
+    }
+
     public boolean validateForm() {
         String name = this.name.getValue();
         String description = this.description.getValue();
         String priceStringValue = this.priceString.getValue();
-
         ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = ErrorUiState.builder();
         boolean isValid = true;
 
@@ -152,6 +207,7 @@ public class ServiceAddFormViewModel extends ViewModel {
             errorUiStateBuilder.description("Description is required.");
             isValid = false;
         }
+
 
         _errors.setValue(errorUiStateBuilder.build());
         return isValid;
@@ -215,9 +271,9 @@ public class ServiceAddFormViewModel extends ViewModel {
         serviceCreateRequestDTO.setDuration(duration.getValue());
         // min and max
 
-        serviceCreateRequestDTO.setEventTypesIDs(List.of(1L, 2L, 3L));
-        serviceCreateRequestDTO.setOfferingCategoryID(3L);
-        serviceCreateRequestDTO.setOwnerId(11L);
+        serviceCreateRequestDTO.setEventTypesIDs(eventTypeIds.getValue());
+        serviceCreateRequestDTO.setOfferingCategoryID(offeringCategoryId.getValue());
+        serviceCreateRequestDTO.setOwnerId(ownerId.getValue());
 
         serviceCreateRequestDTO.setImages(images.getValue());
 

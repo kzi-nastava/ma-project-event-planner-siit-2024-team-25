@@ -18,6 +18,6 @@ public class EventType {
     @NonNull
     @Override
     public String toString() {
-        return name;
+        return this.name;
     }
 }

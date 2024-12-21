@@ -129,7 +129,10 @@ public class FinishPageCreatingServiceFragment extends Fragment {
     public void setObservers(){
         mViewModel.toFinish.observe(getViewLifecycleOwner(), navigate -> {
             if (navigate != null && navigate) {
-                mViewModel.createService();
+                if(mViewModel.validateForm3()){
+                    mViewModel.createService();
+                }
+
             }
         });
         mViewModel.toSecond.observe(getViewLifecycleOwner(), navigate -> {
