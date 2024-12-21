@@ -12,4 +12,8 @@
     <item
         android:icon="@drawable/ic_notifications"
         android:title="@string/notifications" />
+    <item
+        android:id="@id/myEventsFragment"
+        android:icon="@drawable/ic_event"
+        android:title="@string/my_events" />
 </menu>

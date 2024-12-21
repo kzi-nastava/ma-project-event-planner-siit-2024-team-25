@@ -1,23 +1,18 @@
 package com.team25.event.planner.user.viewmodels;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.gson.Gson;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Validation;
-import com.team25.event.planner.core.model.ApiError;
+import com.team25.event.planner.core.api.ResponseCallback;
 import com.team25.event.planner.user.api.BodyBuilder;
 import com.team25.event.planner.user.api.UserApi;
 import com.team25.event.planner.user.model.EventOrganizerInfo;
 import com.team25.event.planner.user.model.Location;
 import com.team25.event.planner.user.model.OwnerInfo;
 import com.team25.event.planner.user.model.RegisterRequest;
-import com.team25.event.planner.user.model.RegisterResponse;
 import com.team25.event.planner.user.model.UserRole;
 
 import java.io.File;
@@ -25,10 +20,6 @@ import java.util.List;
 
 import lombok.Builder;
 import lombok.Data;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RegisterViewModel extends ViewModel {
     private final UserApi userApi;
@@ -330,36 +321,10 @@ public class RegisterViewModel extends ViewModel {
                         : null
         );
 
-        userApi.register(BodyBuilder.getRegisterFormData(registerRequest)).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<RegisterResponse> call,
-                    @NonNull Response<RegisterResponse> response
-            ) {
-                if (response.isSuccessful() && response.body() != null) {
-                    _formStep.postValue(RegisterStep.Success);
-                } else {
-                    try (ResponseBody errorBody = response.errorBody()) {
-                        if (errorBody != null) {
-                            Gson gson = new Gson();
-                            ApiError apiError = gson.fromJson(errorBody.charStream(), ApiError.class);
-                            _serverError.postValue(apiError.getMessage());
-                            Log.e("RegisterViewModel", "Error: " + apiError.getMessage());
-                        } else {
-                            _serverError.postValue("Unknown error occurred");
-                        }
-                    } catch (Exception e) {
-                        Log.e("RegisterViewModel", "Error parsing response: " + e.getMessage());
-                        _serverError.postValue("Error parsing server response");
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<RegisterResponse> call, @NonNull Throwable t) {
-                Log.e("RegisterViewModel", "Network error on signup: " + t.getMessage());
-                _serverError.postValue("Network error");
-            }
-        });
+        userApi.register(BodyBuilder.getRegisterFormData(registerRequest)).enqueue(
+                new ResponseCallback<>(
+                        (response) -> _formStep.postValue(RegisterStep.Success),
+                        _serverError, "RegisterViewModel")
+        );
     }
 }

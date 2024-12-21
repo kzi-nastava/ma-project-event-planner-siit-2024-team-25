@@ -1,9 +1,7 @@
 package com.team25.event.planner.event.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +12,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.google.android.material.card.MaterialCardView;
-import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.R;
-import com.team25.event.planner.event.fragments.EventInvitation;
+import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.model.EventCard;
 
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
@@ -79,12 +72,11 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
         boolean[] isClicked = {false};
         eventIcon.setOnClickListener(v -> {
             isClicked[0] = !isClicked[0];
-            if(isClicked[0]){
+            if (isClicked[0]) {
                 eventIcon.setImageResource(R.drawable.ic_heart_red);
                 Toast.makeText(getContext(), "You add " + event.getName() +
                         " to your favourite list", Toast.LENGTH_SHORT).show();
-            }
-            else{
+            } else {
                 eventIcon.setImageResource(R.drawable.ic_heart);
                 Toast.makeText(getContext(), "You remove " + event.getName() +
                         " from your favourite list", Toast.LENGTH_SHORT).show();
@@ -112,14 +104,10 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
             eventLocationImage.setImageResource(R.drawable.ic_location);
 
 
-            eventCard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("name",event.getName());
-                    bundle.putLong("id",event.getId());
-                    navController.navigate(R.id.action_homeFragment_to_eventInvitation,bundle);
-                }
+            eventCard.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putLong(EventArgumentNames.ID_ARG, event.getId());
+                // TODO: navController.navigate(R.id.action_homeFragment_to_eventDetailsFragment, bundle);
             });
         }
 
