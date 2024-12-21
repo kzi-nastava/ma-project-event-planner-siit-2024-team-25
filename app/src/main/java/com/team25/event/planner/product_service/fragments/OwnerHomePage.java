@@ -5,11 +5,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +20,10 @@ import android.widget.Spinner;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentOwnerHomePageBinding;
-import com.team25.event.planner.product_service.adapters.ServiceCardsAdapter;
+import com.team25.event.planner.event.model.EventType;
+import com.team25.event.planner.event.viewmodel.EventTypeListViewModel;
+import com.team25.event.planner.offering.model.OfferingCategory;
+import com.team25.event.planner.offering.viewmodel.OfferingCategoryViewModel;
 import com.team25.event.planner.product_service.viewModels.ServiceCardsViewModel;
 
 import java.util.ArrayList;
@@ -29,6 +34,13 @@ public class OwnerHomePage extends Fragment {
     private ServiceCardsViewModel serviceCardsViewModel;
     private FragmentOwnerHomePageBinding binding;
     private NavController navController;
+    private Spinner categorySpinner;
+    private OfferingCategoryViewModel categoryViewModel;
+    private Long offeringCategoryFilterId;
+    private Spinner eventTypeSpinner;
+    private EventTypeListViewModel eventTypeListViewModel;
+    private Long eventTypeFilterId;
+
 
     public OwnerHomePage() {
 
@@ -45,6 +57,8 @@ public class OwnerHomePage extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentOwnerHomePageBinding.inflate(inflater, container, false);
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+        categoryViewModel = new ViewModelProvider(this).get(OfferingCategoryViewModel.class);
+        eventTypeListViewModel = new ViewModelProvider(this).get(EventTypeListViewModel.class);
         return binding.getRoot();
     }
 
@@ -74,27 +88,29 @@ public class OwnerHomePage extends Fragment {
                 adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner3.setAdapter(adapter3);
 
-                Spinner spinner = dialogView.findViewById(R.id.spinner);
-                List<String> options = new ArrayList<>();
-                options.add("Select a category"); // Placeholder
-                options.add("category 1");
-                options.add("category 2");
-                options.add("category 3");
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, options);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
+                // offering category spinner
+                setOfferingCategorySpinner(dialogView);
+                categoryViewModel.allCategories.observe(getViewLifecycleOwner(), categories -> {
+                    List<OfferingCategory> updatedCategories = new ArrayList<OfferingCategory>();
+                    updatedCategories.add(new OfferingCategory(null, "Select an offering category"));
+                    updatedCategories.addAll(categories);
+                    ArrayAdapter<OfferingCategory> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, updatedCategories);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    categorySpinner.setAdapter(adapter);
+                });
 
-                Spinner spinner2 = dialogView.findViewById(R.id.spinner2);
-                List<String> options2 = new ArrayList<>();
-                options2.add("Select an event type");
-                options2.add("event type 1");
-                options2.add("event type 3");
-                options2.add("event type 2");
+                // event type spinner
+                setEventTypeSpinner(dialogView);
+                eventTypeListViewModel.eventTypes.observe(getViewLifecycleOwner(), eventTypes -> {
+                    List<EventType> updatedTypes = new ArrayList<EventType>();
+                    updatedTypes.add(new EventType(null, "Select an event type", "", null));
+                    updatedTypes.addAll(eventTypes);
+                    ArrayAdapter<EventType> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, updatedTypes);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    eventTypeSpinner.setAdapter(adapter);
+                });
 
-                ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, options2);
-                adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner2.setAdapter(adapter2);
 
                 bottomSheetDialog.setContentView(dialogView);
                 Button cancelButton = dialogView.findViewById(R.id.button);
@@ -115,7 +131,7 @@ public class OwnerHomePage extends Fragment {
 
                         getChildFragmentManager().beginTransaction()
                                 .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,true, binding.searchText.getText().toString()
-                                ,text.getText().toString(),getAvailable(spinner3)))
+                                ,text.getText().toString(),getAvailable(spinner3),eventTypeFilterId, offeringCategoryFilterId))
                                 .commit();
 
                     }
@@ -124,7 +140,7 @@ public class OwnerHomePage extends Fragment {
                     @Override
                     public void onClick(View v) {
                         getChildFragmentManager().beginTransaction()
-                                .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,true, binding.searchText.getText().toString(),null,null))
+                                .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,true, binding.searchText.getText().toString(),null,null, null, null))
                                 .commit();
                         text.setText("");
                     }
@@ -135,7 +151,7 @@ public class OwnerHomePage extends Fragment {
 
         if (savedInstanceState == null) {
             getChildFragmentManager().beginTransaction()
-                    .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,false, null,null, null))
+                    .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,false, null,null, null,null,null))
                     .commit();
         }
     }
@@ -151,11 +167,48 @@ public class OwnerHomePage extends Fragment {
         }
     }
 
+    private void setOfferingCategorySpinner(View dialogView){
+        categorySpinner = dialogView.findViewById(R.id.spinner);
+
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                OfferingCategory selectedCategory = (OfferingCategory) parent.getItemAtPosition(position);
+                offeringCategoryFilterId = selectedCategory.getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        categoryViewModel.fetchOfferingCategories();
+    }
+
+    private void setEventTypeSpinner(View dialogView){
+        eventTypeSpinner = dialogView.findViewById(R.id.spinner2);
+
+        eventTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                EventType eventType = (EventType) parent.getItemAtPosition(position);
+                eventTypeFilterId = eventType.getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        eventTypeListViewModel.fetchEventTypes();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         getChildFragmentManager().beginTransaction()
-                .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,false,null,null,null))
+                .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,false,null,null,null,null, null))
                 .commit();
     }
 

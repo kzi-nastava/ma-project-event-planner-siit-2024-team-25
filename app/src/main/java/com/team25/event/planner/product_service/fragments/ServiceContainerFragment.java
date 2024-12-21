@@ -20,13 +20,17 @@ public class ServiceContainerFragment extends Fragment {
     private String searchName;
     private String searchPrice;
     private Boolean searchAvailable;
+    private Long eventTypeId;
+    private Long offeringCategoryId;
 
-    public ServiceContainerFragment(ServiceCardsViewModel vm, boolean filter, String name, String price, Boolean a) {
+    public ServiceContainerFragment(ServiceCardsViewModel vm, boolean filter, String name, String price, Boolean a,Long eventTypeId, Long offeringCategoryId) {
         serviceCardsViewModel = vm;
         this.filter = filter;
         this.searchName = name;
         this.searchPrice = price;
         this.searchAvailable = a;
+        this.eventTypeId = eventTypeId;
+        this.offeringCategoryId = offeringCategoryId;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class ServiceContainerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        FragmentTransition.to(ServiceListFragment.newInstance(serviceCardsViewModel,filter, searchName, searchPrice, searchAvailable), requireActivity(), false, binding.serviceContainer.getId());
+        FragmentTransition.to(ServiceListFragment.newInstance(serviceCardsViewModel,filter, searchName, searchPrice, searchAvailable, eventTypeId, offeringCategoryId), requireActivity(), false, binding.serviceContainer.getId());
     }
 
 }

@@ -31,17 +31,22 @@ public class ServiceListFragment extends ListFragment {
     private String nameFilter;
     private String priceFilter;
     private Boolean availableFilter;
+    private Long eventTypeId;
+    private Long offeringCategoryId;
 
-    public ServiceListFragment(ServiceCardsViewModel vm, boolean f, String n, String p, Boolean a) {
+    public ServiceListFragment(ServiceCardsViewModel vm, boolean f, String n, String p, Boolean a,Long eventTypeId, Long offeringCategoryId) {
         this.serviceCardsViewModel = vm;
         this.filter = f;
         this.nameFilter = n;
         this.priceFilter = p;
         this.availableFilter = a;
+        this.eventTypeId = eventTypeId;
+        this.offeringCategoryId = offeringCategoryId;
     }
-    public static ServiceListFragment newInstance(ServiceCardsViewModel vm, boolean f, String n, String p, Boolean a){
 
-        return new ServiceListFragment(vm,f,n,p,a);
+    public static ServiceListFragment newInstance(ServiceCardsViewModel vm, boolean f, String n, String p, Boolean a, Long eventTypeId, Long offeringCategoryId){
+
+        return new ServiceListFragment(vm,f,n,p,a, eventTypeId, offeringCategoryId);
     }
 
     @Override
@@ -49,7 +54,7 @@ public class ServiceListFragment extends ListFragment {
                              Bundle savedInstanceState) {
         serviceCardsViewModel = new ViewModelProvider(requireActivity()).get(ServiceCardsViewModel.class);
         if(filter){
-            serviceCardsViewModel.setupFilter(nameFilter, priceFilter, availableFilter);
+            serviceCardsViewModel.setupFilter(nameFilter, priceFilter, availableFilter, eventTypeId, offeringCategoryId);
         }else{
             serviceCardsViewModel.filterServices();
         }

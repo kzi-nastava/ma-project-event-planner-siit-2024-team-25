@@ -74,7 +74,7 @@ public class ServiceCardsViewModel extends ViewModel {
         }
     }
 
-    public void setupFilter(String nameF, String pf, Boolean availableF) {
+    public void setupFilter(String nameF, String pf, Boolean availableF, Long eventTypeId, Long offeringCategoryId) {
         if (Objects.equals(nameF, "")) {
             filterDTO.setName(null);
         } else {
@@ -90,6 +90,12 @@ public class ServiceCardsViewModel extends ViewModel {
                     filterDTO.setPrice(0.0);
                 }
             }
+        }
+        if(eventTypeId != null){
+            filterDTO.setEventTypeId(eventTypeId);
+        }
+        if(offeringCategoryId != null){
+            filterDTO.setOfferingCategoryId(offeringCategoryId);
         }
 
         filterServices();
@@ -116,6 +122,8 @@ public class ServiceCardsViewModel extends ViewModel {
                     filterDTO.setName(null);
                     filterDTO.setAvailable(null);
                     filterDTO.setPrice(null);
+                    filterDTO.setEventTypeId(null);
+                    filterDTO.setOfferingCategoryId(null);
                 } else {
                     Log.e("ServiceCardsViewModel", "Error fetching services: ");
                 }
