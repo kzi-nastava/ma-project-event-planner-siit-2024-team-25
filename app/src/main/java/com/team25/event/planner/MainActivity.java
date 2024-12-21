@@ -109,6 +109,16 @@ public class MainActivity extends AppCompatActivity {
                     bundle.putString("invitationCode", invitationCode);
 
                     navController.navigate(R.id.registerQuickFragment, bundle);
+                } else if (path != null && path.startsWith("/event/")) {
+                    String eventId = data.getPathSegments().get(1);
+                    String invitationCode = data.getQueryParameter("invitationCode");
+
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("invitationCode", invitationCode);
+                    bundle.putString("eventId", eventId);
+
+                    navController.navigate(R.id.loginFragment, bundle);
                 }
             }
         }

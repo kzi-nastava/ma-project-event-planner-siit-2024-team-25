@@ -38,20 +38,12 @@ public class RegisterQuickFragment extends Fragment {
     private NavController navController;
     private Long _eventId;
 
-    private String invitationCode;
+    private String _invitationCode;
 
 
     public RegisterQuickFragment() {
         _registerQuickViewModel = new RegisterQuickViewModel();
         _eventId = -1l;
-    }
-
-
-    public static RegisterQuickFragment newInstance(String param1, String param2) {
-        RegisterQuickFragment fragment = new RegisterQuickFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -70,8 +62,6 @@ public class RegisterQuickFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
 
         navController = Navigation.findNavController(view);
 
@@ -92,8 +82,8 @@ public class RegisterQuickFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            invitationCode = args.getString("invitationCode");
-            _registerQuickViewModel.invitationCode.setValue(this.invitationCode);
+            _invitationCode = args.getString("invitationCode");
+            _registerQuickViewModel.invitationCode.setValue(this._invitationCode);
         }
 
         //TO DO -> open event fragment
