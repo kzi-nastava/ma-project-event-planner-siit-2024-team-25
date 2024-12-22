@@ -110,12 +110,12 @@ public class MainActivity extends AppCompatActivity {
 
                     navController.navigate(R.id.registerQuickFragment, bundle);
                 } else if (path != null && path.startsWith("/event/")) {
-                    String eventId = data.getPathSegments().get(1);
+                    Long eventId = Long.valueOf(data.getPathSegments().get(1));
                     String invitationCode = data.getQueryParameter("invitationCode");
 
                     Bundle bundle = new Bundle();
                     bundle.putString("invitationCode", invitationCode);
-                    bundle.putString("eventId", eventId);
+                    bundle.putLong("eventId", eventId);
 
                     navController.navigate(R.id.loginFragment, bundle);
                 }
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 headerTitle.setText(user.getFullName());
                 headerSubtitle.setText(user.getEmail());
 
-                final String profilePicUrl = ConnectionParams.BASE_URL + "api/users/" + user.getUserId() + "/profile-picture";
+                final String profilePicUrl = ConnectionParams.BASE_URL + "/api/users/" + user.getUserId() + "/profile-picture";
                 Glide.with(this)
                         .load(profilePicUrl)
                         .placeholder(R.drawable.ic_person)

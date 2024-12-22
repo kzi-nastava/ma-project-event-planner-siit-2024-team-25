@@ -178,4 +178,9 @@
         android:id="@+id/agendaFragment"
         android:name="com.team25.event.planner.event.fragments.AgendaFragment"
         android:label="Agenda" />
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.team25.event.planner.event.fragments.EventDetailsFragment"
+        android:label="fragment_event_details"
+        tools:layout="@layout/fragment_event_details" />
 </navigation>

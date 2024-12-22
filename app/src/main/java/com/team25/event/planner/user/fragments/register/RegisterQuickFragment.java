@@ -93,8 +93,11 @@ public class RegisterQuickFragment extends Fragment {
 
         _registerQuickViewModel.loggedIn.observe(getViewLifecycleOwner(), loggedIn ->{
             if(loggedIn){
-                navController.navigate(R.id.homeFragment);
-                Toast.makeText(getContext(), "Event: " + this._eventId, Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putString("invitationCode", _invitationCode);
+                bundle.putLong("eventId", _eventId);
+
+                navController.navigate(R.id.eventDetailsFragment, bundle);
             }
         });
     }

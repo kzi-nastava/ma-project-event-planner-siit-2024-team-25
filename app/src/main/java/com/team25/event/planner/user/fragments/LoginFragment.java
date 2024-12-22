@@ -23,7 +23,7 @@ import com.team25.event.planner.user.viewmodels.RegisterQuickViewModel;
 public class LoginFragment extends Fragment {
     private LoginViewModel viewModel;
     private String _invitationCode;
-    private String _eventId;
+    private Long _eventId;
 
 
     @Override
@@ -33,10 +33,7 @@ public class LoginFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             _invitationCode = args.getString("invitationCode");
-            _eventId = args.getString("eventId");
-            Toast.makeText(getContext(), "Invitation code: " + _invitationCode, Toast.LENGTH_SHORT).show();
-            Toast.makeText(getContext(), "eventId: " + _eventId, Toast.LENGTH_SHORT).show();
-
+            _eventId = args.getLong("eventId");
         }
     }
 
@@ -63,16 +60,13 @@ public class LoginFragment extends Fragment {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 
                 if(this._invitationCode != null){
-                    navController.navigate(R.id.action_loginFragment_to_homeFragment);
-                } else {
                     Bundle bundle = new Bundle();
                     bundle.putString("invitationCode", _invitationCode);
-                    bundle.putString("eventId", _eventId);
+                    bundle.putLong("eventId", _eventId);
 
-                    navController.navigate(R.id.homeFragment, bundle);
-                    Toast.makeText(getContext(), "Invitation code: " + _invitationCode, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getContext(), "eventId: " + _eventId, Toast.LENGTH_SHORT).show();
-
+                    navController.navigate(R.id.eventDetailsFragment, bundle);
+                } else {
+                    navController.navigate(R.id.action_loginFragment_to_homeFragment);
                 }
             }
         });
