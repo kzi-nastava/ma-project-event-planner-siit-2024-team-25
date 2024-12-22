@@ -283,6 +283,10 @@
                             android:text="Choose event types for the service"
                             android:layout_gravity="center"
                             android:layout_marginTop="15dp"/>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:errorText="@{viewModel.errors.eventType}"/>
                         <MultiAutoCompleteTextView
                             android:id="@+id/eventTypesTextView"
                             android:layout_width="match_parent"

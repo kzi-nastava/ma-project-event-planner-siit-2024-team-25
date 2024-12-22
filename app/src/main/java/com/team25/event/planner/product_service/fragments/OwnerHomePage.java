@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +21,23 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
+import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
 import com.team25.event.planner.databinding.FragmentOwnerHomePageBinding;
 import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.event.viewmodel.EventTypeListViewModel;
+import com.team25.event.planner.offering.dialogs.YesOrNoDialogFragment;
 import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.offering.viewmodel.OfferingCategoryViewModel;
+import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewModel;
 import com.team25.event.planner.product_service.viewModels.ServiceCardsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class OwnerHomePage extends Fragment {
+public class OwnerHomePage extends Fragment  {
+    public static final String SERVICE_ID_ARG_NAME = "serviceId";
     private ServiceCardsViewModel serviceCardsViewModel;
     private FragmentOwnerHomePageBinding binding;
     private NavController navController;
@@ -41,6 +48,7 @@ public class OwnerHomePage extends Fragment {
     private EventTypeListViewModel eventTypeListViewModel;
     private Long eventTypeFilterId;
 
+    private ServiceAddFormViewModel mViewModel;
 
     public OwnerHomePage() {
 
@@ -59,6 +67,9 @@ public class OwnerHomePage extends Fragment {
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         categoryViewModel = new ViewModelProvider(this).get(OfferingCategoryViewModel.class);
         eventTypeListViewModel = new ViewModelProvider(this).get(EventTypeListViewModel.class);
+        mViewModel = new ViewModelProvider(
+                NavHostFragment.findNavController(this).getViewModelStoreOwner(R.id.nav_graph)
+        ).get(ServiceAddFormViewModel.class);
         return binding.getRoot();
     }
 
@@ -211,5 +222,6 @@ public class OwnerHomePage extends Fragment {
                 .replace(binding.scrollServices.getId(), new ServiceContainerFragment(serviceCardsViewModel,false,null,null,null,null, null))
                 .commit();
     }
+
 
 }

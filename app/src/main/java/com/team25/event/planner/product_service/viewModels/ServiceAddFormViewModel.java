@@ -1,5 +1,6 @@
 package com.team25.event.planner.product_service.viewModels;
 
+import android.util.Log;
 import android.widget.SeekBar;
 
 import androidx.lifecycle.LiveData;
@@ -8,14 +9,21 @@ import androidx.lifecycle.ViewModel;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.ConnectionParams;
+import com.team25.event.planner.event.api.EventTypeApi;
+import com.team25.event.planner.event.model.EventType;
+import com.team25.event.planner.offering.Api.OfferingCategoryApi;
+import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.product_service.api.ServiceApi;
 import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
 import com.team25.event.planner.product_service.enums.ReservationType;
+import com.team25.event.planner.product_service.model.Offering;
 import com.team25.event.planner.product_service.model.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +33,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ServiceAddFormViewModel extends ViewModel {
+    private final ServiceApi serviceApi = ConnectionParams.serviceApi;
+    private final EventTypeApi eventTypeApi = ConnectionParams.eventTypeApi;
+    private final OfferingCategoryApi offeringCategoryApi = ConnectionParams.offeringCategoryApi;
+    public final MutableLiveData<Boolean> isEditMode = new MutableLiveData<>(false);
     public MutableLiveData<String> errorMessageFromServer = new MutableLiveData<>();
 
     private ArrayList<Service> services = new ArrayList<Service>();
@@ -54,7 +66,11 @@ public class ServiceAddFormViewModel extends ViewModel {
     public final MutableLiveData<Long> offeringCategoryId = new MutableLiveData<>();
     public final MutableLiveData<String> offeringCategoryNewName = new MutableLiveData<>();
     public final MutableLiveData<List<Long>> eventTypeIds = new MutableLiveData<>();
-    public final MutableLiveData<Long> ownerId = new MutableLiveData<>(21L);
+    public final MutableLiveData<Long> ownerId = new MutableLiveData<>(2L);
+    public final MutableLiveData<Long> serviceId = new MutableLiveData<>();
+    public final MutableLiveData<Service> serviceModel = new MutableLiveData<>();
+    public final MutableLiveData<List<EventType>> eventTypesLive = new MutableLiveData<>();
+    public final MutableLiveData<OfferingCategory> offeringCategoryMutableLiveData = new MutableLiveData<>();
 
     @Data
     @Builder(toBuilder = true)
@@ -151,12 +167,17 @@ public class ServiceAddFormViewModel extends ViewModel {
         Integer minArrangement = this.minArrangement.getValue();
         Integer maxArrangement = this.maxArrangement.getValue();
         Long offeringId = this.offeringCategoryId.getValue();
+        List<Long> eventIds = this.eventTypeIds.getValue();
         Boolean toggle = this.toggle.getValue();
         ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = ErrorUiState.builder();
         boolean isValid = true;
         boolean check = false;
         if(offeringId == null || Objects.equals(offeringCategoryNewName.getValue(), "")){
             errorUiStateBuilder.offeringCategory("Offering category is required");
+            isValid = false;
+        }
+        if(eventIds == null || eventIds.isEmpty()){
+            errorUiStateBuilder.eventType("You must have at least 1 event type");
             isValid = false;
         }
         if(Boolean.TRUE.equals(toggle)){
@@ -214,25 +235,7 @@ public class ServiceAddFormViewModel extends ViewModel {
 
     }
 
-    public void findService(Integer idService) {
-        name.postValue("sss");
-        description.setValue("Description 1");
-        specifics.setValue("Specifics 1");
-        price.setValue(100);
-        discount.setValue(15);
-        confirmationType.setValue(ReservationType.AUTOMATIC);
-        isVisible.setValue(true);
-        isAvailable.setValue(true);
-        syncFront();
-    }
 
-    public void fillTheForm() {
-        duration.setValue(1);
-        minArrangement.setValue(1);
-        maxArrangement.setValue(5);
-        categoryInput.setValue("Category 10");
-        categoryInputEnabled.setValue(false);
-    }
 
     private void syncFront() {
         if (confirmationType.getValue() == ReservationType.AUTOMATIC) {
@@ -240,6 +243,7 @@ public class ServiceAddFormViewModel extends ViewModel {
         } else {
             confirmationTypeToggle.setValue(false);
         }
+        categoryInputEnabled.setValue(false);
     }
 
     public void restart() {
@@ -253,6 +257,56 @@ public class ServiceAddFormViewModel extends ViewModel {
             return ReservationType.MANUAL;
         }
     }
+
+    public void setUpServiceId(Long id){
+        serviceId.setValue(id);
+        if(id!=null){
+            fetchService(id);
+        }else{
+            resetForm();
+            restart();
+        }
+    }
+
+    public final MutableLiveData<Boolean> isDeleted = new MutableLiveData<>(false);
+    public void deleteService(Long serviceId){
+        serviceApi.deleteService(serviceId).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    isDeleted.setValue(true);
+                } else {
+                    errorMessageFromServer.setValue(response.errorBody().toString());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void fetchService(Long idService) {
+        serviceApi.getService(idService).enqueue(new Callback<ServiceCreateRequestDTO>() {
+            @Override
+            public void onResponse(Call<ServiceCreateRequestDTO> call, Response<ServiceCreateRequestDTO> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    serviceId.postValue(idService);
+                    fillTheForm(response.body());
+                } else {
+                    errorMessageFromServer.setValue(response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServiceCreateRequestDTO> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     public void createService() {
 
@@ -269,7 +323,8 @@ public class ServiceAddFormViewModel extends ViewModel {
         serviceCreateRequestDTO.setCancellationDeadline(cancelDeadline.getValue());
 
         serviceCreateRequestDTO.setDuration(duration.getValue());
-        // min and max
+        serviceCreateRequestDTO.setMinimumArrangement(minArrangement.getValue());
+        serviceCreateRequestDTO.setMaximumArrangement(maxArrangement.getValue());
 
         serviceCreateRequestDTO.setEventTypesIDs(eventTypeIds.getValue());
         serviceCreateRequestDTO.setOfferingCategoryID(offeringCategoryId.getValue());
@@ -277,8 +332,10 @@ public class ServiceAddFormViewModel extends ViewModel {
 
         serviceCreateRequestDTO.setImages(images.getValue());
 
-        ServiceApi serviceApi = ConnectionParams.serviceApi;
-        Call<ResponseBody> call = serviceApi.createService(serviceCreateRequestDTO);
+
+        Call<ResponseBody> call = Boolean.TRUE.equals(isEditMode.getValue()) ?
+                                    serviceApi.updateService(serviceId.getValue(),serviceCreateRequestDTO)
+                                    :serviceApi.createService(serviceCreateRequestDTO);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -295,5 +352,96 @@ public class ServiceAddFormViewModel extends ViewModel {
             }
         });
 
+    }
+
+    public void fillTheForm(ServiceCreateRequestDTO service) {
+        fetchFullService(service);
+        //serviceModel.setValue(service);
+        name.setValue(service.getName());
+        description.setValue(service.getDescription());
+        price.setValue((int) service.getPrice());
+        discount.setValue((int) service.getDiscount());
+        isAvailable.setValue(service.isAvailable());
+        isAvailable.setValue(service.isVisible());
+        specifics.setValue(service.getSpecifics());
+        reservationDeadline.setValue(service.getReservationDeadline());
+        cancelDeadline.setValue(service.getCancellationDeadline());
+        duration.setValue(service.getDuration());
+        minArrangement.setValue(service.getMinimumArrangement());
+        maxArrangement.setValue(service.getMaximumArrangement());
+        eventTypeIds.setValue(service.getEventTypesIDs());
+        offeringCategoryId.setValue(service.getOfferingCategoryID());
+        //ownerId.setValue();
+        //images.setValue(service.getImageURL());
+
+        syncFront();
+    }
+    private void fetchFullService(ServiceCreateRequestDTO dto) {
+        List<Call<EventType>> eventTypeCalls = new ArrayList<>();
+        for (Long eventTypeId : dto.getEventTypesIDs()) {
+            eventTypeCalls.add(eventTypeApi.getEventType(eventTypeId)); // API poziv za EventType
+        }
+
+        Call<OfferingCategory> categoryCall = offeringCategoryApi.getOfferingCategory(dto.getOfferingCategoryID()); // API poziv za Category
+
+        // Paralelno dohvaćanje svih EventType modela
+        List<EventType> eventTypes = new ArrayList<>();
+        AtomicBoolean categoryFetched = new AtomicBoolean(false);
+        AtomicReference<OfferingCategory> category = new AtomicReference<>();
+
+        for (Call<EventType> eventTypeCall : eventTypeCalls) {
+            eventTypeCall.enqueue(new Callback<EventType>() {
+                @Override
+                public void onResponse(Call<EventType> call, Response<EventType> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        eventTypes.add(response.body());
+                        eventTypesLive.setValue(eventTypes);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<EventType> call, Throwable t) {
+                    Log.e("API", "Error fetching event type", t);
+                }
+            });
+        }
+
+        categoryCall.enqueue(new Callback<OfferingCategory>() {
+            @Override
+            public void onResponse(Call<OfferingCategory> call, Response<OfferingCategory> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    category.set(response.body());
+                    categoryFetched.set(true);
+                    offeringCategoryMutableLiveData.setValue(category.get());
+                    categoryInput.setValue(category.get().getName());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OfferingCategory> call, Throwable t) {
+                Log.e("API", "Error fetching category", t);
+            }
+        });
+    }
+
+
+    public void resetForm(){
+        name.setValue("");
+        description.setValue("");
+        price.setValue(0);
+        discount.setValue(0);
+        isAvailable.setValue(false);
+        isAvailable.setValue(false);
+        specifics.setValue("");
+        confirmationTypeToggle.setValue(false);
+        reservationDeadline.setValue(0);
+        cancelDeadline.setValue(0);
+        duration.setValue(0);
+        minArrangement.setValue(0);
+        maxArrangement.setValue(0);
+        eventTypeIds.setValue(new ArrayList<>());
+        offeringCategoryId.setValue(null);
+        //ownerId.setValue();
+        images.setValue(new ArrayList<>());
     }
 }

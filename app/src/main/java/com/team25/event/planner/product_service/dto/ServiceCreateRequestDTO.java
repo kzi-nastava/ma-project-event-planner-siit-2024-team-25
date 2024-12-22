@@ -23,6 +23,8 @@ public class ServiceCreateRequestDTO {
     private int duration;
     private int reservationDeadline;
     private int cancellationDeadline;
+    private int minimumArrangement;
+    private int maximumArrangement;
     private List<Long> eventTypesIDs;
     private Long offeringCategoryID;
     private Long ownerId;

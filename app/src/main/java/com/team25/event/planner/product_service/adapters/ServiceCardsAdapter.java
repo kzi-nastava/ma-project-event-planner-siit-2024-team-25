@@ -17,15 +17,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
+import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
 import com.team25.event.planner.product_service.model.ServiceCard;
 
 import java.util.List;
 
 public class ServiceCardsAdapter extends ArrayAdapter<ServiceCard> {
     private List<ServiceCard> services;
+    private OnEditButtonClickListener editButtonClickListener;
+    private OnDeleteButtonClickListener deleteButtonClickListener;
     public ServiceCardsAdapter(Context context, List<ServiceCard> services){
         super(context, R.layout.service_card,services);
         this.services = services;
+    }
+    public void setOnEditButtonClickListener(OnEditButtonClickListener listener) {
+        this.editButtonClickListener = listener;
+    }
+    public void setOnDeleteButtonClickListener(OnDeleteButtonClickListener listener){
+        this.deleteButtonClickListener = listener;
     }
 
     @Override
@@ -71,6 +81,18 @@ public class ServiceCardsAdapter extends ArrayAdapter<ServiceCard> {
                         serviceCard.getId());
                 Toast.makeText(getContext(), "Clicked: " + serviceCard.getName()  +
                         ", id: " + serviceCard.getId(), Toast.LENGTH_SHORT).show();
+            });
+            editButton.setOnClickListener(v ->{
+                if(editButtonClickListener != null){
+                    Log.i("ffff", "Clicked: " + serviceCard.getName() + ", id: " +
+                            serviceCard.getId());
+                    editButtonClickListener.onEditButtonClick(serviceCard.getId());
+                }
+            });
+            deleteButton.setOnClickListener(v ->{
+                if(deleteButtonClickListener != null){
+                    deleteButtonClickListener.onDeleteButtonClick(serviceCard.getId(), serviceCard.getName());
+                }
             });
         }
 

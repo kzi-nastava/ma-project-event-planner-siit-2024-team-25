@@ -1,5 +1,8 @@
 package com.team25.event.planner.product_service.fragments;
 
+import static com.team25.event.planner.offering.fragments.OfferingCategoryBaseFragment.ID_ARG_NAME;
+import static com.team25.event.planner.product_service.fragments.OwnerHomePage.SERVICE_ID_ARG_NAME;
+
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
@@ -25,6 +28,7 @@ public class ServiceAddForm extends Fragment {
     private NavController navController;
     private FragmentServiceAddFormBinding binding;
 
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -39,7 +43,12 @@ public class ServiceAddForm extends Fragment {
         if(getArguments() != null){
             TextView textView = binding.EditOrCreateServiceText;
             textView.setText(R.string.edit_the_service);
-            mViewModel.findService(1);
+            mViewModel.isEditMode.setValue(true);
+            Long serviceId = getArguments().getLong(SERVICE_ID_ARG_NAME);
+            mViewModel.setUpServiceId(serviceId);
+        }
+        else{
+            mViewModel.isEditMode.setValue(false);
         }
 
         setObservers(getArguments());

@@ -80,10 +80,6 @@ public class SecondPageCreatingServiceFragment extends Fragment {
         if(getArguments() != null){
             TextView textView = binding.EditOrCreateServiceText;
             textView.setText(R.string.edit_the_service);
-            mViewModel.fillTheForm();
-            /*String productId = getArguments() != null ? getArguments().getString("productId") : null;*/
-        }else{
-            mViewModel.restart();
         }
 
         binding.setLifecycleOwner(this);
@@ -100,8 +96,11 @@ public class SecondPageCreatingServiceFragment extends Fragment {
                     categories
             );
             autoCompleteTextView.setAdapter(adapter);
-            autoCompleteTextView.setThreshold(0);
-            autoCompleteTextView.showDropDown();
+            autoCompleteTextView.setThreshold(1);
+            if(Boolean.FALSE.equals(mViewModel.isEditMode.getValue())){
+                autoCompleteTextView.showDropDown();
+            }
+
         });
         autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             OfferingCategory selectedCategory = (OfferingCategory) parent.getItemAtPosition(position);
@@ -119,7 +118,7 @@ public class SecondPageCreatingServiceFragment extends Fragment {
             allItems = eventTypes;
         });
 
-        showDialogButton.setOnClickListener(v -> showMultiChoiceDialog());
+        showDialogButton.setOnClickListener(v -> showMultiChoiceDialog(new ArrayList<>()));
         offeringCategoryViewModel.fetchOfferingCategories();
         eventTypeListViewModel.fetchEventTypes();
         return binding.getRoot();
@@ -127,7 +126,7 @@ public class SecondPageCreatingServiceFragment extends Fragment {
 
 
 
-    private void showMultiChoiceDialog() {
+    private void showMultiChoiceDialog(List<Long> ids) {
         boolean[] checkedItems = new boolean[allItems.size()];
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -135,6 +134,12 @@ public class SecondPageCreatingServiceFragment extends Fragment {
         CharSequence[] itemNames = new CharSequence[allItems.size()];
         for (int i = 0; i < allItems.size(); i++) {
             itemNames[i] = allItems.get(i).getName(); // Prikazivanje samo imena
+        }
+        for (EventType e:
+             allItems) {
+            if(ids.contains(e.getId())){
+                selectedItems.add(e);
+            }
         }
         builder.setTitle("Select Multiple Options")
                 .setMultiChoiceItems(itemNames, checkedItems,
@@ -184,6 +189,11 @@ public class SecondPageCreatingServiceFragment extends Fragment {
                 mViewModel.secondToFirst.setValue(false);
             }
         });
+        mViewModel.eventTypesLive.observe(getViewLifecycleOwner(), eventTypes -> {
+            selectedItems = eventTypes;
+            updateUI();
+        });
+
     }
 
     public void setListeners(){

@@ -2,7 +2,14 @@ package com.team25.event.planner.product_service.model;
 
 import com.team25.event.planner.product_service.enums.ProductServiceType;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+
+@Getter
+@Setter
+@AllArgsConstructor
 public abstract class Offering {
 
     protected long id;
@@ -17,17 +24,6 @@ public abstract class Offering {
 
     public Offering(){}
 
-    public Offering(long id, String name, String description, double price, double discount, int imageURL,
-                    boolean isVisible, boolean isAvailable, ProductServiceType status){
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.discount = discount;
-        this.imageURL = imageURL;
-        this.isAvailable = isAvailable;
-        this.isVisible = isVisible;
-        this.status = status;
-    }
+
 
 }
