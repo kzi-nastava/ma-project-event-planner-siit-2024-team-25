@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
                     String eventId = data.getPathSegments().get(1);
                     String invitationCode = data.getQueryParameter("invitationCode");
 
-
                     Bundle bundle = new Bundle();
                     bundle.putString("invitationCode", invitationCode);
                     bundle.putString("eventId", eventId);

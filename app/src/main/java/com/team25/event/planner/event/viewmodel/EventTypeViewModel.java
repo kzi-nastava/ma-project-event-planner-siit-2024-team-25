@@ -1,16 +1,12 @@
 package com.team25.event.planner.event.viewmodel;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.google.gson.Gson;
 import com.team25.event.planner.core.ConnectionParams;
-import com.team25.event.planner.core.model.ApiError;
+import com.team25.event.planner.core.api.ResponseCallback;
 import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.event.model.EventTypeRequest;
@@ -22,10 +18,7 @@ import java.util.Objects;
 
 import lombok.Builder;
 import lombok.Data;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class EventTypeViewModel extends ViewModel {
     private final EventTypeApi eventTypeApi = ConnectionParams.eventTypeApi;
@@ -78,37 +71,14 @@ public class EventTypeViewModel extends ViewModel {
     }
 
     private void fetchEventType(Long eventTypeId) {
-        eventTypeApi.getEventType(eventTypeId).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<EventType> call, @NonNull Response<EventType> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    _eventTypeId.postValue(response.body().getId());
+        eventTypeApi.getEventType(eventTypeId).enqueue(new ResponseCallback<>(
+                (eventType) -> {
+                    _eventTypeId.postValue(eventType.getId());
                     _serverError.postValue(null);
-                    populateForm(response.body());
-                } else {
-                    try (ResponseBody errorBody = response.errorBody()) {
-                        if (errorBody != null) {
-                            Gson gson = new Gson();
-                            ApiError apiError = gson.fromJson(errorBody.charStream(), ApiError.class);
-                            _serverError.postValue(apiError.getMessage());
-                            Log.e("EventTypeViewModel", "Error: " + apiError.getMessage());
-                        } else {
-                            _serverError.postValue("Unknown error occurred");
-                            Log.e("EventTypeViewModel", "Error response with empty body");
-                        }
-                    } catch (Exception e) {
-                        _serverError.postValue("Error parsing server response");
-                        Log.e("EventTypeViewModel", "Error parsing response: " + e.getMessage());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<EventType> call, @NonNull Throwable t) {
-                Log.e("EventTypeViewModel", "Network error on event type fetch: " + t.getMessage());
-                _serverError.postValue("Network error");
-            }
-        });
+                    populateForm(eventType);
+                },
+                _serverError, "EventTypeViewModel"
+        ));
     }
 
     private void populateForm(EventType eventType) {
@@ -167,38 +137,15 @@ public class EventTypeViewModel extends ViewModel {
                 ? eventTypeApi.updateEventType(eventTypeId.getValue(), requestBody)
                 : eventTypeApi.createEventType(requestBody);
 
-        call.enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<EventType> call, @NonNull Response<EventType> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    _eventTypeId.postValue(response.body().getId());
+        call.enqueue(new ResponseCallback<>(
+                (eventType) -> {
+                    _eventTypeId.postValue(eventType.getId());
                     _serverError.postValue(null);
-                    populateForm(response.body());
+                    populateForm(eventType);
                     successSignal.postValue(true);
-                } else {
-                    try (ResponseBody errorBody = response.errorBody()) {
-                        if (errorBody != null) {
-                            Gson gson = new Gson();
-                            ApiError apiError = gson.fromJson(errorBody.charStream(), ApiError.class);
-                            _serverError.postValue(apiError.getMessage());
-                            Log.e("EventTypeViewModel", "Error: " + apiError.getMessage());
-                        } else {
-                            _serverError.postValue("Unknown error occurred");
-                            Log.e("EventTypeViewModel", "Error response with empty body");
-                        }
-                    } catch (Exception e) {
-                        _serverError.postValue("Error parsing server response");
-                        Log.e("EventTypeViewModel", "Error parsing response: " + e.getMessage());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<EventType> call, @NonNull Throwable t) {
-                Log.e("EventTypeViewModel", "Network error on event types fetch: " + t.getMessage());
-                _serverError.postValue("Network error");
-            }
-        });
+                },
+                _serverError, "EventTypeViewModel"
+        ));
     }
 
     private void resetForm() {
