@@ -176,7 +176,6 @@ public class SecondPageCreatingServiceFragment extends Fragment {
             if (navigate != null && navigate) {
                 if(mViewModel.validateForm2()){
                     navController.navigate(R.id.action_secondPageCreatingServiceFragment_to_finishPageCreateingCerviceFragment,argumentsBundle);
-
                     mViewModel.secondToThird.setValue(false);
                 }
 

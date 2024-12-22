@@ -49,8 +49,8 @@ public class Service extends Offering implements Parcelable {
         price = in.readDouble();
         discount = in.readDouble();
         imageURL = in.readInt();
-        isVisible = in.readByte() != 0;
-        isAvailable = in.readByte() != 0;
+        visible = in.readByte() != 0;
+        available = in.readByte() != 0;
         status = ProductServiceType.valueOf(in.readString());
         specifics = in.readString();
         duration = in.readInt();
@@ -73,8 +73,8 @@ public class Service extends Offering implements Parcelable {
         dest.writeDouble(price);
         dest.writeDouble(discount);
         dest.writeInt(imageURL);
-        dest.writeByte((byte) (isVisible ? 1 : 0));
-        dest.writeByte((byte) (isAvailable ? 1 : 0));
+        dest.writeByte((byte) (visible ? 1 : 0));
+        dest.writeByte((byte) (available ? 1 : 0));
         dest.writeString(status.name());
         dest.writeString(specifics);
         dest.writeInt(duration);

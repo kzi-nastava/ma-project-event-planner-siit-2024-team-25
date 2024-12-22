@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import lombok.Builder;
 import lombok.Data;
@@ -47,10 +48,9 @@ public class ServiceAddFormViewModel extends ViewModel {
     public final MutableLiveData<String> description = new MutableLiveData<>("");
     public final MutableLiveData<String> specifics = new MutableLiveData<>();
     public final MutableLiveData<String> priceString = new MutableLiveData<>();
-    public final MutableLiveData<Integer> price = new MutableLiveData<>(0);
+    public final MutableLiveData<Double> price = new MutableLiveData<>(0.0);
     public final MutableLiveData<Integer> discount = new MutableLiveData<>(0);
     public final MutableLiveData<List<String>> images = new MutableLiveData<>(List.of());
-    public final MutableLiveData<String> eventTypes = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isVisible = new MutableLiveData<>(false);
     public final MutableLiveData<Boolean> isAvailable = new MutableLiveData<>(false);
     public final MutableLiveData<Integer> reservationDeadline = new MutableLiveData<>(0);
@@ -68,9 +68,16 @@ public class ServiceAddFormViewModel extends ViewModel {
     public final MutableLiveData<List<Long>> eventTypeIds = new MutableLiveData<>();
     public final MutableLiveData<Long> ownerId = new MutableLiveData<>(2L);
     public final MutableLiveData<Long> serviceId = new MutableLiveData<>();
-    public final MutableLiveData<Service> serviceModel = new MutableLiveData<>();
     public final MutableLiveData<List<EventType>> eventTypesLive = new MutableLiveData<>();
     public final MutableLiveData<OfferingCategory> offeringCategoryMutableLiveData = new MutableLiveData<>();
+
+    public void removeImageUrl(String url) {
+        if (images.getValue() != null) {
+            List<String> updatedList = new ArrayList<>(images.getValue());
+            updatedList.remove(url);
+            images.setValue(updatedList);
+        }
+    }
 
     @Data
     @Builder(toBuilder = true)
@@ -141,7 +148,7 @@ public class ServiceAddFormViewModel extends ViewModel {
     public boolean validateInputNumber(String text) {
 
         try {
-            int number = Integer.parseInt(text);
+            Double number = Double.parseDouble(text);
             price.setValue(number);
             return true;
         } catch (NumberFormatException e) {
@@ -213,7 +220,7 @@ public class ServiceAddFormViewModel extends ViewModel {
             isValid = false;
         } else {
             if (validateInputNumber(priceStringValue)) {
-                price.setValue(Integer.valueOf(priceStringValue));
+                price.setValue(Double.valueOf(priceStringValue));
             } else {
                 errorUiStateBuilder.price("Price must be a number");
                 isValid = false;
@@ -234,8 +241,6 @@ public class ServiceAddFormViewModel extends ViewModel {
         return isValid;
 
     }
-
-
 
     private void syncFront() {
         if (confirmationType.getValue() == ReservationType.AUTOMATIC) {
@@ -356,10 +361,11 @@ public class ServiceAddFormViewModel extends ViewModel {
 
     public void fillTheForm(ServiceCreateRequestDTO service) {
         fetchFullService(service);
-        //serviceModel.setValue(service);
+
         name.setValue(service.getName());
         description.setValue(service.getDescription());
-        price.setValue((int) service.getPrice());
+        price.setValue( service.getPrice());
+        priceString.setValue(String.valueOf(service.getPrice()));
         discount.setValue((int) service.getDiscount());
         isAvailable.setValue(service.isAvailable());
         isAvailable.setValue(service.isVisible());
@@ -369,10 +375,8 @@ public class ServiceAddFormViewModel extends ViewModel {
         duration.setValue(service.getDuration());
         minArrangement.setValue(service.getMinimumArrangement());
         maxArrangement.setValue(service.getMaximumArrangement());
-        eventTypeIds.setValue(service.getEventTypesIDs());
-        offeringCategoryId.setValue(service.getOfferingCategoryID());
-        //ownerId.setValue();
-        //images.setValue(service.getImageURL());
+        confirmationType.setValue(service.getReservationType());
+        images.setValue(service.getImages());
 
         syncFront();
     }
@@ -396,6 +400,7 @@ public class ServiceAddFormViewModel extends ViewModel {
                     if (response.isSuccessful() && response.body() != null) {
                         eventTypes.add(response.body());
                         eventTypesLive.setValue(eventTypes);
+                        eventTypeIds.setValue(eventTypes.stream().map(EventType::getId).collect(Collectors.toList()));
                     }
                 }
 
@@ -414,6 +419,7 @@ public class ServiceAddFormViewModel extends ViewModel {
                     categoryFetched.set(true);
                     offeringCategoryMutableLiveData.setValue(category.get());
                     categoryInput.setValue(category.get().getName());
+                    offeringCategoryId.setValue(category.get().getId());
                 }
             }
 
@@ -428,7 +434,8 @@ public class ServiceAddFormViewModel extends ViewModel {
     public void resetForm(){
         name.setValue("");
         description.setValue("");
-        price.setValue(0);
+        price.setValue(0.0);
+        priceString.setValue("");
         discount.setValue(0);
         isAvailable.setValue(false);
         isAvailable.setValue(false);

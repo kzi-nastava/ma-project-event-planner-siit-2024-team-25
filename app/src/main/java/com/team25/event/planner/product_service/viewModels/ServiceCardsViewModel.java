@@ -101,7 +101,7 @@ public class ServiceCardsViewModel extends ViewModel {
         filterServices();
     }
 
-    public void filterServices() {
+    public void     filterServices() {
 
         Map<String, String> queryMap = buildQueryMap(filterDTO);
 

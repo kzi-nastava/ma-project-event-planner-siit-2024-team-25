@@ -18,8 +18,8 @@ public abstract class Offering {
     protected double price;
     protected double discount;
     protected int imageURL;
-    protected boolean isVisible;
-    protected boolean isAvailable;
+    protected boolean visible;
+    protected boolean available;
     protected ProductServiceType status;
 
     public Offering(){}

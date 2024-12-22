@@ -11,6 +11,7 @@ import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import com.team25.event.planner.product_service.adapters.ServiceCardsAdapter;
 import com.team25.event.planner.product_service.adapters.ServiceListAdapter;
 import com.team25.event.planner.product_service.model.Service;
 import com.team25.event.planner.product_service.model.ServiceCard;
+import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewModel;
 import com.team25.event.planner.product_service.viewModels.ServiceCardsViewModel;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
     private ServiceCardsAdapter adapter;
     private ServiceCardsViewModel serviceCardsViewModel;
     private NavController navController;
+    private ServiceAddFormViewModel mViewModel;
     private boolean filter;
     private String nameFilter;
     private String priceFilter;
@@ -67,7 +70,9 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
             serviceCardsViewModel.filterServices();
         }
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
-
+        mViewModel = new ViewModelProvider(
+                NavHostFragment.findNavController(this).getViewModelStoreOwner(R.id.nav_graph)
+        ).get(ServiceAddFormViewModel.class);
         setObserves();
         return inflater.inflate(R.layout.fragment_service_list, container, false);
     }
@@ -80,7 +85,8 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
     @Override
     public void onResume() {
         super.onResume();
-        //serviceCardsViewModel.filterServices();
+        setObserves();
+        serviceCardsViewModel.filterServices();
     }
 
     public void setObserves(){
@@ -98,7 +104,8 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
         YesOrNoDialogFragment dialog = new YesOrNoDialogFragment(new YesOrNoDialogFragment.ConfirmDialogListener() {
             @Override
             public void onConfirm() {
-                //mViewModel.deleteService(id);
+                mViewModel.deleteService(id);
+
             }
 
             @Override
@@ -108,7 +115,9 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
             @Override
             public void refresh() {
                 serviceCardsViewModel.filterServices();
+                navController.navigateUp();
             }
+
         },name);
 
         dialog.show(getParentFragmentManager(), "ConfirmDialogFragment");

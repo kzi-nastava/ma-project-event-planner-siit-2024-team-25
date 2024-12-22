@@ -49,6 +49,7 @@ public class ServiceAddForm extends Fragment {
         }
         else{
             mViewModel.isEditMode.setValue(false);
+            mViewModel.setUpServiceId(null);
         }
 
         setObservers(getArguments());
@@ -72,9 +73,6 @@ public class ServiceAddForm extends Fragment {
 
             }
         });
-
-
-
         mViewModel.cancelClicked.observe(getViewLifecycleOwner(), navigate -> {
             if (navigate != null && navigate) {
                 navController.navigateUp();
