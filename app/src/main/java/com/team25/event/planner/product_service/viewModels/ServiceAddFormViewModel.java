@@ -40,7 +40,6 @@ public class ServiceAddFormViewModel extends ViewModel {
     public final MutableLiveData<Boolean> isEditMode = new MutableLiveData<>(false);
     public MutableLiveData<String> errorMessageFromServer = new MutableLiveData<>();
 
-    private ArrayList<Service> services = new ArrayList<Service>();
     private ServiceCreateRequestDTO serviceCreateRequestDTO;
 
     public final MutableLiveData<String> name = new MutableLiveData<>("");
@@ -59,7 +58,7 @@ public class ServiceAddFormViewModel extends ViewModel {
     public final MutableLiveData<Boolean> confirmationTypeToggle = new MutableLiveData<>();
     public final MutableLiveData<String> categoryInput = new MutableLiveData<>();
     public final MutableLiveData<Boolean> categoryInputEnabled = new MutableLiveData<>();
-    public final MutableLiveData<Integer> duration = new MutableLiveData<>(0);
+    public final MutableLiveData<Integer> duration = new MutableLiveData<>(1);
     public final MutableLiveData<Integer> minArrangement = new MutableLiveData<>(0);
     public final MutableLiveData<Integer> maxArrangement = new MutableLiveData<>(0);
     public final MutableLiveData<Boolean> toggle = new MutableLiveData<>();
@@ -95,39 +94,8 @@ public class ServiceAddFormViewModel extends ViewModel {
     public final LiveData<ErrorUiState> errors = _errors;
     private final MutableLiveData<String> _serverError = new MutableLiveData<>();
     public final LiveData<String> serverError = _serverError;
-    private final MutableLiveData<Boolean> _addedService = new MutableLiveData<>(false);
-    public final LiveData<Boolean> addedService = _addedService;
+    public final MutableLiveData<Boolean> _addedService = new MutableLiveData<>(false);
 
-    public final MutableLiveData<Boolean> secondToThird = new MutableLiveData<>();
-    public final MutableLiveData<Boolean> secondToFirst = new MutableLiveData<>();
-    public final MutableLiveData<Boolean> firstToSecond = new MutableLiveData<>();
-    public final MutableLiveData<Boolean> cancelClicked = new MutableLiveData<>();
-    public final MutableLiveData<Boolean> toFinish = new MutableLiveData<>();
-    public final MutableLiveData<Boolean> toSecond = new MutableLiveData<>();
-
-    public void FirstToSecond() {
-        firstToSecond.setValue(true);
-    }
-
-    public void cancel() {
-        cancelClicked.setValue(true);
-    }
-
-    public void SecondToThird() {
-        secondToThird.setValue(true);
-    }
-
-    public void SecondToFirst() {
-        secondToFirst.setValue(true);
-    }
-
-    public void Finish() {
-        toFinish.setValue(true);
-    }
-
-    public void ToSecond() {
-        toSecond.setValue(true);
-    }
 
     public void onSeeking(SeekBar seekBar, Integer seekParams) {
         if (seekBar.getId() == R.id.durationValue) {
@@ -179,10 +147,11 @@ public class ServiceAddFormViewModel extends ViewModel {
         ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = ErrorUiState.builder();
         boolean isValid = true;
         boolean check = false;
-        if(offeringId == null || Objects.equals(offeringCategoryNewName.getValue(), "")){
+        if(offeringId == null && Objects.equals(categoryInput.getValue(), "")){
             errorUiStateBuilder.offeringCategory("Offering category is required");
             isValid = false;
         }
+
         if(eventIds == null || eventIds.isEmpty()){
             errorUiStateBuilder.eventType("You must have at least 1 event type");
             isValid = false;
@@ -333,6 +302,9 @@ public class ServiceAddFormViewModel extends ViewModel {
 
         serviceCreateRequestDTO.setEventTypesIDs(eventTypeIds.getValue());
         serviceCreateRequestDTO.setOfferingCategoryID(offeringCategoryId.getValue());
+        if(offeringCategoryId.getValue() == null){
+            serviceCreateRequestDTO.setOfferingCategoryName(categoryInput.getValue());
+        }
         serviceCreateRequestDTO.setOwnerId(ownerId.getValue());
 
         serviceCreateRequestDTO.setImages(images.getValue());
@@ -345,7 +317,7 @@ public class ServiceAddFormViewModel extends ViewModel {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    errorMessageFromServer.setValue("You successfully created new service");
+                    _addedService.setValue(true);
                 } else {
                     errorMessageFromServer.setValue(response.errorBody().toString());
                 }
@@ -448,7 +420,6 @@ public class ServiceAddFormViewModel extends ViewModel {
         maxArrangement.setValue(0);
         eventTypeIds.setValue(new ArrayList<>());
         offeringCategoryId.setValue(null);
-        //ownerId.setValue();
         images.setValue(new ArrayList<>());
     }
 }

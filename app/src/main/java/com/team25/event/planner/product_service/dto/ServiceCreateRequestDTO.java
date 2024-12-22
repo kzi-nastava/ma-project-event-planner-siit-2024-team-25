@@ -27,5 +27,6 @@ public class ServiceCreateRequestDTO {
     private int maximumArrangement;
     private List<Long> eventTypesIDs;
     private Long offeringCategoryID;
+    private String offeringCategoryName;
     private Long ownerId;
 }

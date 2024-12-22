@@ -43,9 +43,7 @@
         tools:layout="@layout/fragment_service_add_form">
         <action
             android:id="@+id/action_serviceAddForm_to_secondPageCreatingServiceFragment"
-            app:destination="@id/secondPageCreatingServiceFragment"
-            app:popUpTo="@+id/serviceAddForm"
-            app:popUpToInclusive="true" />
+            app:destination="@id/secondPageCreatingServiceFragment" />
         <action
             android:id="@+id/action_serviceAddForm_to_ownerHomePage"
             app:destination="@id/ownerHomePage" />
@@ -58,13 +56,11 @@
         <action
             android:id="@+id/action_secondPageCreatingServiceFragment_to_finishPageCreateingCerviceFragment"
             app:destination="@id/finishPageCreateingCerviceFragment"
-            app:popUpTo="@+id/secondPageCreatingServiceFragment"
-            app:popUpToInclusive="true" />
+             />
         <action
             android:id="@+id/action_secondPageCreatingServiceFragment_to_serviceAddForm"
             app:destination="@id/serviceAddForm"
-            app:popUpTo="@+id/secondPageCreatingServiceFragment"
-            app:popUpToInclusive="true" />
+             />
     </fragment>
     <fragment
         android:id="@+id/finishPageCreateingCerviceFragment"
@@ -74,13 +70,11 @@
         <action
             android:id="@+id/action_finishPageCreateingCerviceFragment_to_ownerHomePage"
             app:destination="@id/ownerHomePage"
-            app:popUpTo="@+id/finishPageCreateingCerviceFragment"
+            app:popUpTo="@+id/ownerHomePage"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_finishPageCreateingCerviceFragment_to_secondPageCreatingServiceFragment"
-            app:destination="@id/secondPageCreatingServiceFragment"
-            app:popUpTo="@+id/finishPageCreateingCerviceFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/secondPageCreatingServiceFragment" />
     </fragment>
 
     <fragment

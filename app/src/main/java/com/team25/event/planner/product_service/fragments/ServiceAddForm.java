@@ -50,6 +50,7 @@ public class ServiceAddForm extends Fragment {
         else{
             mViewModel.isEditMode.setValue(false);
             mViewModel.setUpServiceId(null);
+
         }
 
         setObservers(getArguments());
@@ -63,20 +64,20 @@ public class ServiceAddForm extends Fragment {
     }
 
     public void setObservers(Bundle argumentsBundle){
-        mViewModel.firstToSecond.observe(getViewLifecycleOwner(), navigate -> {
-            if (navigate != null && navigate) {
+
+        binding.button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if(mViewModel.validateForm()){
                     navController.navigate(R.id.action_serviceAddForm_to_secondPageCreatingServiceFragment, argumentsBundle);
 
-                    mViewModel.firstToSecond.setValue(false);
                 }
-
             }
         });
-        mViewModel.cancelClicked.observe(getViewLifecycleOwner(), navigate -> {
-            if (navigate != null && navigate) {
+        binding.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 navController.navigateUp();
-                mViewModel.cancelClicked.setValue(false);
             }
         });
 

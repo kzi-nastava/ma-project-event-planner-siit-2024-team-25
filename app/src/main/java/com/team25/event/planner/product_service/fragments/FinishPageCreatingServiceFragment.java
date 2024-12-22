@@ -93,7 +93,8 @@ public class FinishPageCreatingServiceFragment extends Fragment {
             TextView textView = binding.EditOrCreateServiceText;
             textView.setText(R.string.edit_the_service);
         }
-
+        mViewModel._addedService.setValue(false);
+        setListeners();
         setObservers();
         return binding.getRoot();
     }
@@ -102,6 +103,12 @@ public class FinishPageCreatingServiceFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mViewModel._addedService.setValue(false);
     }
 
     private void addImageToContainer(Uri imageUri) {
@@ -129,29 +136,41 @@ public class FinishPageCreatingServiceFragment extends Fragment {
         imageContainer.addView(imageView);
     }
 
-    public void setObservers(){
-        mViewModel.toFinish.observe(getViewLifecycleOwner(), navigate -> {
-            if (navigate != null && navigate) {
+    public void setListeners(){
+        binding.buttonFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if(mViewModel.validateForm3()){
                     mViewModel.createService();
                 }
-
             }
         });
-        mViewModel.toSecond.observe(getViewLifecycleOwner(), navigate -> {
-            if (navigate != null && navigate) {
+        binding.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 navController.navigateUp();
-                mViewModel.toSecond.setValue(false);
             }
         });
+    }
+    public void setObservers(){
+
+        mViewModel._addedService.observe(getViewLifecycleOwner(), check ->{
+            if(check){
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Information")
+                        .setMessage("You successfully added a new service")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+                navController.navigate(R.id.action_finishPageCreateingCerviceFragment_to_ownerHomePage);
+            }
+        });
+
         mViewModel.errorMessageFromServer.observe(getViewLifecycleOwner(), errorMessage -> {
             new AlertDialog.Builder(requireContext())
                     .setTitle("Information")
                     .setMessage(errorMessage)
                     .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                     .show();
-            mViewModel.toFinish.setValue(false);
-            navController.navigate(R.id.action_finishPageCreateingCerviceFragment_to_ownerHomePage);
         });
         mViewModel.images.observe(getViewLifecycleOwner(), urls -> {
             LinearLayout container = requireView().findViewById(R.id.imageContainer);

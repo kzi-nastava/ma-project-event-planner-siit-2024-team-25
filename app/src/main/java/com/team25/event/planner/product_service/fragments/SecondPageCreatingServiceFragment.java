@@ -80,13 +80,16 @@ public class SecondPageCreatingServiceFragment extends Fragment {
         if(getArguments() != null){
             TextView textView = binding.EditOrCreateServiceText;
             textView.setText(R.string.edit_the_service);
+        }else{
+            selectedItems.clear();
+            updateUI();
         }
 
         binding.setLifecycleOwner(this);
 
 
-        setObservers(getArguments());
-        setListeners();
+        setObservers();
+        setListeners(getArguments());
 
         autoCompleteTextView = binding.autocompleteDropdown;
         offeringCategoryViewModel.allCategories.observe(getViewLifecycleOwner(), categories -> {
@@ -108,9 +111,14 @@ public class SecondPageCreatingServiceFragment extends Fragment {
         });
         autoCompleteTextView.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
+                String enteredText = autoCompleteTextView.getText().toString();
+                List<String> options = offeringCategoryViewModel.allCategories.getValue().stream().map(OfferingCategory::getName).collect(Collectors.toList()); // Lista dostupnih opcija
 
-                mViewModel.offeringCategoryId.setValue(-1L);
-                mViewModel.offeringCategoryNewName.setValue(autoCompleteTextView.getText().toString());
+
+                boolean isOptionValid = options != null && options.contains(enteredText);
+                if(!isOptionValid){
+                    mViewModel.offeringCategoryId.setValue(null);
+                }
             }
         });
 
@@ -171,31 +179,31 @@ public class SecondPageCreatingServiceFragment extends Fragment {
         mViewModel.eventTypeIds.setValue(selectedIds);
     }
 
-    public void setObservers(Bundle argumentsBundle){
-        mViewModel.secondToThird.observe(getViewLifecycleOwner(), navigate -> {
-            if (navigate != null && navigate) {
-                if(mViewModel.validateForm2()){
-                    navController.navigate(R.id.action_secondPageCreatingServiceFragment_to_finishPageCreateingCerviceFragment,argumentsBundle);
-                    mViewModel.secondToThird.setValue(false);
-                }
-
-            }
-        });
-
-        mViewModel.secondToFirst.observe(getViewLifecycleOwner(), navigate -> {
-            if (navigate != null && navigate) {
-                navController.navigateUp();
-                mViewModel.secondToFirst.setValue(false);
-            }
-        });
+    public void setObservers(){
         mViewModel.eventTypesLive.observe(getViewLifecycleOwner(), eventTypes -> {
             selectedItems = eventTypes;
             updateUI();
         });
 
+
     }
 
-    public void setListeners(){
+    public void setListeners(Bundle argumentsBundle){
+        binding.button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mViewModel.validateForm2()){
+                    navController.navigate(R.id.action_secondPageCreatingServiceFragment_to_finishPageCreateingCerviceFragment,argumentsBundle);
+
+                }
+            }
+        });
+        binding.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigateUp();
+            }
+        });
         toggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 mViewModel.toggle.setValue(true);

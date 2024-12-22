@@ -73,6 +73,7 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
         mViewModel = new ViewModelProvider(
                 NavHostFragment.findNavController(this).getViewModelStoreOwner(R.id.nav_graph)
         ).get(ServiceAddFormViewModel.class);
+
         setObserves();
         return inflater.inflate(R.layout.fragment_service_list, container, false);
     }
@@ -86,7 +87,7 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
     public void onResume() {
         super.onResume();
         setObserves();
-        serviceCardsViewModel.filterServices();
+        //serviceCardsViewModel.filterServices();
     }
 
     public void setObserves(){
@@ -115,7 +116,6 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
             @Override
             public void refresh() {
                 serviceCardsViewModel.filterServices();
-                navController.navigateUp();
             }
 
         },name);
