@@ -242,7 +242,7 @@ public class ServiceAddFormViewModel extends ViewModel {
         }
     }
 
-    public final MutableLiveData<Boolean> isDeleted = new MutableLiveData<>(false);
+    public final MutableLiveData<Boolean> isDeleted = new MutableLiveData<>();
     public void deleteService(Long serviceId){
         serviceApi.deleteService(serviceId).enqueue(new Callback<ResponseBody>() {
             @Override

@@ -31,6 +31,7 @@ import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewMod
 import com.team25.event.planner.product_service.viewModels.ServiceCardsViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ServiceListFragment extends ListFragment implements OnEditButtonClickListener, OnDeleteButtonClickListener {
@@ -87,7 +88,10 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
     public void onResume() {
         super.onResume();
         setObserves();
-        //serviceCardsViewModel.filterServices();
+        if(!filter){
+            serviceCardsViewModel.filterServices();
+        }
+
     }
 
     public void setObserves(){
@@ -98,6 +102,11 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
             adapter.setOnDeleteButtonClickListener(this);
             adapter.notifyDataSetChanged();
         }));
+        mViewModel.isDeleted.observe(getViewLifecycleOwner(), deleted ->{
+            if(deleted){
+                serviceCardsViewModel.getServices(new HashMap<>());
+            }
+        });
 
     }
     @Override
@@ -106,7 +115,6 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
             @Override
             public void onConfirm() {
                 mViewModel.deleteService(id);
-
             }
 
             @Override
@@ -115,7 +123,7 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
 
             @Override
             public void refresh() {
-                serviceCardsViewModel.filterServices();
+                serviceCardsViewModel.getServices(new HashMap<>());
             }
 
         },name);
