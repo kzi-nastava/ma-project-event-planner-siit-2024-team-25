@@ -32,6 +32,9 @@ public interface EventApi {
             @QueryMap Map<String, String> filter
     );
 
+    @GET("/api/events/")
+    Call<Page<EventCard>> getOrganizerEvents(@Query("page") int page);
+
     @POST("/api/events/{eventId}/send-invitations")
     Call<Void> sendInvitations(
             @Path("eventId") Long eventId,

@@ -147,11 +147,14 @@
     <fragment
         android:id="@+id/myEventsFragment"
         android:name="com.team25.event.planner.event.fragments.MyEventsFragment"
-        android:label="fragment_my_events"
+        android:label="My Events"
         tools:layout="@layout/fragment_my_events">
         <action
             android:id="@+id/action_myEventsFragment_to_eventFormFragment"
             app:destination="@id/eventFormFragment" />
+        <action
+            android:id="@+id/action_myEventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventFormFragment"
@@ -182,5 +185,12 @@
         android:id="@+id/eventDetailsFragment"
         android:name="com.team25.event.planner.event.fragments.EventDetailsFragment"
         android:label="fragment_event_details"
-        tools:layout="@layout/fragment_event_details" />
+        tools:layout="@layout/fragment_event_details">
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_eventInvitation"
+            app:destination="@id/eventInvitation" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_agendaFragment"
+            app:destination="@id/agendaFragment" />
+    </fragment>
 </navigation>

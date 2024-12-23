@@ -120,6 +120,8 @@
     <string name="add">Add</string>
     <string name="add_activity_title">Add Activity</string>
     <string name="agenda_finish_message">Successfully updated event agenda!</string>
+    <string name="location_icon">Location icon</string>
+    <string name="event_picture">Event picture</string>
 
 
 </resources>
