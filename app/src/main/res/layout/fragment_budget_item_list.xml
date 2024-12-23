@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".event.fragments.BudgetItemListFragment">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.team25.event.planner.event.viewmodel.BudgetItemViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Events budget plan"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textColor="@color/primary"
+                android:padding="20sp"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:padding="8dp"
+                android:layout_marginHorizontal="100sp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0.00 $"
+                    android:textSize="20sp"
+                    android:textColor="@color/primary"
+                    android:gravity="center" />
+            </FrameLayout>
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="400sp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Header Row -->
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primary">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:text="Offering Category"
+                        android:textStyle="bold"
+                        android:padding="8dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:text="Budget"
+                        android:textStyle="bold"
+                        android:padding="8dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Edit"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:padding="8dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Delete"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:padding="5dp" />
+                </TableRow>
+
+                <!-- ListView for Data -->
+                <ListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@android:color/darker_gray"
+                    android:dividerHeight="1dp"
+                    tools:listitem="@layout/list_item_budget_item"/>
+
+            </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonNewBudgetItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add new budget item"
+                android:layout_marginHorizontal="40sp"
+                android:textColor="?attr/colorPrimary"
+                style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

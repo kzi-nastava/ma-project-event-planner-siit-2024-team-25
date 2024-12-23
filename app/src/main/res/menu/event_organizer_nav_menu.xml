@@ -12,4 +12,8 @@
     <item
         android:icon="@drawable/ic_notifications"
         android:title="@string/notifications" />
+    <item
+        android:id="@id/budgetItemFragment"
+        android:icon="@drawable/money"
+        android:title="@string/budget_plan"/>
 </menu>
