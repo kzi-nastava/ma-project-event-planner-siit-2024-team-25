@@ -1,4 +1,4 @@
-package com.team25.event.planner.home.fragments;
+package com.team25.event.planner.event.fragments;
 
 import android.os.Bundle;
 
@@ -14,20 +14,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.ViewSwitcher;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.R;
-import com.team25.event.planner.databinding.FragmentHomePageBaseBinding;
-import com.team25.event.planner.databinding.HomePageEventFilterBinding;
-import com.team25.event.planner.databinding.HomePageEventSortBinding;
+import com.team25.event.planner.databinding.FragmentEventPurchaseBinding;
 import com.team25.event.planner.databinding.HomePageOfferingFilterBinding;
 import com.team25.event.planner.databinding.HomePageOfferingSortBinding;
-import com.team25.event.planner.event.fragments.EventsFragment;
-import com.team25.event.planner.event.fragments.TopEventsFragment;
 import com.team25.event.planner.event.model.EventTypePreviewDTO;
 import com.team25.event.planner.event.model.OfferingCategoryPreviewDTO;
 import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
@@ -37,34 +31,32 @@ import com.team25.event.planner.offering.viewmodel.HomeOfferingViewModel;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 
-public class HomePageBaseFragment extends Fragment {
+public class EventPurchaseFragment extends Fragment {
 
-    private Button _eventButton;
-    private Button _psButton;
+    private final String PRODUCTS = "PRODUCTS";
+    private final String SERVICES = "SERVICES";
 
+    private Button _productsButton;
+    private Button _servicesButton;
     private Button _filterButton;
     private Button _sortButton;
-
-    private BottomSheetDialog _filterEventDialog;
-    private BottomSheetDialog _sortEventDialog;
-    private HomeEventViewModel _homeEventViewModel;
-
     private BottomSheetDialog _filterOfferingDialog;
     private BottomSheetDialog _sortOfferingDialog;
     private HomeOfferingViewModel _homeOfferingViewModel;
-    private FragmentHomePageBaseBinding _binding;
+    private HomeEventViewModel _homeEventViewModel;
+    private FragmentEventPurchaseBinding _binding;
 
-    public HomePageBaseFragment() {
+    public EventPurchaseFragment() {
 
     }
 
-    public static HomePageBaseFragment newInstance() {
-        return new HomePageBaseFragment();
+    public static EventPurchaseFragment newInstance() {
+        return new EventPurchaseFragment();
     }
 
     @Override
@@ -78,7 +70,7 @@ public class HomePageBaseFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        _binding = FragmentHomePageBaseBinding.inflate(inflater, container, false);
+        _binding = FragmentEventPurchaseBinding.inflate(inflater, container, false);
         _binding.setLifecycleOwner(this);
         return _binding.getRoot();
     }
@@ -91,187 +83,39 @@ public class HomePageBaseFragment extends Fragment {
         oldButton.setTextColor(getResources().getColor(R.color.white));
     }
 
-    private void eventButtonClick() {
-        FragmentTransition.toRight(new EventsFragment(_homeEventViewModel), requireActivity(), false, _binding.homeContainer.getId());
-        changeButton(_eventButton, _psButton);
-        _psButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                psButtonClick();
-            }
-        });
-
-        setEventFilterDialog();
-        setEventSortDialog();
-    }
-
-
-    private void psButtonClick() {
+    private void productsButtonClick() {
         FragmentTransition.toLeft(new HomeOfferingsFragment(_homeOfferingViewModel), requireActivity(), false, _binding.homeContainer.getId());
 
-        setOfferingFilterDialog();
+        setOfferingFilterDialog(this.PRODUCTS);
         setOfferingSortDialog();
 
-        changeButton(_psButton, _eventButton);
+        changeButton(_productsButton, _servicesButton);
+        _servicesButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                servicesButtonClick();
+            }
+        });
+    }
 
-        _eventButton.setOnClickListener(new View.OnClickListener() {
+
+    private void servicesButtonClick() {
+        FragmentTransition.toLeft(new HomeOfferingsFragment(_homeOfferingViewModel), requireActivity(), false, _binding.homeContainer.getId());
+
+        setOfferingFilterDialog(this.SERVICES);
+        setOfferingSortDialog();
+
+        changeButton(_servicesButton, _productsButton);
+
+        _productsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eventButtonClick();
+                productsButtonClick();
             }
         });
 
     }
 
-    public void setEventFilterDialog() {
-        HomePageEventFilterBinding homePageEventFilterBinding = DataBindingUtil.inflate(
-                getLayoutInflater(),
-                R.layout.home_page_event_filter,
-                null,
-                false
-        );
-        View eventView = homePageEventFilterBinding.getRoot();
-        homePageEventFilterBinding.setViewModel(_homeEventViewModel);
-        _filterEventDialog = new BottomSheetDialog(getActivity());
-        _filterEventDialog.setContentView(eventView);
-
-        Spinner eventTypeSpinner = _filterEventDialog.findViewById(R.id.event_type_filter);
-
-        _homeEventViewModel.allEventTypes.observe(getViewLifecycleOwner(),types ->{
-            ArrayAdapter<EventTypePreviewDTO> adapter = new ArrayAdapter<>(_filterEventDialog.getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(types));
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            eventTypeSpinner.setAdapter(adapter);
-        });
-        _homeEventViewModel.getEventTypes();
-
-        eventTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                EventTypePreviewDTO selectedType = (EventTypePreviewDTO) parent.getItemAtPosition(position);
-                _homeEventViewModel.eventFilterDTO.selectedEventType.setValue(selectedType);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-
-        Calendar calendar = Calendar.getInstance();
-        long minDate = calendar.getTimeInMillis();
-        homePageEventFilterBinding.eventStartDate.setMinDate(minDate);
-        homePageEventFilterBinding.eventEndDate.setMinDate(minDate);
-
-        homePageEventFilterBinding.eventStartDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
-            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
-            _homeEventViewModel.eventFilterDTO.selectedStartDate.setValue(localDate);
-        });
-
-        homePageEventFilterBinding.eventEndDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
-            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
-            _homeEventViewModel.eventFilterDTO.selectedEndDate.setValue(localDate);
-        });
-
-        homePageEventFilterBinding.eventStartTime.setIs24HourView(true);
-        homePageEventFilterBinding.eventStartTime.setOnTimeChangedListener((view, hourOfDay, minute) -> {
-            LocalTime selectedTime = LocalTime.of(hourOfDay, minute);
-            _homeEventViewModel.eventFilterDTO.selectedStartTime.setValue(selectedTime);
-        });
-
-        homePageEventFilterBinding.eventEndTime.setIs24HourView(true);
-        homePageEventFilterBinding.eventEndTime.setOnTimeChangedListener((view, hourOfDay, minute) -> {
-            LocalTime selectedTime = LocalTime.of(hourOfDay, minute);
-            _homeEventViewModel.eventFilterDTO.selectedEndTime.setValue(selectedTime);
-        });
-
-        _binding.searchView.setQueryHint("Event name");
-        _binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                _homeEventViewModel.getAllEvents();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                _homeEventViewModel.eventFilterDTO.name.setValue(newText);
-                if(newText.isEmpty()){
-                    _homeEventViewModel.getAllEvents();
-                }
-                return false;
-            }
-        });
-
-
-        _filterButton.setOnClickListener(v -> {
-            _filterEventDialog.show();
-        });
-
-        ImageView filter = homePageEventFilterBinding.imageView;
-        filter.setOnClickListener(v -> {
-            _homeEventViewModel.getAllEvents();
-            _filterEventDialog.dismiss();
-        });
-
-        homePageEventFilterBinding.imageRestart.setOnClickListener(v -> {
-            _binding.searchView.setQuery("", false);
-            _homeEventViewModel.restartFilter();
-            _filterEventDialog.dismiss();
-        });
-    }
-
-
-    private void setEventSortDialog() {
-        HomePageEventSortBinding homePageEventSortBinding = DataBindingUtil.inflate(
-                getLayoutInflater(),
-                R.layout.home_page_event_sort,
-                null,
-                false
-        );
-        View eventView = homePageEventSortBinding.getRoot();
-        _sortEventDialog = new BottomSheetDialog(getActivity());
-        _sortEventDialog.setContentView(eventView);
-
-        Spinner eventSortCategory = _sortEventDialog.findViewById(R.id.event_sort_category);
-        Spinner eventSortType = _sortEventDialog.findViewById(R.id.event_sort_type);
-        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<>(_sortEventDialog.getContext(), android.R.layout.simple_spinner_item, _homeEventViewModel.eventFilterDTO.sortByMap.keySet().toArray(new String[0]));
-        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        eventSortCategory.setAdapter(sortByAdapter);
-
-        ArrayAdapter<String> sortCriteriaAdapter = new ArrayAdapter<>(_sortEventDialog.getContext(), android.R.layout.simple_spinner_item, _homeEventViewModel.eventFilterDTO.sortCriteriaMap.keySet().toArray(new String[0]));
-        sortCriteriaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        eventSortType.setAdapter(sortCriteriaAdapter);
-
-        _sortButton.setOnClickListener(v -> {
-            _sortEventDialog.show();
-        });
-
-        homePageEventSortBinding.eventSortCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                _homeEventViewModel.eventFilterDTO.selectedSortBy.setValue((String)parent.getItemAtPosition(position));
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        homePageEventSortBinding.eventSortType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                _homeEventViewModel.eventFilterDTO.selectedSortCriteria.setValue((String)parent.getItemAtPosition(position));
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        Button sortEvent = homePageEventSortBinding.eventSortButton;
-        sortEvent.setOnClickListener(v -> {
-            _homeEventViewModel.getAllEvents();
-            _sortEventDialog.dismiss();
-        });
-    }
-
-    public void setOfferingFilterDialog() {
+    public void setOfferingFilterDialog(String selectedType) {
         HomePageOfferingFilterBinding homePageOfferingFilterBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
                 R.layout.home_page_offering_filter,
@@ -378,8 +222,12 @@ public class HomePageBaseFragment extends Fragment {
             _homeOfferingViewModel.offeringFilterDTO.selectedEndTime.setValue(selectedTime);
         });
 
-        this._homeOfferingViewModel.selectedFilterId.setValue(R.id.all_radio_button);
-        this._homeOfferingViewModel.getOfferings();
+        if(selectedType.equals(PRODUCTS)){
+            _homeOfferingViewModel.selectedFilterId.setValue(R.id.products_radio_button);
+        }
+        else{
+            _homeOfferingViewModel.selectedFilterId.setValue(R.id.services_radio_button);
+        }
 
         ImageView filter = homePageOfferingFilterBinding.offeringFilterButton;
         filter.setOnClickListener(v -> {
@@ -397,6 +245,15 @@ public class HomePageBaseFragment extends Fragment {
         _filterButton.setOnClickListener(v -> {
             _filterOfferingDialog.show();
         });
+
+        if(Objects.equals(selectedType, PRODUCTS)){
+            _homeOfferingViewModel.selectedFilterId.setValue(R.id.products_radio_button);
+            filter.callOnClick();
+        }
+        else{
+            _homeOfferingViewModel.selectedFilterId.setValue(R.id.services_radio_button);
+            filter.callOnClick();
+        }
     }
 
 
@@ -459,32 +316,25 @@ public class HomePageBaseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (savedInstanceState == null) {
-            getChildFragmentManager().beginTransaction()
-                    .replace(_binding.homeTopEvents.getId(), new TopEventsFragment(_homeEventViewModel))
-                    .replace(_binding.homeTopOffers.getId(), new TopOfferingsFragment(_homeOfferingViewModel))
-                    .commit();
-        }
-
-
-        _eventButton = _binding.eventButton;
-        _psButton = _binding.psButton;
+        _productsButton = _binding.productsButton;
+        _servicesButton = _binding.servicesButton;
         _filterButton = _binding.filterButton;
         _sortButton = _binding.sortButton;
 
-        _eventButton.setOnClickListener(new View.OnClickListener() {
+        _productsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eventButtonClick();
+                productsButtonClick();
             }
         });
 
-        _psButton.setOnClickListener(new View.OnClickListener() {
+        _servicesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                psButtonClick();
+                servicesButtonClick();
             }
         });
 
+        _productsButton.callOnClick();
     }
 }

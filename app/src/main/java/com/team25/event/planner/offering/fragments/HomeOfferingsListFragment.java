@@ -42,7 +42,6 @@ public class HomeOfferingsListFragment extends ListFragment {
             adapter = new HomeOfferingListAdapter(getActivity(), offerings);
             setListAdapter(adapter);
         }));
-        _homeOfferingViewModel.getAllOfferings();
         return inflater.inflate(R.layout.fragment_home_offerings_list, container, false);
     }
 }

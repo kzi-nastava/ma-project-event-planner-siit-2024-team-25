@@ -25,9 +25,9 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
 
     private List<OfferingCard> offeringCards;
 
-    public HomeOfferingListAdapter(Context context, List<OfferingCard> events) {
-        super(context, R.layout.home_page_top_event, events);
-        this.offeringCards = events;
+    public HomeOfferingListAdapter(Context context, List<OfferingCard> offerings) {
+        super(context, R.layout.home_page_top_offer, offerings);
+        this.offeringCards = offerings;
     }
 
     @Override
