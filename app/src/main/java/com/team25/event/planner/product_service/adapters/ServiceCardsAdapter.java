@@ -86,7 +86,7 @@ public class ServiceCardsAdapter extends ArrayAdapter<ServiceCard> {
                 if(editButtonClickListener != null){
                     Log.i("ffff", "Clicked: " + serviceCard.getName() + ", id: " +
                             serviceCard.getId());
-                    editButtonClickListener.onEditButtonClick(serviceCard.getId());
+                    editButtonClickListener.onEditButtonClick(serviceCard.getId(), null);
                 }
             });
             deleteButton.setOnClickListener(v ->{

@@ -133,7 +133,7 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
     }
 
     @Override
-    public void onEditButtonClick(Long id) {
+    public void onEditButtonClick(Long id, String name) {
         Bundle bundle = new Bundle();
         bundle.putLong(SERVICE_ID_ARG_NAME, id);
         navController.navigate(R.id.action_ownerHomePage_to_serviceAddForm, bundle);

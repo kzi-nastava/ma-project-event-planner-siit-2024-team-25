@@ -69,7 +69,7 @@ public class BudgetItemAdapter extends ArrayAdapter<BudgetItem> {
             budget.setText(String.valueOf(budgetItem.getBudget()));
             editButton.setOnClickListener(v -> {
                 if (editButtonClickListener != null) {
-                    editButtonClickListener.onEditButtonClick(budgetItem.getId());
+                    editButtonClickListener.onEditButtonClick(budgetItem.getId(), name);
                 }
             });
             deleteButton.setOnClickListener(v -> {

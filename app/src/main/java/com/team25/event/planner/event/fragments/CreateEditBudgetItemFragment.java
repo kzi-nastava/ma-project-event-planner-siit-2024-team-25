@@ -121,17 +121,18 @@ public class CreateEditBudgetItemFragment extends Fragment {
             if(check){
                 if(Objects.requireNonNull(navController.getCurrentDestination()).getId() == R.id.createEditBudgetItemFragment){
                     navController.navigateUp();
+                    String s = "edited";
+                    if(Boolean.FALSE.equals(viewModel.isEditMode.getValue())){
+                        s = "added";
+                    }
+                    new AlertDialog.Builder(requireActivity())
+                            .setTitle("Information")
+                            .setMessage("You successfully " + s + " budget item")
+                            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                            .show();
             }
 
-                String s = "edited";
-                if(Boolean.FALSE.equals(viewModel.isEditMode.getValue())){
-                    s = "added";
-                }
-                new AlertDialog.Builder(requireActivity())
-                        .setTitle("Information")
-                        .setMessage("You successfully " + s + " budget item")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+
 
             }
         });

@@ -22,6 +22,7 @@ import com.team25.event.planner.offering.model.OfferingCategory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.Builder;
 import lombok.Data;
@@ -38,6 +39,9 @@ public class BudgetItemViewModel extends ViewModel {
     public final LiveData<List<BudgetItem>> allBudgetItem = _allBudgetItems;
     private final MutableLiveData<Boolean> _successAllItems = new MutableLiveData<>();
     public final LiveData<Boolean> successAllItems = _successAllItems;
+    public final MutableLiveData<String> overallBudgetString = new MutableLiveData<>();
+    public final MutableLiveData<Double> overallBudget = new MutableLiveData<Double>(0.0);
+
 
     private final MutableLiveData<Long> _budgetItemId = new MutableLiveData<>();
     public final LiveData<Long> budgetItemId = _budgetItemId;
@@ -66,6 +70,7 @@ public class BudgetItemViewModel extends ViewModel {
     public final MutableLiveData<String> budgetString = new MutableLiveData<>();
     public final MutableLiveData<Double> budget = new MutableLiveData<>();
     public final MutableLiveData<Long> eventId = new MutableLiveData<>(2L);
+    public final MutableLiveData<String> eventName = new MutableLiveData<>("MyEvent`s budget plan");
     public final MutableLiveData<Long> eventTypeId = new MutableLiveData<>(2L);
 
     public final MutableLiveData<Long> offeringCategoryId = new MutableLiveData<>();
@@ -118,6 +123,7 @@ public class BudgetItemViewModel extends ViewModel {
                 public void onResponse(Call<BudgetItemResponseDTO> call, Response<BudgetItemResponseDTO> response) {
                     if(response.isSuccessful() && response.body()!=null){
                         _success.postValue(true);
+                        _successAllItems.postValue(true);
                     }else{
                         catchError(response);
                     }
@@ -167,6 +173,7 @@ public class BudgetItemViewModel extends ViewModel {
         });
     }
     public void fetchBudgetItems() {
+        overallBudget.postValue(0.0);
         budgetItemApi.getBudgetItems(eventId.getValue()).enqueue(new Callback<List<BudgetItemResponseDTO>>() {
             @Override
             public void onResponse(Call<List<BudgetItemResponseDTO>> call, Response<List<BudgetItemResponseDTO>> response) {
@@ -295,5 +302,13 @@ public class BudgetItemViewModel extends ViewModel {
         budget.setValue(null);
         budgetString.setValue("");
         offeringCategoryId.setValue(null);
+    }
+    public void refreshBudget(){
+        Double budget = 0.0;
+        for (BudgetItem b:
+                Objects.requireNonNull(_allBudgetItems.getValue())) {
+            budget += b.getBudget();
+        }
+        budgetString.postValue(String.valueOf(budget) + " $");
     }
 }

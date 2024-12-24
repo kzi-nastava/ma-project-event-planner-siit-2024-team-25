@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
@@ -97,6 +98,17 @@ public class BudgetItemListFragment extends Fragment implements OnEditButtonClic
                 viewModel.fetchBudgetItems();
             }
         });
+        viewModel.serverError.observe(getViewLifecycleOwner(), mess->{
+            if(mess != null){
+                Toast.makeText(requireContext(), mess, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        viewModel.successAllItems.observe(getViewLifecycleOwner(), check->{
+            if(check){
+                viewModel.refreshBudget();
+            }
+        });
     }
 
     @Override
@@ -121,9 +133,10 @@ public class BudgetItemListFragment extends Fragment implements OnEditButtonClic
     }
 
     @Override
-    public void onEditButtonClick(Long id) {
+    public void onEditButtonClick(Long id, String name) {
         Bundle bundle = new Bundle();
         bundle.putLong(BUDGET_ITEM_ID, id);
+        //bundle.putString("BUDGET_ITEM_NAME", name);
         navController.navigate(R.id.action_budgetItemFragment_to_createEditBudgetItemFragment, bundle);
     }
 }

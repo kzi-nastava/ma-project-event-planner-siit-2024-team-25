@@ -127,7 +127,7 @@ public class OfferingCategoryBaseFragment extends Fragment implements OnEditButt
     }
 
     @Override
-    public void onEditButtonClick(Long id) {
+    public void onEditButtonClick(Long id, String name) {
         Bundle bundle = new Bundle();
         bundle.putLong(ID_ARG_NAME, id);
         navController.navigate(R.id.action_offeringCategoryFragment_to_createEditOfferingCategoryFragment, bundle);
