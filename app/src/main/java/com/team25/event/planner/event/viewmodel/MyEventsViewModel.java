@@ -21,14 +21,16 @@ public class MyEventsViewModel extends ViewModel {
 
     private int currentPage = 0;
     private boolean isEndReached = false;
-    private boolean isLoading = false;
+
+    private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>(false);
+    public final LiveData<Boolean> isLoading = _isLoading;
 
     private final MutableLiveData<String> _serverError = new MutableLiveData<>();
     public final LiveData<String> serverError = _serverError;
 
     public void loadNextPage() {
-        if (isLoading) return;
-        isLoading = true;
+        if (isLoading()) return;
+        _isLoading.setValue(true);
 
         if (isEndReached) return;
 
@@ -40,7 +42,7 @@ public class MyEventsViewModel extends ViewModel {
                     }
                     _events.postValue(page.getContent());
                 },
-                () -> isLoading = false,
+                () -> _isLoading.postValue(false),
                 _serverError, "MyEventsViewModel")
         );
     }
@@ -50,6 +52,6 @@ public class MyEventsViewModel extends ViewModel {
     }
 
     public boolean isLoading() {
-        return isLoading;
+        return isLoading.getValue() == null || isLoading.getValue();
     }
 }

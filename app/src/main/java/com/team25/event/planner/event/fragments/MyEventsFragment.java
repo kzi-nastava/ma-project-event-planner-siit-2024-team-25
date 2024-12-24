@@ -78,6 +78,14 @@ public class MyEventsFragment extends Fragment {
     }
 
     private void setupObservers() {
+        viewModel.isLoading.observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading) {
+                binding.loadingSpinner.setVisibility(View.VISIBLE);
+            } else {
+                binding.loadingSpinner.setVisibility(View.GONE);
+            }
+        });
+
         viewModel.serverError.observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {
                 Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
