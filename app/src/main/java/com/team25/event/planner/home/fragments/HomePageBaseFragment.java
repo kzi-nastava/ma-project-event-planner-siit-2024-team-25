@@ -106,7 +106,7 @@ public class HomePageBaseFragment extends Fragment {
 
 
     private void psButtonClick() {
-        FragmentTransition.toLeft(new HomeOfferingsFragment(_homeOfferingViewModel), requireActivity(), false, _binding.homeContainer.getId());
+        FragmentTransition.toLeft(new HomeOfferingsFragment(_homeOfferingViewModel,null), requireActivity(), false, _binding.homeContainer.getId());
 
         setOfferingFilterDialog();
         setOfferingSortDialog();

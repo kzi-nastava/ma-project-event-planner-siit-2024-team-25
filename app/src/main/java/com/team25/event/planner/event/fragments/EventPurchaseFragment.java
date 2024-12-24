@@ -38,6 +38,8 @@ import java.util.Objects;
 
 public class EventPurchaseFragment extends Fragment {
 
+    private final String EVENT_ID = "EVENT_ID";
+    private Long _eventId;
     private final String PRODUCTS = "PRODUCTS";
     private final String SERVICES = "SERVICES";
 
@@ -84,7 +86,7 @@ public class EventPurchaseFragment extends Fragment {
     }
 
     private void productsButtonClick() {
-        FragmentTransition.toLeft(new HomeOfferingsFragment(_homeOfferingViewModel), requireActivity(), false, _binding.homeContainer.getId());
+        FragmentTransition.toLeft(new HomeOfferingsFragment(_homeOfferingViewModel,this._eventId), requireActivity(), false, _binding.homeContainer.getId());
 
         setOfferingFilterDialog(this.PRODUCTS);
         setOfferingSortDialog();
@@ -99,7 +101,7 @@ public class EventPurchaseFragment extends Fragment {
 
 
     private void servicesButtonClick() {
-        FragmentTransition.toLeft(new HomeOfferingsFragment(_homeOfferingViewModel), requireActivity(), false, _binding.homeContainer.getId());
+        FragmentTransition.toLeft(new HomeOfferingsFragment(_homeOfferingViewModel,this._eventId), requireActivity(), false, _binding.homeContainer.getId());
 
         setOfferingFilterDialog(this.SERVICES);
         setOfferingSortDialog();
@@ -316,6 +318,10 @@ public class EventPurchaseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            _eventId = arguments.getLong(EVENT_ID);
+        }
         _productsButton = _binding.productsButton;
         _servicesButton = _binding.servicesButton;
         _filterButton = _binding.filterButton;

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".event.fragments.EventDetailsFragment">
+    tools:context=".product_service.fragments.ServiceDetailsFragment">
 
     <TextView
         android:layout_width="match_parent"
@@ -11,12 +11,12 @@
         android:text="@string/hello_blank_fragment" />
 
     <Button
-        android:id="@+id/event_purchase"
+        android:id="@+id/book_service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/purchase"
+        android:text="@string/book_a_service"
+        android:visibility="gone"
         >
-
     </Button>
 
 </FrameLayout>

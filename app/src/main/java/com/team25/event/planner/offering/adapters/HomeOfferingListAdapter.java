@@ -1,6 +1,7 @@
 package com.team25.event.planner.offering.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavController;
 
 import com.google.android.material.card.MaterialCardView;
 import com.team25.event.planner.R;
@@ -23,11 +25,18 @@ import java.util.List;
 public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
 
 
+    private final String OFFERING_ID = "OFFERING_ID";
+    private final String EVENT_ID = "EVENT_ID";
     private List<OfferingCard> offeringCards;
+    private Long _eventId;
 
-    public HomeOfferingListAdapter(Context context, List<OfferingCard> offerings) {
+    private NavController navController;
+
+    public HomeOfferingListAdapter(Context context, List<OfferingCard> offerings, NavController navController, Long eventId) {
         super(context, R.layout.home_page_top_offer, offerings);
         this.offeringCards = offerings;
+        this._eventId = eventId;
+        this.navController = navController;
     }
 
     @Override
@@ -95,8 +104,15 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
 
 
             offerCard.setOnClickListener(v -> {
-                Toast.makeText(getContext(), "Clicked: " + offeringCard.getName() +
-                        ", id: " + offeringCard.getId(), Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putLong(OFFERING_ID, offeringCard.getId());
+                if(this._eventId != null){
+                    bundle.putLong(EVENT_ID, this._eventId);
+                    bundle.putBoolean("BOOK_SERVICE", true);
+                    navController.navigate(R.id.action_eventPurchaseFragment_to_serviceDetailsFragment, bundle);
+                }else{
+
+                }
             });
         }
 

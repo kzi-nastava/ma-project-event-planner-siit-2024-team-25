@@ -190,5 +190,14 @@
     <fragment
         android:id="@+id/eventPurchaseFragment"
         android:name="com.team25.event.planner.event.fragments.EventPurchaseFragment"
-        android:label="EventPurchaseFragment" />
+        android:label="EventPurchaseFragment" >
+        <action
+            android:id="@+id/action_eventPurchaseFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.team25.event.planner.product_service.fragments.ServiceDetailsFragment"
+        android:label="fragment_service_details"
+        tools:layout="@layout/fragment_service_details" />
 </navigation>

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ public class EventDetailsFragment extends Fragment {
     private final String INVITATION_CODE = "invitationCode";
     private Long _eventId;
     private String _invitationCode;
+    private NavController navController;
     private FragmentEventDetailsBinding _binding;
 
     public EventDetailsFragment() {
@@ -45,12 +48,24 @@ public class EventDetailsFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        navController = Navigation.findNavController(view);
+
+        // Postavljanje OnClickListener-a za dugme
+        _binding.eventPurchase.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putLong(EVENT_ID, _eventId);
+            navController.navigate(R.id.eventPurchaseFragment, bundle);
+        });
+    }
+
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         _binding = FragmentEventDetailsBinding.inflate(inflater, container, false);
-
-        Toast.makeText(getContext(), "Event id: " + this._eventId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(getContext(), "Invitation code: " + this._invitationCode, Toast.LENGTH_SHORT).show();
 
         return _binding.getRoot();
     }
