@@ -1,5 +1,7 @@
 package com.team25.event.planner.event.fragments;
 
+import static com.team25.event.planner.event.fragments.BudgetItemListFragment.BUDGET_ITEM_ID;
+
 import android.app.AlertDialog;
 import android.os.Bundle;
 
@@ -27,6 +29,7 @@ import com.team25.event.planner.offering.viewmodel.OfferingCategoryViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class CreateEditBudgetItemFragment extends Fragment {
@@ -56,6 +59,21 @@ public class CreateEditBudgetItemFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(BudgetItemViewModel.class);
         binding.setViewModel(viewModel);
         navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
+
+        if(getArguments()!=null){
+            binding.title.setText("Edit the budget item");
+            viewModel.isEditMode.setValue(true);
+            Long budgetItemId = getArguments().getLong(BUDGET_ITEM_ID);
+            viewModel.setUoBudgetItemId(budgetItemId);
+            binding.spinnerOfferingCategory.setEnabled(false);
+            binding.saveButton.setText("Edit");
+        }else{
+            viewModel.isEditMode.setValue(false);
+            viewModel.resetForm();
+            binding.spinnerOfferingCategory.setEnabled(true);
+            binding.saveButton.setText("Create");
+        }
+
         return binding.getRoot();
     }
 
@@ -101,38 +119,43 @@ public class CreateEditBudgetItemFragment extends Fragment {
         });
         viewModel.success.observe(getViewLifecycleOwner(), check ->{
             if(check){
+                if(Objects.requireNonNull(navController.getCurrentDestination()).getId() == R.id.createEditBudgetItemFragment){
+                    navController.navigateUp();
+            }
 
                 String s = "edited";
                 if(Boolean.FALSE.equals(viewModel.isEditMode.getValue())){
                     s = "added";
                 }
-                new AlertDialog.Builder(requireContext())
+                new AlertDialog.Builder(requireActivity())
                         .setTitle("Information")
                         .setMessage("You successfully " + s + " budget item")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
-                navController.navigateUp();
+
             }
         });
     }
 
     private void setOfferingCategorySpinner(){
         categorySpinner = binding.spinnerOfferingCategory;
+        if(Boolean.FALSE.equals(viewModel.isEditMode.getValue())){
+            categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    OfferingCategory selectedCategory = (OfferingCategory) parent.getItemAtPosition(position);
+                    viewModel.offeringCategoryId.setValue(selectedCategory.getId());
+                    viewModel.isSuitableCategoryForEvent();
+                }
 
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                OfferingCategory selectedCategory = (OfferingCategory) parent.getItemAtPosition(position);
-                viewModel.offeringCategoryId.setValue(selectedCategory.getId());
-                viewModel.isSuitableCategoryForEvent();
-            }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+            viewModel.fetchSuitableOfferingCategories();
+        }
 
-            }
-        });
-        viewModel.fetchSuitableOfferingCategories();
     }
 
 }

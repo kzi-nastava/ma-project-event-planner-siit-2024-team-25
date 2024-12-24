@@ -36,6 +36,8 @@ public class BudgetItemViewModel extends ViewModel {
     private OfferingCategoryApi categoryApi = ConnectionParams.offeringCategoryApi;
     private final MutableLiveData<List<BudgetItem>> _allBudgetItems = new MutableLiveData<>();
     public final LiveData<List<BudgetItem>> allBudgetItem = _allBudgetItems;
+    private final MutableLiveData<Boolean> _successAllItems = new MutableLiveData<>();
+    public final LiveData<Boolean> successAllItems = _successAllItems;
 
     private final MutableLiveData<Long> _budgetItemId = new MutableLiveData<>();
     public final LiveData<Long> budgetItemId = _budgetItemId;
@@ -44,6 +46,9 @@ public class BudgetItemViewModel extends ViewModel {
     public final LiveData<String> serverError = _serverError;
     private final MutableLiveData<Boolean> _success = new MutableLiveData<>();
     public final LiveData<Boolean> success = _success;
+
+    private final MutableLiveData<Boolean> _deleted = new MutableLiveData<>();
+    public final LiveData<Boolean> deleted = _deleted;
 
     public final MutableLiveData<Boolean> isEditMode = new MutableLiveData<>(false);
     public final MutableLiveData<Boolean> isOfferingCategorySuitable = new MutableLiveData<>(false);
@@ -62,6 +67,7 @@ public class BudgetItemViewModel extends ViewModel {
     public final MutableLiveData<Double> budget = new MutableLiveData<>();
     public final MutableLiveData<Long> eventId = new MutableLiveData<>(2L);
     public final MutableLiveData<Long> eventTypeId = new MutableLiveData<>(2L);
+
     public final MutableLiveData<Long> offeringCategoryId = new MutableLiveData<>();
     private final MutableLiveData<List<OfferingCategory>> _allCategories = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<OfferingCategory>> allCategories = _allCategories;
@@ -125,59 +131,107 @@ public class BudgetItemViewModel extends ViewModel {
 
         }
     }
-    public void fetchBudgetItems(){
-        _allBudgetItems.postValue(fetchBudgetItemsTemp());
+
+    public void fetchBudgetItem(){
+        budgetItemApi.getBudgetItem(budgetItemId.getValue(), eventId.getValue()).enqueue(new Callback<BudgetItemResponseDTO>() {
+            @Override
+            public void onResponse(Call<BudgetItemResponseDTO> call, Response<BudgetItemResponseDTO> response) {
+                if(response.isSuccessful() && response.body()!=null){
+                    fillForm(response.body());
+                }else{
+                    catchError(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BudgetItemResponseDTO> call, Throwable t) {
+                _serverError.postValue("Network error");
+            }
+        });
     }
-    private List<BudgetItem> fetchBudgetItemsTemp() {
-        List<BudgetItem> budgetItems = new ArrayList<>();
+    public void deleteBudgetItem(Long id){
+        budgetItemApi.deleteBudgetItem(id).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful() && response.body()!=null){
+                    _deleted.setValue(true);
+                }else{
+                    catchError(response);
+                }
+            }
 
-            budgetItemApi.getBudgetItems(eventId.getValue()).enqueue(new Callback<List<BudgetItemResponseDTO>>() {
-                @Override
-                public void onResponse(Call<List<BudgetItemResponseDTO>> call, Response<List<BudgetItemResponseDTO>> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        try {
-                            for (BudgetItemResponseDTO dto : response.body()) {
-                                budgetItems.add(fetchFullBudgetItem(dto));
-                            }
-                        }catch (IOException e){
-                            _serverError.postValue("Failed to fetch category");
-                        }
-
-                    } else {
-                        _serverError.postValue("Failed to fetch budget items");
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                _serverError.postValue("Network error");
+            }
+        });
+    }
+    public void fetchBudgetItems() {
+        budgetItemApi.getBudgetItems(eventId.getValue()).enqueue(new Callback<List<BudgetItemResponseDTO>>() {
+            @Override
+            public void onResponse(Call<List<BudgetItemResponseDTO>> call, Response<List<BudgetItemResponseDTO>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<BudgetItem> budgetItems = new ArrayList<>();
+                    for (BudgetItemResponseDTO dto : response.body()) {
+                        BudgetItem budgetItem = mapToBudgetItem(dto);
+                        budgetItems.add(budgetItem);
+                        fetchCategoryDetails(budgetItem, dto.getOfferingCategoryId());
                     }
+                    _allBudgetItems.postValue(budgetItems);
+                    _successAllItems.postValue(true);
+                } else {
+                    catchError(response);
                 }
+            }
 
-                @Override
-                public void onFailure(Call<List<BudgetItemResponseDTO>> call, Throwable t) {
-                    _serverError.postValue("Network problem");
+            @Override
+            public void onFailure(Call<List<BudgetItemResponseDTO>> call, Throwable t) {
+                _serverError.postValue("Network error");
+            }
+        });
+    }
+    private void updateBudgetItemsLiveData(BudgetItem updatedItem) {
+        List<BudgetItem> currentItems = _allBudgetItems.getValue();
+        if (currentItems != null) {
+            for (int i = 0; i < currentItems.size(); i++) {
+                if (currentItems.get(i).getId().equals(updatedItem.getId())) {
+                    currentItems.set(i, updatedItem);
+                    break;
                 }
-            });
-
-
-        return budgetItems;
+            }
+            _allBudgetItems.postValue(currentItems);
+        }
     }
 
-    private BudgetItem fetchFullBudgetItem(BudgetItemResponseDTO dto) throws IOException {
-        Response<OfferingCategory> categoryResponse = categoryApi.getOfferingCategory(dto.getOfferingCategoryId()).execute(); // Dohvat kategorije
+    private void fetchCategoryDetails(BudgetItem budgetItem, Long id) {
+        categoryApi.getOfferingCategory(id).enqueue(new Callback<OfferingCategory>() {
+            @Override
+            public void onResponse(Call<OfferingCategory> call, Response<OfferingCategory> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    budgetItem.setOfferingCategory(response.body());
+                    updateBudgetItemsLiveData(budgetItem);
+                } else {
+                    _serverError.postValue("Error fetching category details");
+                }
+            }
 
-        if (categoryResponse.isSuccessful() && categoryResponse.body() != null) {
-            OfferingCategory category = categoryResponse.body();
-            BudgetItem budgetItem = new BudgetItem();
-            budgetItem.setId(dto.getId());
-            budgetItem.setOfferingCategory(category);
-            budgetItem.setBudget(dto.getBudget());
-            return budgetItem;
-        } else {
-            _serverError.postValue("Failed to fetch category");
-            return null;
-        }
+            @Override
+            public void onFailure(Call<OfferingCategory> call, Throwable t) {
+                _serverError.postValue("Network error while fetching category details");
+            }
+        });
+    }
+    private BudgetItem mapToBudgetItem(BudgetItemResponseDTO dto) {
+        BudgetItem budgetItem = new BudgetItem();
+        budgetItem.setId(dto.getId());
+        budgetItem.setBudget(dto.getBudget());
+        return budgetItem;
     }
 
     public void setUoBudgetItemId(Long id){
         _budgetItemId.setValue(id);
         if(id != null){
-            // fetch
+            fetchBudgetItem();
         }else{
             resetForm();
         }
@@ -232,12 +286,14 @@ public class BudgetItemViewModel extends ViewModel {
        });
     }
 
-    public void fillForm(BudgetItem item){
+    public void fillForm(BudgetItemResponseDTO item){
         budgetString.setValue(String.valueOf(item.getBudget()));
         budget.setValue(item.getBudget());
+        offeringCategoryId.setValue(item.getOfferingCategoryId());
     }
     public void resetForm(){
         budget.setValue(null);
         budgetString.setValue("");
+        offeringCategoryId.setValue(null);
     }
 }

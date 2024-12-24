@@ -15,13 +15,17 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
+import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
 import com.team25.event.planner.databinding.FragmentBudgetItemListBinding;
 import com.team25.event.planner.event.adapters.BudgetItemAdapter;
 import com.team25.event.planner.event.viewmodel.BudgetItemViewModel;
+import com.team25.event.planner.offering.dialogs.YesOrNoDialogFragment;
 
 
-public class BudgetItemListFragment extends Fragment {
+public class BudgetItemListFragment extends Fragment implements OnEditButtonClickListener, OnDeleteButtonClickListener {
 
+    public final static String BUDGET_ITEM_ID = "BUDGET_ITEM_ID";
     private NavController navController;
     private FragmentBudgetItemListBinding binding;
     private BudgetItemViewModel viewModel;
@@ -82,5 +86,44 @@ public class BudgetItemListFragment extends Fragment {
     }
 
     private void setUpObservers() {
+        viewModel.allBudgetItem.observe(getViewLifecycleOwner(), items ->{
+                adapter = new BudgetItemAdapter(requireContext(), items);
+                adapter.setOnEditButtonClickListener(this);
+                adapter.setOnDeleteButtonClickListener(this);
+                listView.setAdapter(adapter);
+        });
+        viewModel.deleted.observe(getViewLifecycleOwner(), check->{
+            if(check){
+                viewModel.fetchBudgetItems();
+            }
+        });
+    }
+
+    @Override
+    public void onDeleteButtonClick(Long id, String name) {
+
+        YesOrNoDialogFragment dialog = new YesOrNoDialogFragment(new YesOrNoDialogFragment.ConfirmDialogListener() {
+            @Override
+            public void onConfirm() {
+                viewModel.deleteBudgetItem(id);
+            }
+
+            @Override
+            public void onCancel() {
+            }
+
+            @Override
+            public void refresh() {
+            }
+        },name);
+
+        dialog.show(getParentFragmentManager(), "ConfirmDialogFragment");
+    }
+
+    @Override
+    public void onEditButtonClick(Long id) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(BUDGET_ITEM_ID, id);
+        navController.navigate(R.id.action_budgetItemFragment_to_createEditBudgetItemFragment, bundle);
     }
 }

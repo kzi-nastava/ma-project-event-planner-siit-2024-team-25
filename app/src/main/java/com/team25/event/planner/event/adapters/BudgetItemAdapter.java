@@ -1,6 +1,5 @@
 package com.team25.event.planner.event.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +59,13 @@ public class BudgetItemAdapter extends ArrayAdapter<BudgetItem> {
         MaterialButton deleteButton = convertView.findViewById(R.id.deleteBtn1);
 
         if(budgetItem != null){
-            offeringCategoryName.setText(budgetItem.getOfferingCategory().getName());
+            String name;
+            if(budgetItem.getOfferingCategory()!=null){
+                name = budgetItem.getOfferingCategory().getName();
+            } else {
+                name = "";
+            }
+            offeringCategoryName.setText(name);
             budget.setText(String.valueOf(budgetItem.getBudget()));
             editButton.setOnClickListener(v -> {
                 if (editButtonClickListener != null) {
@@ -69,7 +74,7 @@ public class BudgetItemAdapter extends ArrayAdapter<BudgetItem> {
             });
             deleteButton.setOnClickListener(v -> {
                 if(deleteButtonClickListener != null){
-                    deleteButtonClickListener.onDeleteButtonClick(budgetItem.getId(), budgetItem.getOfferingCategory().getName());
+                    deleteButtonClickListener.onDeleteButtonClick(budgetItem.getId(), name);
                 }
             });
         }
