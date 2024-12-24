@@ -21,7 +21,7 @@ import com.team25.event.planner.event.viewmodel.EventFormViewModel;
 
 public class EventDetailsFragment extends Fragment {
 
-    private final String EVENT_ID = "eventId";
+    private final String EVENT_ID = "EVENT_ID";
     private final String INVITATION_CODE = "invitationCode";
     private Long _eventId;
     private String _invitationCode;
@@ -53,7 +53,6 @@ public class EventDetailsFragment extends Fragment {
 
         navController = Navigation.findNavController(view);
 
-        // Postavljanje OnClickListener-a za dugme
         _binding.eventPurchase.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putLong(EVENT_ID, _eventId);

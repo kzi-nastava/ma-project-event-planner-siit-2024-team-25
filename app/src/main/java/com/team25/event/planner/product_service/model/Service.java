@@ -10,6 +10,10 @@ import com.team25.event.planner.product_service.enums.ReservationType;
 
 import java.time.LocalDateTime;
 
+import lombok.Data;
+
+
+@Data
 public class Service extends Offering implements Parcelable {
     private String specifics;
     private int duration;
@@ -17,17 +21,22 @@ public class Service extends Offering implements Parcelable {
     private LocalDateTime cancellationDate;
     private ReservationType reservationType;
 
+    private Integer minimumArrangement;
+    private Integer maximumArrangement;
+
     public Service(){}
 
-    public Service(long id, String name, String description, double price, double discount,  int imageURL,
+    public Service(long id, String name, String description, double price, double discount, int imageURL,
                    boolean isVisible, boolean isAvailable, ProductServiceType status, String specifics, int duration,
-                   LocalDateTime reservationDate, LocalDateTime cancellationDate, ReservationType reservationType){
+                   LocalDateTime reservationDate, LocalDateTime cancellationDate, ReservationType reservationType, Integer minimumArrangement, Integer maximumArrangement){
         super(id,name,description,price,discount,imageURL,isVisible,isAvailable,status);
         this.specifics = specifics;
         this.duration = duration;
         this.reservationDate = reservationDate;
         this.cancellationDate = cancellationDate;
         this.reservationType = reservationType;
+        this.minimumArrangement = minimumArrangement;
+        this.maximumArrangement = maximumArrangement;
     }
 
     public Service(Long id, String name, String description, int imageURL){
@@ -52,6 +61,8 @@ public class Service extends Offering implements Parcelable {
         reservationDate = (LocalDateTime) in.readSerializable();
         cancellationDate = (LocalDateTime) in.readSerializable();
         reservationType = ReservationType.valueOf(in.readString());
+        minimumArrangement = in.readInt();
+        maximumArrangement = in.readInt();
     }
     @Override
     public int describeContents() {
@@ -74,6 +85,8 @@ public class Service extends Offering implements Parcelable {
         dest.writeSerializable(reservationDate);
         dest.writeSerializable(cancellationDate);
         dest.writeString(reservationType.name());
+        dest.writeInt(minimumArrangement);
+        dest.writeInt(maximumArrangement);
     }
 
     public static final Creator<Service> CREATOR = new Creator<Service>() {

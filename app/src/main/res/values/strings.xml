@@ -122,6 +122,7 @@
     <string name="agenda_finish_message">Successfully updated event agenda!</string>
     <string name="book_a_service">book a service</string>
     <string name="purchase">purchase</string>
+    <string name="book_service">Book service</string>
 
 
 </resources>
