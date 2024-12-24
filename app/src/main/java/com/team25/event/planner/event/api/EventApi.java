@@ -20,6 +20,12 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface EventApi {
+    @GET("/api/events/{eventId}")
+    Call<Event> getEvent(
+            @Path("eventId") Long eventId,
+            @Query("invitationCode") String invitationCode
+    );
+
     @GET("/api/events/top")
     Call<Page<EventCard>> getTopEvents(
             @Query("country") String country,

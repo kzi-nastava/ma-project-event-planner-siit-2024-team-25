@@ -27,6 +27,8 @@ public class EventInvitation extends Fragment {
     private Long eventId;
     private NavController navController;
 
+    private boolean cameFromDetails;
+
     public EventInvitation() {
     }
 
@@ -45,8 +47,8 @@ public class EventInvitation extends Fragment {
         if (getArguments() != null) {
             eventName = getArguments().getString(EventArgumentNames.NAME_ARG);
             eventId = getArguments().getLong(EventArgumentNames.ID_ARG);
+            cameFromDetails = getArguments().getBoolean(EventArgumentNames.CAME_FROM_DETAILS_ARG);
             eventInvitationViewModel = new EventInvitationViewModel(eventId);
-
         }
     }
 
@@ -77,10 +79,14 @@ public class EventInvitation extends Fragment {
 
         eventInvitationViewModel.closeFragmentEvent.observe(getViewLifecycleOwner(), shouldClose -> {
             if (shouldClose != null && shouldClose) {
-                Bundle args = new Bundle();
-                args.putLong(EventArgumentNames.ID_ARG, eventId);
-                args.putString(EventArgumentNames.NAME_ARG, eventName);
-                navController.navigate(R.id.action_eventInvitation_to_agendaFragment, args);
+                if (cameFromDetails) {
+                    navController.popBackStack();
+                } else {
+                    Bundle args = new Bundle();
+                    args.putLong(EventArgumentNames.ID_ARG, eventId);
+                    args.putString(EventArgumentNames.NAME_ARG, eventName);
+                    navController.navigate(R.id.action_eventInvitation_to_agendaFragment, args);
+                }
             }
         });
 
@@ -95,7 +101,10 @@ public class EventInvitation extends Fragment {
             public void handleOnBackPressed() {
                 if (navController.getCurrentDestination() != null &&
                         navController.getCurrentDestination().getId() == R.id.agendaFragment) {
-                    navController.popBackStack(R.id.myEventsFragment, false);
+                    final int destinationFragment = cameFromDetails
+                            ? R.id.eventDetailsFragment
+                            : R.id.myEventsFragment;
+                    navController.popBackStack(destinationFragment, false);
                 } else {
                     setEnabled(false);
                     requireActivity().onBackPressed();

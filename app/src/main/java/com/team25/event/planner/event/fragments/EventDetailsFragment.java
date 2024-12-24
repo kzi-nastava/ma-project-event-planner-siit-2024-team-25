@@ -1,29 +1,35 @@
 package com.team25.event.planner.event.fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentEventDetailsBinding;
 import com.team25.event.planner.event.model.Event;
-import com.team25.event.planner.event.viewmodel.EventFormViewModel;
+import com.team25.event.planner.event.viewmodel.EventDetailsViewModel;
+
+import java.time.format.DateTimeFormatter;
 
 
 public class EventDetailsFragment extends Fragment {
+    private FragmentEventDetailsBinding binding;
+    private NavController navController;
+    private EventDetailsViewModel viewModel;
+    private AuthViewModel authViewModel;
 
-    private final String EVENT_ID = "eventId";
-    private final String INVITATION_CODE = "invitationCode";
-    private Long _eventId;
-    private String _invitationCode;
-    private FragmentEventDetailsBinding _binding;
+    private final MediatorLiveData<Boolean> isOrganizer = new MediatorLiveData<>(false);
 
     public EventDetailsFragment() {
     }
@@ -36,22 +42,148 @@ public class EventDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_event_details, container, false);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
+
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+
+        viewModel = new ViewModelProvider(this).get(EventDetailsViewModel.class);
+        binding.setViewModel(viewModel);
+
+        setupObservers();
+        setupListeners();
+
         if (getArguments() != null) {
-            _eventId = getArguments().getLong(EVENT_ID);
-            _invitationCode = getArguments().getString(INVITATION_CODE);
+            long eventId = getArguments().getLong(EventArgumentNames.ID_ARG);
+            String invitationCode = getArguments().getString(EventArgumentNames.INVITATION_CODE_ARG);
+            if (eventId != -1) {
+                viewModel.loadEvent(eventId, invitationCode);
+            }
         }
+
+        return binding.getRoot();
+    }
+
+    private void setupObservers() {
+        isOrganizer.addSource(viewModel.event, event -> {
+            Long userId = authViewModel.getUserId();
+            isOrganizer.setValue(event != null && event.getOrganizer().getId().equals(userId));
+        });
+
+        isOrganizer.addSource(authViewModel.user, user -> {
+            Event event = viewModel.event.getValue();
+            Long userId = user == null ? null : user.getUserId();
+            isOrganizer.setValue(event != null && event.getOrganizer().getId().equals(userId));
+        });
+
+        isOrganizer.observe(getViewLifecycleOwner(), isOrganizer -> {
+            if (isOrganizer) {
+                binding.organizerActions.setVisibility(View.VISIBLE);
+                binding.viewAgendaButton.setText(R.string.edit_agenda);
+            } else {
+                binding.organizerActions.setVisibility(View.GONE);
+                binding.viewAgendaButton.setText(R.string.view_agenda);
+            }
+        });
+
+        viewModel.event.observe(getViewLifecycleOwner(), event -> {
+            if (event == null) return;
+            binding.dateTime.setText(getDateTimeString(event));
+        });
+    }
+
+    private void setupListeners() {
+        binding.showOnMapButton.setOnClickListener(v -> showOnMap());
+        binding.viewAgendaButton.setOnClickListener(v -> goToAgenda());
+        binding.inviteButton.setOnClickListener(v -> goToInvite());
+        binding.budgetPlanButton.setOnClickListener(v -> goToBudgetPlan());
+        binding.purchaseButton.setOnClickListener(v -> goToPurchase());
+        binding.purchaseListButton.setOnClickListener(v -> goToPurchaseList());
+    }
+
+    private void showOnMap() {
+        // TODO: open a fragment to display event on a map
+        Toast.makeText(getContext(), "Coming soon...⏳", Toast.LENGTH_SHORT).show();
+    }
+
+    private void goToAgenda() {
+        final Event event = viewModel.event.getValue();
+        if (event == null) return;
+
+        Bundle args = new Bundle();
+        args.putLong(EventArgumentNames.ID_ARG, event.getId());
+        args.putString(EventArgumentNames.NAME_ARG, event.getName());
+        args.putBoolean(EventArgumentNames.IS_ORGANIZER_ARG, Boolean.TRUE.equals(isOrganizer.getValue()));
+        args.putBoolean(EventArgumentNames.CAME_FROM_DETAILS_ARG, true);
+        navController.navigate(R.id.action_eventDetailsFragment_to_agendaFragment, args);
+    }
+
+    private void goToInvite() {
+        final Event event = viewModel.event.getValue();
+        if (event == null) return;
+
+        Bundle args = new Bundle();
+        args.putLong(EventArgumentNames.ID_ARG, event.getId());
+        args.putString(EventArgumentNames.NAME_ARG, event.getName());
+        args.putBoolean(EventArgumentNames.CAME_FROM_DETAILS_ARG, true);
+        navController.navigate(R.id.action_eventDetailsFragment_to_eventInvitation, args);
+    }
+
+    private void goToBudgetPlan() {
+        final Event event = viewModel.event.getValue();
+        if (event == null) return;
+
+        Bundle args = new Bundle();
+        args.putLong(EventArgumentNames.ID_ARG, event.getId());
+        args.putString(EventArgumentNames.NAME_ARG, event.getName());
+        // TODO: add budget planning and uncomment
+//        navController.navigate(R.id.action_eventDetailsFragment_to_budgetPlanFragment, args);
+    }
+
+    private void goToPurchase() {
+        // TODO: Implement
+    }
+
+    private void goToPurchaseList() {
+        // TODO: Implement
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        _binding = FragmentEventDetailsBinding.inflate(inflater, container, false);
+    public void onDestroyView() {
+        super.onDestroyView();
+        isOrganizer.removeSource(viewModel.event);
+        isOrganizer.removeSource(authViewModel.user);
+    }
 
-        Toast.makeText(getContext(), "Event id: " + this._eventId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(getContext(), "Invitation code: " + this._invitationCode, Toast.LENGTH_SHORT).show();
+    @NonNull
+    private static String getDateTimeString(@NonNull Event event) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d MMM yyyy");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm");
 
-        return _binding.getRoot();
+        String startDate = event.getStartDate().format(dateFormatter);
+        String startTime = event.getStartTime().format(timeFormatter);
+        String endDate = event.getEndDate().format(dateFormatter);
+        String endTime = event.getEndTime().format(timeFormatter);
+
+        // If same day event, only show date once
+        String formattedDateTime;
+        if (event.getStartDate().equals(event.getEndDate())) {
+            formattedDateTime = String.format("%s, %s - %s",
+                    startDate,
+                    startTime,
+                    endTime
+            );
+        } else {
+            formattedDateTime = String.format("%s %s - %s %s",
+                    startDate,
+                    startTime,
+                    endDate,
+                    endTime
+            );
+        }
+        return formattedDateTime;
     }
 }

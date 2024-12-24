@@ -20,4 +20,5 @@ public class Event {
     private LocalTime startTime;
     private LocalTime endTime;
     private Location location;
+    private EventOrganizerPreview organizer;
 }

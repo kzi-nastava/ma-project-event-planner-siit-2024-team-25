@@ -107,7 +107,7 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
             eventCard.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
                 bundle.putLong(EventArgumentNames.ID_ARG, event.getId());
-                // TODO: navController.navigate(R.id.action_homeFragment_to_eventDetailsFragment, bundle);
+                navController.navigate(R.id.action_homeFragment_to_eventDetailsFragment, bundle);
             });
         }
 

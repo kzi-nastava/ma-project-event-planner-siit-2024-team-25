@@ -93,6 +93,7 @@ public class EventFormFragment extends Fragment {
                 Bundle args = new Bundle();
                 args.putLong(EventArgumentNames.ID_ARG, event.getId());
                 args.putString(EventArgumentNames.NAME_ARG, event.getName());
+                args.putBoolean(EventArgumentNames.IS_ORGANIZER_ARG, true);
 
                 if (event.getPrivacyType().equals(PrivacyType.PRIVATE)) {
                     navController.navigate(R.id.action_eventFormFragment_to_eventInvitation, args);

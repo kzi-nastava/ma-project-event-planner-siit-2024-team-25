@@ -1,7 +1,7 @@
 package com.team25.event.planner.event.adapters;
 
 import android.content.Context;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,25 +12,25 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavController;
 
 import com.google.android.material.card.MaterialCardView;
 import com.team25.event.planner.R;
-
+import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.model.EventCard;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
-public class TopEventsListAdapter extends ArrayAdapter<EventCard>{
+public class TopEventsListAdapter extends ArrayAdapter<EventCard> {
 
     private List<EventCard> eventCards;
+    private NavController navController;
 
-    public TopEventsListAdapter(Context context, List<EventCard> eventCards) {
+    public TopEventsListAdapter(Context context, List<EventCard> eventCards, NavController navController) {
         super(context, R.layout.home_page_top_event, eventCards);
         this.eventCards = eventCards;
+        this.navController = navController;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard>{
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         EventCard event = getItem(position);
-        if(convertView == null){
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.home_page_top_event,
                     parent, false);
         }
@@ -66,7 +66,7 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard>{
         ImageView eventLocationImage = convertView.findViewById(R.id.top_event_location_image);
         TextView eventLocation = convertView.findViewById(R.id.top_event_location);
 
-        if(event != null){
+        if (event != null) {
             eventName.setText(event.getName());
             eventOrganizer.setText(event.getOrganizerName());
 
@@ -89,12 +89,11 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard>{
             boolean[] isClicked = {false};
             eventIcon.setOnClickListener(v -> {
                 isClicked[0] = !isClicked[0];
-                if(isClicked[0]){
+                if (isClicked[0]) {
                     eventIcon.setImageResource(R.drawable.ic_heart_red);
                     Toast.makeText(getContext(), "You add " + event.getName() +
                             " to your favourite list", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                } else {
                     eventIcon.setImageResource(R.drawable.ic_heart);
                     Toast.makeText(getContext(), "You remove " + event.getName() +
                             " from your favourite list", Toast.LENGTH_SHORT).show();
@@ -103,10 +102,9 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard>{
 
 
             eventCard.setOnClickListener(v -> {
-                Log.i("ShopApp", "Clicked: " + event.getName() + ", id: " +
-                        event.getId());
-                Toast.makeText(getContext(), "Clicked: " + event.getName() +
-                        ", id: " + event.getId(), Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putLong(EventArgumentNames.ID_ARG, event.getId());
+                navController.navigate(R.id.action_homeFragment_to_eventDetailsFragment, bundle);
             });
         }
 
