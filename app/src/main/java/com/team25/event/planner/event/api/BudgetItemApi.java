@@ -24,6 +24,9 @@ public interface BudgetItemApi {
     Call<BudgetItemResponseDTO> getBudgetItem(@Path("id")Long id,
                                               @Query("eventId") Long eventId);
 
+    @GET("api/budget-items/{id}/is-suitable")
+    Call<Boolean> isOfferingCategorySuitableForEvent(@Path("id")Long id,
+                                                     @Query("eventId")Long eventId);
     @POST("api/budget-items/")
     Call<BudgetItemResponseDTO> createBudgetItem(@Body BudgetItemRequestDTO requestDTO);
 

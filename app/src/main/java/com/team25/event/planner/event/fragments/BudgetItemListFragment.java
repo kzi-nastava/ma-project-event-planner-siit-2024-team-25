@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentBudgetItemListBinding;
+import com.team25.event.planner.event.adapters.BudgetItemAdapter;
 import com.team25.event.planner.event.viewmodel.BudgetItemViewModel;
 
 
@@ -26,7 +27,7 @@ public class BudgetItemListFragment extends Fragment {
     private BudgetItemViewModel viewModel;
 
     private ListView listView;
-    //adapter
+    private BudgetItemAdapter adapter;
 
     public BudgetItemListFragment() {
         // Required empty public constructor
@@ -59,7 +60,7 @@ public class BudgetItemListFragment extends Fragment {
         setUpObservers();
         setUpListeners();
 
-        //offeringCategoryViewModel.fetchOfferingCategories();
+        viewModel.fetchBudgetItems();
     }
 
     @Override
@@ -68,10 +69,16 @@ public class BudgetItemListFragment extends Fragment {
         setUpObservers();
         setUpListeners();
 
-        //offeringCategoryViewModel.fetchOfferingCategories();
+        viewModel.fetchBudgetItems();
     }
 
     private void setUpListeners() {
+        binding.buttonNewBudgetItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_budgetItemFragment_to_createEditBudgetItemFragment);
+            }
+        });
     }
 
     private void setUpObservers() {

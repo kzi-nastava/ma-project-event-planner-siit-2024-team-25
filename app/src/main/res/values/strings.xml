@@ -106,6 +106,7 @@
     <string name="update_offering_category">Update offering category</string>
     <string name="edit">Edit</string>
     <string name="budget_plan">Budget plan</string>
+    <string name="create_new_budget_item">Create new budget item</string>
 
 
 </resources>

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
@@ -100,6 +101,12 @@ public class OfferingCategoryBaseFragment extends Fragment implements OnEditButt
         offeringCategoryViewModel.success.observe(getViewLifecycleOwner(), check ->{
             if(check){
                 offeringCategoryViewModel.fetchOfferingCategories();
+            }
+        });
+        offeringCategoryViewModel.serverError.observe(getViewLifecycleOwner(), mess->{
+            if(mess != null){
+                Toast.makeText(requireContext(), mess, Toast.LENGTH_SHORT).show();
+
             }
         });
     }

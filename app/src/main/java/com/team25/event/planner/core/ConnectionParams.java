@@ -4,8 +4,10 @@ package com.team25.event.planner.core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.team25.event.planner.BuildConfig;
+import com.team25.event.planner.event.api.BudgetItemApi;
 import com.team25.event.planner.event.api.EventApi;
 import com.team25.event.planner.event.api.EventTypeApi;
+import com.team25.event.planner.event.model.BudgetItem;
 import com.team25.event.planner.offering.Api.OfferingApi;
 import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.product_service.api.ServiceApi;
@@ -40,6 +42,7 @@ public class ConnectionParams {
     public static ServiceApi serviceApi;
 
     public static OfferingCategoryApi offeringCategoryApi;
+    public static BudgetItemApi budgetItemApi;
 
     public static void setup(String jwt, AuthInterceptor.LogoutHandler logoutHandler) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -63,6 +66,7 @@ public class ConnectionParams {
         eventTypeApi = retrofit.create(EventTypeApi.class);
         serviceApi = retrofit.create(ServiceApi.class);
         offeringCategoryApi = retrofit.create(OfferingCategoryApi.class);
+        budgetItemApi = retrofit.create(BudgetItemApi.class);
     }
 
 }

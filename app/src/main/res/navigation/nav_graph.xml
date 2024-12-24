@@ -160,5 +160,18 @@
         android:id="@+id/budgetItemFragment"
         android:name="com.team25.event.planner.event.fragments.BudgetItemListFragment"
         android:label="fragment_budget_item_list"
-        tools:layout="@layout/fragment_budget_item_list" />
+        tools:layout="@layout/fragment_budget_item_list" >
+        <action
+            android:id="@+id/action_budgetItemFragment_to_createEditBudgetItemFragment"
+            app:destination="@id/createEditBudgetItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEditBudgetItemFragment"
+        android:name="com.team25.event.planner.event.fragments.CreateEditBudgetItemFragment"
+        android:label="fragment_create_edit_budget_item"
+        tools:layout="@layout/fragment_create_edit_budget_item" >
+        <action
+            android:id="@+id/action_createEditBudgetItemFragment_to_budgetItemFragment"
+            app:destination="@id/budgetItemFragment" />
+    </fragment>
 </navigation>
