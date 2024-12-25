@@ -105,8 +105,26 @@
     <string name="create">Create</string>
     <string name="update_offering_category">Update offering category</string>
     <string name="edit">Edit</string>
+
     <string name="budget_plan">Budget plan</string>
     <string name="create_new_budget_item">Create new budget item</string>
+
+    <string name="create_new_event">Create new event</string>
+    <string name="my_events">My Events</string>
+    <string name="create_event">Create Event</string>
+    <string name="private_event">Private event</string>
+    <string name="public_event">Public event</string>
+    <string name="event_created_success">Event created successfully!</string>
+    <string name="activity_add_success">Successfully added activity to agenda!</string>
+    <string name="remove">Remove</string>
+    <string name="add_activity">Add activity</string>
+    <string name="agenda">Agenda</string>
+    <string name="location">Location</string>
+    <string name="activity_remove_success">Successfully removed activity!</string>
+    <string name="add">Add</string>
+    <string name="add_activity_title">Add Activity</string>
+    <string name="agenda_finish_message">Successfully updated event agenda!</string>
+
 
 
 </resources>
