@@ -82,6 +82,7 @@
                     <!-- Additional steps as needed -->
                 </LinearLayout>
 
+
         <ScrollView
             android:id="@+id/scrollableSection"
             android:layout_width="0dp"
@@ -92,6 +93,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="60dp">
 
+
         <LinearLayout
             android:id="@+id/imageContainer"
         android:layout_width="match_parent"
@@ -100,10 +102,15 @@
         android:gravity="center"
         android:layout_marginTop="20dp">
 
+
     </LinearLayout>
 
 </ScrollView>
-
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:errorText="@{viewModel.errors.image}"
+                    tools:ignore="MissingConstraints" />
 
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -119,7 +126,6 @@
                         android:id="@+id/button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="@{() -> viewModel.ToSecond()}"
                         android:text="back"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -136,11 +142,10 @@
                     />
 
                     <Button
-                        android:id="@+id/button2"
+                        android:id="@+id/buttonFinish"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="finish"
-                        android:onClick="@{() -> viewModel.Finish()}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>

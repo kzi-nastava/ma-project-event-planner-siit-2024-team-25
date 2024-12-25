@@ -4,6 +4,10 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,8 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EventPlanner.Starting"
         tools:targetApi="31"
-        android:networkSecurityConfig="@xml/network_security_config"
-        >
+        android:networkSecurityConfig="@xml/network_security_config">
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -26,16 +29,28 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="localhost" android:port="4200" android:pathPrefix="/user/register/quick" />
+
+                <data
+                    android:scheme="http"
+                    android:host="localhost"
+                    android:port="4200"
+                    android:pathPrefix="/user/register/quick" />
             </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="localhost" android:port="4200" android:pathPrefix="/event/" />
+
+                <data
+                    android:scheme="http"
+                    android:host="localhost"
+                    android:port="4200"
+                    android:pathPrefix="/event/" />
             </intent-filter>
         </activity>
     </application>

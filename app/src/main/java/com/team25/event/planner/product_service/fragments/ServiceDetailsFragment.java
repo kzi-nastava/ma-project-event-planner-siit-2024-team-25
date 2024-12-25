@@ -20,8 +20,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.DialogBookServiceBinding;
 import com.team25.event.planner.databinding.FragmentServiceDetailsBinding;
+import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.viewmodel.EventViewModel;
+import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
+import com.team25.event.planner.product_service.dto.ServiceCreateResponseDTO;
 import com.team25.event.planner.product_service.model.Service;
 import com.team25.event.planner.product_service.viewModels.BookServiceViewModel;
 import com.team25.event.planner.product_service.viewModels.ServiceViewModel;
@@ -44,7 +47,6 @@ public class ServiceDetailsFragment extends Fragment {
 
     private DialogBookServiceBinding _dialogBookServiceBinding;
 
-    private final String EVENT_ID = "EVENT_ID";
     private final String OFFERING_ID = "OFFERING_ID";
     private final String BOOK_SERVICE = "BOOK_SERVICE";
 
@@ -53,8 +55,8 @@ public class ServiceDetailsFragment extends Fragment {
 
     private final MutableLiveData<Event> _event = new MutableLiveData<>();
     public LiveData<Event> event = _event;
-    private final MutableLiveData<Service> _service = new MutableLiveData<>();
-    public  LiveData<Service> service = _service;
+    private final MutableLiveData<ServiceCreateResponseDTO> _service = new MutableLiveData<>();
+    public  LiveData<ServiceCreateResponseDTO> service = _service;
 
     private final MutableLiveData<Boolean> _bookService = new MutableLiveData<>();
     public  LiveData<Boolean> bookService = _bookService;
@@ -68,7 +70,7 @@ public class ServiceDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            _eventId = getArguments().getLong(EVENT_ID);
+            _eventId = getArguments().getLong(EventArgumentNames.ID_ARG);
             _serviceId = getArguments().getLong(OFFERING_ID);
             _bookService.setValue(getArguments().getBoolean(BOOK_SERVICE));
         }

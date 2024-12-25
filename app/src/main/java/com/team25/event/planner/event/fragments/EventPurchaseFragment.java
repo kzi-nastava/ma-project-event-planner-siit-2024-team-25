@@ -40,7 +40,6 @@ import java.util.Objects;
 
 public class EventPurchaseFragment extends Fragment {
 
-    private final String EVENT_ID = "EVENT_ID";
     private Long _eventId;
     private final String PRODUCTS = "PRODUCTS";
     private final String SERVICES = "SERVICES";
@@ -328,7 +327,7 @@ public class EventPurchaseFragment extends Fragment {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            _eventId = arguments.getLong(EVENT_ID);
+            _eventId = arguments.getLong(EventArgumentNames.ID_ARG);
         }
         _productsButton = _binding.productsButton;
         _servicesButton = _binding.servicesButton;

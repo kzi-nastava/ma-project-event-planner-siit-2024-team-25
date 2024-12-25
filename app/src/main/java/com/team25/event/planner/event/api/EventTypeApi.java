@@ -4,6 +4,7 @@ import com.team25.event.planner.core.Page;
 import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.event.model.EventTypePreviewDTO;
 import com.team25.event.planner.event.model.EventTypeRequest;
+import com.team25.event.planner.offering.model.OfferingCategory;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface EventTypeApi {
     @GET("/api/event-types")
@@ -20,7 +22,8 @@ public interface EventTypeApi {
 
     @GET("/api/event-types/{id}")
     Call<EventType> getEventType(@Path("id") Long id);
-
+    @GET("/api/event-types/{id}/offering-categories")
+    Call<List<OfferingCategory>> getOfferingCategoriesByEventType(@Path("id") Long id);
     @POST("/api/event-types")
     Call<EventType> createEventType(@Body EventTypeRequest eventType);
 

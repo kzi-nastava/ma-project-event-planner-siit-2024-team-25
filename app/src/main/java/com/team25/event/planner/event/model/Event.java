@@ -1,13 +1,21 @@
 package com.team25.event.planner.event.model;
 
+
 import com.team25.event.planner.user.model.Location;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import retrofit2.http.GET;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Event {
     private Long id;
     private EventTypePreviewDTO eventType;
@@ -20,4 +28,5 @@ public class Event {
     private LocalTime startTime;
     private LocalTime endTime;
     private Location location;
+    private EventOrganizerPreview organizer;
 }

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
@@ -102,6 +103,12 @@ public class OfferingCategoryBaseFragment extends Fragment implements OnEditButt
                 offeringCategoryViewModel.fetchOfferingCategories();
             }
         });
+        offeringCategoryViewModel.serverError.observe(getViewLifecycleOwner(), mess->{
+            if(mess != null){
+                Toast.makeText(requireContext(), mess, Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     public void setUpListeners(){
@@ -120,7 +127,7 @@ public class OfferingCategoryBaseFragment extends Fragment implements OnEditButt
     }
 
     @Override
-    public void onEditButtonClick(Long id) {
+    public void onEditButtonClick(Long id, String name) {
         Bundle bundle = new Bundle();
         bundle.putLong(ID_ARG_NAME, id);
         navController.navigate(R.id.action_offeringCategoryFragment_to_createEditOfferingCategoryFragment, bundle);

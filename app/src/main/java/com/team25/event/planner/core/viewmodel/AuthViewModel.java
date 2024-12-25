@@ -27,6 +27,13 @@ public class AuthViewModel extends ViewModel {
         _jwt.postValue(sharedPrefService.getString(JWT_KEY));
     }
 
+    public Long getUserId() {
+        if (user.getValue() == null) {
+            return null;
+        }
+        return user.getValue().getUserId();
+    }
+
     public void setUser(User user) {
         _user.postValue(user);
         sharedPrefService.putUser(user);

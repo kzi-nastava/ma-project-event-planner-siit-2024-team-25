@@ -31,6 +31,9 @@ public class AgendaFragment extends Fragment {
     private AgendaViewModel viewModel;
     private NavController navController;
 
+    private boolean isEditable = false;
+    private boolean cameFromDetails = false;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_agenda, container, false);
@@ -41,28 +44,36 @@ public class AgendaFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(AgendaViewModel.class);
         binding.setViewModel(viewModel);
 
+        parseArguments();
         setupObservers();
         setupListeners();
         setupMenu();
         setupBackPress();
 
-        if (getArguments() != null) {
-            long eventId = getArguments().getLong(EventArgumentNames.ID_ARG);
-            if (eventId != -1) {
-                viewModel.setEventId(eventId);
-            }
+        return binding.getRoot();
+    }
 
-            String eventName = getArguments().getString(EventArgumentNames.NAME_ARG);
-            binding.tvEventName.setText(eventName);
+    private void parseArguments() {
+        Bundle args = getArguments();
+        if (args == null) return;
+
+        long eventId = args.getLong(EventArgumentNames.ID_ARG);
+        if (eventId != -1) {
+            viewModel.setEventId(eventId);
         }
 
-        return binding.getRoot();
+        String eventName = args.getString(EventArgumentNames.NAME_ARG);
+        binding.tvEventName.setText(eventName);
+
+        isEditable = args.getBoolean(EventArgumentNames.IS_ORGANIZER_ARG);
+        cameFromDetails = args.getBoolean(EventArgumentNames.CAME_FROM_DETAILS_ARG);
     }
 
     private void setupObservers() {
         ActivityAdapter adapter = new ActivityAdapter(
                 new ArrayList<>(),
-                activity -> viewModel.removeActivity(activity.getId())
+                activity -> viewModel.removeActivity(activity.getId()),
+                isEditable
         );
         binding.recyclerViewActivities.setAdapter(adapter);
         viewModel.activities.observe(getViewLifecycleOwner(), adapter::refreshActivities);
@@ -76,13 +87,19 @@ public class AgendaFragment extends Fragment {
     }
 
     private void setupListeners() {
-        binding.fabAddActivity.setOnClickListener(v -> {
-            ActivityAddFragment activityAddBottomSheet = new ActivityAddFragment(viewModel);
-            activityAddBottomSheet.show(getParentFragmentManager(), "ActivityAddFragment");
-        });
+        if (isEditable) {
+            binding.fabAddActivity.setOnClickListener(v -> {
+                ActivityAddFragment activityAddBottomSheet = new ActivityAddFragment(viewModel);
+                activityAddBottomSheet.show(getParentFragmentManager(), "ActivityAddFragment");
+            });
+        } else {
+            binding.fabAddActivity.setVisibility(View.GONE);
+        }
     }
 
     private void setupMenu() {
+        if (!isEditable) return;
+
         MenuHost menuHost = requireActivity();
 
         menuHost.addMenuProvider(new MenuProvider() {
@@ -95,9 +112,11 @@ public class AgendaFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.action_finish) {
                     Toast.makeText(getContext(), R.string.agenda_finish_message, Toast.LENGTH_SHORT).show();
-                    navController.popBackStack(R.id.myEventsFragment, false);
-                    // TODO: replace with navController.navigate(R.id.ACTION_AGENDA_FRAGMENT_TO_BUDGET_PLANNING_FRAGMENT)
-                    // TODO: if editing navigate to event details instead of budget planning
+                    if (cameFromDetails) {
+                        navController.popBackStack(R.id.eventDetailsFragment, false);
+                    } else {
+                        // TODO: navController.navigate(R.id.ACTION_AGENDA_FRAGMENT_TO_BUDGET_PLANNING_FRAGMENT)
+                    }
                     return true;
                 }
                 return false;
@@ -111,7 +130,10 @@ public class AgendaFragment extends Fragment {
             public void handleOnBackPressed() {
                 if (navController.getCurrentDestination() != null &&
                         navController.getCurrentDestination().getId() == R.id.agendaFragment) {
-                    navController.popBackStack(R.id.myEventsFragment, false);
+                    final int destinationFragment = cameFromDetails
+                            ? R.id.eventDetailsFragment
+                            : R.id.myEventsFragment;
+                    navController.popBackStack(destinationFragment, false);
                 } else {
                     setEnabled(false);
                     requireActivity().onBackPressed();

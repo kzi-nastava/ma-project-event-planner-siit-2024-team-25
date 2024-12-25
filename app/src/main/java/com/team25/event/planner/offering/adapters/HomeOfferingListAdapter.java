@@ -16,6 +16,7 @@ import androidx.navigation.NavController;
 
 import com.google.android.material.card.MaterialCardView;
 import com.team25.event.planner.R;
+import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.offering.model.OfferingCard;
 
 import java.text.NumberFormat;
@@ -26,7 +27,6 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
 
 
     private final String OFFERING_ID = "OFFERING_ID";
-    private final String EVENT_ID = "EVENT_ID";
     private List<OfferingCard> offeringCards;
     private Long _eventId;
 
@@ -107,7 +107,7 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
                 Bundle bundle = new Bundle();
                 bundle.putLong(OFFERING_ID, offeringCard.getId());
                 if(this._eventId != null){
-                    bundle.putLong(EVENT_ID, this._eventId);
+                    bundle.putLong(EventArgumentNames.ID_ARG, this._eventId);
                     bundle.putBoolean("BOOK_SERVICE", true);
                     navController.navigate(R.id.action_eventPurchaseFragment_to_serviceDetailsFragment, bundle);
                 }else{
