@@ -17,6 +17,7 @@ import retrofit2.http.GET;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Event {
+    private Long id;
     private EventTypePreviewDTO eventType;
     private String name;
     private String description;
