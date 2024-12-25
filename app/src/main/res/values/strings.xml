@@ -105,6 +105,10 @@
     <string name="create">Create</string>
     <string name="update_offering_category">Update offering category</string>
     <string name="edit">Edit</string>
+
+    <string name="budget_plan">Budget plan</string>
+    <string name="create_new_budget_item">Create new budget item</string>
+
     <string name="create_new_event">Create new event</string>
     <string name="my_events">My Events</string>
     <string name="create_event">Create Event</string>
@@ -134,6 +138,7 @@
     <string name="buy_products_services">Buy Products/Services</string>
     <string name="edit_agenda">Edit Agenda</string>
     <string name="view_purchases">View Purchases</string>
+
 
 
 </resources>

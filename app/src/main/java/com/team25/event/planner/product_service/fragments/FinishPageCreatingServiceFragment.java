@@ -14,6 +14,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -36,6 +38,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.team25.event.planner.R;
@@ -90,7 +93,8 @@ public class FinishPageCreatingServiceFragment extends Fragment {
             TextView textView = binding.EditOrCreateServiceText;
             textView.setText(R.string.edit_the_service);
         }
-
+        mViewModel._addedService.setValue(false);
+        setListeners();
         setObservers();
         return binding.getRoot();
     }
@@ -99,6 +103,12 @@ public class FinishPageCreatingServiceFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mViewModel._addedService.setValue(false);
     }
 
     private void addImageToContainer(Uri imageUri) {
@@ -126,27 +136,90 @@ public class FinishPageCreatingServiceFragment extends Fragment {
         imageContainer.addView(imageView);
     }
 
-    public void setObservers(){
-        mViewModel.toFinish.observe(getViewLifecycleOwner(), navigate -> {
-            if (navigate != null && navigate) {
-                mViewModel.createService();
+    public void setListeners(){
+        binding.buttonFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mViewModel.validateForm3()){
+                    mViewModel.createService();
+                }
             }
         });
-        mViewModel.toSecond.observe(getViewLifecycleOwner(), navigate -> {
-            if (navigate != null && navigate) {
+        binding.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 navController.navigateUp();
-                mViewModel.toSecond.setValue(false);
             }
         });
+    }
+    public void setObservers(){
+
+        mViewModel._addedService.observe(getViewLifecycleOwner(), check ->{
+            if(check){
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Information")
+                        .setMessage("You successfully added a new service")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+                navController.navigate(R.id.action_finishPageCreateingCerviceFragment_to_ownerHomePage);
+            }
+        });
+
         mViewModel.errorMessageFromServer.observe(getViewLifecycleOwner(), errorMessage -> {
             new AlertDialog.Builder(requireContext())
                     .setTitle("Information")
                     .setMessage(errorMessage)
                     .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                     .show();
-            mViewModel.toFinish.setValue(false);
-            navController.navigate(R.id.action_finishPageCreateingCerviceFragment_to_ownerHomePage);
         });
+        mViewModel.images.observe(getViewLifecycleOwner(), urls -> {
+            LinearLayout container = requireView().findViewById(R.id.imageContainer);
+            container.removeAllViews();
+
+            for (int i = 0; i < urls.size(); i++) {
+                String url = urls.get(i);
+
+                LinearLayout rowLayout = new LinearLayout(requireContext());
+                rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+                rowLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                ));
+                rowLayout.setPadding(16, 16, 16, 16);
+
+                ImageView imageView = new ImageView(requireContext());
+                LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1f
+                );
+                imageView.setLayoutParams(imageParams);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                Glide.with(requireContext()).load(url).into(imageView);
+
+                ImageButton deleteButton = new ImageButton(requireContext());
+                deleteButton.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                ));
+                Drawable deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.delete_icon);
+                if (deleteIcon != null) {
+                    deleteIcon.setTint(Color.RED);
+                }
+                deleteButton.setImageDrawable(deleteIcon);
+                deleteButton.setBackground(null);
+                deleteButton.setPadding(16, 16, 16, 16);
+                deleteButton.setOnClickListener(v -> {
+                    mViewModel.removeImageUrl(url);
+                });
+
+                rowLayout.addView(imageView);
+                rowLayout.addView(deleteButton);
+
+                container.addView(rowLayout);
+            }
+        });
+
     }
 
     private final ActivityResultLauncher<Intent> startForProfileImageResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {

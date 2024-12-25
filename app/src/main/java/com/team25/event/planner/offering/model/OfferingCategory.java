@@ -28,6 +28,11 @@ public class OfferingCategory implements Parcelable {
         status = OfferingCategoryType.valueOf(in.readString());
     }
 
+    public OfferingCategory(Long id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -51,5 +56,10 @@ public class OfferingCategory implements Parcelable {
             return new OfferingCategory[size];
         }
     };
+    @NonNull
+    @Override
+    public String toString() {
+        return name;
+    }
 
 }
