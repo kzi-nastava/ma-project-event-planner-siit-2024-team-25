@@ -1,6 +1,7 @@
 package com.team25.event.planner.event.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -16,14 +17,16 @@ import java.util.List;
 public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ActivityViewHolder> {
     private List<Activity> activities;
     private final OnRemoveClickListener onRemoveClickListener;
+    private final boolean isEditable;
 
     public interface OnRemoveClickListener {
         void onRemove(Activity activity);
     }
 
-    public ActivityAdapter(List<Activity> activities, OnRemoveClickListener onRemoveClickListener) {
+    public ActivityAdapter(List<Activity> activities, OnRemoveClickListener onRemoveClickListener, boolean isEditable) {
         this.activities = activities;
         this.onRemoveClickListener = onRemoveClickListener;
+        this.isEditable = isEditable;
     }
 
     public static class ActivityViewHolder extends RecyclerView.ViewHolder {
@@ -34,8 +37,11 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
             this.binding = binding;
         }
 
-        public void bind(Activity activity, OnRemoveClickListener listener) {
+        public void bind(Activity activity, OnRemoveClickListener listener, boolean isEditable) {
             binding.setActivity(activity);
+            if (!isEditable) {
+                binding.btnRemove.setVisibility(View.GONE);
+            }
             binding.executePendingBindings();
             binding.btnRemove.setOnClickListener(v -> listener.onRemove(activity));
         }
@@ -52,7 +58,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
     @Override
     public void onBindViewHolder(@NonNull ActivityViewHolder holder, int position) {
         final Activity activity = activities.get(position);
-        holder.bind(activity, onRemoveClickListener);
+        holder.bind(activity, onRemoveClickListener, isEditable);
     }
 
     @Override

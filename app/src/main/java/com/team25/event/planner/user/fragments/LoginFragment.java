@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,8 +16,8 @@ import androidx.navigation.Navigation;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentLoginBinding;
+import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.user.viewmodels.LoginViewModel;
-import com.team25.event.planner.user.viewmodels.RegisterQuickViewModel;
 
 public class LoginFragment extends Fragment {
     private LoginViewModel viewModel;
@@ -59,10 +58,10 @@ public class LoginFragment extends Fragment {
             if (loggedIn) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 
-                if(this._invitationCode != null){
+                if (this._invitationCode != null) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("invitationCode", _invitationCode);
-                    bundle.putLong("eventId", _eventId);
+                    bundle.putString(EventArgumentNames.INVITATION_CODE_ARG, _invitationCode);
+                    bundle.putLong(EventArgumentNames.NAME_ARG, _eventId);
 
                     navController.navigate(R.id.eventDetailsFragment, bundle);
                 } else {

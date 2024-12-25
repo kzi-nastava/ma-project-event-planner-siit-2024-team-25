@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
@@ -37,7 +39,8 @@ public class TopEventsListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         homeEventViewModel.topEvents.observe(getViewLifecycleOwner(), (eventCards -> {
-            adapter = new TopEventsListAdapter(requireContext(), eventCards);
+            NavController navController = Navigation.findNavController(requireView());
+            adapter = new TopEventsListAdapter(requireContext(), eventCards, navController);
             setListAdapter(adapter);
         }));
         AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
@@ -54,8 +57,9 @@ public class TopEventsListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         homeEventViewModel = new ViewModelProvider(requireActivity()).get(HomeEventViewModel.class);
         if (getArguments() != null) {
+            NavController navController = Navigation.findNavController(requireView());
             topEventCards = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new TopEventsListAdapter(getActivity(), topEventCards);
+            adapter = new TopEventsListAdapter(getActivity(), topEventCards, navController);
             setListAdapter(adapter);
         }
     }
