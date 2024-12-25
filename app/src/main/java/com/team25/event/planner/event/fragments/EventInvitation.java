@@ -85,6 +85,7 @@ public class EventInvitation extends Fragment {
                     Bundle args = new Bundle();
                     args.putLong(EventArgumentNames.ID_ARG, eventId);
                     args.putString(EventArgumentNames.NAME_ARG, eventName);
+                    args.putBoolean(EventArgumentNames.IS_ORGANIZER_ARG, true);
                     navController.navigate(R.id.action_eventInvitation_to_agendaFragment, args);
                 }
             }
