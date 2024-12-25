@@ -16,14 +16,17 @@ public class ServiceCreateRequestDTO {
     private double price;
     private double discount;
     private List<String> images;
-    private boolean isVisible;
-    private boolean isAvailable;
+    private boolean visible;
+    private boolean available;
     private String specifics;
     private ReservationType reservationType;
     private int duration;
     private int reservationDeadline;
     private int cancellationDeadline;
+    private int minimumArrangement;
+    private int maximumArrangement;
     private List<Long> eventTypesIDs;
     private Long offeringCategoryID;
+    private String offeringCategoryName;
     private Long ownerId;
 }

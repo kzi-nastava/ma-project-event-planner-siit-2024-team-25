@@ -112,12 +112,24 @@ public class OfferingCategoryViewModel extends ViewModel {
                 public void onResponse(Call<OfferingCategory> call, Response<OfferingCategory> response) {
                     if(response.isSuccessful() && response.body()!=null){
                         _success.postValue(true);
-                    }//TODO
+                    }else{
+                        try (ResponseBody errorBody = response.errorBody()) {
+                            if (errorBody != null) {
+                                Gson gson = new Gson();
+                                ApiError apiError = gson.fromJson(errorBody.charStream(), ApiError.class);
+                                _serverError.postValue(apiError.getMessage());
+                            } else {
+                                _serverError.postValue("Unknown error occurred");
+                            }
+                        } catch (Exception e) {
+                            _serverError.postValue("Error parsing server response");
+                        }
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<OfferingCategory> call, Throwable t) {
-                    //TODO
+                    _serverError.postValue("Network error");
                 }
             });
         }

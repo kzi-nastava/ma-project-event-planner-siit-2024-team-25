@@ -72,7 +72,7 @@ public class OfferingCategoryAdapter extends ArrayAdapter<OfferingCategory> {
 
             editButton.setOnClickListener(v -> {
                 if (editButtonClickListener != null) {
-                    editButtonClickListener.onEditButtonClick(offeringCategory.getId());
+                    editButtonClickListener.onEditButtonClick(offeringCategory.getId(), null);
                 }
             });
             deleteButton.setOnClickListener(v -> {
