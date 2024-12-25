@@ -14,6 +14,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import retrofit2.http.QueryName;
 
 public interface PurchaseApi {
     @POST("/api/purchase/event/{eventId}/service/{serviceId}")
@@ -27,5 +28,5 @@ public interface PurchaseApi {
 
     @GET("/api/purchase/event/{eventId}/budget")
     Call<Double> getLeftMoneyFromBudgetItem(@Path(value = "eventId") Long eventId,
-                                            @Query(value = "serviceId") Long serviceId);
+                                            @Query(value = "categoryId") Long categoryId);
 }

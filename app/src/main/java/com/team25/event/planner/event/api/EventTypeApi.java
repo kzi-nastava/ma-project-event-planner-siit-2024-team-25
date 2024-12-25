@@ -29,4 +29,7 @@ public interface EventTypeApi {
 
     @GET("/api/event-types/all")
     Call<List<EventTypePreviewDTO>> getAllEventTypes();
+
+    @GET("/api/event-types/event/{eventId}")
+    Call<EventType> getEventTypeByEvent(@Path(value = "eventId") Long eventId);
 }

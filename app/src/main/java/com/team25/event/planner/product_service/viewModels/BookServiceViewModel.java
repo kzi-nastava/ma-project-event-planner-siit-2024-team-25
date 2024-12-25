@@ -2,6 +2,7 @@ package com.team25.event.planner.product_service.viewModels;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.team25.event.planner.core.ConnectionParams;
@@ -21,14 +22,12 @@ import retrofit2.Response;
 public class BookServiceViewModel {
 
     public MutableLiveData<String> errorMessageFromServer = new MutableLiveData<>();
-    public MutableLiveData<String> purchaseMessage = new MutableLiveData<>();
-
     private PurchaseApi purchaseApi = ConnectionParams.purchaseApi;
     public Purchase purchase = new Purchase();
     public MutableLiveData<Double> leftMoney = new MutableLiveData<>();
     public MutableLiveData<Boolean> isAvailable = new MutableLiveData<>();
 
-    public MutableLiveData<ServicePurchaseResponseDTO> response = new MutableLiveData<>();
+    public MutableLiveData<ServicePurchaseResponseDTO> responseDTO = new MutableLiveData<>();
 
     public BookServiceViewModel(){}
 
@@ -40,34 +39,28 @@ public class BookServiceViewModel {
                 purchase.getSelectedEndTime().getValue(),
                 Double.parseDouble(purchase.getPrice().getValue())
         );
-
-        purchaseApi.bookService(eventId,serviceId,servicePurchaseDTO).enqueue(new ResponseCallback<>(
-                service -> {
-                    response.postValue(service);
-                },
-                errorMessageFromServer, "EventFormViewModel"
-        ));
         Call<ServicePurchaseResponseDTO> call = purchaseApi.bookService(eventId,serviceId,servicePurchaseDTO);
-        call.enqueue(new Callback<ServicePurchaseResponseDTO>() {
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<ServicePurchaseResponseDTO> call, Response<ServicePurchaseResponseDTO> response) {
+            public void onResponse(@NonNull Call<ServicePurchaseResponseDTO> call, @NonNull Response<ServicePurchaseResponseDTO> response) {
                 if (response.isSuccessful()) {
+                    responseDTO.setValue(response.body());
                     errorMessageFromServer.setValue("You've successfully booked this service for your event!");
                 } else {
-                    errorMessageFromServer.setValue("Sorry, you haven't enough money to book this service");
+                    if (Boolean.TRUE.equals(isAvailable.getValue())) {
+                        errorMessageFromServer.setValue("Sorry, you haven't enough money to book this service");
+                    } else {
+                        errorMessageFromServer.setValue("Service isn't available for booking in this period");
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<ServicePurchaseResponseDTO> call, Throwable t) {
+            public void onFailure(@NonNull Call<ServicePurchaseResponseDTO> call, @NonNull Throwable t) {
                 Log.e("Retrofit", "Network error: " + t.getMessage());
             }
 
         });
-    }
-
-    public void getLeftMoneyFromBudgetItem(){
-
     }
 
     public void isServiceAvailable(Long serviceId){

@@ -22,6 +22,7 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentEventPurchaseBinding;
 import com.team25.event.planner.databinding.HomePageOfferingFilterBinding;
 import com.team25.event.planner.databinding.HomePageOfferingSortBinding;
+import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.event.model.EventTypePreviewDTO;
 import com.team25.event.planner.event.model.OfferingCategoryPreviewDTO;
 import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
@@ -33,6 +34,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Objects;
 
 
@@ -143,12 +145,23 @@ public class EventPurchaseFragment extends Fragment {
         Spinner offeringCategoryFilter = _filterOfferingDialog.findViewById(R.id.offering_category_filter);
 
 
-        _homeEventViewModel.allEventTypes.observe(getViewLifecycleOwner(),types ->{
-            ArrayAdapter<EventTypePreviewDTO> adapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(types));
+        _homeEventViewModel.currentEventType.observe(getViewLifecycleOwner(),type ->{
+            EventTypePreviewDTO eventTypePreviewDTO = new EventTypePreviewDTO();
+            eventTypePreviewDTO.setId(type.getId());
+            eventTypePreviewDTO.setName(type.getName());
+            ArrayList<EventTypePreviewDTO>list=new ArrayList<>();
+            list.add(eventTypePreviewDTO);
+            ArrayAdapter<EventTypePreviewDTO> adapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, list);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             offeringEventTypeFilter.setAdapter(adapter);
+
+            ArrayList<OfferingCategoryPreviewDTO> categoryPreviewDTOS = new ArrayList<>(type.getCategories());
+            categoryPreviewDTOS.add(0,new OfferingCategoryPreviewDTO(null, null));
+            ArrayAdapter<OfferingCategoryPreviewDTO> offeringCategoriesAdapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, categoryPreviewDTOS);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            offeringCategoryFilter.setAdapter(offeringCategoriesAdapter);
         });
-        _homeEventViewModel.getEventTypes();
+        _homeEventViewModel.getEventTypeByEvent(this._eventId);
 
         offeringEventTypeFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -160,18 +173,15 @@ public class EventPurchaseFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        _homeOfferingViewModel.allOfferingCategories.observe(getViewLifecycleOwner(),types ->{
-            ArrayAdapter<OfferingCategoryPreviewDTO> adapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(types));
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            offeringCategoryFilter.setAdapter(adapter);
-        });
-        _homeOfferingViewModel.getAllOfferingCategories();
 
         offeringCategoryFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 OfferingCategoryPreviewDTO selectedType = (OfferingCategoryPreviewDTO) parent.getItemAtPosition(position);
                 _homeOfferingViewModel.offeringFilterDTO.selectedCategoryType.setValue(selectedType);
+                if(selectedType.getId() != null){
+                    _homeOfferingViewModel.getLeftMoneyForBudgetItem(_eventId, selectedType.getId());
+                }
             }
 
             @Override
@@ -224,15 +234,10 @@ public class EventPurchaseFragment extends Fragment {
             _homeOfferingViewModel.offeringFilterDTO.selectedEndTime.setValue(selectedTime);
         });
 
-        if(selectedType.equals(PRODUCTS)){
-            _homeOfferingViewModel.selectedFilterId.setValue(R.id.products_radio_button);
-        }
-        else{
-            _homeOfferingViewModel.selectedFilterId.setValue(R.id.services_radio_button);
-        }
 
         ImageView filter = homePageOfferingFilterBinding.offeringFilterButton;
         filter.setOnClickListener(v -> {
+            setFilterCriteria(selectedType);
             _filterOfferingDialog.dismiss();
             _homeOfferingViewModel.getOfferings();
         });
@@ -240,7 +245,8 @@ public class EventPurchaseFragment extends Fragment {
         homePageOfferingFilterBinding.imageRestart.setOnClickListener(v -> {
             _binding.searchView.setQuery("", false);
             _homeOfferingViewModel.restartFilter();
-            homePageOfferingFilterBinding.radioButtons.clearCheck();
+            setFilterCriteria(selectedType);
+            _homeOfferingViewModel.getOfferings();
             _filterOfferingDialog.dismiss();
         });
 
@@ -248,13 +254,15 @@ public class EventPurchaseFragment extends Fragment {
             _filterOfferingDialog.show();
         });
 
-        if(Objects.equals(selectedType, PRODUCTS)){
+        setFilterCriteria(selectedType);
+    }
+
+    private void setFilterCriteria(String selectedType){
+        if(selectedType.equals(PRODUCTS)){
             _homeOfferingViewModel.selectedFilterId.setValue(R.id.products_radio_button);
-            filter.callOnClick();
         }
         else{
             _homeOfferingViewModel.selectedFilterId.setValue(R.id.services_radio_button);
-            filter.callOnClick();
         }
     }
 

@@ -391,6 +391,7 @@ public class HomePageBaseFragment extends Fragment {
             _binding.searchView.setQuery("", false);
             _homeOfferingViewModel.restartFilter();
             homePageOfferingFilterBinding.radioButtons.clearCheck();
+            _homeOfferingViewModel.getAllOfferings();
             _filterOfferingDialog.dismiss();
         });
 

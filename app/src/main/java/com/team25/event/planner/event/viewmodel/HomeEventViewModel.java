@@ -13,9 +13,11 @@ import com.team25.event.planner.event.api.EventApi;
 import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.event.model.EventCard;
 import com.team25.event.planner.event.model.EventFilterDTO;
+import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.event.model.EventTypePreviewDTO;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,6 +38,9 @@ public class HomeEventViewModel extends ViewModel {
     public EventFilterDTO eventFilterDTO = new EventFilterDTO();
     private final MutableLiveData<List<EventTypePreviewDTO>> _allEventTypes = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<EventTypePreviewDTO>> allEventTypes = _allEventTypes;
+
+    private final MutableLiveData<EventType> _currentEventType = new MutableLiveData<>();
+    public final LiveData<EventType> currentEventType = _currentEventType;
 
 
     public HomeEventViewModel() {
@@ -126,6 +131,27 @@ public class HomeEventViewModel extends ViewModel {
 
             @Override
             public void onFailure(@NonNull Call<List<EventTypePreviewDTO>> call, @NonNull Throwable t) {
+                Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
+            }
+        });
+    }
+
+    public void getEventTypeByEvent(Long eventId) {
+        EventTypeApi eventTypeApi = ConnectionParams.eventTypeApi;
+        Call<EventType> call = eventTypeApi.getEventTypeByEvent(eventId);
+
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<EventType> call, @NonNull Response<EventType> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _currentEventType.setValue(response.body());
+                } else {
+                    Log.e("HomeEventViewModel", "Failed to fetch top events");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<EventType> call, @NonNull Throwable t) {
                 Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
             }
         });

@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
@@ -123,21 +124,22 @@ public class ServiceDetailsFragment extends Fragment {
         _bookServiceDialog = new BottomSheetDialog(getActivity());
         _bookServiceDialog.setContentView(bookDialog);
 
-        long minDate = this._event.getValue().getStartDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        long maxDate = this._event.getValue().getEndDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
         LocalTime minTime = LocalTime.of(event.getValue().getStartTime().getHour(), event.getValue().getStartTime().getMinute());
         LocalTime maxTime = LocalTime.of(event.getValue().getEndTime().getHour(), event.getValue().getEndTime().getMinute());
 
-        _dialogBookServiceBinding.bookServiceButton.setOnClickListener(v -> {
-            _bookServiceViewModel.bookService(this._eventId, this._serviceId);
+        _bookServiceViewModel.purchase.selectedStartTime.observe(getViewLifecycleOwner(), localTime -> {
+            if(localTime.isBefore(minTime)){
+                _bookServiceViewModel.errorMessageFromServer.setValue("Invalid start time");
+            }
         });
 
         _bookServiceViewModel.purchase.selectedEndTime.observe(getViewLifecycleOwner(), localTime -> {
+            if(localTime.isAfter(maxTime)){
+                _bookServiceViewModel.errorMessageFromServer.setValue("Invalid end time");
+            }
             if(localTime.isAfter(_bookServiceViewModel.purchase.getSelectedStartTime().getValue())
             && !localTime.isAfter(maxTime)){
                 _bookServiceViewModel.isServiceAvailable(this._serviceId);
-            }else{
-                _bookServiceViewModel.errorMessageFromServer.setValue("Invalid start time");
             }
         });
 
@@ -189,9 +191,12 @@ public class ServiceDetailsFragment extends Fragment {
     private void showTimePicker(boolean isStartTime) {
         int eventStartHour = this._event.getValue().getStartTime().getHour();
         int eventStartMinute = this._event.getValue().getStartTime().getMinute();
-        if(_bookServiceViewModel.purchase.getSelectedEndTime().getValue() != null){
+        if(_bookServiceViewModel.purchase.getSelectedEndTime().getValue() != null && !isStartTime){
             eventStartHour = _bookServiceViewModel.purchase.getSelectedEndTime().getValue().getHour();
             eventStartMinute =_bookServiceViewModel.purchase.getSelectedEndTime().getValue().getMinute();
+        }else if(_bookServiceViewModel.purchase.getSelectedStartTime().getValue() != null && isStartTime){
+            eventStartHour = _bookServiceViewModel.purchase.getSelectedStartTime().getValue().getHour();
+            eventStartMinute =_bookServiceViewModel.purchase.getSelectedStartTime().getValue().getMinute();
         }
 
 
@@ -228,6 +233,11 @@ public class ServiceDetailsFragment extends Fragment {
 
         _dialogBookServiceBinding.bookServiceButton.setOnClickListener(v -> {
             _bookServiceViewModel.bookService(this._eventId, this._serviceId);
+            _bookServiceDialog.dismiss();
+        });
+
+        _bookServiceViewModel.responseDTO.observe(getViewLifecycleOwner(), response -> {
+            Toast.makeText(getContext(), "You've successfully booked this service for your event!", Toast.LENGTH_LONG).show();
         });
     }
 
