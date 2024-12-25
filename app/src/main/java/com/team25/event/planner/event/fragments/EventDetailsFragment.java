@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -15,6 +14,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.fragments.MapFragment;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentEventDetailsBinding;
 import com.team25.event.planner.event.model.Event;
@@ -105,8 +105,13 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void showOnMap() {
-        // TODO: open a fragment to display event on a map
-        Toast.makeText(getContext(), "Coming soon...⏳", Toast.LENGTH_SHORT).show();
+        final Event event = viewModel.event.getValue();
+        if (event == null) return;
+
+        Bundle args = new Bundle();
+        args.putString(MapFragment.TITLE_ARG, event.getName());
+        args.putParcelable(MapFragment.LOCATION_ARG, event.getLocation());
+        navController.navigate(R.id.action_eventDetailsFragment_to_mapFragment, args);
     }
 
     private void goToAgenda() {

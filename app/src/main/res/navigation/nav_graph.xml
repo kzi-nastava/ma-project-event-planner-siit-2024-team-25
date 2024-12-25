@@ -196,5 +196,12 @@
         <action
             android:id="@+id/action_eventDetailsFragment_to_agendaFragment"
             app:destination="@id/agendaFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.team25.event.planner.core.fragments.MapFragment"
+        android:label="MapFragment" />
 </navigation>
