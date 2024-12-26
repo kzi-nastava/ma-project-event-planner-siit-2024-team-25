@@ -47,6 +47,7 @@ public class EventDetailsFragment extends Fragment {
         EventDetailsFragment fragment = new EventDetailsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -200,5 +201,14 @@ public class EventDetailsFragment extends Fragment {
             );
         }
         return formattedDateTime;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            _eventId = arguments.getLong(EventArgumentNames.ID_ARG);
+        }
     }
 }

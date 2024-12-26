@@ -115,7 +115,6 @@ public class EventPurchaseFragment extends Fragment {
                 productsButtonClick();
             }
         });
-
     }
 
     public void setOfferingFilterDialog(String selectedType) {
@@ -125,6 +124,7 @@ public class EventPurchaseFragment extends Fragment {
                 null,
                 false
         );
+
         View offeringView = homePageOfferingFilterBinding.getRoot();
         homePageOfferingFilterBinding.setViewModel(_homeOfferingViewModel);
         _homeOfferingViewModel.selectedFilterId.observe(getViewLifecycleOwner(), v -> {
@@ -148,6 +148,7 @@ public class EventPurchaseFragment extends Fragment {
             EventTypePreviewDTO eventTypePreviewDTO = new EventTypePreviewDTO();
             eventTypePreviewDTO.setId(type.getId());
             eventTypePreviewDTO.setName(type.getName());
+            _homeOfferingViewModel.offeringFilterDTO.selectedEventType.setValue(eventTypePreviewDTO);
             ArrayList<EventTypePreviewDTO>list=new ArrayList<>();
             list.add(eventTypePreviewDTO);
             ArrayAdapter<EventTypePreviewDTO> adapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, list);
@@ -159,6 +160,9 @@ public class EventPurchaseFragment extends Fragment {
             ArrayAdapter<OfferingCategoryPreviewDTO> offeringCategoriesAdapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, categoryPreviewDTOS);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             offeringCategoryFilter.setAdapter(offeringCategoriesAdapter);
+
+
+            _homeOfferingViewModel.getOfferings();
         });
         _homeEventViewModel.getEventTypeByEvent(this._eventId);
 

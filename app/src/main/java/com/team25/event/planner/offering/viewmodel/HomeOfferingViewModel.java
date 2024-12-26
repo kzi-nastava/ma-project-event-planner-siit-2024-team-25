@@ -164,7 +164,9 @@ public class HomeOfferingViewModel extends ViewModel {
             @Override
             public void onResponse(@NonNull Call<Double> call, @NonNull Response<Double> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    offeringFilterDTO.maxPrice.setValue(response.body().toString());
+                    if(response.body()>=0){
+                        offeringFilterDTO.maxPrice.setValue(response.body().toString());
+                    }
                 } else {
                     Log.e("HomeOfferingViewModel", "Failed to fetch left money");
                 }
