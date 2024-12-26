@@ -16,12 +16,14 @@ public class OfferingCard implements Parcelable {
     private double price;
     private String ownerName;
     private double rating;
+    private boolean isService;
 
     protected OfferingCard(Parcel in) {
         id = in.readInt();
         name = in.readString();
         price = in.readDouble();
         ownerName = in.readString();
+        isService = in.readBoolean();
     }
 
 
@@ -38,6 +40,7 @@ public class OfferingCard implements Parcelable {
         dest.writeDouble(price);
         dest.writeString(ownerName);
         dest.writeDouble(rating);
+        dest.writeBoolean(isService);
     }
 
     public static final Creator<OfferingCard> CREATOR = new Creator<OfferingCard>() {

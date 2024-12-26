@@ -30,13 +30,13 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
     private List<OfferingCard> offeringCards;
     private Long _eventId;
 
-    private NavController navController;
+    private NavController _navController;
 
     public HomeOfferingListAdapter(Context context, List<OfferingCard> offerings, NavController navController, Long eventId) {
         super(context, R.layout.home_page_top_offer, offerings);
         this.offeringCards = offerings;
         this._eventId = eventId;
-        this.navController = navController;
+        this._navController = navController;
     }
 
     @Override
@@ -109,10 +109,19 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
                 if(this._eventId != null){
                     bundle.putLong(EventArgumentNames.ID_ARG, this._eventId);
                     bundle.putBoolean("BOOK_SERVICE", true);
-                    navController.navigate(R.id.action_eventPurchaseFragment_to_serviceDetailsFragment, bundle);
+                    if(offeringCard.isService()){
+                        _navController.navigate(R.id.action_eventPurchaseFragment_to_serviceDetailsFragment, bundle);
+                    }else{
+                        ///TO-DO: navController.navigate(R.id.action_eventPurchaseFragment_to_productDetailsFragment, bundle);
+                    }
                 }else{
-
+                    if(offeringCard.isService()){
+                        _navController.navigate(R.id.serviceDetailsFragment, bundle);
+                    }else{
+                        ///TO-DO: navController.navigate(R.id.productDetailsPragment, bundle);
+                    }
                 }
+
             });
         }
 

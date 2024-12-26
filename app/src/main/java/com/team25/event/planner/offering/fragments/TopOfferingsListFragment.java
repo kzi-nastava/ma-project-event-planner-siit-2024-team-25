@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentTopOfferingsListBinding;
@@ -38,7 +40,8 @@ public class TopOfferingsListFragment extends ListFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         _homeOfferingViewModel.topOfferings.observe(getViewLifecycleOwner(), offeringCards -> {
-            adapter = new TopOfferingsListAdapter(getContext(), offeringCards);
+            NavController navController = Navigation.findNavController(requireView());
+            adapter = new TopOfferingsListAdapter(getContext(), offeringCards, navController);
             setListAdapter(adapter);
         });
         AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
@@ -56,8 +59,9 @@ public class TopOfferingsListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         _homeOfferingViewModel = new ViewModelProvider(requireActivity()).get(HomeOfferingViewModel.class);
         if (getArguments() != null) {
+            NavController navController = Navigation.findNavController(requireView());
             _topOfferings = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new TopOfferingsListAdapter(getActivity(), _topOfferings);
+            adapter = new TopOfferingsListAdapter(getActivity(), _topOfferings,navController);
             setListAdapter(adapter);
         }
     }
