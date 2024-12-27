@@ -1,6 +1,5 @@
 package com.team25.event.planner.product_service.model;
 
-import android.hardware.lights.LightsManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,13 +8,14 @@ import androidx.annotation.NonNull;
 import com.team25.event.planner.product_service.enums.ProductServiceType;
 import com.team25.event.planner.product_service.enums.ReservationType;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
@@ -31,9 +31,6 @@ public class Service extends Offering implements Parcelable {
     private List<Long> eventTypesIDs;
 
     public Service(){}
-
-
-
 
     public Service(Long id, String name, String description, int imageURL){
         this.id = id;
@@ -59,6 +56,8 @@ public class Service extends Offering implements Parcelable {
         minimumArrangement = in.readInt();
         maximumArrangement = in.readInt();
         reservationType = ReservationType.valueOf(in.readString());
+        minimumArrangement = in.readInt();
+        maximumArrangement = in.readInt();
     }
     @Override
     public int describeContents() {
@@ -83,6 +82,8 @@ public class Service extends Offering implements Parcelable {
         dest.writeInt(minimumArrangement);
         dest.writeInt(maximumArrangement);
         dest.writeString(reservationType.name());
+        dest.writeInt(minimumArrangement);
+        dest.writeInt(maximumArrangement);
     }
 
     public static final Creator<Service> CREATOR = new Creator<Service>() {

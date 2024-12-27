@@ -1,5 +1,6 @@
 package com.team25.event.planner.offering.adapters;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.navigation.NavController;
 
 import com.google.android.material.card.MaterialCardView;
 import com.team25.event.planner.R;
@@ -20,12 +22,14 @@ import java.util.List;
 
 public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
 
-
+    private final String OFFERING_ID = "OFFERING_ID";
     private List<OfferingCard> offeringCards;
+    private NavController _navController;
 
-    public TopOfferingsListAdapter(Context context, List<OfferingCard> events) {
+    public TopOfferingsListAdapter(Context context, List<OfferingCard> events, NavController navController) {
         super(context, R.layout.home_page_top_event, events);
         this.offeringCards = events;
+        this._navController = navController;
     }
 
     @Override
@@ -90,11 +94,16 @@ public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
                 }
             });
 
-
             offerCard.setOnClickListener(v -> {
-                Toast.makeText(getContext(), "Clicked: " + offeringCard.getName() +
-                        ", id: " + offeringCard.getId(), Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putLong(OFFERING_ID, offeringCard.getId());
+                if(offeringCard.isService()){
+                    _navController.navigate(R.id.serviceDetailsFragment, bundle);
+                }else{
+                    ///TO-DO: navController.navigate(R.id.productDetailsFragment, bundle);
+                }
             });
+
         }
 
         return convertView;

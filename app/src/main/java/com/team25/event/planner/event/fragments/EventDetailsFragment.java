@@ -8,6 +8,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -28,7 +35,9 @@ public class EventDetailsFragment extends Fragment {
     private NavController navController;
     private EventDetailsViewModel viewModel;
     private AuthViewModel authViewModel;
-
+    private Long _eventId;
+    private String _invitationCode;
+    private FragmentEventDetailsBinding _binding;
     private final MediatorLiveData<Boolean> isOrganizer = new MediatorLiveData<>(false);
 
     public EventDetailsFragment() {
@@ -38,6 +47,7 @@ public class EventDetailsFragment extends Fragment {
         EventDetailsFragment fragment = new EventDetailsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -149,14 +159,15 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void goToPurchase() {
-        // TODO: Implement
+        Bundle bundle = new Bundle();
+        bundle.putLong(EventArgumentNames.ID_ARG, _eventId);
+        navController.navigate(R.id.eventPurchaseFragment, bundle);
     }
 
     private void goToPurchaseList() {
         // TODO: Implement
     }
 
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         isOrganizer.removeSource(viewModel.event);
@@ -190,5 +201,14 @@ public class EventDetailsFragment extends Fragment {
             );
         }
         return formattedDateTime;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            _eventId = arguments.getLong(EventArgumentNames.ID_ARG);
+        }
     }
 }

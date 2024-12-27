@@ -2,6 +2,7 @@ package com.team25.event.planner.offering.viewmodel;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -16,6 +17,8 @@ import com.team25.event.planner.offering.Api.OfferingApi;
 import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.offering.model.OfferingFilterDTO;
+import com.team25.event.planner.product_service.api.PurchaseApi;
+import com.team25.event.planner.product_service.model.Purchase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,6 +156,28 @@ public class HomeOfferingViewModel extends ViewModel {
         });
     }
 
+    public void getLeftMoneyForBudgetItem(Long eventId, Long categoryId){
+        PurchaseApi purchaseApi = ConnectionParams.purchaseApi;
+        Call<Double> call = purchaseApi.getLeftMoneyFromBudgetItem(eventId, categoryId);
+
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Double> call, @NonNull Response<Double> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    if(response.body()>=0){
+                        offeringFilterDTO.maxPrice.setValue(response.body().toString());
+                    }
+                } else {
+                    Log.e("HomeOfferingViewModel", "Failed to fetch left money");
+                }
+            }
+            @Override
+            public void onFailure(Call<Double> call, Throwable t) {
+                Log.e("HomeOfferingViewModel", "Error fetching left money: " + t.getMessage());
+            }
+        });
+    }
+
 
     public void getNextPage(){
         if(this._currentPage.getValue()+1 < this._totalPage.getValue()){
@@ -180,6 +205,5 @@ public class HomeOfferingViewModel extends ViewModel {
 
     public void restartFilter() {
         this.offeringFilterDTO = new OfferingFilterDTO();
-        this.getAllOfferings();
     }
 }

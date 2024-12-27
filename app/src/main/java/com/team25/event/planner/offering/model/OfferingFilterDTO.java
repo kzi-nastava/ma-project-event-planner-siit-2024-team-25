@@ -49,7 +49,9 @@ public class OfferingFilterDTO {
             query.put("name", this.name.getValue().trim());
         }
         if(this.selectedCategoryType.getValue()!= null){
-            query.put("categoryId", this.selectedCategoryType.getValue().getName());
+            if(this.selectedCategoryType.getValue().getId()!= null){
+                query.put("categoryId", this.selectedCategoryType.getValue().getId());
+            }
         }
         if(this.minPrice.getValue()!= null){
             query.put("minPrice", this.minPrice.getValue());

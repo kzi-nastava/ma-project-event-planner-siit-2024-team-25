@@ -10,7 +10,10 @@
         android:id="@+id/homeFragment"
         android:name="com.team25.event.planner.home.fragments.HomePageBaseFragment"
         android:label="Event Planner"
-        tools:layout="@layout/fragment_home_page_base">
+        tools:layout="@layout/fragment_home_page_base" >
+        <action
+            android:id="@+id/action_homeFragment_to_eventPurchaseFragment"
+            app:destination="@id/eventPurchaseFragment" />
         <action
             android:id="@+id/action_homeFragment_to_eventDetailsFragment"
             app:destination="@id/eventDetailsFragment" />
@@ -209,8 +212,21 @@
         android:id="@+id/eventDetailsFragment"
         android:name="com.team25.event.planner.event.fragments.EventDetailsFragment"
         android:label="fragment_event_details"
-        tools:layout="@layout/fragment_event_details">
+        tools:layout="@layout/fragment_event_details" />
+    <fragment
+        android:id="@+id/eventPurchaseFragment"
+        android:name="com.team25.event.planner.event.fragments.EventPurchaseFragment"
+        android:label="EventPurchaseFragment" >
         <action
+            android:id="@+id/action_eventPurchaseFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.team25.event.planner.product_service.fragments.ServiceDetailsFragment"
+        android:label="fragment_service_details"
+        tools:layout="@layout/fragment_service_details" >
+     <action
             android:id="@+id/action_eventDetailsFragment_to_eventInvitation"
             app:destination="@id/eventInvitation" />
         <action

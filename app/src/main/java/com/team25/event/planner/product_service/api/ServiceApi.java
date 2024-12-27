@@ -1,10 +1,8 @@
 package com.team25.event.planner.product_service.api;
 
 import com.team25.event.planner.core.Page;
-import com.team25.event.planner.event.model.EventCard;
 import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
-import com.team25.event.planner.product_service.dto.ServiceFilterDTO;
-import com.team25.event.planner.product_service.model.Service;
+import com.team25.event.planner.product_service.dto.ServiceCreateResponseDTO;
 import com.team25.event.planner.product_service.model.ServiceCard;
 
 import java.util.Map;
@@ -17,7 +15,6 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface ServiceApi {
@@ -25,10 +22,9 @@ public interface ServiceApi {
     Call<Page<ServiceCard>> getServices(@QueryMap Map<String, String> filters
     );
     @GET("/api/services/{id}")
-    Call<ServiceCreateRequestDTO> getService(@Path("id")Long id);
+    Call<ServiceCreateResponseDTO> getService(@Path("id")Long id);
     @POST("/api/services")
     Call<ResponseBody> createService(@Body ServiceCreateRequestDTO requestDTO);
-
     @PUT("api/services/{id}")
     Call<ResponseBody> updateService(@Path("id")Long id,
                                      @Body ServiceCreateRequestDTO requestDTO);

@@ -58,4 +58,7 @@ public interface EventApi {
 
     @DELETE("/api/events/{eventId}/agenda/{activityId}")
     Call<Void> removeActivity(@Path("eventId") Long eventId, @Path("activityId") Long activityId);
+
+    @GET("/api/events/{eventId}")
+    Call<Event> getEvent(@Path("eventId") Long eventId);
 }

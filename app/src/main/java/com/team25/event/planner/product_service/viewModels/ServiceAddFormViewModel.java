@@ -15,6 +15,7 @@ import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.product_service.api.ServiceApi;
 import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
+import com.team25.event.planner.product_service.dto.ServiceCreateResponseDTO;
 import com.team25.event.planner.product_service.enums.ReservationType;
 import com.team25.event.planner.product_service.model.Offering;
 import com.team25.event.planner.product_service.model.Service;
@@ -263,9 +264,9 @@ public class ServiceAddFormViewModel extends ViewModel {
     }
 
     public void fetchService(Long idService) {
-        serviceApi.getService(idService).enqueue(new Callback<ServiceCreateRequestDTO>() {
+        serviceApi.getService(idService).enqueue(new Callback<ServiceCreateResponseDTO>() {
             @Override
-            public void onResponse(Call<ServiceCreateRequestDTO> call, Response<ServiceCreateRequestDTO> response) {
+            public void onResponse(Call<ServiceCreateResponseDTO> call, Response<ServiceCreateResponseDTO> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     serviceId.postValue(idService);
                     fillTheForm(response.body());
@@ -275,7 +276,7 @@ public class ServiceAddFormViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<ServiceCreateRequestDTO> call, Throwable t) {
+            public void onFailure(Call<ServiceCreateResponseDTO> call, Throwable t) {
 
             }
         });
@@ -331,7 +332,7 @@ public class ServiceAddFormViewModel extends ViewModel {
 
     }
 
-    public void fillTheForm(ServiceCreateRequestDTO service) {
+    public void fillTheForm(ServiceCreateResponseDTO service) {
         fetchFullService(service);
 
         name.setValue(service.getName());
@@ -352,7 +353,7 @@ public class ServiceAddFormViewModel extends ViewModel {
 
         syncFront();
     }
-    private void fetchFullService(ServiceCreateRequestDTO dto) {
+    private void fetchFullService(ServiceCreateResponseDTO dto) {
         List<Call<EventType>> eventTypeCalls = new ArrayList<>();
         for (Long eventTypeId : dto.getEventTypesIDs()) {
             eventTypeCalls.add(eventTypeApi.getEventType(eventTypeId)); // API poziv za EventType

@@ -3,6 +3,8 @@ package com.team25.event.planner.offering.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.ListFragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,14 +21,16 @@ import java.util.ArrayList;
 public class HomeOfferingsListFragment extends ListFragment {
     private HomeOfferingListAdapter adapter;
     private HomeOfferingViewModel _homeOfferingViewModel;
+    private Long _eventId;
 
-    private HomeOfferingsListFragment(HomeOfferingViewModel homeOfferingViewModel) {
+    private HomeOfferingsListFragment(HomeOfferingViewModel homeOfferingViewModel, Long eventId) {
         this._homeOfferingViewModel = homeOfferingViewModel;
+        this._eventId = eventId;
     }
 
 
-    public static HomeOfferingsListFragment newInstance(HomeOfferingViewModel homeOfferingViewModel) {
-        return new HomeOfferingsListFragment(homeOfferingViewModel);
+    public static HomeOfferingsListFragment newInstance(HomeOfferingViewModel homeOfferingViewModel, Long eventId) {
+        return new HomeOfferingsListFragment(homeOfferingViewModel,eventId);
     }
 
     @Override
@@ -39,10 +43,10 @@ public class HomeOfferingsListFragment extends ListFragment {
                              Bundle savedInstanceState) {
 
         _homeOfferingViewModel.allOfferings.observe(getViewLifecycleOwner(), (offerings -> {
-            adapter = new HomeOfferingListAdapter(getActivity(), offerings);
+            NavController navController = Navigation.findNavController(requireView());
+            adapter = new HomeOfferingListAdapter(getActivity(), offerings, navController, this._eventId);
             setListAdapter(adapter);
         }));
-        _homeOfferingViewModel.getAllOfferings();
         return inflater.inflate(R.layout.fragment_home_offerings_list, container, false);
     }
 }

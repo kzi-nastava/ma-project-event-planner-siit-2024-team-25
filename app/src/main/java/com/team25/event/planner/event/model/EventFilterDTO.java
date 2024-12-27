@@ -71,7 +71,7 @@ public class EventFilterDTO {
             String formattedTime = this.selectedEndTime.getValue().format(DateTimeFormatter.ISO_TIME);
             query.put("endTime", formattedTime);
         }
-        if(this.selectedEventType.getValue()!= null){
+        if(this.selectedEventType.getValue()!= null && this.selectedEventType.getValue().getId() != null){
             query.put("eventTypeId", this.selectedEventType.getValue().id.toString());
         }
 

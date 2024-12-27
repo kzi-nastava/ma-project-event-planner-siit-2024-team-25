@@ -27,9 +27,12 @@ public class HomeOfferingsFragment extends Fragment {
 
     private HomeOfferingViewModel homeOfferingViewModel;
     private FragmentHomeOfferingsBinding binding;
+    private Long _eventId;
 
-    public HomeOfferingsFragment(HomeOfferingViewModel homeOfferingViewModel){
+    public HomeOfferingsFragment(HomeOfferingViewModel homeOfferingViewModel, Long eventId){
         this.homeOfferingViewModel = homeOfferingViewModel;
+        this._eventId = eventId;
+
     }
 
     @Override
@@ -52,7 +55,7 @@ public class HomeOfferingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        FragmentTransition.toRight(HomeOfferingsListFragment.newInstance(homeOfferingViewModel), requireActivity(), false, binding.offeringsContainer.getId());
+        FragmentTransition.toRight(HomeOfferingsListFragment.newInstance(homeOfferingViewModel, this._eventId), requireActivity(), false, binding.offeringsContainer.getId());
     }
 
     @Override
