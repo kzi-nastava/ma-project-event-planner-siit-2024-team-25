@@ -87,7 +87,7 @@ public class EventPurchaseFragment extends Fragment {
     }
 
     private void productsButtonClick() {
-        FragmentTransition.toLeft(new HomeOfferingsFragment(_homeOfferingViewModel,this._eventId), requireActivity(), false, _binding.homeContainer.getId());
+        FragmentTransition.toLeft(new ProductPurchaseListFragment(), requireActivity(), false, _binding.homeContainer.getId());
 
         setOfferingFilterDialog(this.PRODUCTS);
         setOfferingSortDialog();
