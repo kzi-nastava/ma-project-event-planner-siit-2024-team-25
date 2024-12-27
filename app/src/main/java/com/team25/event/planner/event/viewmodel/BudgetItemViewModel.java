@@ -69,9 +69,9 @@ public class BudgetItemViewModel extends ViewModel {
 
     public final MutableLiveData<String> budgetString = new MutableLiveData<>();
     public final MutableLiveData<Double> budget = new MutableLiveData<>();
-    public final MutableLiveData<Long> eventId = new MutableLiveData<>(2L);
-    public final MutableLiveData<String> eventName = new MutableLiveData<>("MyEvent`s budget plan");
-    public final MutableLiveData<Long> eventTypeId = new MutableLiveData<>(2L);
+    public final MutableLiveData<Long> eventId = new MutableLiveData<>();
+    public final MutableLiveData<String> eventName = new MutableLiveData<>();
+    public final MutableLiveData<Long> eventTypeId = new MutableLiveData<>();
 
     public final MutableLiveData<Long> offeringCategoryId = new MutableLiveData<>();
     private final MutableLiveData<List<OfferingCategory>> _allCategories = new MutableLiveData<>(new ArrayList<>());

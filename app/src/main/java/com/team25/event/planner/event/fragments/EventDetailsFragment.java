@@ -154,8 +154,8 @@ public class EventDetailsFragment extends Fragment {
         Bundle args = new Bundle();
         args.putLong(EventArgumentNames.ID_ARG, event.getId());
         args.putString(EventArgumentNames.NAME_ARG, event.getName());
-        // TODO: add budget planning and uncomment
-//        navController.navigate(R.id.action_eventDetailsFragment_to_budgetPlanFragment, args);
+        args.putLong(EventArgumentNames.EVENT_TYPE_ID, event.getEventType().id);
+        navController.navigate(R.id.action_eventDetailsFragment_to_budgetItemFragment, args);
     }
 
     private void goToPurchase() {
