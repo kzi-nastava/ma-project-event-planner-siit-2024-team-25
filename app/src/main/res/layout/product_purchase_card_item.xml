@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.team25.event.planner.event.viewmodel.PurchaseViewModel" />
+    </data>
 
     <com.google.android.material.card.MaterialCardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80sp"
         android:orientation="horizontal"
         android:layout_marginVertical="8dp"
         app:strokeWidth="1dp"
@@ -27,7 +30,7 @@
             <Button
                 android:id="@+id/buyProductButton"
                 android:layout_width="80dp"
-                android:layout_height="68dp"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="5dp"
                 android:background="@color/primary"
                 android:text="BUY"
@@ -73,6 +76,7 @@
                     android:layout_alignParentLeft="true"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
+                    android:layout_marginBottom="8sp"
                     android:textStyle="italic"
                     android:paddingLeft="10dp"/>
 
@@ -84,21 +88,34 @@
                     android:contentDescription="Offering image"
                     android:layout_toRightOf="@id/product_rating"
                     android:scaleType="fitStart"
+                    android:layout_marginBottom="8sp"
+                    android:src="@drawable/ic_star"
                     />
 
+
+                <ImageView
+                    android:id="@+id/eur"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/money"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/product_owner_name"
+                    android:layout_marginBottom="8sp"
+                    android:paddingRight="10dp"/>
                 <TextView
                     android:id="@+id/home_offering_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/product_owner_name"
-                    android:layout_alignParentRight="true"
+                    android:layout_toLeftOf="@id/eur"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
                     android:textStyle="italic"
-                    android:paddingRight="10dp"/>
+                    android:layout_marginBottom="8sp"
+                    />
             </RelativeLayout>
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
-</LinearLayout>
+</layout>
