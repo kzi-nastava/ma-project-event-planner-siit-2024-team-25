@@ -3,6 +3,8 @@ package com.team25.event.planner;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.se.omapi.Session;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,10 +30,17 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
+import com.team25.event.planner.communication.model.NotificationCategory;
+import com.team25.event.planner.communication.viewmodel.NotificationViewModel;
+import com.team25.event.planner.communication.viewmodel.NotificationWebSocket;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.SharedPrefService;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.ActivityMainBinding;
+import com.team25.event.planner.event.fragments.EventArgumentNames;
+import com.team25.event.planner.user.model.UserRole;
+
+import java.net.URI;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private AuthViewModel authViewModel;
 
+    private NotificationWebSocket _notificationWebSocket;
+    private NotificationViewModel _notificationViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,8 +103,19 @@ public class MainActivity extends AppCompatActivity {
         SharedPrefService sharedPrefService = new SharedPrefService(this);
         authViewModel.initialize(sharedPrefService);
 
+        _notificationViewModel = new NotificationViewModel(this);
+
         setupNavigationView();
         setupAuthInterceptor();
+        openWebSocket();
+    }
+
+    private void openWebSocket(){
+        this.authViewModel.user.observe(this,user -> {
+            if(user != null){
+                _notificationViewModel.connectToSocket(user);
+            }
+        });
     }
 
     private void handleIntent(Intent intent) {
@@ -118,6 +140,30 @@ public class MainActivity extends AppCompatActivity {
                     bundle.putLong("eventId", eventId);
 
                     navController.navigate(R.id.loginFragment, bundle);
+                }
+            }
+        }else if(intent != null){
+            Bundle data = intent.getExtras();
+            if(data != null){
+                NotificationCategory notificationCategory = (NotificationCategory) data.get("notification_category");
+                UserRole userRole = (UserRole) data.get("user_role");
+                Long entityId = data.getLong(EventArgumentNames.ID_ARG);
+                Bundle bundle = new Bundle();
+                if(notificationCategory == NotificationCategory.OFFERING_CATEGORY){
+                    if(userRole == UserRole.ADMINISTRATOR){
+                        navController.navigate(R.id.offeringCategoryFragment);
+                    }else{
+                        navController.navigate(R.id.ownerHomePage);
+                    }
+                }else if(notificationCategory == NotificationCategory.EVENT){
+                    bundle.putLong(EventArgumentNames.ID_ARG, entityId);
+                    navController.navigate(R.id.eventDetailsFragment, bundle);
+                }else if(notificationCategory == NotificationCategory.PRODUCT){
+//                    bundle.putLong(EventArgumentNames.ID_ARG, entityId);
+//                    navController.navigate(R.id.productDetailsFragment, bundle);
+                }else if(notificationCategory == NotificationCategory.SERVICE){
+                    bundle.putLong("OFFERING_ID", entityId);
+                    navController.navigate(R.id.serviceDetailsFragment, bundle);
                 }
             }
         }
@@ -234,5 +280,10 @@ public class MainActivity extends AppCompatActivity {
             navController.popBackStack(R.id.homeFragment, false);
             navController.navigate(R.id.loginFragment);
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
