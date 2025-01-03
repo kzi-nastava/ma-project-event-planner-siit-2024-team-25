@@ -56,7 +56,7 @@ public class CreateEditBudgetItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentCreateEditBudgetItemBinding.inflate(inflater,container,false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
-        viewModel = new ViewModelProvider(this).get(BudgetItemViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(BudgetItemViewModel.class);
         binding.setViewModel(viewModel);
         navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
 

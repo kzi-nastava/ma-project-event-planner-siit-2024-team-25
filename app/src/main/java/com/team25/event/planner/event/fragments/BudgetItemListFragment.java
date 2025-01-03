@@ -50,9 +50,16 @@ public class BudgetItemListFragment extends Fragment implements OnEditButtonClic
                              Bundle savedInstanceState) {
         binding = FragmentBudgetItemListBinding.inflate(inflater,container,false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
-        viewModel = new ViewModelProvider(this).get(BudgetItemViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(BudgetItemViewModel.class);
         binding.setViewModel(viewModel);
         navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
+        if(getArguments()!= null){
+            viewModel.eventId.postValue(getArguments().getLong(EventArgumentNames.ID_ARG));
+            viewModel.eventTypeId.postValue(getArguments().getLong(EventArgumentNames.EVENT_TYPE_ID));
+            viewModel.eventName.postValue(getArguments().getString(EventArgumentNames.NAME_ARG) + "`s budget plan");
+        }else{
+            Toast.makeText(requireContext(), "Event problem", Toast.LENGTH_SHORT).show();
+        }
         return binding.getRoot();
     }
 

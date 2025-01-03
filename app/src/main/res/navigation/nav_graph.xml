@@ -157,6 +157,9 @@
         <action
             android:id="@+id/action_budgetItemFragment_to_createEditBudgetItemFragment"
             app:destination="@id/createEditBudgetItemFragment" />
+        <action
+            android:id="@+id/action_budgetItemFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/createEditBudgetItemFragment"
@@ -212,7 +215,11 @@
         android:id="@+id/eventDetailsFragment"
         android:name="com.team25.event.planner.event.fragments.EventDetailsFragment"
         android:label="fragment_event_details"
-        tools:layout="@layout/fragment_event_details" />
+        tools:layout="@layout/fragment_event_details" >
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_budgetItemFragment"
+            app:destination="@id/budgetItemFragment" />
+    </fragment>
     <fragment
         android:id="@+id/eventPurchaseFragment"
         android:name="com.team25.event.planner.event.fragments.EventPurchaseFragment"

@@ -1,5 +1,8 @@
 package com.team25.event.planner.product_service.api;
 
+import com.team25.event.planner.offering.model.ProductCard;
+import com.team25.event.planner.offering.model.ProductPurchaseRequestDTO;
+import com.team25.event.planner.offering.model.ProductPurchaseResponseDTO;
 import com.team25.event.planner.product_service.dto.ServicePurchaseRequestDTO;
 import com.team25.event.planner.product_service.dto.ServicePurchaseResponseDTO;
 import com.team25.event.planner.product_service.model.Service;
@@ -21,6 +24,10 @@ public interface PurchaseApi {
     Call<ServicePurchaseResponseDTO> bookService(@Path(value = "eventId") Long eventId,
                                                  @Path(value = "serviceId") Long serviceId,
                                                  @Body ServicePurchaseRequestDTO purchase);
+
+    @POST("api/purchase/events/{eventId}/products")
+    Call<ProductPurchaseResponseDTO> purchaseProduct(@Path("eventId")Long eventId,
+                                                     @Body ProductPurchaseRequestDTO requestDTO);
 
     @GET("/api/purchase/service/{serviceId}/available")
     Call<Boolean> isServiceAvailable(@Path(value = "serviceId") Long serviceId,

@@ -2,6 +2,7 @@ package com.team25.event.planner.offering.Api;
 
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.offering.model.OfferingCard;
+import com.team25.event.planner.offering.model.ProductCard;
 import com.team25.event.planner.offering.model.SubmittedOfferingCategory;
 import java.util.Map;
 import java.util.List;
@@ -32,6 +33,11 @@ public interface OfferingApi {
             @QueryMap Map<String, Object> filter
     );
 
+    @GET("/api/products/all")
+    Call<Page<ProductCard>> getProductsPurchase(
+            @Query("page") int page,
+            @QueryMap Map<String, Object> filter
+    );
     @GET("/api/services/all")
     Call<Page<OfferingCard>> getAllServices(
             @Query("page") int page,

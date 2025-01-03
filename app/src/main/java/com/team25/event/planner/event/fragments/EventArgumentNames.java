@@ -6,4 +6,5 @@ public class EventArgumentNames {
     public static final String INVITATION_CODE_ARG = "invitationCode";
     public static final String IS_ORGANIZER_ARG = "isOrganizer";
     public static final String CAME_FROM_DETAILS_ARG = "navigatedFromDetailsPage";
+    public static final String EVENT_TYPE_ID = "eventTypeId";
 }
