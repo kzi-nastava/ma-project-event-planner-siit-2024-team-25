@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private AppBarConfiguration appBarConfiguration;
     private AuthViewModel authViewModel;
-
-    private NotificationWebSocket _notificationWebSocket;
     private NotificationViewModel _notificationViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

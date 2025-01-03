@@ -240,4 +240,9 @@
         android:id="@+id/mapFragment"
         android:name="com.team25.event.planner.core.fragments.MapFragment"
         android:label="MapFragment" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.team25.event.planner.communication.fragments.NotificationFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notification" />
 </navigation>

@@ -39,21 +39,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class NotificationViewModel extends ViewModel {
-
     private FragmentActivity _fragmentActivity;
     private NotificationWebSocket _notificationWebSocket;
-    private NavController navController;
 
     public NotificationViewModel(FragmentActivity fragmentActivity){
         this._fragmentActivity = fragmentActivity;
     }
-    private final MutableLiveData<List<Notification>> _notifications = new MutableLiveData<>();
-    public LiveData<List<Notification>> notifications = _notifications;
-
-    private final MutableLiveData<Integer> _currentPage = new MutableLiveData<>();
-    public LiveData<Integer> currentPage = _currentPage;
     private UserRole _currentUserRole;
-
 
     @SuppressLint("CheckResult")
     public void connectToSocket(User currentUser) {

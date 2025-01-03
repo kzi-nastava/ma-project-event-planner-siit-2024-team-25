@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.team25.event.planner.BuildConfig;
 
+import com.team25.event.planner.communication.api.NotificationApi;
 import com.team25.event.planner.event.api.BudgetItemApi;
 
 import com.team25.event.planner.core.api.serialization.LocalDateAdapter;
@@ -56,6 +57,8 @@ public class ConnectionParams {
 
     public static PurchaseApi purchaseApi;
 
+    public static NotificationApi notificationApi;
+
 
     public static void setup(String jwt, AuthInterceptor.LogoutHandler logoutHandler) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -81,6 +84,7 @@ public class ConnectionParams {
         offeringCategoryApi = retrofit.create(OfferingCategoryApi.class);
         purchaseApi = retrofit.create(PurchaseApi.class);
         budgetItemApi = retrofit.create(BudgetItemApi.class);
+        notificationApi = retrofit.create(NotificationApi.class);
     }
 
 }
