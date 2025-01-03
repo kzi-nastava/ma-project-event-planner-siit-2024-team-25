@@ -22,6 +22,7 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -30,7 +31,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
+import com.team25.event.planner.communication.model.Notification;
 import com.team25.event.planner.communication.model.NotificationCategory;
+import com.team25.event.planner.communication.viewmodel.MyNotificationViewModel;
 import com.team25.event.planner.communication.viewmodel.NotificationViewModel;
 import com.team25.event.planner.communication.viewmodel.NotificationWebSocket;
 import com.team25.event.planner.core.ConnectionParams;
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private AuthViewModel authViewModel;
     private NotificationViewModel _notificationViewModel;
+
+    private MyNotificationViewModel _myNotificationViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         authViewModel.initialize(sharedPrefService);
 
         _notificationViewModel = new NotificationViewModel(this);
+        _myNotificationViewModel = new MyNotificationViewModel();
 
         setupNavigationView();
         setupAuthInterceptor();
@@ -143,26 +149,29 @@ public class MainActivity extends AppCompatActivity {
         }else if(intent != null){
             Bundle data = intent.getExtras();
             if(data != null){
-                NotificationCategory notificationCategory = (NotificationCategory) data.get("notification_category");
+                Notification notification = (Notification) data.get("notification");
+                NotificationCategory notificationCategory = notification.getNotificationCategory();
                 UserRole userRole = (UserRole) data.get("user_role");
-                Long entityId = data.getLong(EventArgumentNames.ID_ARG);
                 Bundle bundle = new Bundle();
-                if(notificationCategory == NotificationCategory.OFFERING_CATEGORY){
-                    if(userRole == UserRole.ADMINISTRATOR){
-                        navController.navigate(R.id.offeringCategoryFragment);
-                    }else{
-                        navController.navigate(R.id.ownerHomePage);
-                    }
-                }else if(notificationCategory == NotificationCategory.EVENT){
-                    bundle.putLong(EventArgumentNames.ID_ARG, entityId);
-                    navController.navigate(R.id.eventDetailsFragment, bundle);
-                }else if(notificationCategory == NotificationCategory.PRODUCT){
+                _myNotificationViewModel.notification.observe(this, currentNotification ->{
+                    if(notificationCategory == NotificationCategory.OFFERING_CATEGORY){
+                        if(userRole == UserRole.ADMINISTRATOR){
+                            navController.navigate(R.id.offeringCategoryFragment);
+                        }else{
+                            navController.navigate(R.id.ownerHomePage);
+                        }
+                    }else if(notificationCategory == NotificationCategory.EVENT){
+                        bundle.putLong(EventArgumentNames.ID_ARG, notification.getEntityId());
+                        navController.navigate(R.id.eventDetailsFragment, bundle);
+                    }else if(notificationCategory == NotificationCategory.PRODUCT){
 //                    bundle.putLong(EventArgumentNames.ID_ARG, entityId);
 //                    navController.navigate(R.id.productDetailsFragment, bundle);
-                }else if(notificationCategory == NotificationCategory.SERVICE){
-                    bundle.putLong("OFFERING_ID", entityId);
-                    navController.navigate(R.id.serviceDetailsFragment, bundle);
-                }
+                    }else if(notificationCategory == NotificationCategory.SERVICE){
+                        bundle.putLong("OFFERING_ID", notification.getEntityId());
+                        navController.navigate(R.id.serviceDetailsFragment, bundle);
+                    }
+                });
+                _myNotificationViewModel.updateNotification(notification);
             }
         }
     }

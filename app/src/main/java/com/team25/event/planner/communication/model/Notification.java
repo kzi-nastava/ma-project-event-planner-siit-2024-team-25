@@ -1,5 +1,6 @@
 package com.team25.event.planner.communication.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notification {
+public class Notification implements Serializable {
     private Long id;
     private String title;
     private String message;

@@ -96,20 +96,15 @@ public class NotificationViewModel extends ViewModel {
     @NonNull
     private Intent getIntent(Notification notification) {
         Intent intent = new Intent(_fragmentActivity, _fragmentActivity.getClass());
-        intent.putExtra("notification_category", NotificationCategory.EVENT);
         if(notification.getNotificationCategory().equals(NotificationCategory.OFFERING_CATEGORY)){
             intent = new Intent(_fragmentActivity, _fragmentActivity.getClass());
-            intent.putExtra("notification_category", NotificationCategory.OFFERING_CATEGORY);
         }else if(notification.getNotificationCategory().equals(NotificationCategory.PRODUCT)){
             intent = new Intent(_fragmentActivity, _fragmentActivity.getClass());
-            intent.putExtra("notification_category", NotificationCategory.PRODUCT);
         }else if(notification.getNotificationCategory().equals(NotificationCategory.SERVICE)){
             intent = new Intent(_fragmentActivity, _fragmentActivity.getClass());
-            intent.putExtra("notification_category", NotificationCategory.SERVICE);
-
         }
 
-        intent.putExtra(EventArgumentNames.ID_ARG, notification.getEntityId());
+        intent.putExtra("notification", notification);
         intent.putExtra("user_role", _currentUserRole);
 
         return intent;
