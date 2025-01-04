@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserReportRequest {
-    private Long userId;
+    private Long reportedUserId;
     private String reportMessage;
 }

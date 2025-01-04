@@ -27,7 +27,8 @@ public class UserReportViewModel extends ViewModel {
     public final LiveData<String> serverError = _serverError;
 
     public void reportUser(){
-        _userReportApi.reportUser(this._reportedUserId, this._currentReport.getValue()).enqueue(new ResponseCallback<>(
+        this._currentReport.getValue().setReportedUserId(this._reportedUserId);
+        _userReportApi.reportUser(this._currentReport.getValue()).enqueue(new ResponseCallback<>(
                 (report) -> {
                     _isReportSend.postValue(true);
                 },
