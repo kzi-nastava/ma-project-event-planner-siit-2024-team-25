@@ -83,7 +83,7 @@ public class NotificationViewModel extends ViewModel {
         );
 
         android.app.Notification.Builder builder = new android.app.Notification.Builder(_fragmentActivity, "notifications_channel")
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(notification.getTitle())
                 .setContentText(notification.getMessage())
                 .setAutoCancel(true)

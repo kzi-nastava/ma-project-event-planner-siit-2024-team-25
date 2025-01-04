@@ -150,10 +150,13 @@ public class MainActivity extends AppCompatActivity {
             Bundle data = intent.getExtras();
             if(data != null){
                 Notification notification = (Notification) data.get("notification");
+
+                notification.setIsViewed(true);
+                _myNotificationViewModel.updateNotification(notification);
+
                 NotificationCategory notificationCategory = notification.getNotificationCategory();
                 UserRole userRole = (UserRole) data.get("user_role");
                 Bundle bundle = new Bundle();
-                _myNotificationViewModel.notification.observe(this, currentNotification ->{
                     if(notificationCategory == NotificationCategory.OFFERING_CATEGORY){
                         if(userRole == UserRole.ADMINISTRATOR){
                             navController.navigate(R.id.offeringCategoryFragment);
@@ -170,8 +173,6 @@ public class MainActivity extends AppCompatActivity {
                         bundle.putLong("OFFERING_ID", notification.getEntityId());
                         navController.navigate(R.id.serviceDetailsFragment, bundle);
                     }
-                });
-                _myNotificationViewModel.updateNotification(notification);
             }
         }
     }

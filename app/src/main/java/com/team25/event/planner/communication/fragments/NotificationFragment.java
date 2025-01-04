@@ -19,14 +19,17 @@ import android.widget.Toast;
 import com.team25.event.planner.R;
 import com.team25.event.planner.communication.adapters.NotificationsListAdapter;
 import com.team25.event.planner.communication.model.Notification;
+import com.team25.event.planner.communication.model.NotificationCategory;
 import com.team25.event.planner.communication.viewmodel.MyNotificationViewModel;
 import com.team25.event.planner.communication.viewmodel.NotificationViewModel;
+import com.team25.event.planner.core.SharedPrefService;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentNotificationBinding;
 import com.team25.event.planner.event.adapters.HomeEventListAdapter;
 import com.team25.event.planner.event.adapters.MyEventAdapter;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.viewmodel.MyEventsViewModel;
+import com.team25.event.planner.user.model.UserRole;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -62,6 +65,8 @@ public class NotificationFragment extends Fragment {
         _binding.setLifecycleOwner(getViewLifecycleOwner());
         _notificationViewModel = new ViewModelProvider(this).get(MyNotificationViewModel.class);
         _authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        SharedPrefService sharedPrefService = new SharedPrefService(getActivity());
+        _authViewModel.initialize(sharedPrefService);
         _navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 
         setupNotificationList();
@@ -76,9 +81,33 @@ public class NotificationFragment extends Fragment {
         _adapter = new NotificationsListAdapter(new ArrayList<>(), new NotificationsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Notification notification) {
-                Bundle bundle = new Bundle();
-                bundle.putLong(EventArgumentNames.ID_ARG, notification.getId());
-                // _navController.navigate(R.id.action_myEventsFragment_to_eventDetailsFragment, bundle);
+                _authViewModel.user.observe(getViewLifecycleOwner(),user -> {
+                    if(user != null){
+                        NotificationCategory notificationCategory = notification.getNotificationCategory();
+                        UserRole userRole = user.getUserRole();
+                        Bundle bundle = new Bundle();
+                        _notificationViewModel.notification.observe(getViewLifecycleOwner(), currentNotification ->{
+                            if(notificationCategory == NotificationCategory.OFFERING_CATEGORY){
+                                if(userRole == UserRole.ADMINISTRATOR){
+                                    _navController.navigate(R.id.offeringCategoryFragment);
+                                }else{
+                                    _navController.navigate(R.id.ownerHomePage);
+                                }
+                            }else if(notificationCategory == NotificationCategory.EVENT){
+                                bundle.putLong(EventArgumentNames.ID_ARG, notification.getEntityId());
+                                _navController.navigate(R.id.eventDetailsFragment, bundle);
+                            }else if(notificationCategory == NotificationCategory.PRODUCT){
+//                    bundle.putLong(EventArgumentNames.ID_ARG, entityId);
+//                    navController.navigate(R.id.productDetailsFragment, bundle);
+                            }else if(notificationCategory == NotificationCategory.SERVICE){
+                                bundle.putLong("OFFERING_ID", notification.getEntityId());
+                                _navController.navigate(R.id.serviceDetailsFragment, bundle);
+                            }
+                        });
+                        notification.setIsViewed(true);
+                        _notificationViewModel.updateNotification(notification);
+                    }
+                });
             }
 
             @Override
