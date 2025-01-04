@@ -19,6 +19,7 @@ import com.team25.event.planner.product_service.api.PurchaseApi;
 import com.team25.event.planner.product_service.api.ServiceApi;
 import com.team25.event.planner.user.api.LoginApi;
 import com.team25.event.planner.user.api.UserApi;
+import com.team25.event.planner.user.api.UserReportApi;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -53,8 +54,9 @@ public class ConnectionParams {
 
     public static OfferingCategoryApi offeringCategoryApi;
     public static BudgetItemApi budgetItemApi;
-
     public static PurchaseApi purchaseApi;
+    public static UserReportApi userReportApi;
+
 
 
     public static void setup(String jwt, AuthInterceptor.LogoutHandler logoutHandler) {
@@ -81,6 +83,7 @@ public class ConnectionParams {
         offeringCategoryApi = retrofit.create(OfferingCategoryApi.class);
         purchaseApi = retrofit.create(PurchaseApi.class);
         budgetItemApi = retrofit.create(BudgetItemApi.class);
+        userReportApi = retrofit.create(UserReportApi.class);
     }
 
 }
