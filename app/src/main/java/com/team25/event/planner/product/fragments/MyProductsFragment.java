@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,7 +29,6 @@ import java.util.ArrayList;
 public class MyProductsFragment extends Fragment {
     private FragmentMyProductsBinding binding;
     private MyProductsViewModel viewModel;
-    private AuthViewModel authViewModel;
     private NavController navController;
     private MyProductsAdapter productsAdapter;
 
@@ -38,7 +38,7 @@ public class MyProductsFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         viewModel = new ViewModelProvider(this).get(MyProductsViewModel.class);
-        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 
@@ -129,6 +129,29 @@ public class MyProductsFragment extends Fragment {
     }
 
     private void setupListeners() {
+        binding.searchBox.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                viewModel.productFilter.name.setValue(query);
+                reloadProducts();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    viewModel.productFilter.name.setValue(null);
+                    reloadProducts();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        binding.filterButton.setOnClickListener(v -> {
+            // TODO: Implement action to open additional filters
+        });
+
         binding.createProductButton.setOnClickListener(v -> {
             // TODO: navigate to product form fragment
         });

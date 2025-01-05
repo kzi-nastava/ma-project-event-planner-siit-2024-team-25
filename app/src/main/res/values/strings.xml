@@ -145,4 +145,6 @@
     <string name="star">star</string>
     <string name="my_products">My Products</string>
     <string name="my_services">My Services</string>
+    <string name="filter_products">Filter products</string>
+    <string name="search_products">Search products</string>
 </resources>

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -10,16 +9,48 @@
             type="com.team25.event.planner.product.viewmodel.MyProductsViewModel" />
     </data>
 
-    <FrameLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurface"
+            android:elevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/searchBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:queryHint="@string/search_products" />
+
+                <ImageButton
+                    android:id="@+id/filterButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/filter_products"
+                    android:src="@drawable/filter_icon" />
+            </LinearLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewProducts"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/item_my_product" />
 
         <com.airbnb.lottie.LottieAnimationView
@@ -29,22 +60,22 @@
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="16dp"
             app:lottie_autoPlay="true"
+            app:lottie_colorFilter="?attr/colorPrimary"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/loading_animation"
-            app:lottie_colorFilter="?attr/colorPrimary" />
+            app:lottie_rawRes="@raw/loading_animation" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/createProductButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/create_new_product"
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:backgroundTint="@color/white"
-            android:theme="@style/Base.Theme.EventPlanner"
             android:clickable="true"
-            android:src="@drawable/ic_add" />
+            android:contentDescription="@string/create_new_product"
+            android:src="@drawable/ic_add"
+            android:theme="@style/Base.Theme.EventPlanner" />
 
-    </FrameLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
