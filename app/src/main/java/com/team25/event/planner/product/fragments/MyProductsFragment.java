@@ -51,6 +51,9 @@ public class MyProductsFragment extends Fragment {
             viewModel.loadNextPage();
         });
 
+        viewModel.loadEventTypes();
+        viewModel.loadOfferingCategories();
+
         return binding.getRoot();
     }
 
@@ -149,7 +152,8 @@ public class MyProductsFragment extends Fragment {
         });
 
         binding.filterButton.setOnClickListener(v -> {
-            // TODO: Implement action to open additional filters
+            ProductFilterFragment filterBottomSheet = new ProductFilterFragment(viewModel, this::reloadProducts);
+            filterBottomSheet.show(getParentFragmentManager(), "ProductFilterFragment");
         });
 
         binding.createProductButton.setOnClickListener(v -> {
