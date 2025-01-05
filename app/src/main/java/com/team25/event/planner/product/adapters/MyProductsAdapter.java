@@ -75,4 +75,10 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
         products.addAll(newProducts);
         notifyItemRangeInserted(oldSize, newProducts.size());
     }
+
+    public void clearProducts() {
+        int oldSize = products.size();
+        products.clear();
+        notifyItemRangeRemoved(0, oldSize);
+    }
 }

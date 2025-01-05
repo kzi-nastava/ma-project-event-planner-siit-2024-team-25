@@ -6,6 +6,7 @@ import com.team25.event.planner.offering.model.OfferingCard;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -18,4 +19,7 @@ public interface ProductApi {
             @Query("page") int page,
             @QueryMap Map<String, Object> filters
     );
+
+    @DELETE("/api/products/{productId}")
+    Call<Void> deleteProduct(@Path("productId") Long productId);
 }

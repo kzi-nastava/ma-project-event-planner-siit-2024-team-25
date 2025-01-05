@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.team25.event.planner.core.ConnectionParams;
+import com.team25.event.planner.core.api.ResponseCallback;
 import com.team25.event.planner.core.api.SideEffectResponseCallback;
 import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.product.api.ProductApi;
@@ -67,5 +68,12 @@ public class MyProductsViewModel extends ViewModel {
 
     public boolean isLoading() {
         return isLoading.getValue() == null || isLoading.getValue();
+    }
+
+    public void deleteProduct(Long productId) {
+        productApi.deleteProduct(productId).enqueue(new ResponseCallback<>(
+                ignored -> reload(),
+                _serverError, "MyProductsViewModel"
+        ));
     }
 }

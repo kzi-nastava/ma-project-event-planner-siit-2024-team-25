@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentMyProductsBinding;
+import com.team25.event.planner.offering.dialogs.YesOrNoDialogFragment;
+import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.product.adapters.MyProductsAdapter;
 import com.team25.event.planner.product.viewmodel.MyProductsViewModel;
 
@@ -28,6 +30,7 @@ public class MyProductsFragment extends Fragment {
     private MyProductsViewModel viewModel;
     private AuthViewModel authViewModel;
     private NavController navController;
+    private MyProductsAdapter productsAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,15 +55,15 @@ public class MyProductsFragment extends Fragment {
     }
 
     private void setupProductList() {
-        MyProductsAdapter adapter = new MyProductsAdapter(
+        productsAdapter = new MyProductsAdapter(
                 new ArrayList<>(),
                 product -> { /* TODO: navigate to product details fragment */ },
                 product -> { /* TODO: navigate to product form fragment */ },
-                product -> { /* TODO: show delete confirmation modal */ }
+                this::openDeleteDialog
         );
-        binding.recyclerViewProducts.setAdapter(adapter);
+        binding.recyclerViewProducts.setAdapter(productsAdapter);
 
-        viewModel.products.observe(getViewLifecycleOwner(), adapter::addProducts);
+        viewModel.products.observe(getViewLifecycleOwner(), productsAdapter::addProducts);
 
         binding.recyclerViewProducts.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -82,6 +85,31 @@ public class MyProductsFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void reloadProducts() {
+        productsAdapter.clearProducts();
+        viewModel.reload();
+    }
+
+    private void openDeleteDialog(OfferingCard product) {
+        YesOrNoDialogFragment dialog = new YesOrNoDialogFragment(new YesOrNoDialogFragment.ConfirmDialogListener() {
+            @Override
+            public void onConfirm() {
+                viewModel.deleteProduct(product.getId());
+            }
+
+            @Override
+            public void onCancel() {
+            }
+
+            @Override
+            public void refresh() {
+                reloadProducts();
+            }
+        }, product.getName());
+
+        dialog.show(getParentFragmentManager(), "ConfirmDialogFragment");
     }
 
     private void setupObservers() {
