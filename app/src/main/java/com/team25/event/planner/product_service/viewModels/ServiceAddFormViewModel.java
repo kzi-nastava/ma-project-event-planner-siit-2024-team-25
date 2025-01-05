@@ -66,7 +66,7 @@ public class ServiceAddFormViewModel extends ViewModel {
     public final MutableLiveData<Long> offeringCategoryId = new MutableLiveData<>();
     public final MutableLiveData<String> offeringCategoryNewName = new MutableLiveData<>();
     public final MutableLiveData<List<Long>> eventTypeIds = new MutableLiveData<>();
-    public final MutableLiveData<Long> ownerId = new MutableLiveData<>(2L);
+    public final MutableLiveData<Long> ownerId = new MutableLiveData<>();
     public final MutableLiveData<Long> serviceId = new MutableLiveData<>();
     public final MutableLiveData<List<EventType>> eventTypesLive = new MutableLiveData<>();
     public final MutableLiveData<OfferingCategory> offeringCategoryMutableLiveData = new MutableLiveData<>();

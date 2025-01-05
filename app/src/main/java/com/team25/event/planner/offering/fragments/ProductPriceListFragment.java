@@ -24,16 +24,20 @@ import com.team25.event.planner.offering.viewmodel.PriceListViewModel;
 
 public class ProductPriceListFragment extends Fragment implements OnEditButtonClickListener {
     private FragmentProductPriceListBinding binding;
-    private TableLayout tableLayout;
     private NavController navController;
     private PriceListViewModel viewModel;
     private ProductPriceListAdapter adapter;
     private ListView listView;
     private boolean isProductsView = false;
+    private Long ownerId;
 
+    public ProductPriceListFragment(boolean flag, Long id) {
+        isProductsView = flag;
+        ownerId = id;
+    }
 
-    public ProductPriceListFragment() {
-        // Required empty public constructor
+    public static ProductPriceListFragment newInstance(boolean flag, Long id){
+        return new ProductPriceListFragment(flag, id);
     }
 
 
@@ -47,9 +51,10 @@ public class ProductPriceListFragment extends Fragment implements OnEditButtonCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProductPriceListBinding.inflate(inflater, container, false);
-        //setlifecycle
+        binding.setLifecycleOwner(getViewLifecycleOwner());
         viewModel = new ViewModelProvider(this).get(PriceListViewModel.class);
-        //set vm
+        viewModel.ownerId.postValue(this.ownerId);
+        binding.setViewModel(viewModel);
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         return binding.getRoot();
     }
@@ -61,6 +66,23 @@ public class ProductPriceListFragment extends Fragment implements OnEditButtonCl
 
         setUpObservers();
         setUpListeners();
+        if(isProductsView){
+            viewModel.fetchProductsPriceList();
+        }else{
+            viewModel.fetchServicesPriceList();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setUpObservers();
+        setUpListeners();
+        if(isProductsView){
+            viewModel.fetchProductsPriceList();
+        }else{
+            viewModel.fetchServicesPriceList();
+        }
     }
 
     private void setUpListeners() {
