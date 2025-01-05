@@ -16,4 +16,8 @@
         android:id="@id/ownerHomePage"
         android:icon="@drawable/ic_shopping_bag"
         android:title="@string/my_products_services" />
+    <item
+        android:id="@+id/priceListPage"
+        android:icon="@drawable/money"
+        android:title="@string/my_price_list"/>
 </menu>

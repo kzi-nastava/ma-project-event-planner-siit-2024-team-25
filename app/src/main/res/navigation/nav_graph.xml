@@ -247,4 +247,9 @@
         android:id="@+id/mapFragment"
         android:name="com.team25.event.planner.core.fragments.MapFragment"
         android:label="MapFragment" />
+    <fragment
+        android:id="@+id/priceListPage"
+        android:name="com.team25.event.planner.offering.fragments.PriceListBaseFragment"
+        android:label="fragment_price_list_base"
+        tools:layout="@layout/fragment_price_list_base" />
 </navigation>
