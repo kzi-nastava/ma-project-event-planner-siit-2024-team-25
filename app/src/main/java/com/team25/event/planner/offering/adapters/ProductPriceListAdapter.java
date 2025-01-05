@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.button.MaterialButton;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
+import com.team25.event.planner.core.listeners.OnEditPriceListClickListener;
 import com.team25.event.planner.offering.model.PriceListItemRequestDTO;
 import com.team25.event.planner.offering.model.PriceListItemResponseDTO;
 
@@ -21,13 +22,13 @@ import java.util.List;
 public class ProductPriceListAdapter extends ArrayAdapter<PriceListItemResponseDTO> {
     private List<PriceListItemResponseDTO> priceListItemResponseDTOS;
 
-    private OnEditButtonClickListener listenerEditItem;
+    private OnEditPriceListClickListener listenerEditItem;
 
     public ProductPriceListAdapter(Context context, List<PriceListItemResponseDTO> list){
         super(context, R.layout.price_list_item, list);
         priceListItemResponseDTOS = list;
     }
-    public void setListener(OnEditButtonClickListener l){
+    public void setListener(OnEditPriceListClickListener l){
         listenerEditItem = l;
     }
 
@@ -66,7 +67,7 @@ public class ProductPriceListAdapter extends ArrayAdapter<PriceListItemResponseD
             finalPrice.setText(String.valueOf(dto.getPriceWithDiscount()));
             btn.setOnClickListener(v ->{
                 if(listenerEditItem != null){
-                    listenerEditItem.onEditButtonClick(dto.getOfferingId(), null);
+                    listenerEditItem.onEditButtonClick(dto.getOfferingId(), dto.getPrice(), dto.getDiscount());
                 }
             });
         }

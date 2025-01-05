@@ -251,5 +251,18 @@
         android:id="@+id/priceListPage"
         android:name="com.team25.event.planner.offering.fragments.PriceListBaseFragment"
         android:label="fragment_price_list_base"
-        tools:layout="@layout/fragment_price_list_base" />
+        tools:layout="@layout/fragment_price_list_base" >
+        <action
+            android:id="@+id/action_priceListPage_to_editPriceListItemFragment"
+            app:destination="@id/editPriceListItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPriceListItemFragment"
+        android:name="com.team25.event.planner.offering.fragments.EditPriceListItemFragment"
+        android:label="fragment_edit_price_list_item"
+        tools:layout="@layout/fragment_edit_price_list_item" >
+        <action
+            android:id="@+id/action_editPriceListItemFragment_to_priceListPage"
+            app:destination="@id/priceListPage" />
+    </fragment>
 </navigation>

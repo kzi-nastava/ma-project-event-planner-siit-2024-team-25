@@ -14,15 +14,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TableLayout;
+import android.widget.Toast;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
+import com.team25.event.planner.core.listeners.OnEditPriceListClickListener;
 import com.team25.event.planner.databinding.FragmentProductPriceListBinding;
 import com.team25.event.planner.offering.adapters.ProductPriceListAdapter;
 import com.team25.event.planner.offering.viewmodel.PriceListViewModel;
 
 
-public class ProductPriceListFragment extends Fragment implements OnEditButtonClickListener {
+public class ProductPriceListFragment extends Fragment implements OnEditPriceListClickListener {
+    public static final String ID_OFFERING_ARG_NAME = "offeringId";
+    public static final String PRICE_ARG_NAME = "offeringPrice";
+    public static final String DISCOUNT_ARG_NAME = "offeringDiscount";
     private FragmentProductPriceListBinding binding;
     private NavController navController;
     private PriceListViewModel viewModel;
@@ -94,10 +99,19 @@ public class ProductPriceListFragment extends Fragment implements OnEditButtonCl
             adapter.setListener(this);
             listView.setAdapter(adapter);
         });
+        viewModel.serverError.observe(getViewLifecycleOwner(), mess->{
+            if(mess != null){
+                Toast.makeText(requireContext(), mess, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
-    public void onEditButtonClick(Long id, String name) {
-
+    public void onEditButtonClick(Long id, Double price, Double discount) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(ID_OFFERING_ARG_NAME, id);
+        bundle.putDouble(PRICE_ARG_NAME, price);
+        bundle.putDouble(DISCOUNT_ARG_NAME, discount);
+        navController.navigate(R.id.action_priceListPage_to_editPriceListItemFragment, bundle);
     }
 }
