@@ -138,4 +138,5 @@
     <string name="buy_products_services">Buy Products/Services</string>
     <string name="edit_agenda">Edit Agenda</string>
     <string name="view_purchases">View Purchases</string>
+    <string name="notification_status">notification status</string>
 </resources>

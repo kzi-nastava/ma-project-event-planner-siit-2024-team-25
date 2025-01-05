@@ -90,4 +90,9 @@ dependencies {
     implementation libs.glide
 
     implementation libs.osmdroid.android
+
+    implementation libs.stompprotocolandroid
+    implementation libs.okhttp.v3121
+    implementation libs.rxjava
+    implementation libs.rxandroid
 }

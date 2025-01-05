@@ -121,7 +121,7 @@ public class EventDetailsFragment extends Fragment {
         Bundle args = new Bundle();
         args.putString(MapFragment.TITLE_ARG, event.getName());
         args.putParcelable(MapFragment.LOCATION_ARG, event.getLocation());
-        navController.navigate(R.id.action_eventDetailsFragment_to_mapFragment, args);
+        navController.navigate(R.id.mapFragment, args);
     }
 
     private void goToAgenda() {
@@ -133,7 +133,7 @@ public class EventDetailsFragment extends Fragment {
         args.putString(EventArgumentNames.NAME_ARG, event.getName());
         args.putBoolean(EventArgumentNames.IS_ORGANIZER_ARG, Boolean.TRUE.equals(isOrganizer.getValue()));
         args.putBoolean(EventArgumentNames.CAME_FROM_DETAILS_ARG, true);
-        navController.navigate(R.id.action_eventDetailsFragment_to_agendaFragment, args);
+        navController.navigate(R.id.agendaFragment, args);
     }
 
     private void goToInvite() {
