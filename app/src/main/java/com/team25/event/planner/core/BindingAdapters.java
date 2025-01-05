@@ -2,10 +2,8 @@ package com.team25.event.planner.core;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.SeekBar;
-import android.widget.Toast;
-
+import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.LiveData;
@@ -14,7 +12,14 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Locale;
+
 public class BindingAdapters {
+    @BindingAdapter("app:decimalText")
+    public static void setDecimalText(TextView view, Double number) {
+        view.setText(String.format(Locale.US, "%.1f", number));
+    }
+
     @BindingAdapter("app:errorText")
     public static void setErrorMessage(TextInputLayout view, String errorMessage) {
         view.setError(errorMessage);
@@ -53,7 +58,7 @@ public class BindingAdapters {
 
     @BindingAdapter(value = {"app:onSeeking"})
     public static void onProgressChanged(SeekBar seekBar, final OnProgressChanged seeking
-                                         ) {
+    ) {
         if (seeking != null) {
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -74,6 +79,7 @@ public class BindingAdapters {
             });
         }
     }
+
     public interface OnProgressChanged {
         void onSeeking(SeekBar seekBar, Integer progress);
 

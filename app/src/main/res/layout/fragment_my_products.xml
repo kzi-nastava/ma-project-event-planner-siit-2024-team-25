@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.team25.event.planner.product.viewmodel.MyProductsViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewProducts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_my_product" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loadingSpinner"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="16dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading_animation"
+            app:lottie_colorFilter="?attr/colorPrimary" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/createProductButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/create_new_product"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/white"
+            android:theme="@style/Base.Theme.EventPlanner"
+            android:clickable="true"
+            android:src="@drawable/ic_add" />
+
+    </FrameLayout>
+</layout>

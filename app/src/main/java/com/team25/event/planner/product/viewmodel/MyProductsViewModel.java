@@ -1,0 +1,71 @@
+package com.team25.event.planner.product.viewmodel;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import com.team25.event.planner.core.ConnectionParams;
+import com.team25.event.planner.core.api.SideEffectResponseCallback;
+import com.team25.event.planner.offering.model.OfferingCard;
+import com.team25.event.planner.product.api.ProductApi;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.Setter;
+
+public class MyProductsViewModel extends ViewModel {
+    private final ProductApi productApi = ConnectionParams.productApi;
+
+    private final MutableLiveData<List<OfferingCard>> _products = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<OfferingCard>> products = _products;
+
+    public final ProductFilter productFilter = new ProductFilter();
+
+    private int currentPage = 0;
+    private boolean isEndReached = false;
+
+    private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>(false);
+    public final LiveData<Boolean> isLoading = _isLoading;
+
+    private final MutableLiveData<String> _serverError = new MutableLiveData<>();
+    public final LiveData<String> serverError = _serverError;
+
+    @Setter
+    private Long ownerId;
+
+    public void loadNextPage() {
+        if (isLoading() || isEndReached) return;
+        _isLoading.setValue(true);
+
+        productApi.getOwnerProducts(ownerId, currentPage, productFilter.buildQueryMap())
+                .enqueue(new SideEffectResponseCallback<>(
+                        page -> {
+                            currentPage++;
+                            if (page.isLast()) {
+                                isEndReached = true;
+                            }
+                            _products.postValue(page.getContent());
+                        },
+                        () -> _isLoading.postValue(false),
+                        _serverError, "MyEventsViewModel"
+                ));
+    }
+
+    /**
+     * Resets page counter and loads the first page again, with the currently applied filters.
+     */
+    public void reload() {
+        currentPage = 0;
+        isEndReached = false;
+        loadNextPage();
+    }
+
+    public boolean isEndReached() {
+        return isEndReached;
+    }
+
+    public boolean isLoading() {
+        return isLoading.getValue() == null || isLoading.getValue();
+    }
+}
