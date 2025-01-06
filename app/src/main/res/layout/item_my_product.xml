@@ -34,7 +34,7 @@
                 android:layout_height="100dp"
                 android:scaleType="centerCrop"
                 android:contentDescription="@string/product_image"
-                tools:src="@tools:sample/avatars" />
+                android:src="@drawable/ic_image_placeholder" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -60,7 +60,7 @@
                     android:layout_marginTop="4dp"
                     android:textSize="14sp"
                     android:textColor="@android:color/darker_gray"
-                    app:decimalText="@{product.price}"
+                    app:decimalNumberText="@{product.price}"
                     tools:text="$99.99" />
 
                 <TextView
@@ -84,7 +84,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
-                        app:decimalText="@{product.rating}"
+                        app:decimalNumberText="@{product.rating}"
                         tools:text="4.5" />
 
                     <ImageView
