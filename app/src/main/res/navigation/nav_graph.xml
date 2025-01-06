@@ -248,5 +248,13 @@
     <fragment
         android:id="@+id/myProductsFragment"
         android:name="com.team25.event.planner.product.fragments.MyProductsFragment"
-        android:label="My Products" />
+        android:label="My Products">
+        <action
+            android:id="@+id/action_myProductsFragment_to_productFormFragment"
+            app:destination="@id/productFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productFormFragment"
+        android:name="com.team25.event.planner.product.fragments.ProductFormFragment"
+        android:label="Product" />
 </navigation>

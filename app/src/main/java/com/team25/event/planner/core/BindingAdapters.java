@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.Locale;
 
 public class BindingAdapters {
-    @BindingAdapter("app:decimalText")
+    @BindingAdapter("app:decimalNumberText")
     public static void setDecimalText(TextView view, Double value) {
         if (value != null) {
             String formattedValue = String.format(Locale.US, "%.1f", value);
@@ -29,34 +29,40 @@ public class BindingAdapters {
         }
     }
 
-    @BindingAdapter("decimalText")
+    @BindingAdapter("app:decimalText")
     public static void setDecimalText(TextInputEditText view, Double value) {
         if (value != null) {
             String formattedValue = String.format(Locale.US, "%.2f", value);
+
             if (view.getText() == null || !formattedValue.equals(view.getText().toString())) {
+                int cursorPosition = view.getSelectionStart();
                 view.setText(formattedValue);
+                view.setSelection(Math.min(cursorPosition, formattedValue.length()));
             }
         } else {
             view.setText("");
         }
     }
 
-    @InverseBindingAdapter(attribute = "decimalText", event = "decimalTextAttrChanged")
+    @InverseBindingAdapter(attribute = "app:decimalText", event = "app:decimalTextAttrChanged")
     public static Double getDecimalText(TextInputEditText view) {
-        if (view.getText() == null) {
+        String text = view.getText() == null ? "" : view.getText().toString().trim();
+        if (text.isEmpty()) {
             return null;
         }
         try {
-            return Double.parseDouble(view.getText().toString());
+            return Double.parseDouble(text);
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
-    @BindingAdapter("decimalTextAttrChanged")
+    @BindingAdapter("app:decimalTextAttrChanged")
     public static void setDecimalTextListener(TextInputEditText view, final InverseBindingListener listener) {
         if (listener != null) {
             view.addTextChangedListener(new TextWatcher() {
+                private String previousValue = "";
+
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
@@ -67,11 +73,18 @@ public class BindingAdapters {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    listener.onChange();
+                    String currentValue = s.toString();
+
+                    // Only notify listener if the value has changed
+                    if (!currentValue.equals(previousValue)) {
+                        previousValue = currentValue;
+                        listener.onChange();
+                    }
                 }
             });
         }
     }
+
 
     @BindingAdapter("app:errorText")
     public static void setErrorMessage(TextInputLayout view, String errorMessage) {

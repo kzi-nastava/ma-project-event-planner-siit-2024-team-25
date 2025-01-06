@@ -150,4 +150,9 @@
     <string name="price_range">Price Range</string>
     <string name="apply">Apply</string>
     <string name="clear_filters">Clear filters</string>
+    <string name="discount_percentage">Discount (%)</string>
+    <string name="visible_to_organizers">Visible to organizers</string>
+    <string name="available_for_purchase">Available for purchase</string>
+    <string name="select_images">Select Images</string>
+    <string name="submit">Submit</string>
 </resources>

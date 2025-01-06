@@ -38,6 +38,8 @@ public class MyProductsFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         viewModel = new ViewModelProvider(this).get(MyProductsViewModel.class);
+        binding.setViewModel(viewModel);
+
         AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
@@ -47,7 +49,7 @@ public class MyProductsFragment extends Fragment {
         setupListeners();
 
         authViewModel.user.observe(getViewLifecycleOwner(), user -> {
-            viewModel.setOwnerId(user.getUserId());
+            viewModel.setOwnerId(user == null ? null : user.getUserId());
             viewModel.loadNextPage();
         });
 
@@ -61,7 +63,11 @@ public class MyProductsFragment extends Fragment {
         productsAdapter = new MyProductsAdapter(
                 new ArrayList<>(),
                 product -> { /* TODO: navigate to product details fragment */ },
-                product -> { /* TODO: navigate to product form fragment */ },
+                product -> {
+                    Bundle args = new Bundle();
+                    args.putLong(ProductFormFragment.ID_ARG_NAME, product.getId());
+                    navController.navigate(R.id.action_myProductsFragment_to_productFormFragment, args);
+                },
                 this::openDeleteDialog
         );
         binding.recyclerViewProducts.setAdapter(productsAdapter);
@@ -157,8 +163,15 @@ public class MyProductsFragment extends Fragment {
         });
 
         binding.createProductButton.setOnClickListener(v -> {
-            // TODO: navigate to product form fragment
+            Bundle args = new Bundle();
+            args.putLong(ProductFormFragment.ID_ARG_NAME, -1);
+            navController.navigate(R.id.action_myProductsFragment_to_productFormFragment, args);
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        reloadProducts();
+    }
 }
