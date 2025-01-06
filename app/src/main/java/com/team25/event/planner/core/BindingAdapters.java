@@ -14,6 +14,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class BindingAdapters {
@@ -149,6 +151,36 @@ public class BindingAdapters {
     public interface OnProgressChanged {
         void onSeeking(SeekBar seekBar, Integer progress);
 
+    }
+
+    @BindingAdapter("formattedTime")
+    public static void setFormattedTime(TextView textView, LocalDateTime dateTime) {
+        if (dateTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            textView.setText(dateTime.toLocalTime().format(formatter));
+        } else {
+            textView.setText("");
+        }
+    }
+
+    @BindingAdapter("formattedDate")
+    public static void setFormattedDate(TextView textView, LocalDateTime dateTime) {
+        if (dateTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            textView.setText(dateTime.toLocalDate().format(formatter));
+        } else {
+            textView.setText("");
+        }
+    }
+
+    @BindingAdapter("formattedDateTime")
+    public static void setFormattedDateTime(TextView textView, LocalDateTime dateTime) {
+        if (dateTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            textView.setText(dateTime.format(formatter));
+        } else {
+            textView.setText("");
+        }
     }
 
 }

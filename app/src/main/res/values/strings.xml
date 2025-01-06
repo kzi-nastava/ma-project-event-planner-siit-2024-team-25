@@ -155,4 +155,8 @@
     <string name="available_for_purchase">Available for purchase</string>
     <string name="select_images">Select Images</string>
     <string name="submit">Submit</string>
+    <string name="report_user">Report user</string>
+    <string name="report_message">Report message</string>
+    <string name="send_report">Send report</string>
+    <string name="notification_status">notification status</string>
 </resources>

@@ -257,4 +257,9 @@
         android:id="@+id/productFormFragment"
         android:name="com.team25.event.planner.product.fragments.ProductFormFragment"
         android:label="Product" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.team25.event.planner.communication.fragments.NotificationFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notification" />
 </navigation>
