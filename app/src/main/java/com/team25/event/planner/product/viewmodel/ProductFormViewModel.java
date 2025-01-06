@@ -47,7 +47,7 @@ public class ProductFormViewModel extends ViewModel {
     public final MutableLiveData<List<Long>> eventTypeIds = new MutableLiveData<>(new ArrayList<>());
     public final MutableLiveData<Long> offeringCategoryId = new MutableLiveData<>();
     public final MutableLiveData<String> offeringCategoryName = new MutableLiveData<>();
-    public final MutableLiveData<List<File>> images = new MutableLiveData<>(new ArrayList<>());
+    public final MutableLiveData<List<File>> newImages = new MutableLiveData<>(new ArrayList<>());
     public final MutableLiveData<List<String>> imagesToDelete = new MutableLiveData<>(new ArrayList<>());
 
     private final MutableLiveData<List<String>> _existingImages = new MutableLiveData<>(new ArrayList<>());
@@ -152,7 +152,9 @@ public class ProductFormViewModel extends ViewModel {
             isValid = false;
         }
 
-        if (images.getValue() == null || images.getValue().isEmpty()) {
+        if ((newImages.getValue() == null || newImages.getValue().isEmpty()) &&
+                (existingImages.getValue() == null || existingImages.getValue().isEmpty())
+        ) {
             errorBuilder.images("At least one image is required.");
             isValid = false;
         }
@@ -173,7 +175,7 @@ public class ProductFormViewModel extends ViewModel {
                 description.getValue(),
                 price.getValue(),
                 discount.getValue(),
-                images.getValue(),
+                newImages.getValue(),
                 isVisible.getValue(),
                 isAvailable.getValue(),
                 eventTypeIds.getValue(),
@@ -206,9 +208,13 @@ public class ProductFormViewModel extends ViewModel {
         eventTypeIds.setValue(product.getEventTypes().stream().map(et -> et.getId()).collect(Collectors.toList()));
         offeringCategoryId.setValue(product.getOfferingCategory().getId());
         offeringCategoryName.setValue(product.getOfferingCategory().getName());
-        images.setValue(new ArrayList<>());
+        newImages.setValue(new ArrayList<>());
         imagesToDelete.setValue(new ArrayList<>());
-        _existingImages.setValue(product.getImages());
+        _existingImages.setValue(
+                product.getImages().stream().map(imageId ->
+                        ConnectionParams.BASE_URL + "api/products/" + product.getId() + "/images/" + imageId
+                ).collect(Collectors.toList())
+        );
     }
 
     private void resetForm() {
@@ -221,8 +227,29 @@ public class ProductFormViewModel extends ViewModel {
         eventTypeIds.setValue(new ArrayList<>());
         offeringCategoryId.setValue(null);
         offeringCategoryName.setValue(null);
-        images.setValue(new ArrayList<>());
+        newImages.setValue(new ArrayList<>());
         imagesToDelete.setValue(new ArrayList<>());
         _existingImages.setValue(new ArrayList<>());
+    }
+
+    public void removeNewImage(File image) {
+        List<File> currentImages = newImages.getValue();
+        if (currentImages != null && currentImages.remove(image)) {
+            newImages.setValue(currentImages);
+        }
+    }
+
+    public void removeExistingImage(String url) {
+        List<String> existingImages = this.existingImages.getValue();
+        if (existingImages == null) return;
+        if (existingImages.remove(url)) {
+            List<String> imagesToDelete = this.imagesToDelete.getValue();
+            if (imagesToDelete == null) {
+                imagesToDelete = new ArrayList<>();
+            }
+            imagesToDelete.add(url);
+            this.imagesToDelete.setValue(imagesToDelete);
+            this._existingImages.setValue(existingImages);
+        }
     }
 }

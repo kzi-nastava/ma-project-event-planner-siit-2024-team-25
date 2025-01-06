@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -29,11 +30,13 @@ import com.team25.event.planner.databinding.FragmentProductFormBinding;
 import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.product.adapters.ProductImagesAdapter;
+import com.team25.event.planner.product.model.ProductImage;
 import com.team25.event.planner.product.viewmodel.ProductFormViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductFormFragment extends Fragment {
     public static final String ID_ARG_NAME = "PRODUCT_ID";
@@ -43,6 +46,7 @@ public class ProductFormFragment extends Fragment {
     private NavController navController;
     private ProductImagesAdapter imagesAdapter;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private final MediatorLiveData<List<ProductImage>> imagesLiveData = new MediatorLiveData<>(new ArrayList<>());
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,10 +99,10 @@ public class ProductFormFragment extends Fragment {
                                 selectedImages.add(file);
                             }
                             if (selectedImages.isEmpty()) return;
-                            List<File> currentImages = viewModel.images.getValue();
+                            List<File> currentImages = viewModel.newImages.getValue();
                             assert currentImages != null;
                             currentImages.addAll(selectedImages);
-                            viewModel.images.setValue(currentImages);
+                            viewModel.newImages.setValue(currentImages);
                         }
                     }
                 }
@@ -108,10 +112,15 @@ public class ProductFormFragment extends Fragment {
     private void setupRecyclerView() {
         imagesAdapter = new ProductImagesAdapter(
                 new ArrayList<>(),
-                image -> {
-                    List<File> currentImages = viewModel.images.getValue();
-                    if (currentImages != null && currentImages.remove(image)) {
-                        viewModel.images.setValue(currentImages);
+                new ProductImagesAdapter.OnImageDeleteListener() {
+                    @Override
+                    public void onDeleteNewImage(File image) {
+                        viewModel.removeNewImage(image);
+                    }
+
+                    @Override
+                    public void onDeleteExistingImage(String url) {
+                        viewModel.removeExistingImage(url);
                     }
                 }
         );
@@ -126,7 +135,27 @@ public class ProductFormFragment extends Fragment {
 
         viewModel.offeringCategories.observe(getViewLifecycleOwner(), this::updateOfferingCategoryDropdown);
 
-        viewModel.images.observe(getViewLifecycleOwner(), images -> imagesAdapter.refreshImages(images));
+        imagesLiveData.addSource(viewModel.newImages, newImages -> {
+            List<String> existingImages = viewModel.existingImages.getValue();
+            if (existingImages == null) existingImages = new ArrayList<>();
+            List<ProductImage> images = existingImages.stream().map(ProductImage::fromUrl).collect(Collectors.toList());
+            if (newImages != null) {
+                images.addAll(newImages.stream().map(ProductImage::fromFile).collect(Collectors.toList()));
+            }
+            imagesLiveData.setValue(images);
+        });
+
+        imagesLiveData.addSource(viewModel.existingImages, existingImages -> {
+            if (existingImages == null) existingImages = new ArrayList<>();
+            List<ProductImage> images = existingImages.stream().map(ProductImage::fromUrl).collect(Collectors.toList());
+            List<File> newImages = viewModel.newImages.getValue();
+            if (newImages != null) {
+                images.addAll(newImages.stream().map(ProductImage::fromFile).collect(Collectors.toList()));
+            }
+            imagesLiveData.setValue(images);
+        });
+
+        imagesLiveData.observe(getViewLifecycleOwner(), images -> imagesAdapter.refreshImages(images));
 
         viewModel.errors.observe(getViewLifecycleOwner(), errors -> {
             if (errors.getEventTypes() == null || errors.getEventTypes().isEmpty()) {
