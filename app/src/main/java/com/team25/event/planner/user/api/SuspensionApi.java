@@ -1,5 +1,7 @@
 package com.team25.event.planner.user.api;
 
+import android.app.DownloadManager;
+
 import com.team25.event.planner.communication.model.NotificationRequestDTO;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.user.model.SuspensionRequest;
@@ -23,4 +25,6 @@ public interface SuspensionApi {
     Call<UserReportResponse> updateReport(@Body UserReportUpdateRequest request);
     @POST("/api/users/suspend")
     Call<SuspensionResponse> suspendUser(@Body SuspensionRequest request);
+    @GET("/api/users/suspended")
+    Call<Page<SuspensionResponse>> getAllSuspensions(@Query("page") int page);
 }

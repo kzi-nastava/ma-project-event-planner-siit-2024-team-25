@@ -257,4 +257,9 @@
         android:name="com.team25.event.planner.user.fragments.ReportedUsers"
         android:label="Reported users"
         tools:layout="@layout/fragment_reported_users" />
+    <fragment
+        android:id="@+id/suspendedUsers"
+        android:name="com.team25.event.planner.user.fragments.SuspendedUsers"
+        android:label="Suspended users"
+        tools:layout="@layout/fragment_suspended_users" />
 </navigation>

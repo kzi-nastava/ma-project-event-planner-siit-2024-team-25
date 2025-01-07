@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,22 +16,11 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
-import com.team25.event.planner.communication.adapters.NotificationsListAdapter;
-import com.team25.event.planner.communication.model.Notification;
-import com.team25.event.planner.communication.model.NotificationCategory;
-import com.team25.event.planner.communication.viewmodel.MyNotificationViewModel;
-import com.team25.event.planner.core.SharedPrefService;
-import com.team25.event.planner.core.viewmodel.AuthViewModel;
-import com.team25.event.planner.databinding.FragmentNotificationBinding;
 import com.team25.event.planner.databinding.FragmentReportedUsersBinding;
-import com.team25.event.planner.databinding.HomePageOfferingFilterBinding;
-import com.team25.event.planner.databinding.ReportDialogBinding;
 import com.team25.event.planner.databinding.ReportUserDialogBinding;
-import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.user.adapters.ReportListAdapter;
 import com.team25.event.planner.user.model.UserReportResponse;
-import com.team25.event.planner.user.model.UserRole;
-import com.team25.event.planner.user.viewmodels.SuspensionViewModel;
+import com.team25.event.planner.user.viewmodels.ReportViewModel;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -40,7 +28,7 @@ import java.util.Objects;
 public class ReportedUsers extends Fragment {
     private FragmentReportedUsersBinding _binding;
     private ReportListAdapter _adapter;
-    private SuspensionViewModel _suspensionViewModel;
+    private ReportViewModel _suspensionViewModel;
 
     private BottomSheetDialog _reportDialog;
 
@@ -70,9 +58,9 @@ public class ReportedUsers extends Fragment {
                              Bundle savedInstanceState) {
         _binding = FragmentReportedUsersBinding.inflate(inflater, container, false);
         _binding.setLifecycleOwner(getViewLifecycleOwner());
-        _suspensionViewModel = new ViewModelProvider(this).get(SuspensionViewModel.class);
+        _suspensionViewModel = new ViewModelProvider(this).get(ReportViewModel.class);
 
-        setupNotificationList();
+        setupReportsList();
         setupObservers();
 
         _suspensionViewModel.loadNextPage();
@@ -80,7 +68,7 @@ public class ReportedUsers extends Fragment {
         return _binding.getRoot();
     }
 
-    private void setupNotificationList() {
+    private void setupReportsList() {
         _adapter = new ReportListAdapter(new ArrayList<>(), new ReportListAdapter.OnItemClickListener() {
             @Override
             public void suspendUser(UserReportResponse report, int position) {

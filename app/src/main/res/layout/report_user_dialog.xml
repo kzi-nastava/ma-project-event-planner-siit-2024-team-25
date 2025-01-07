@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.team25.event.planner.user.viewmodels.SuspensionViewModel" />
+            type="com.team25.event.planner.user.viewmodels.ReportViewModel" />
     </data>
 
     <LinearLayout

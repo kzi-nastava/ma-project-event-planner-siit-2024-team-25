@@ -1,34 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
-            name="report"
-            type="com.team25.event.planner.user.model.UserReportResponse" />
+            name="suspension"
+            type="com.team25.event.planner.user.model.SuspensionResponse" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginVertical="8dp"
         app:strokeWidth="1dp"
         app:strokeColor="@android:color/darker_gray"
         app:cornerRadius="8dp"
         android:elevation="4dp"
-        android:id="@+id/notification_card"
         android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_weight="1"
             android:background="@color/secondary">
 
             <ImageView
-                android:id="@+id/suspend_user"
+                android:id="@+id/suspended_image"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginEnd="5dp"
@@ -42,43 +38,57 @@
                 android:layout_height="match_parent"
                 android:background="@color/secondary">
 
-
                 <TextView
-                    android:id="@+id/reported_user"
-                    android:layout_width="match_parent"
+                    android:id="@+id/suspended_user_label"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{report.reportedUserFirstName +' '+ report.reportedUserLastName}"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="4dp"
-                    android:width="180dp"
+                    android:text="User: "
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:paddingStart="10dp" />
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="4dp"/>
 
                 <TextView
-                    android:id="@+id/report_message"
+                    android:id="@+id/suspended_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{report.reportMessage}"
-                    android:layout_below="@id/reported_user"
-                    android:layout_alignParentStart="true"
+                    android:text="@{suspension.suspendedUserFirstName + ' ' + suspension.suspendedUserLastName}"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="4dp"
                     android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:textStyle="italic"
-                    android:paddingStart="10dp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:paddingStart="10dp"
+                    android:layout_toEndOf="@id/suspended_user_label" />
 
                 <TextView
-                    android:id="@+id/report_date"
+                    android:id="@+id/expiration_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:formattedDateTime="@{report.createdDate}"
+                    android:text="Expiration Date: "
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_below="@id/suspended_user"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="8dp"/>
+
+                <!-- Expiration Time next to the label -->
+                <TextView
+                    android:id="@+id/suspension_expiration_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/suspended_user"
+                    android:layout_marginTop="12dp"
+                    android:layout_toEndOf="@+id/expiration_label"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
                     android:textStyle="italic"
-                    android:layout_below="@id/report_message"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="10dp"/>
+                    app:formattedDateTime="@{suspension.expirationTime}" />
+
             </RelativeLayout>
         </LinearLayout>
 
