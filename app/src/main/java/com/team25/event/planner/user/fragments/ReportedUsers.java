@@ -3,6 +3,7 @@ package com.team25.event.planner.user.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
 import com.team25.event.planner.communication.adapters.NotificationsListAdapter;
 import com.team25.event.planner.communication.model.Notification;
@@ -23,6 +25,9 @@ import com.team25.event.planner.core.SharedPrefService;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentNotificationBinding;
 import com.team25.event.planner.databinding.FragmentReportedUsersBinding;
+import com.team25.event.planner.databinding.HomePageOfferingFilterBinding;
+import com.team25.event.planner.databinding.ReportDialogBinding;
+import com.team25.event.planner.databinding.ReportUserDialogBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.user.adapters.ReportListAdapter;
 import com.team25.event.planner.user.model.UserReportResponse;
@@ -36,6 +41,8 @@ public class ReportedUsers extends Fragment {
     private FragmentReportedUsersBinding _binding;
     private ReportListAdapter _adapter;
     private SuspensionViewModel _suspensionViewModel;
+
+    private BottomSheetDialog _reportDialog;
 
     private boolean _isUpdate;
 
@@ -76,8 +83,26 @@ public class ReportedUsers extends Fragment {
     private void setupNotificationList() {
         _adapter = new ReportListAdapter(new ArrayList<>(), new ReportListAdapter.OnItemClickListener() {
             @Override
-            public void suspendUser(UserReportResponse report) {
+            public void suspendUser(UserReportResponse report, int position) {
+                ReportUserDialogBinding reportDialogBinding = DataBindingUtil.inflate(
+                        getLayoutInflater(),
+                        R.layout.report_user_dialog,
+                        null,
+                        false
+                );
+                View dialog = reportDialogBinding.getRoot();
+                _suspensionViewModel.currentReport.setValue(report);
+                reportDialogBinding.setViewModel(_suspensionViewModel);
+                _reportDialog = new BottomSheetDialog(getActivity());
+                _reportDialog.setContentView(dialog);
+                _reportDialog.show();
 
+                _suspensionViewModel.currentSuspension.observe(getViewLifecycleOwner(), suspensionResponse -> {
+                    _reportDialog.dismiss();
+                    _adapter.removeReport(position);
+                    _isUpdate = true;
+                    _suspensionViewModel.loadCurrentPage();
+                });
             }
 
             @Override

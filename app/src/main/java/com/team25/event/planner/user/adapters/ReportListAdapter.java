@@ -17,7 +17,7 @@ public class ReportListAdapter extends RecyclerView.Adapter<ReportListAdapter.Re
     private final ReportListAdapter.OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
-        void suspendUser(UserReportResponse report);
+        void suspendUser(UserReportResponse report, int position);
         void markReportAsViewed(UserReportResponse report, int position);
     }
 
@@ -44,7 +44,7 @@ public class ReportListAdapter extends RecyclerView.Adapter<ReportListAdapter.Re
                 listener.markReportAsViewed(report, position);
             });
 
-            binding.getRoot().setOnClickListener(v -> listener.suspendUser(report));
+            binding.getRoot().setOnClickListener(v -> listener.suspendUser(report, position));
         }
     }
 

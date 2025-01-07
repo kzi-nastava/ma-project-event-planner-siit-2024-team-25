@@ -8,6 +8,8 @@ import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.api.ResponseCallback;
 import com.team25.event.planner.core.api.SideEffectResponseCallback;
 import com.team25.event.planner.user.api.SuspensionApi;
+import com.team25.event.planner.user.model.SuspensionRequest;
+import com.team25.event.planner.user.model.SuspensionResponse;
 import com.team25.event.planner.user.model.UserReportResponse;
 import com.team25.event.planner.user.model.UserReportUpdateRequest;
 
@@ -28,16 +30,18 @@ public class SuspensionViewModel extends ViewModel {
     private MutableLiveData<List<UserReportResponse>> _reports = new MutableLiveData<>();
     public LiveData<List<UserReportResponse>> reports = _reports;
 
-    private MutableLiveData<UserReportResponse> _currentReport = new MutableLiveData<>();
-    public LiveData<UserReportResponse> currentReport = _currentReport;
+    public MutableLiveData<UserReportResponse> currentReport = new MutableLiveData<>();
+
+    private final MutableLiveData<SuspensionResponse> _currentSuspension = new MutableLiveData<>();
+    public final LiveData<SuspensionResponse> currentSuspension = _currentSuspension;
 
     private int _currentPage;
 
-    public SuspensionViewModel(){
+    public SuspensionViewModel() {
         _currentPage = 0;
     }
 
-    public void loadCurrentPage(){
+    public void loadCurrentPage() {
         this._currentPage -= 1;
         this._isEndReached = false;
         loadNextPage();
@@ -71,16 +75,23 @@ public class SuspensionViewModel extends ViewModel {
     }
 
 
-    public void updateReport(UserReportResponse userReportResponse){
+    public void updateReport(UserReportResponse userReportResponse) {
         UserReportUpdateRequest request = new UserReportUpdateRequest();
         request.setIsViewed(true);
         request.setReportId(userReportResponse.getId());
         _suspensionApi.updateReport(request).enqueue(new ResponseCallback<>(
-                _currentReport::postValue,
+                currentReport::postValue,
                 _serverError, "SuspensionViewModel")
         );
     }
 
-    public void suspendUser(){
+    public void suspendUser() {
+        SuspensionRequest request = SuspensionRequest.builder()
+                .userId(currentReport.getValue().getUserId())
+                .reportId(currentReport.getValue().getId()).build();
+        _suspensionApi.suspendUser(request).enqueue(new ResponseCallback<>(
+                _currentSuspension::postValue,
+                _serverError, "SuspensionViewModel")
+        );
     }
 }

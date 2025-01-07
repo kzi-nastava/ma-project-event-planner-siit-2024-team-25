@@ -1,6 +1,6 @@
 package com.team25.event.planner.user.model;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -10,5 +10,5 @@ public class SuspensionResponse {
     private Long suspendedUserId;
     private String suspendedUserFirstName;
     private String suspendedUserLastName;
-    private Instant expirationTime;
+    private LocalDateTime expirationTime;
 }
