@@ -146,4 +146,6 @@
     <string name="reports">Reports</string>
     <string name="suspended_users">Suspended users</string>
     <string name="suspensions">Suspensions</string>
+    <string name="you_are_suspended">You are suspended!</string>
+    <string name="remaining_time">Remaining time:</string>
 </resources>

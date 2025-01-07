@@ -262,4 +262,9 @@
         android:name="com.team25.event.planner.user.fragments.SuspendedUsers"
         android:label="Suspended users"
         tools:layout="@layout/fragment_suspended_users" />
+    <fragment
+        android:id="@+id/suspensionPage"
+        android:name="com.team25.event.planner.user.fragments.SuspensionPage"
+        android:label="Suspension"
+        tools:layout="@layout/fragment_suspension_page" />
 </navigation>
