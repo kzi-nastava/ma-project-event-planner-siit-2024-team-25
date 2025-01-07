@@ -255,6 +255,6 @@
     <fragment
         android:id="@+id/reportedUsers"
         android:name="com.team25.event.planner.user.fragments.ReportedUsers"
-        android:label="fragment_reported_users"
+        android:label="Reported users"
         tools:layout="@layout/fragment_reported_users" />
 </navigation>

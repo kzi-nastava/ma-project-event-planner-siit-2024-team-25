@@ -18,7 +18,7 @@ public class ReportListAdapter extends RecyclerView.Adapter<ReportListAdapter.Re
 
     public interface OnItemClickListener {
         void suspendUser(UserReportResponse report);
-        void markReportAsViewed(UserReportResponse report);
+        void markReportAsViewed(UserReportResponse report, int position);
     }
 
     public ReportListAdapter(List<UserReportResponse> reports, ReportListAdapter.OnItemClickListener onItemClickListener) {
@@ -41,7 +41,7 @@ public class ReportListAdapter extends RecyclerView.Adapter<ReportListAdapter.Re
             binding.suspendUser.setImageResource(R.drawable.ic_delete);
 
             binding.suspendUser.setOnClickListener(v -> {
-                listener.markReportAsViewed(report);
+                listener.markReportAsViewed(report, position);
             });
 
             binding.getRoot().setOnClickListener(v -> listener.suspendUser(report));
@@ -67,9 +67,24 @@ public class ReportListAdapter extends RecyclerView.Adapter<ReportListAdapter.Re
         return _reports != null ? _reports.size() : 0;
     }
 
-    public void addNotification(List<UserReportResponse> newReports) {
+    public void addReports(List<UserReportResponse> newReports, boolean isUpdate) {
         int oldSize = _reports.size();
-        _reports.addAll(newReports);
-        notifyItemRangeInserted(oldSize, newReports.size());
+        if(isUpdate){
+            for (UserReportResponse report : newReports) {
+                if (!_reports.contains(report)) {
+                    _reports.add(report);
+                }
+            }
+            notifyItemRangeInserted(oldSize, _reports.size() - oldSize);
+        }else{
+            _reports.addAll(newReports);
+            notifyItemRangeInserted(oldSize, newReports.size());
+        }
+    }
+
+    public void removeReport(int position) {
+        _reports.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, _reports.size() - position);
     }
 }

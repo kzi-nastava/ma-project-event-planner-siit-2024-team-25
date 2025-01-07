@@ -37,7 +37,10 @@ public class ReportedUsers extends Fragment {
     private ReportListAdapter _adapter;
     private SuspensionViewModel _suspensionViewModel;
 
+    private boolean _isUpdate;
+
     public ReportedUsers() {
+        _isUpdate = false;
     }
 
 
@@ -78,10 +81,12 @@ public class ReportedUsers extends Fragment {
             }
 
             @Override
-            public void markReportAsViewed(UserReportResponse report) {
+            public void markReportAsViewed(UserReportResponse report, int position) {
                 _suspensionViewModel.currentReport.observe(getViewLifecycleOwner(), response -> {
-                    if(response!=null){
+                    if(response!=null && Objects.equals(response.getId(), report.getId())){
                         Toast.makeText(getContext(), "You marked report as viewed", Toast.LENGTH_LONG).show();
+                        _adapter.removeReport(position);
+                        _isUpdate = true;
                         _suspensionViewModel.loadCurrentPage();
                     }
                 });
@@ -90,7 +95,10 @@ public class ReportedUsers extends Fragment {
         });
         _binding.recyclerViewReports.setAdapter(_adapter);
 
-        _suspensionViewModel.reports.observe(getViewLifecycleOwner(), _adapter::addNotification);
+        _suspensionViewModel.reports.observe(getViewLifecycleOwner(), userReportResponses -> {
+            _adapter.addReports(userReportResponses, _isUpdate);
+            _isUpdate = !_isUpdate;
+        });
 
         _binding.recyclerViewReports.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

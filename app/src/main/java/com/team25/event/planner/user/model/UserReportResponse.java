@@ -4,8 +4,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode
 public class UserReportResponse {
     private Long id;
     private Long userId;
@@ -17,4 +19,5 @@ public class UserReportResponse {
     private String reportedUserLastName;
     private Boolean isViewed;
     private LocalDateTime createdDate;
+
 }

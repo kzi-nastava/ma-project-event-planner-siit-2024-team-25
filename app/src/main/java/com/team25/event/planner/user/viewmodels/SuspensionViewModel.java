@@ -38,7 +38,8 @@ public class SuspensionViewModel extends ViewModel {
     }
 
     public void loadCurrentPage(){
-        this._currentPage -=1;
+        this._currentPage -= 1;
+        this._isEndReached = false;
         loadNextPage();
     }
 
@@ -54,7 +55,7 @@ public class SuspensionViewModel extends ViewModel {
                     if (page.isLast()) {
                         _isEndReached = true;
                     }
-                    _reports.postValue(page.getContent());
+                    _reports.setValue(page.getContent());
                 },
                 () -> _isLoading.postValue(false),
                 _serverError, "SuspensionViewModel")
