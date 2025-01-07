@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.team25.event.planner.event.model.EventType;
+import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.product_service.enums.ProductServiceType;
 import com.team25.event.planner.product_service.enums.ReservationType;
 
@@ -27,8 +29,8 @@ public class Service extends Offering implements Parcelable {
     private int minimumArrangement;
     private int maximumArrangement;
     private ReservationType reservationType;
-    private Long OfferingCategoryID;
-    private List<Long> eventTypesIDs;
+    private OfferingCategory OfferingCategory;
+    private List<EventType> eventTypes;
 
     public Service(){}
 

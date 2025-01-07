@@ -3,6 +3,7 @@ package com.team25.event.planner.product_service.api;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
 import com.team25.event.planner.product_service.dto.ServiceCreateResponseDTO;
+import com.team25.event.planner.product_service.model.Service;
 import com.team25.event.planner.product_service.model.ServiceCard;
 
 import java.util.Map;
@@ -22,7 +23,9 @@ public interface ServiceApi {
     Call<Page<ServiceCard>> getServices(@QueryMap Map<String, String> filters
     );
     @GET("/api/services/{id}")
-    Call<ServiceCreateResponseDTO> getService(@Path("id")Long id);
+    Call<ServiceCreateResponseDTO> getServiceResponse(@Path("id")Long id);
+    @GET("api/services/{id}")
+    Call<Service> getService(@Path("id")Long id);
     @POST("/api/services")
     Call<ResponseBody> createService(@Body ServiceCreateRequestDTO requestDTO);
     @PUT("api/services/{id}")

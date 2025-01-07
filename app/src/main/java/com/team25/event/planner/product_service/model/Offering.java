@@ -1,6 +1,10 @@
 package com.team25.event.planner.product_service.model;
 
 import com.team25.event.planner.product_service.enums.ProductServiceType;
+import com.team25.event.planner.user.model.User;
+
+import java.security.acl.Owner;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +25,8 @@ public abstract class Offering {
     protected boolean visible;
     protected boolean available;
     protected ProductServiceType status;
+    protected User owner;
+    protected List<String> images;
 
     public Offering(){}
 

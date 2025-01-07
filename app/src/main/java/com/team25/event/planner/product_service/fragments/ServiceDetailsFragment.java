@@ -55,8 +55,8 @@ public class ServiceDetailsFragment extends Fragment {
 
     private final MutableLiveData<Event> _event = new MutableLiveData<>();
     public LiveData<Event> event = _event;
-    private final MutableLiveData<ServiceCreateResponseDTO> _service = new MutableLiveData<>();
-    public  LiveData<ServiceCreateResponseDTO> service = _service;
+    private final MutableLiveData<Service> _service = new MutableLiveData<>();
+    public  LiveData<Service> service = _service;
 
     private final MutableLiveData<Boolean> _bookService = new MutableLiveData<>();
     public  LiveData<Boolean> bookService = _bookService;
