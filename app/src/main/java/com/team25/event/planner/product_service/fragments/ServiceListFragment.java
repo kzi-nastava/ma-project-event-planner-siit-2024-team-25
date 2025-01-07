@@ -19,8 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
+import com.team25.event.planner.core.listeners.OnDetailsClickListener;
 import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
 import com.team25.event.planner.event.adapters.TopEventsListAdapter;
+import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 import com.team25.event.planner.offering.dialogs.YesOrNoDialogFragment;
 import com.team25.event.planner.product_service.adapters.ServiceCardsAdapter;
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ServiceListFragment extends ListFragment implements OnEditButtonClickListener, OnDeleteButtonClickListener {
+public class ServiceListFragment extends ListFragment implements OnEditButtonClickListener, OnDeleteButtonClickListener, OnDetailsClickListener {
     private ServiceCardsAdapter adapter;
     private ServiceCardsViewModel serviceCardsViewModel;
     private NavController navController;
@@ -45,6 +47,8 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
     private Boolean availableFilter;
     private Long eventTypeId;
     private Long offeringCategoryId;
+    private final String OFFERING_ID = "OFFERING_ID";
+    private final String BOOK_SERVICE = "BOOK_SERVICE";
 
     public ServiceListFragment(ServiceCardsViewModel vm, boolean f, String n, String p, Boolean a,Long eventTypeId, Long offeringCategoryId) {
         this.serviceCardsViewModel = vm;
@@ -100,6 +104,7 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
             setListAdapter(adapter);
             adapter.setOnEditButtonClickListener(this);
             adapter.setOnDeleteButtonClickListener(this);
+            adapter.setOnDetailsClick(this);
             adapter.notifyDataSetChanged();
         }));
         mViewModel.isDeleted.observe(getViewLifecycleOwner(), deleted ->{
@@ -139,4 +144,12 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
         navController.navigate(R.id.action_ownerHomePage_to_serviceAddForm, bundle);
     }
 
+    @Override
+    public void onDetailsClick(Long id) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(OFFERING_ID, id);
+        bundle.putLong(EventArgumentNames.ID_ARG, 0L);
+        bundle.putBoolean(BOOK_SERVICE,false);
+        navController.navigate(R.id.action_ownerHomePage_to_serviceDetailsFragment, bundle);
+    }
 }

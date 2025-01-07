@@ -29,7 +29,7 @@ public class Service extends Offering implements Parcelable {
     private int minimumArrangement;
     private int maximumArrangement;
     private ReservationType reservationType;
-    private OfferingCategory OfferingCategory;
+    private OfferingCategory offeringCategory;
     private List<EventType> eventTypes;
 
     public Service(){}

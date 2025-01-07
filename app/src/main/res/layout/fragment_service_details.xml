@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".product_service.fragments.ServiceDetailsFragment">
 
     <data>
@@ -25,23 +26,49 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/textName"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@{viewModel.name}"
-                    android:textColor="@color/primary"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    tools:text="Service Name" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center_vertical"
+                        android:text="@={viewModel.name}"
+                        android:textColor="@color/primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        tools:text="Service Name"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/favorite_button"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/favorite_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/add_to_favorites"
+                        android:src="@drawable/ic_favorite_border"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/imageSlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="250sp" />
 
                 <TextView
                     android:id="@+id/textDescriptionLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Description:"
-                    android:layout_marginTop="5sp"
+                    android:layout_marginTop="8sp"
                     android:textColor="@color/primary"
                     android:textStyle="bold" />
 
@@ -81,7 +108,7 @@
                     android:id="@+id/textDiscount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text='@{String.format("%.2f %", viewModel.discount)}'
+                    android:text='@{String.format("%.2f", viewModel.discount)}'
 
                     tools:text="10%"
                     />
@@ -115,7 +142,7 @@
                     android:id="@+id/textDuration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text='@{String.format("%.2f h", viewModel.duration)}'
+                    android:text='@{String.format("%d h", viewModel.duration)}'
                     tools:text="2 hours" />
 
                 <TextView
@@ -131,7 +158,7 @@
                     android:id="@+id/textMinimumArrangement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text='@{String.format("%.2f h", viewModel.minimumArrangement)}'
+                    android:text='@{String.format("%d h", viewModel.minimumArrangement)}'
                     tools:text="5 people" />
 
                 <TextView
@@ -147,7 +174,7 @@
                     android:id="@+id/textMaximumArrangement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text='@{String.format("%.2f h", viewModel.maximumArrangement)}'
+                    android:text='@{String.format("%d h", viewModel.maximumArrangement)}'
 
                     tools:text="50 people" />
 
@@ -164,7 +191,7 @@
                     android:id="@+id/textReservationDeadline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text='@{String.format("%.2f day(s)", viewModel.reservationDeadline)}'
+                    android:text='@{String.format("%d day(s)", viewModel.reservationDeadline)}'
 
                     tools:text="2025-12-31" />
 
@@ -181,7 +208,7 @@
                     android:id="@+id/textCancellationDeadline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text='@{String.format("%.2f day(s)", viewModel.cancellationDeadline)}'
+                    android:text='@{String.format("%d day(s)", viewModel.cancellationDeadline)}'
 
                     tools:text="2025-12-15" />
 
@@ -226,11 +253,10 @@
                     android:textColor="@color/primary"
                     android:textStyle="bold"/>
 
-                <TextView
-                    android:id="@+id/textEventTypeNames"
+                <ListView
+                    android:id="@+id/listView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="Wedding, Birthday, Corporate" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/textOwnerNameLabel"

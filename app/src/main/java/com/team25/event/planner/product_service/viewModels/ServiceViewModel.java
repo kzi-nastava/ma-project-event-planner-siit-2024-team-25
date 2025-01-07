@@ -45,6 +45,7 @@ public class ServiceViewModel extends ViewModel {
     public final MutableLiveData<List<String>> eventTypeNames = new MutableLiveData<>();
     public final MutableLiveData<String> ownerName = new MutableLiveData<>();
     public final MutableLiveData<List<String>> images = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> showDuration = new MutableLiveData<>();
 
 
     public void getService(Long serviceId) {
@@ -53,7 +54,7 @@ public class ServiceViewModel extends ViewModel {
             public void onResponse(Call<Service> call, Response<Service> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     _currentService.postValue(response.body());
-                    fillForm();
+                    fillForm(response.body());
                 } else {
                     _serverError.postValue("Error fetch service");
                 }
@@ -66,8 +67,7 @@ public class ServiceViewModel extends ViewModel {
         });
     }
 
-    private void fillForm() {
-        Service service = _currentService.getValue();
+    private void fillForm(Service service) {
         name.postValue(service.getName());
         description.postValue(service.getDescription());
         price.postValue(service.getPrice());
@@ -75,9 +75,11 @@ public class ServiceViewModel extends ViewModel {
         specifics.postValue(service.getSpecifics());
         if(service.getDuration()>=1){
             duration.postValue(service.getDuration());
+            showDuration.postValue(true);
         }else{
             minimumArrangement.postValue(service.getMinimumArrangement());
             maximumArrangement.postValue(service.getMaximumArrangement());
+            showDuration.postValue(false);
         }
         reservationDeadline.postValue(service.getReservationDeadline());
         cancellationDeadline.postValue(service.getCancellationDeadline());
@@ -89,7 +91,7 @@ public class ServiceViewModel extends ViewModel {
         offeringCategoryName.postValue(service.getOfferingCategory().getName());
         List<String> res = service.getEventTypes().stream().map(EventType::getName).collect(Collectors.toList());
         eventTypeNames.postValue(res);
-        ownerName.postValue(service.getOwner().getFullName());
+        ownerName.postValue(service.getOwner().getName());
         images.postValue(service.getImages());
     }
  }

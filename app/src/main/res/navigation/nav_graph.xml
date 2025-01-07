@@ -38,6 +38,9 @@
         <action
             android:id="@+id/action_ownerHomePage_to_serviceAddForm"
             app:destination="@id/serviceAddForm" />
+        <action
+            android:id="@+id/action_ownerHomePage_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAddForm"
@@ -242,6 +245,9 @@
         <action
             android:id="@+id/action_eventDetailsFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_ownerHomePage"
+            app:destination="@id/ownerHomePage" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
