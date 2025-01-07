@@ -19,6 +19,7 @@ import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.product_service.api.PurchaseApi;
 import com.team25.event.planner.product_service.api.ServiceApi;
 import com.team25.event.planner.user.api.LoginApi;
+import com.team25.event.planner.user.api.SuspensionApi;
 import com.team25.event.planner.user.api.UserApi;
 import com.team25.event.planner.user.api.UserReportApi;
 
@@ -58,7 +59,7 @@ public class ConnectionParams {
     public static PurchaseApi purchaseApi;
     public static UserReportApi userReportApi;
 
-
+    public static SuspensionApi suspensionApi;
     public static NotificationApi notificationApi;
 
 
@@ -88,6 +89,7 @@ public class ConnectionParams {
         budgetItemApi = retrofit.create(BudgetItemApi.class);
         userReportApi = retrofit.create(UserReportApi.class);
         notificationApi = retrofit.create(NotificationApi.class);
+        suspensionApi = retrofit.create(SuspensionApi.class);
     }
 
 }

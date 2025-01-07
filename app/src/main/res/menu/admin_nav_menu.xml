@@ -21,4 +21,8 @@
         android:id="@+id/offeringCategoryFragment"
         android:icon="@drawable/filter_icon"
         android:title="@string/offering_category"/>
+    <item
+        android:id="@+id/reportedUsers"
+        android:icon="@drawable/ic_reported"
+        android:title="@string/reports"/>
 </menu>

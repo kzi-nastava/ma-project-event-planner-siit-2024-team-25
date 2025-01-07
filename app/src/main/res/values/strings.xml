@@ -142,4 +142,6 @@
     <string name="report_message">Report message</string>
     <string name="send_report">Send report</string>
     <string name="notification_status">notification status</string>
+    <string name="suspend_user">suspend user</string>
+    <string name="reports">Reports</string>
 </resources>
