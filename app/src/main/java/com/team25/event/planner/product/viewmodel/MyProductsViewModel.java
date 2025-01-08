@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.team25.event.planner.core.ConnectionParams;
+import com.team25.event.planner.core.ErrorParse;
 import com.team25.event.planner.core.api.ResponseCallback;
 import com.team25.event.planner.core.api.SideEffectResponseCallback;
 import com.team25.event.planner.event.api.EventTypeApi;
@@ -13,16 +14,32 @@ import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.product.api.ProductApi;
+import com.team25.event.planner.product.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.Setter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MyProductsViewModel extends ViewModel {
     private final ProductApi productApi = ConnectionParams.productApi;
     private final EventTypeApi eventTypeApi = ConnectionParams.eventTypeApi;
     private final OfferingCategoryApi offeringCategoryApi = ConnectionParams.offeringCategoryApi;
+
+    private final MutableLiveData<Product> _selectedProduct = new MutableLiveData<>();
+    public final LiveData<Product> selectedProduct = _selectedProduct;
+    public final MutableLiveData<String> name = new MutableLiveData<>();
+    public final MutableLiveData<String> description = new MutableLiveData<>();
+    public final MutableLiveData<Double> price = new MutableLiveData<>();
+    public final MutableLiveData<Double> discount = new MutableLiveData<>();
+    public final MutableLiveData<String> offeringCategoryName = new MutableLiveData<>();
+    public final MutableLiveData<List<String>> eventTypeNames = new MutableLiveData<>();
+    public final MutableLiveData<String> ownerName = new MutableLiveData<>();
+    public final MutableLiveData<List<String>> images = new MutableLiveData<>();
 
     private final MutableLiveData<List<OfferingCard>> _products = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<OfferingCard>> products = _products;
@@ -101,5 +118,34 @@ public class MyProductsViewModel extends ViewModel {
                 ignored -> reload(),
                 _serverError, "MyProductsViewModel"
         ));
+    }
+    public void fetchProduct(Long id){
+        productApi.getProduct(id).enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if(response.isSuccessful() && response.body()!= null){
+                    _selectedProduct.postValue(response.body());
+                    fillForm(response.body());
+                }else{
+                    _serverError.postValue(ErrorParse.catchError(response));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+                _serverError.postValue("Network problem");
+            }
+        });
+    }
+    private void fillForm(Product product) {
+        name.postValue(product.getName());
+        description.postValue(product.getDescription());
+        price.postValue(product.getPrice());
+        discount.postValue(product.getDiscount());
+        offeringCategoryName.postValue(product.getOfferingCategory().getName());
+        List<String> res = product.getEventTypes().stream().map(com.team25.event.planner.product.model.EventType::getName).collect(Collectors.toList());
+        eventTypeNames.postValue(res);
+        ownerName.postValue(product.getOwnerInfo().getName());
+        images.postValue(product.getImages());
     }
 }

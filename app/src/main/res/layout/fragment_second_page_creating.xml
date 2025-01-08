@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
-    tools:context=".product_service.fragments.SecondPageCreatingServiceFragment"
+    tools:context=".service.fragments.SecondPageCreatingServiceFragment"
     >
 
     <data>
         <variable
             name="viewModel"
-            type="com.team25.event.planner.product_service.viewModels.ServiceAddFormViewModel" />
+            type="com.team25.event.planner.service.viewModels.ServiceAddFormViewModel" />
     </data>
 
     <LinearLayout

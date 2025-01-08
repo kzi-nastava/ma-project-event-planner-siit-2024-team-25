@@ -3,12 +3,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".product_service.fragments.FilterServiceFragment"
+    tools:context=".service.fragments.FilterServiceFragment"
     >
     <data>
         <variable
             name="viewModel"
-            type="com.team25.event.planner.product_service.viewModels.ServiceCardsViewModel" />
+            type="com.team25.event.planner.service.viewModels.ServiceCardsViewModel" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"

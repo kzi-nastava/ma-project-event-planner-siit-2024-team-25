@@ -18,8 +18,8 @@ import com.team25.event.planner.offering.Api.PriceListApi;
 
 import com.team25.event.planner.product.api.ProductApi;
 
-import com.team25.event.planner.product_service.api.PurchaseApi;
-import com.team25.event.planner.product_service.api.ServiceApi;
+import com.team25.event.planner.service.api.PurchaseApi;
+import com.team25.event.planner.service.api.ServiceApi;
 import com.team25.event.planner.user.api.LoginApi;
 import com.team25.event.planner.user.api.UserApi;
 import com.team25.event.planner.user.api.UserReportApi;
