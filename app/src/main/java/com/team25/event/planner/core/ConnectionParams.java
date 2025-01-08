@@ -4,18 +4,16 @@ package com.team25.event.planner.core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.team25.event.planner.BuildConfig;
-
 import com.team25.event.planner.communication.api.NotificationApi;
-import com.team25.event.planner.event.api.BudgetItemApi;
-
 import com.team25.event.planner.core.api.serialization.LocalDateAdapter;
 import com.team25.event.planner.core.api.serialization.LocalDateTimeAdapter;
 import com.team25.event.planner.core.api.serialization.LocalTimeAdapter;
-
+import com.team25.event.planner.event.api.BudgetItemApi;
 import com.team25.event.planner.event.api.EventApi;
 import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.offering.Api.OfferingApi;
 import com.team25.event.planner.offering.Api.OfferingCategoryApi;
+import com.team25.event.planner.product.api.ProductApi;
 import com.team25.event.planner.product_service.api.PurchaseApi;
 import com.team25.event.planner.product_service.api.ServiceApi;
 import com.team25.event.planner.user.api.LoginApi;
@@ -53,11 +51,12 @@ public class ConnectionParams {
 
     public static ServiceApi serviceApi;
 
+    public static ProductApi productApi;
+
     public static OfferingCategoryApi offeringCategoryApi;
     public static BudgetItemApi budgetItemApi;
     public static PurchaseApi purchaseApi;
     public static UserReportApi userReportApi;
-
 
     public static NotificationApi notificationApi;
 
@@ -83,6 +82,7 @@ public class ConnectionParams {
         offeringApi = retrofit.create(OfferingApi.class);
         eventTypeApi = retrofit.create(EventTypeApi.class);
         serviceApi = retrofit.create(ServiceApi.class);
+        productApi = retrofit.create(ProductApi.class);
         offeringCategoryApi = retrofit.create(OfferingCategoryApi.class);
         purchaseApi = retrofit.create(PurchaseApi.class);
         budgetItemApi = retrofit.create(BudgetItemApi.class);
