@@ -29,10 +29,8 @@ public class MyEventsViewModel extends ViewModel {
     public final LiveData<String> serverError = _serverError;
 
     public void loadNextPage() {
-        if (isLoading()) return;
+        if (isLoading() || isEndReached) return;
         _isLoading.setValue(true);
-
-        if (isEndReached) return;
 
         eventApi.getOrganizerEvents(currentPage).enqueue(new SideEffectResponseCallback<>(
                 page -> {

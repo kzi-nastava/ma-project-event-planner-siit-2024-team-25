@@ -14,11 +14,16 @@
         android:icon="@drawable/ic_notifications"
         android:title="@string/notifications" />
     <item
-        android:id="@id/ownerHomePage"
+        android:id="@id/myProductsFragment"
         android:icon="@drawable/ic_shopping_bag"
         android:title="@string/my_products_services" />
     <item
         android:id="@+id/priceListPage"
         android:icon="@drawable/money"
         android:title="@string/my_price_list"/>
+    <item
+        android:id="@id/ownerHomePage"
+        android:icon="@drawable/ic_shopping_basket"
+        android:title="@string/my_services" />
+
 </menu>
