@@ -16,10 +16,7 @@ import retrofit2.http.QueryMap;
 
 public interface OfferingApi {
     @GET("/api/offerings/top")
-    Call<Page<OfferingCard>> getTopOfferings(
-            @Query("country") String country,
-            @Query("city") String city
-    );
+    Call<Page<OfferingCard>> getTopOfferings();
 
     @GET("/api/offerings/")
     Call<Page<OfferingCard>> getAllOfferings(

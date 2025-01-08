@@ -264,6 +264,7 @@
             app:destination="@id/priceListPage" />
     </fragment>
 
+    <fragment
         android:id="@+id/myProductsFragment"
         android:name="com.team25.event.planner.product.fragments.MyProductsFragment"
         android:label="My Products">

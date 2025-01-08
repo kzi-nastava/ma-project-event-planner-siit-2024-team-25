@@ -85,11 +85,8 @@ public class HomeEventViewModel extends ViewModel {
 
     public void getTopEvents() {
 
-        String countryValue = "";
-        String cityValue = "";
-
         EventApi eventApi = ConnectionParams.eventApi;
-        Call<Page<EventCard>> call = eventApi.getTopEvents(countryValue, cityValue);
+        Call<Page<EventCard>> call = eventApi.getTopEvents();
 
         call.enqueue(new Callback<>() {
             @Override
