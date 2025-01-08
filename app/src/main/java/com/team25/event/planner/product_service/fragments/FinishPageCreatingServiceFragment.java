@@ -42,6 +42,7 @@ import com.bumptech.glide.Glide;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentFinishPageCreatingServiceBinding;
 import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewModel;
 
@@ -59,6 +60,7 @@ public class FinishPageCreatingServiceFragment extends Fragment {
     private LinearLayout imageContainer;
     private static final int PICK_IMAGE_REQUEST = 1;
     private ActivityResultLauncher<Intent> galleryLauncher;
+    AuthViewModel authViewModel;
 
     public static FinishPageCreatingServiceFragment newInstance() {
         return new FinishPageCreatingServiceFragment();
@@ -75,6 +77,8 @@ public class FinishPageCreatingServiceFragment extends Fragment {
         mViewModel = new ViewModelProvider(
                 NavHostFragment.findNavController(this).getViewModelStoreOwner(R.id.nav_graph)
         ).get(ServiceAddFormViewModel.class);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        mViewModel.ownerId.postValue(authViewModel.getUserId());
         imageContainer = binding.imageContainer;
         binding.setViewModel(mViewModel);
 

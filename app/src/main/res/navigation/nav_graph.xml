@@ -246,6 +246,24 @@
         android:name="com.team25.event.planner.core.fragments.MapFragment"
         android:label="MapFragment" />
     <fragment
+        android:id="@+id/priceListPage"
+        android:name="com.team25.event.planner.offering.fragments.PriceListBaseFragment"
+        android:label="fragment_price_list_base"
+        tools:layout="@layout/fragment_price_list_base" >
+        <action
+            android:id="@+id/action_priceListPage_to_editPriceListItemFragment"
+            app:destination="@id/editPriceListItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPriceListItemFragment"
+        android:name="com.team25.event.planner.offering.fragments.EditPriceListItemFragment"
+        android:label="fragment_edit_price_list_item"
+        tools:layout="@layout/fragment_edit_price_list_item" >
+        <action
+            android:id="@+id/action_editPriceListItemFragment_to_priceListPage"
+            app:destination="@id/priceListPage" />
+    </fragment>
+
         android:id="@+id/myProductsFragment"
         android:name="com.team25.event.planner.product.fragments.MyProductsFragment"
         android:label="My Products">
@@ -257,9 +275,11 @@
         android:id="@+id/productFormFragment"
         android:name="com.team25.event.planner.product.fragments.ProductFormFragment"
         android:label="Product" />
+
     <fragment
         android:id="@+id/notificationFragment"
         android:name="com.team25.event.planner.communication.fragments.NotificationFragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_notification" />
+
 </navigation>
