@@ -36,6 +36,7 @@ public class MyProductsViewModel extends ViewModel {
     public final MutableLiveData<String> description = new MutableLiveData<>();
     public final MutableLiveData<Double> price = new MutableLiveData<>();
     public final MutableLiveData<Double> discount = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> available = new MutableLiveData<>();
     public final MutableLiveData<String> offeringCategoryName = new MutableLiveData<>();
     public final MutableLiveData<List<String>> eventTypeNames = new MutableLiveData<>();
     public final MutableLiveData<String> ownerName = new MutableLiveData<>();
@@ -147,5 +148,6 @@ public class MyProductsViewModel extends ViewModel {
         eventTypeNames.postValue(res);
         ownerName.postValue(product.getOwnerInfo().getName());
         images.postValue(product.getImages());
+        available.postValue(product.isAvailable());
     }
 }

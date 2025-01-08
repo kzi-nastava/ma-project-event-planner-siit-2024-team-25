@@ -270,6 +270,9 @@
         <action
             android:id="@+id/action_myProductsFragment_to_productFormFragment"
             app:destination="@id/productFormFragment" />
+        <action
+            android:id="@+id/action_myProductsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/productFormFragment"
@@ -281,5 +284,14 @@
         android:name="com.team25.event.planner.communication.fragments.NotificationFragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.team25.event.planner.product.fragments.ProductDetailsFragment"
+        android:label="ProductDetails"
+        tools:layout="@layout/fragment_product_details">
+        <action
+            android:id="@+id/action_productDetailsFragment_to_myProductsFragment"
+            app:destination="@id/myProductsFragment" />
+    </fragment>
 
 </navigation>
