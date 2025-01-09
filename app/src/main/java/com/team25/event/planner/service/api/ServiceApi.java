@@ -1,16 +1,11 @@
 package com.team25.event.planner.service.api;
 
 import com.team25.event.planner.core.Page;
-<<<<<<< HEAD:app/src/main/java/com/team25/event/planner/product_service/api/ServiceApi.java
-import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
-import com.team25.event.planner.product_service.dto.ServiceCreateResponseDTO;
-import com.team25.event.planner.product_service.model.Service;
-import com.team25.event.planner.product_service.model.ServiceCard;
-=======
+
 import com.team25.event.planner.service.dto.ServiceCreateRequestDTO;
 import com.team25.event.planner.service.dto.ServiceCreateResponseDTO;
+import com.team25.event.planner.service.model.Service;
 import com.team25.event.planner.service.model.ServiceCard;
->>>>>>> develop:app/src/main/java/com/team25/event/planner/service/api/ServiceApi.java
 
 import java.util.Map;
 

@@ -27,18 +27,11 @@ import com.team25.event.planner.databinding.FragmentServiceDetailsBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.viewmodel.EventViewModel;
-<<<<<<< HEAD:app/src/main/java/com/team25/event/planner/product_service/fragments/ServiceDetailsFragment.java
-import com.team25.event.planner.product_service.adapters.ImageSliderAdapter;
-import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
-import com.team25.event.planner.product_service.dto.ServiceCreateResponseDTO;
-import com.team25.event.planner.product_service.model.Service;
-import com.team25.event.planner.product_service.viewModels.BookServiceViewModel;
-import com.team25.event.planner.product_service.viewModels.ServiceViewModel;
-=======
+
 import com.team25.event.planner.service.dto.ServiceCreateResponseDTO;
+import com.team25.event.planner.service.model.Service;
 import com.team25.event.planner.service.viewModels.BookServiceViewModel;
 import com.team25.event.planner.service.viewModels.ServiceViewModel;
->>>>>>> develop:app/src/main/java/com/team25/event/planner/service/fragments/ServiceDetailsFragment.java
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -261,7 +254,7 @@ public class ServiceDetailsFragment extends Fragment {
             listView.setAdapter(adapter);
         });
         _serviceViewModel.images.observe(getViewLifecycleOwner(), res->{
-            ImageSliderAdapter  adapter = new ImageSliderAdapter(res);
+            com.team25.event.planner.service.adapters.ImageSliderAdapter adapter = new com.team25.event.planner.service.adapters.ImageSliderAdapter(res);
             ViewPager2 viewPager = _binding.imageSlider;
             viewPager.setAdapter(adapter);
         });
