@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
+import com.team25.event.planner.core.listeners.OnDetailsClickListener;
 import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
 import com.team25.event.planner.service.model.ServiceCard;
 
@@ -27,6 +28,7 @@ public class ServiceCardsAdapter extends ArrayAdapter<ServiceCard> {
     private List<ServiceCard> services;
     private OnEditButtonClickListener editButtonClickListener;
     private OnDeleteButtonClickListener deleteButtonClickListener;
+    private OnDetailsClickListener detailsClickListener;
     public ServiceCardsAdapter(Context context, List<ServiceCard> services){
         super(context, R.layout.service_card,services);
         this.services = services;
@@ -36,6 +38,9 @@ public class ServiceCardsAdapter extends ArrayAdapter<ServiceCard> {
     }
     public void setOnDeleteButtonClickListener(OnDeleteButtonClickListener listener){
         this.deleteButtonClickListener = listener;
+    }
+    public void setOnDetailsClick(OnDetailsClickListener listener){
+        this.detailsClickListener = listener;
     }
 
     @Override
@@ -77,10 +82,9 @@ public class ServiceCardsAdapter extends ArrayAdapter<ServiceCard> {
             productDescription.setText(serviceCard.getDescription());
             priceText.setText(serviceCard.getPrice().toString() + "e");
             productCard.setOnClickListener(v -> {
-                Log.i("ShopApp", "Clicked: " + serviceCard.getName() + ", id: " +
-                        serviceCard.getId());
-                Toast.makeText(getContext(), "Clicked: " + serviceCard.getName()  +
-                        ", id: " + serviceCard.getId(), Toast.LENGTH_SHORT).show();
+                if(detailsClickListener != null){
+                    detailsClickListener.onDetailsClick(serviceCard.getId());
+                }
             });
             editButton.setOnClickListener(v ->{
                 if(editButtonClickListener != null){

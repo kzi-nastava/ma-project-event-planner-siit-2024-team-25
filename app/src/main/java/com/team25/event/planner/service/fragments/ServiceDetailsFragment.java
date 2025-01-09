@@ -10,10 +10,14 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -23,9 +27,18 @@ import com.team25.event.planner.databinding.FragmentServiceDetailsBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.viewmodel.EventViewModel;
+<<<<<<< HEAD:app/src/main/java/com/team25/event/planner/product_service/fragments/ServiceDetailsFragment.java
+import com.team25.event.planner.product_service.adapters.ImageSliderAdapter;
+import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
+import com.team25.event.planner.product_service.dto.ServiceCreateResponseDTO;
+import com.team25.event.planner.product_service.model.Service;
+import com.team25.event.planner.product_service.viewModels.BookServiceViewModel;
+import com.team25.event.planner.product_service.viewModels.ServiceViewModel;
+=======
 import com.team25.event.planner.service.dto.ServiceCreateResponseDTO;
 import com.team25.event.planner.service.viewModels.BookServiceViewModel;
 import com.team25.event.planner.service.viewModels.ServiceViewModel;
+>>>>>>> develop:app/src/main/java/com/team25/event/planner/service/fragments/ServiceDetailsFragment.java
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -51,13 +64,14 @@ public class ServiceDetailsFragment extends Fragment {
 
     private final MutableLiveData<Event> _event = new MutableLiveData<>();
     public LiveData<Event> event = _event;
-    private final MutableLiveData<ServiceCreateResponseDTO> _service = new MutableLiveData<>();
-    public  LiveData<ServiceCreateResponseDTO> service = _service;
+    private final MutableLiveData<Service> _service = new MutableLiveData<>();
+    public  LiveData<Service> service = _service;
 
     private final MutableLiveData<Boolean> _bookService = new MutableLiveData<>();
     public  LiveData<Boolean> bookService = _bookService;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    private ListView listView;
 
     public ServiceDetailsFragment() {
     }
@@ -72,7 +86,7 @@ public class ServiceDetailsFragment extends Fragment {
         }
 
         _eventViewModel = new EventViewModel();
-        _serviceViewModel = new ServiceViewModel();
+        _serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
         _bookServiceViewModel = new BookServiceViewModel();
         _dialogBookServiceBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
@@ -81,6 +95,8 @@ public class ServiceDetailsFragment extends Fragment {
                 false
         );
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -105,7 +121,10 @@ public class ServiceDetailsFragment extends Fragment {
         _bookService.observe(getViewLifecycleOwner(), isBookService -> {
             if (isBookService != null) {
                 _binding.bookService.setVisibility(isBookService ? View.VISIBLE : View.GONE);
-                _eventViewModel.getEvent(_eventId);
+                if(_bookService.getValue() != null && Boolean.TRUE.equals(_bookService.getValue())){
+                    _eventViewModel.getEvent(_eventId);
+                }
+
 
                 _binding.bookService.setOnClickListener(v -> {
                     _bookServiceDialog.show();
@@ -237,6 +256,32 @@ public class ServiceDetailsFragment extends Fragment {
         _bookServiceViewModel.responseDTO.observe(getViewLifecycleOwner(), response -> {
             Toast.makeText(getContext(), "You've successfully booked this service for your event!", Toast.LENGTH_LONG).show();
         });
+        _serviceViewModel.eventTypeNames.observe(getViewLifecycleOwner(), res ->{
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, res);
+            listView.setAdapter(adapter);
+        });
+        _serviceViewModel.images.observe(getViewLifecycleOwner(), res->{
+            ImageSliderAdapter  adapter = new ImageSliderAdapter(res);
+            ViewPager2 viewPager = _binding.imageSlider;
+            viewPager.setAdapter(adapter);
+        });
+        _serviceViewModel.showDuration.observe(getViewLifecycleOwner(), check->{
+            if(check){
+                _binding.textDuration.setVisibility(View.VISIBLE);
+                _binding.textDurationLabel.setVisibility(View.VISIBLE);
+                _binding.textMaximumArrangementLabel.setVisibility(View.GONE);
+                _binding.textMinimumArrangementLabel.setVisibility(View.GONE);
+                _binding.textMaximumArrangement.setVisibility(View.GONE);
+                _binding.textMinimumArrangement.setVisibility(View.GONE);
+            }else{
+                _binding.textDuration.setVisibility(View.GONE);
+                _binding.textDurationLabel.setVisibility(View.GONE);
+                _binding.textMaximumArrangementLabel.setVisibility(View.VISIBLE);
+                _binding.textMinimumArrangementLabel.setVisibility(View.VISIBLE);
+                _binding.textMaximumArrangement.setVisibility(View.VISIBLE);
+                _binding.textMinimumArrangement.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
@@ -245,7 +290,9 @@ public class ServiceDetailsFragment extends Fragment {
 
 
         _binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
-
+        _binding.setLifecycleOwner(getViewLifecycleOwner());
+        _binding.setViewModel(_serviceViewModel);
+        listView = _binding.listView;
         setupDateTimePickers();
         setupObservable();
         return _binding.getRoot();

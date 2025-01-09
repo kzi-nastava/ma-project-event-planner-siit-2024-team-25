@@ -7,10 +7,23 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.team25.event.planner.core.ConnectionParams;
+<<<<<<< HEAD:app/src/main/java/com/team25/event/planner/product_service/viewModels/ServiceViewModel.java
+import com.team25.event.planner.event.model.Event;
+import com.team25.event.planner.event.model.EventType;
+import com.team25.event.planner.product_service.api.ServiceApi;
+import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
+import com.team25.event.planner.product_service.dto.ServiceCreateResponseDTO;
+import com.team25.event.planner.product_service.enums.ReservationType;
+import com.team25.event.planner.product_service.model.Service;
+=======
 import com.team25.event.planner.product.model.EventType;
 import com.team25.event.planner.product.model.Product;
 import com.team25.event.planner.service.api.ServiceApi;
 import com.team25.event.planner.service.dto.ServiceCreateResponseDTO;
+
+import java.util.List;
+import java.util.stream.Collectors;
+>>>>>>> develop:app/src/main/java/com/team25/event/planner/service/viewModels/ServiceViewModel.java
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,26 +35,76 @@ import retrofit2.Response;
 public class ServiceViewModel extends ViewModel {
 
     private ServiceApi _serviceApi = ConnectionParams.serviceApi;
-    private final MutableLiveData<ServiceCreateResponseDTO> _currentService = new MutableLiveData<>();
-    public LiveData<ServiceCreateResponseDTO> currentService = _currentService;
+    private final MutableLiveData<Service> _currentService = new MutableLiveData<>();
+    public LiveData<Service> currentService = _currentService;
+    private MutableLiveData<String> _serverError = new MutableLiveData<>();
+    public LiveData<String> serverError = _serverError;
 
+    public final MutableLiveData<String> name = new MutableLiveData<>();
+    public final MutableLiveData<String> description = new MutableLiveData<>();
+    public final MutableLiveData<Double> price = new MutableLiveData<>();
+    public final MutableLiveData<Double> discount = new MutableLiveData<>();
+    public final MutableLiveData<String> specifics = new MutableLiveData<>();
+    public final MutableLiveData<Integer> duration = new MutableLiveData<>();
+    public final MutableLiveData<Integer> minimumArrangement = new MutableLiveData<>();
+    public final MutableLiveData<Integer> maximumArrangement = new MutableLiveData<>();
+    public final MutableLiveData<Integer> reservationDeadline = new MutableLiveData<>();
+    public final MutableLiveData<Integer> cancellationDeadline = new MutableLiveData<>();
+    public final MutableLiveData<String> reservationTypeService = new MutableLiveData<>();
+    public final MutableLiveData<String> offeringCategoryName = new MutableLiveData<>();
+    public final MutableLiveData<List<String>> eventTypeNames = new MutableLiveData<>();
+    public final MutableLiveData<String> ownerName = new MutableLiveData<>();
+    public final MutableLiveData<List<String>> images = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> showDuration = new MutableLiveData<>();
 
 
     public void getService(Long serviceId) {
-        _serviceApi.getService(serviceId).enqueue(new Callback<>() {
+        _serviceApi.getService(serviceId).enqueue(new Callback<Service>() {
             @Override
-            public void onResponse(Call<ServiceCreateResponseDTO> call, Response<ServiceCreateResponseDTO> response) {
+            public void onResponse(Call<Service> call, Response<Service> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    _currentService.setValue(response.body());
+                    _currentService.postValue(response.body());
+                    fillForm(response.body());
                 } else {
-                    Log.e("ServiceViewModel", "Failed to fetch event");
+                    _serverError.postValue("Error fetch service");
                 }
             }
+
             @Override
-            public void onFailure(Call<ServiceCreateResponseDTO> call, Throwable t) {
-                Log.e("ServiceViewModel", "Error " + t.getMessage());
+            public void onFailure(Call<Service> call, Throwable t) {
+                _serverError.postValue("Error, network problem");
             }
         });
     }
 
+<<<<<<< HEAD:app/src/main/java/com/team25/event/planner/product_service/viewModels/ServiceViewModel.java
+    private void fillForm(Service service) {
+        name.postValue(service.getName());
+        description.postValue(service.getDescription());
+        price.postValue(service.getPrice());
+        discount.postValue(service.getDiscount());
+        specifics.postValue(service.getSpecifics());
+        if(service.getDuration()>=1){
+            duration.postValue(service.getDuration());
+            showDuration.postValue(true);
+        }else{
+            minimumArrangement.postValue(service.getMinimumArrangement());
+            maximumArrangement.postValue(service.getMaximumArrangement());
+            showDuration.postValue(false);
+        }
+        reservationDeadline.postValue(service.getReservationDeadline());
+        cancellationDeadline.postValue(service.getCancellationDeadline());
+        if(service.getReservationType() == ReservationType.MANUAL){
+            reservationTypeService.postValue("Manual");
+        }else{
+            reservationTypeService.postValue("Automatic");
+        }
+        offeringCategoryName.postValue(service.getOfferingCategory().getName());
+        List<String> res = service.getEventTypes().stream().map(EventType::getName).collect(Collectors.toList());
+        eventTypeNames.postValue(res);
+        ownerName.postValue(service.getOwner().getName());
+        images.postValue(service.getImages());
+    }
+=======
+>>>>>>> develop:app/src/main/java/com/team25/event/planner/service/viewModels/ServiceViewModel.java
  }

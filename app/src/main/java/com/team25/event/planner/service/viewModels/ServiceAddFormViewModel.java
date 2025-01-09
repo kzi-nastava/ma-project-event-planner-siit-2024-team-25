@@ -262,7 +262,7 @@ public class ServiceAddFormViewModel extends ViewModel {
     }
 
     public void fetchService(Long idService) {
-        serviceApi.getService(idService).enqueue(new Callback<ServiceCreateResponseDTO>() {
+        serviceApi.getServiceResponse(idService).enqueue(new Callback<ServiceCreateResponseDTO>() {
             @Override
             public void onResponse(Call<ServiceCreateResponseDTO> call, Response<ServiceCreateResponseDTO> response) {
                 if (response.isSuccessful() && response.body() != null) {

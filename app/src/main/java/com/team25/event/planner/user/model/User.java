@@ -6,6 +6,6 @@ import lombok.Data;
 public class User {
     private final Long userId;
     private final String email;
-    private final String fullName;
+    private final String name;
     private final UserRole userRole;
 }
