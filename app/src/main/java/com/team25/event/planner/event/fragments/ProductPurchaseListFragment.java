@@ -57,6 +57,7 @@ public class ProductPurchaseListFragment extends Fragment implements OnPurchaseC
      viewModel = new ViewModelProvider(this).get(PurchaseViewModel.class);
      binding.setViewModel(viewModel);
      navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
+
      return binding.getRoot();
     }
 

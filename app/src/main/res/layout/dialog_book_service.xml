@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.team25.event.planner.product_service.viewModels.BookServiceViewModel" />
+            type="com.team25.event.planner.service.viewModels.BookServiceViewModel" />
     </data>
 
     <LinearLayout

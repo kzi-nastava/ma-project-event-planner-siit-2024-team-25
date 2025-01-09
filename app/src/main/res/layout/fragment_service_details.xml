@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".product_service.fragments.ServiceDetailsFragment">
+
+    tools:context=".service.fragments.ServiceDetailsFragment">
+
 
     <data>
         <variable
             name="viewModel"
-            type="com.team25.event.planner.product_service.viewModels.ServiceViewModel" />
+            type="com.team25.event.planner.service.viewModels.ServiceViewModel" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"

@@ -9,11 +9,9 @@ import androidx.lifecycle.ViewModel;
 import com.google.gson.Gson;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.model.ApiError;
-import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.offering.model.OfferingCategoryType;
-import com.team25.event.planner.product_service.viewModels.ServiceAddFormViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
