@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.team25.event.planner.product_service.viewModels.ServiceCardsViewModel" />
+            type="com.team25.event.planner.service.viewModels.ServiceCardsViewModel" />
     </data>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".product_service.fragments.OwnerHomePage"
+    tools:context=".service.fragments.OwnerHomePage"
     android:id="@+id/mainOwner">
 
 
