@@ -5,15 +5,10 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-<<<<<<< HEAD:app/src/main/java/com/team25/event/planner/product_service/model/Service.java
 import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.offering.model.OfferingCategory;
-import com.team25.event.planner.product_service.enums.ProductServiceType;
-import com.team25.event.planner.product_service.enums.ReservationType;
-=======
 import com.team25.event.planner.service.enums.ProductServiceType;
 import com.team25.event.planner.service.enums.ReservationType;
->>>>>>> develop:app/src/main/java/com/team25/event/planner/service/model/Service.java
 
 import java.util.List;
 

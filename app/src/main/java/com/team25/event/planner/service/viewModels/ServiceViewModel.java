@@ -7,23 +7,15 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.team25.event.planner.core.ConnectionParams;
-<<<<<<< HEAD:app/src/main/java/com/team25/event/planner/product_service/viewModels/ServiceViewModel.java
-import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.model.EventType;
-import com.team25.event.planner.product_service.api.ServiceApi;
-import com.team25.event.planner.product_service.dto.ServiceCreateRequestDTO;
-import com.team25.event.planner.product_service.dto.ServiceCreateResponseDTO;
-import com.team25.event.planner.product_service.enums.ReservationType;
-import com.team25.event.planner.product_service.model.Service;
-=======
-import com.team25.event.planner.product.model.EventType;
 import com.team25.event.planner.product.model.Product;
 import com.team25.event.planner.service.api.ServiceApi;
 import com.team25.event.planner.service.dto.ServiceCreateResponseDTO;
+import com.team25.event.planner.service.enums.ReservationType;
+import com.team25.event.planner.service.model.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
->>>>>>> develop:app/src/main/java/com/team25/event/planner/service/viewModels/ServiceViewModel.java
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,7 +69,6 @@ public class ServiceViewModel extends ViewModel {
         });
     }
 
-<<<<<<< HEAD:app/src/main/java/com/team25/event/planner/product_service/viewModels/ServiceViewModel.java
     private void fillForm(Service service) {
         name.postValue(service.getName());
         description.postValue(service.getDescription());
@@ -105,6 +96,4 @@ public class ServiceViewModel extends ViewModel {
         ownerName.postValue(service.getOwner().getName());
         images.postValue(service.getImages());
     }
-=======
->>>>>>> develop:app/src/main/java/com/team25/event/planner/service/viewModels/ServiceViewModel.java
  }

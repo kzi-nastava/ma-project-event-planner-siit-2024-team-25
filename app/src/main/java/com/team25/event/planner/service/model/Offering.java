@@ -1,14 +1,9 @@
 package com.team25.event.planner.service.model;
 
-<<<<<<< HEAD:app/src/main/java/com/team25/event/planner/product_service/model/Offering.java
-import com.team25.event.planner.product_service.enums.ProductServiceType;
+import com.team25.event.planner.service.enums.ProductServiceType;
 import com.team25.event.planner.user.model.User;
 
-import java.security.acl.Owner;
 import java.util.List;
-=======
-import com.team25.event.planner.service.enums.ProductServiceType;
->>>>>>> develop:app/src/main/java/com/team25/event/planner/service/model/Offering.java
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

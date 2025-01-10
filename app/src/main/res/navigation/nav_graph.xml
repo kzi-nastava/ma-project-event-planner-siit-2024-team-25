@@ -291,7 +291,6 @@
         android:label="Notifications"
         tools:layout="@layout/fragment_notification" />
     <fragment
-    <fragment
         android:id="@+id/reportedUsers"
         android:name="com.team25.event.planner.user.fragments.ReportedUsers"
         android:label="Reported users"

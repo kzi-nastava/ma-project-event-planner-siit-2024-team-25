@@ -20,12 +20,7 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
 import com.team25.event.planner.core.listeners.OnDetailsClickListener;
 import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
-<<<<<<< HEAD:app/src/main/java/com/team25/event/planner/product_service/fragments/ServiceListFragment.java
-import com.team25.event.planner.event.adapters.TopEventsListAdapter;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
-import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
-=======
->>>>>>> develop:app/src/main/java/com/team25/event/planner/service/fragments/ServiceListFragment.java
 import com.team25.event.planner.offering.dialogs.YesOrNoDialogFragment;
 import com.team25.event.planner.service.adapters.ServiceCardsAdapter;
 import com.team25.event.planner.service.viewModels.ServiceAddFormViewModel;
