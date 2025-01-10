@@ -1,7 +1,5 @@
 package com.team25.event.planner.event.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -9,12 +7,11 @@ import androidx.lifecycle.ViewModel;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.offering.Api.OfferingApi;
-import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.offering.model.OfferingFilterDTO;
 import com.team25.event.planner.offering.model.ProductCard;
 import com.team25.event.planner.offering.model.ProductPurchaseRequestDTO;
 import com.team25.event.planner.offering.model.ProductPurchaseResponseDTO;
-import com.team25.event.planner.product_service.api.PurchaseApi;
+import com.team25.event.planner.service.api.PurchaseApi;
 
 import java.util.List;
 

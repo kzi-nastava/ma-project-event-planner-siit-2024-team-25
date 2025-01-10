@@ -33,15 +33,18 @@
     <include app:graph="@navigation/nav_graph_registration" />
     <fragment
         android:id="@+id/ownerHomePage"
-        android:name="com.team25.event.planner.product_service.fragments.OwnerHomePage"
+        android:name="com.team25.event.planner.service.fragments.OwnerHomePage"
         android:label="OwnerHomePage">
         <action
             android:id="@+id/action_ownerHomePage_to_serviceAddForm"
             app:destination="@id/serviceAddForm" />
+        <action
+            android:id="@+id/action_ownerHomePage_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAddForm"
-        android:name="com.team25.event.planner.product_service.fragments.ServiceAddForm"
+        android:name="com.team25.event.planner.service.fragments.ServiceAddForm"
         android:label="fragment_service_add_form"
         tools:layout="@layout/fragment_service_add_form">
         <action
@@ -53,7 +56,7 @@
     </fragment>
     <fragment
         android:id="@+id/secondPageCreatingServiceFragment"
-        android:name="com.team25.event.planner.product_service.fragments.SecondPageCreatingServiceFragment"
+        android:name="com.team25.event.planner.service.fragments.SecondPageCreatingServiceFragment"
         android:label="fragment_second_page_creating"
         tools:layout="@layout/fragment_second_page_creating">
         <action
@@ -65,7 +68,7 @@
     </fragment>
     <fragment
         android:id="@+id/finishPageCreateingCerviceFragment"
-        android:name="com.team25.event.planner.product_service.fragments.FinishPageCreatingServiceFragment"
+        android:name="com.team25.event.planner.service.fragments.FinishPageCreatingServiceFragment"
         android:label="fragment_finish_page_createing_cervice"
         tools:layout="@layout/fragment_finish_page_creating_service">
         <action
@@ -228,7 +231,7 @@
     </fragment>
     <fragment
         android:id="@+id/serviceDetailsFragment"
-        android:name="com.team25.event.planner.product_service.fragments.ServiceDetailsFragment"
+        android:name="com.team25.event.planner.service.fragments.ServiceDetailsFragment"
         android:label="fragment_service_details"
         tools:layout="@layout/fragment_service_details">
         <action
@@ -240,6 +243,9 @@
         <action
             android:id="@+id/action_eventDetailsFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_ownerHomePage"
+            app:destination="@id/ownerHomePage" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -263,7 +269,6 @@
             android:id="@+id/action_editPriceListItemFragment_to_priceListPage"
             app:destination="@id/priceListPage" />
     </fragment>
-
     <fragment
         android:id="@+id/myProductsFragment"
         android:name="com.team25.event.planner.product.fragments.MyProductsFragment"
@@ -271,6 +276,9 @@
         <action
             android:id="@+id/action_myProductsFragment_to_productFormFragment"
             app:destination="@id/productFormFragment" />
+        <action
+            android:id="@+id/action_myProductsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/productFormFragment"
@@ -282,5 +290,28 @@
         android:name="com.team25.event.planner.communication.fragments.NotificationFragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_notification" />
-
+    <fragment
+        android:id="@+id/reportedUsers"
+        android:name="com.team25.event.planner.user.fragments.ReportedUsers"
+        android:label="Reported users"
+        tools:layout="@layout/fragment_reported_users" />
+    <fragment
+        android:id="@+id/suspendedUsers"
+        android:name="com.team25.event.planner.user.fragments.SuspendedUsers"
+        android:label="Suspended users"
+        tools:layout="@layout/fragment_suspended_users" />
+    <fragment
+        android:id="@+id/suspensionPage"
+        android:name="com.team25.event.planner.user.fragments.SuspensionPage"
+        android:label="Suspension"
+        tools:layout="@layout/fragment_suspension_page" />
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.team25.event.planner.product.fragments.ProductDetailsFragment"
+        android:label="ProductDetails"
+        tools:layout="@layout/fragment_product_details">
+        <action
+            android:id="@+id/action_productDetailsFragment_to_myProductsFragment"
+            app:destination="@id/myProductsFragment" />
+    </fragment>
 </navigation>

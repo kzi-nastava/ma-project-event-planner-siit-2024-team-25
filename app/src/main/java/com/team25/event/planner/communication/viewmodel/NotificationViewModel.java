@@ -7,36 +7,23 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import com.google.gson.GsonBuilder;
 import com.team25.event.planner.R;
 import com.team25.event.planner.communication.model.Notification;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.google.gson.Gson;
 import com.team25.event.planner.communication.model.NotificationCategory;
 import com.team25.event.planner.core.api.serialization.LocalDateTimeAdapter;
-import com.team25.event.planner.event.fragments.EventArgumentNames;
-import com.team25.event.planner.event.fragments.EventDetailsFragment;
-import com.team25.event.planner.offering.fragments.OfferingCategoryBaseFragment;
-import com.team25.event.planner.offering.model.OfferingCategory;
-import com.team25.event.planner.product_service.fragments.OwnerHomePage;
-import com.team25.event.planner.product_service.fragments.ServiceDetailsFragment;
 import com.team25.event.planner.user.model.User;
 import com.team25.event.planner.user.model.UserRole;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class NotificationViewModel extends ViewModel {
     private FragmentActivity _fragmentActivity;

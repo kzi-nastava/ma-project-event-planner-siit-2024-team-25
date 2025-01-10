@@ -11,14 +11,12 @@ import androidx.lifecycle.ViewModel;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Page;
-import com.team25.event.planner.event.model.EventTypePreviewDTO;
 import com.team25.event.planner.event.model.OfferingCategoryPreviewDTO;
 import com.team25.event.planner.offering.Api.OfferingApi;
 import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.offering.model.OfferingFilterDTO;
-import com.team25.event.planner.product_service.api.PurchaseApi;
-import com.team25.event.planner.product_service.model.Purchase;
+import com.team25.event.planner.service.api.PurchaseApi;
 
 import java.util.ArrayList;
 import java.util.List;

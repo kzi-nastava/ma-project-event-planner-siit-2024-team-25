@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentMyProductsBinding;
+import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.offering.dialogs.YesOrNoDialogFragment;
 import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.product.adapters.MyProductsAdapter;
@@ -62,7 +63,12 @@ public class MyProductsFragment extends Fragment {
     private void setupProductList() {
         productsAdapter = new MyProductsAdapter(
                 new ArrayList<>(),
-                product -> { /* TODO: navigate to product details fragment */ },
+                product -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putLong(ProductFormFragment.ID_ARG_NAME, product.getId());
+                    bundle.putLong(EventArgumentNames.ID_ARG, 0L);
+                    navController.navigate(R.id.action_myProductsFragment_to_productDetailsFragment, bundle);
+                },
                 product -> {
                     Bundle args = new Bundle();
                     args.putLong(ProductFormFragment.ID_ARG_NAME, product.getId());

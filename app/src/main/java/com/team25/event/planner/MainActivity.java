@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
 
-                headerTitle.setText(user.getFullName());
+                headerTitle.setText(user.getName());
                 headerSubtitle.setText(user.getEmail());
 
                 final String profilePicUrl = ConnectionParams.BASE_URL + "/api/users/" + user.getUserId() + "/profile-picture";
