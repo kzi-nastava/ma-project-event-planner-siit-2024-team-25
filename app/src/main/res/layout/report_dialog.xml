@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.team25.event.planner.user.viewmodels.ReportViewModel" />
+            type="com.team25.event.planner.user.viewmodels.UserReportViewModel" />
     </data>
 
     <LinearLayout
@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@string/sans_serif"
-                android:text="@{viewModel.currentReport.reportedUserFirstName + ' ' +viewModel.currentReport.reportedUserLastName }"
+                android:text="@string/report_user"
                 android:textColor="@color/primary"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -54,16 +54,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:id="@+id/minPriceInput"
-                android:text="@{viewModel.currentReport.reportMessage}"
+                android:text="@={viewModel.currentReport.reportMessage}"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/suspend_user"
-            android:layout_marginStart="180dp"
-            android:onClick="@{() -> viewModel.suspendUser()}">
+            android:text="@string/send_report"
+            android:layout_marginStart="220dp"
+            android:onClick="@{() -> viewModel.reportUser()}">
         </Button>
 
     </LinearLayout>

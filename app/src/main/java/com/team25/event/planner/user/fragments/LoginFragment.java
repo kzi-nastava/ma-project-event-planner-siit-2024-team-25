@@ -14,6 +14,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.SharedPrefService;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentLoginBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
@@ -24,6 +25,7 @@ public class LoginFragment extends Fragment {
     private String _invitationCode;
     private Long _eventId;
 
+    private AuthViewModel authViewModel;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -43,7 +45,9 @@ public class LoginFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
-        AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        SharedPrefService sharedPrefService = new SharedPrefService(getContext());
+        authViewModel.initialize(sharedPrefService);
         viewModel.setAuthViewModel(authViewModel);
 
         binding.setViewModel(viewModel);
@@ -66,6 +70,19 @@ public class LoginFragment extends Fragment {
                     navController.navigate(R.id.eventDetailsFragment, bundle);
                 } else {
                     navController.navigate(R.id.action_loginFragment_to_homeFragment);
+                }
+            }
+        });
+
+        authViewModel.user.observe(getViewLifecycleOwner(), user -> {
+            if(user != null){
+                if(user.getSuspensionEndDateTime() != null){
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("suspensionEndDateTime", user.getSuspensionEndDateTime());
+                    navController.navigate(R.id.suspensionPage, bundle);
+                    authViewModel.clearJwt();
+                    authViewModel.clearUser();
                 }
             }
         });

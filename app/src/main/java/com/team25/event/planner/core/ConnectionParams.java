@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.team25.event.planner.BuildConfig;
 import com.team25.event.planner.communication.api.NotificationApi;
+import com.team25.event.planner.core.api.serialization.InstantAdapter;
+import com.team25.event.planner.event.api.BudgetItemApi;
 import com.team25.event.planner.core.api.serialization.LocalDateAdapter;
 import com.team25.event.planner.core.api.serialization.LocalDateTimeAdapter;
 import com.team25.event.planner.core.api.serialization.LocalTimeAdapter;
@@ -21,9 +23,11 @@ import com.team25.event.planner.product.api.ProductApi;
 import com.team25.event.planner.service.api.PurchaseApi;
 import com.team25.event.planner.service.api.ServiceApi;
 import com.team25.event.planner.user.api.LoginApi;
+import com.team25.event.planner.user.api.SuspensionApi;
 import com.team25.event.planner.user.api.UserApi;
 import com.team25.event.planner.user.api.UserReportApi;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -39,6 +43,7 @@ public class ConnectionParams {
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
             .registerTypeAdapter(LocalTime.class, new LocalTimeAdapter())
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .registerTypeAdapter(Instant.class, new InstantAdapter())
             .create();
 
     public static Retrofit retrofit;
@@ -61,6 +66,7 @@ public class ConnectionParams {
     public static BudgetItemApi budgetItemApi;
     public static PurchaseApi purchaseApi;
 
+    public static SuspensionApi suspensionApi;
     public static PriceListApi priceListApi;
 
     public static UserReportApi userReportApi;
@@ -94,12 +100,10 @@ public class ConnectionParams {
         offeringCategoryApi = retrofit.create(OfferingCategoryApi.class);
         purchaseApi = retrofit.create(PurchaseApi.class);
         budgetItemApi = retrofit.create(BudgetItemApi.class);
-
         priceListApi = retrofit.create(PriceListApi.class);
-
         userReportApi = retrofit.create(UserReportApi.class);
         notificationApi = retrofit.create(NotificationApi.class);
-
+        suspensionApi = retrofit.create(SuspensionApi.class);
     }
 
 }

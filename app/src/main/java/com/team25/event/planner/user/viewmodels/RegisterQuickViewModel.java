@@ -177,7 +177,8 @@ public class RegisterQuickViewModel extends ViewModel {
                             loginResponse.getUserId(),
                             loginResponse.getEmail(),
                             loginResponse.getFullName(),
-                            loginResponse.getRole()
+                            loginResponse.getRole(),
+                            loginResponse.getSuspensionEndDateTime()
                     ));
                     authViewModel.setJwt(loginResponse.getJwt());
                     _loggedIn.postValue(true);
