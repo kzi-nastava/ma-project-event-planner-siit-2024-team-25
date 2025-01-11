@@ -67,11 +67,9 @@ public class HomeOfferingViewModel extends ViewModel {
         });
     }
     public void getTopOfferings(){
-        String countryValue =  "";
-        String cityValue =  "";
 
         OfferingApi offeringApi = ConnectionParams.offeringApi;
-        Call<Page<OfferingCard>> call = offeringApi.getTopOfferings(countryValue, cityValue);
+        Call<Page<OfferingCard>> call = offeringApi.getTopOfferings();
 
         call.enqueue(new Callback<>() {
             @Override

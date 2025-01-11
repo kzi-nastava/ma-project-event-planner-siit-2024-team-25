@@ -254,7 +254,9 @@ public class ServiceDetailsFragment extends Fragment {
             listView.setAdapter(adapter);
         });
         _serviceViewModel.images.observe(getViewLifecycleOwner(), res->{
+
             com.team25.event.planner.service.adapters.ImageSliderAdapter adapter = new com.team25.event.planner.service.adapters.ImageSliderAdapter(res);
+
             ViewPager2 viewPager = _binding.imageSlider;
             viewPager.setAdapter(adapter);
         });

@@ -7,8 +7,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.team25.event.planner.core.ConnectionParams;
+
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.model.EventType;
+
 
 import com.team25.event.planner.product.model.Product;
 import com.team25.event.planner.service.api.ServiceApi;

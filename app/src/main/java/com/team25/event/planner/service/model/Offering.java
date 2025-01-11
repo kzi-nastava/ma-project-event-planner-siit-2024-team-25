@@ -1,12 +1,11 @@
 package com.team25.event.planner.service.model;
 
 
+import com.team25.event.planner.service.enums.ProductServiceType;
+
 import com.team25.event.planner.user.model.User;
 
-import java.security.acl.Owner;
 import java.util.List;
-
-import com.team25.event.planner.service.enums.ProductServiceType;
 
 
 import lombok.AllArgsConstructor;

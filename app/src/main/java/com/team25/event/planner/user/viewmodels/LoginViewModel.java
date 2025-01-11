@@ -92,11 +92,14 @@ public class LoginViewModel extends ViewModel {
                             loginResponse.getUserId(),
                             loginResponse.getEmail(),
                             loginResponse.getFullName(),
-                            loginResponse.getRole()
+                            loginResponse.getRole(),
+                            loginResponse.getSuspensionEndDateTime()
                     ));
                     authViewModel.setJwt(loginResponse.getJwt());
                     clearFields();
-                    _loggedIn.postValue(true);
+                    if(loginResponse.getSuspensionEndDateTime() == null) {
+                        _loggedIn.postValue(true);
+                    }
                 } else {
                     try (ResponseBody errorBody = response.errorBody()) {
                         if (errorBody != null) {

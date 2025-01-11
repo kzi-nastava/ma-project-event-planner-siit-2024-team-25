@@ -27,10 +27,7 @@ public interface EventApi {
     );
 
     @GET("/api/events/top")
-    Call<Page<EventCard>> getTopEvents(
-            @Query("country") String country,
-            @Query("city") String city
-    );
+    Call<Page<EventCard>> getTopEvents();
 
     @GET("/api/events/all")
     Call<Page<EventCard>> getAllEvents(
