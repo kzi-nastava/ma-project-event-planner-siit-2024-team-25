@@ -169,4 +169,5 @@
     <string name="suspensions">Suspensions</string>
     <string name="you_are_suspended">You are suspended!</string>
     <string name="remaining_time">Remaining time:</string>
+    <string name="download_pdf_report">Download PDF Report</string>
 </resources>
