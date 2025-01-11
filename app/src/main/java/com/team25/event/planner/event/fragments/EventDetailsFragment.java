@@ -1,31 +1,32 @@
 package com.team25.event.planner.event.fragments;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.fragments.MapFragment;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentEventDetailsBinding;
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.viewmodel.EventDetailsViewModel;
+import com.team25.event.planner.user.model.UserRole;
 
 import java.time.format.DateTimeFormatter;
 
@@ -99,6 +100,14 @@ public class EventDetailsFragment extends Fragment {
             }
         });
 
+        authViewModel.user.observe(getViewLifecycleOwner(), user -> {
+            if (user.getUserRole().equals(UserRole.ADMINISTRATOR)) {
+                binding.adminActions.setVisibility(View.VISIBLE);
+            } else {
+                binding.adminActions.setVisibility(View.GONE);
+            }
+        });
+
         viewModel.event.observe(getViewLifecycleOwner(), event -> {
             if (event == null) return;
             binding.dateTime.setText(getDateTimeString(event));
@@ -112,6 +121,8 @@ public class EventDetailsFragment extends Fragment {
         binding.budgetPlanButton.setOnClickListener(v -> goToBudgetPlan());
         binding.purchaseButton.setOnClickListener(v -> goToPurchase());
         binding.purchaseListButton.setOnClickListener(v -> goToPurchaseList());
+        binding.downloadReportButton.setOnClickListener(v -> downloadReport());
+        binding.downloadReportAdminButton.setOnClickListener(v -> downloadReport());
     }
 
     private void showOnMap() {
@@ -166,6 +177,34 @@ public class EventDetailsFragment extends Fragment {
 
     private void goToPurchaseList() {
         // TODO: Implement
+    }
+
+    private void downloadReport() {
+        final Event event = viewModel.event.getValue();
+        if (event == null) {
+            Toast.makeText(getContext(), "Unable to download report", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final String url = ConnectionParams.BASE_URL + "api/events/" + event.getId() + "/report";
+        final String filename = "event_" + event.getId() + "_" + System.currentTimeMillis() + ".pdf";
+
+        Log.d("TAG", url);
+
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.setTitle(event.getName() + " details report");
+        request.setDescription("Downloading PDF report with event details for " + event.getName() + "...");
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+
+        DownloadManager downloadManager = (DownloadManager) requireContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        if (downloadManager != null) {
+            downloadManager.enqueue(request);
+            Toast.makeText(requireContext(), "Download started!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "Unable to download report", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onDestroyView() {
