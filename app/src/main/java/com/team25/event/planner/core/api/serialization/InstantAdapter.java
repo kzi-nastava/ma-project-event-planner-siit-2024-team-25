@@ -14,11 +14,20 @@ public class InstantAdapter extends TypeAdapter<Instant> {
 
     @Override
     public void write(JsonWriter out, Instant value) throws IOException {
-        out.value(value.atZone(ZoneOffset.UTC).format(formatter));
+        if (value == null) {
+            out.nullValue();
+        } else {
+            out.value(value.atZone(ZoneOffset.UTC).format(formatter));
+        }
     }
 
     @Override
     public Instant read(JsonReader in) throws IOException {
-        return Instant.from(formatter.parse(in.nextString()));
+        if (in.peek() == com.google.gson.stream.JsonToken.NULL) {
+            in.nextNull();
+            return null;
+        } else {
+            return Instant.from(formatter.parse(in.nextString()));
+        }
     }
 }
