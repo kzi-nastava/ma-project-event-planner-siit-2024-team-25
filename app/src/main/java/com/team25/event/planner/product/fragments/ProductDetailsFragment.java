@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.communication.fragments.ChatFragment;
+import com.team25.event.planner.communication.model.ChatMessage;
 import com.team25.event.planner.core.dialogs.DialogHelper;
 import com.team25.event.planner.databinding.FragmentProductDetailsBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
@@ -105,6 +107,15 @@ public class ProductDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 purchaseViewModel.purchaseProduct(_productId);
+            }
+        });
+        binding.chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putLong(ChatFragment.RECEIVER_ID_ARG, productViewModel.selectedProduct.getValue().getOwnerInfo().getId());
+                bundle.putString(ChatFragment.RECEIVER_NAME_ARG, productViewModel.selectedProduct.getValue().getOwnerInfo().getName());
+                navController.navigate(R.id.action_productDetailsFragment_to_chatFragment, bundle);
             }
         });
     }

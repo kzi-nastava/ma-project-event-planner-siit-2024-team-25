@@ -1,0 +1,74 @@
+package com.team25.event.planner.communication.viewmodel;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import com.team25.event.planner.communication.api.ChatApi;
+import com.team25.event.planner.communication.model.ChatMessage;
+import com.team25.event.planner.core.ConnectionParams;
+import com.team25.event.planner.core.ErrorParse;
+import com.team25.event.planner.core.Page;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MyChatMessageViewModel extends ViewModel {
+    private ChatApi chatApi = ConnectionParams.chatApi;
+    public final MutableLiveData<String> message = new MutableLiveData<>();
+    private int _currentPage = 0;
+    private int _totalPages = 0;
+    public final MutableLiveData<Long> senderId = new MutableLiveData<>();
+    public final MutableLiveData<Long> receiverId = new MutableLiveData<>();
+    public final MutableLiveData<String> receiverName = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>(false);
+    public final LiveData<Boolean> isLoading = _isLoading;
+
+    private final MutableLiveData<String> _serverError = new MutableLiveData<>();
+    public final LiveData<String> serverError = _serverError;
+
+    private final  MutableLiveData<List<ChatMessage>> _chatMessages= new MutableLiveData<>();
+    public final LiveData<List<ChatMessage>> chatMessages = _chatMessages;
+
+    public boolean isLoading() {
+        return isLoading.getValue() == null || isLoading.getValue();
+    }
+
+    public void getChat(){
+        if(isLoading())return;
+        _isLoading.postValue(true);
+        chatApi.getChatMessages(senderId.getValue(), receiverId.getValue(), _currentPage).enqueue(new Callback<Page<ChatMessage>>() {
+            @Override
+            public void onResponse(Call<Page<ChatMessage>> call, Response<Page<ChatMessage>> response) {
+                if(response.isSuccessful() && response.body()!=null){
+                    _chatMessages.postValue(response.body().getContent());//fill front
+                    _isLoading.postValue(false);
+                    _totalPages = response.body().getTotalPages();
+                }else{
+                    _serverError.postValue(ErrorParse.catchError(response));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Page<ChatMessage>> call, Throwable t) {
+                _serverError.postValue("Network problem");
+            }
+        });
+    }
+
+    public void scrollDown(){
+        if(_currentPage > 0){
+            _currentPage--;
+            getChat();
+        }
+    }
+    public void scrollUp(){
+        if(_currentPage < _totalPages-1){
+            _currentPage++;
+            getChat();
+        }
+    }
+}
