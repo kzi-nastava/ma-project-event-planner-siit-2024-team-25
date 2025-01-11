@@ -41,6 +41,7 @@ import com.team25.event.planner.core.SharedPrefService;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.ActivityMainBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
+import com.team25.event.planner.product.fragments.ProductFormFragment;
 import com.team25.event.planner.user.model.UserRole;
 
 import java.net.URI;
@@ -167,8 +168,8 @@ public class MainActivity extends AppCompatActivity {
                         bundle.putLong(EventArgumentNames.ID_ARG, notification.getEntityId());
                         navController.navigate(R.id.eventDetailsFragment, bundle);
                     }else if(notificationCategory == NotificationCategory.PRODUCT){
-//                    bundle.putLong(EventArgumentNames.ID_ARG, entityId);
-//                    navController.navigate(R.id.productDetailsFragment, bundle);
+                    bundle.putLong(ProductFormFragment.ID_ARG_NAME, notification.getEntityId());
+                    navController.navigate(R.id.productDetailsFragment, bundle);
                     }else if(notificationCategory == NotificationCategory.SERVICE){
                         bundle.putLong("OFFERING_ID", notification.getEntityId());
                         navController.navigate(R.id.serviceDetailsFragment, bundle);
