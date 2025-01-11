@@ -14,7 +14,7 @@ import java.util.List;
 public class OfferingCategoryAdapter extends RecyclerView.Adapter<OfferingCategoryAdapter.CategoryViewHolder> {
 
     private List<OfferingCategoryPreviewDTO> categories;
-    private final List<Long> selectedCategoryIds;
+    private List<Long> selectedCategoryIds;
     private final OnSelectionChangeListener selectionChangeListener;
 
     public interface OnSelectionChangeListener {
@@ -79,5 +79,9 @@ public class OfferingCategoryAdapter extends RecyclerView.Adapter<OfferingCatego
     public void updateCategories(List<OfferingCategoryPreviewDTO> categories) {
         this.categories = categories;
         notifyDataSetChanged();
+    }
+
+    public void updateSelectedCategoryIds(List<Long> selectedCategoryIds) {
+        this.selectedCategoryIds = selectedCategoryIds;
     }
 }

@@ -11,6 +11,7 @@ import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.event.model.EventTypeRequest;
 import com.team25.event.planner.event.model.OfferingCategoryPreviewDTO;
+import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import retrofit2.Call;
 
 public class EventTypeViewModel extends ViewModel {
     private final EventTypeApi eventTypeApi = ConnectionParams.eventTypeApi;
+    private final OfferingCategoryApi offeringCategoryApi = ConnectionParams.offeringCategoryApi;
 
     private final MutableLiveData<List<OfferingCategoryPreviewDTO>> _offeringCategories = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<OfferingCategoryPreviewDTO>> offeringCategories = _offeringCategories;
@@ -51,14 +53,11 @@ public class EventTypeViewModel extends ViewModel {
 
     public final MutableLiveData<Boolean> successSignal = new MutableLiveData<>(false);
 
-    public void fetchOfferings() {
-        List<OfferingCategoryPreviewDTO> mockOfferings = new ArrayList<>();
-        mockOfferings.add(new OfferingCategoryPreviewDTO(1L, "Training"));
-        mockOfferings.add(new OfferingCategoryPreviewDTO(2L, "Consultation"));
-        mockOfferings.add(new OfferingCategoryPreviewDTO(3L, "Product Demo"));
-        mockOfferings.add(new OfferingCategoryPreviewDTO(4L, "Mentorship"));
-        mockOfferings.add(new OfferingCategoryPreviewDTO(5L, "Certification"));
-        _offeringCategories.setValue(mockOfferings);
+    public void fetchOfferingCategories() {
+        offeringCategoryApi.getAllOfferingCategories().enqueue(new ResponseCallback<>(
+                _offeringCategories::postValue,
+                _serverError, "EventTypeViewModel"
+        ));
     }
 
     public void setEventTypeId(Long eventTypeId) {
