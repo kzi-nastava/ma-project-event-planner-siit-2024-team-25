@@ -27,6 +27,7 @@ import com.team25.event.planner.databinding.FragmentServiceDetailsBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.viewmodel.EventViewModel;
+
 import com.team25.event.planner.service.dto.ServiceCreateResponseDTO;
 import com.team25.event.planner.service.model.Service;
 import com.team25.event.planner.service.viewModels.BookServiceViewModel;
@@ -253,7 +254,9 @@ public class ServiceDetailsFragment extends Fragment {
             listView.setAdapter(adapter);
         });
         _serviceViewModel.images.observe(getViewLifecycleOwner(), res->{
-            com.team25.event.planner.product_service.adapters.ImageSliderAdapter adapter = new com.team25.event.planner.product_service.adapters.ImageSliderAdapter(res);
+
+            com.team25.event.planner.service.adapters.ImageSliderAdapter adapter = new com.team25.event.planner.service.adapters.ImageSliderAdapter(res);
+
             ViewPager2 viewPager = _binding.imageSlider;
             viewPager.setAdapter(adapter);
         });

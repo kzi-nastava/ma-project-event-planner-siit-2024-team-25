@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.offering.model.OfferingCategory;
+
 import com.team25.event.planner.service.enums.ProductServiceType;
 import com.team25.event.planner.service.enums.ReservationType;
 
