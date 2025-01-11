@@ -24,6 +24,7 @@ public class EventCard implements Parcelable {
     private String city;
     private String country;
     private String organizerName;
+    private Boolean isFavorite;
 
     protected EventCard(Parcel in) {
         id = in.readLong();
@@ -33,7 +34,7 @@ public class EventCard implements Parcelable {
         country = in.readString();
         city = in.readString();
         startDateTime = LocalDateTime.parse(in.readString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME); // Parsiranje u LocalDateTime
-
+        isFavorite = in.readBoolean();
     }
 
     public static final Creator<EventCard> CREATOR = new Creator<EventCard>() {
@@ -62,5 +63,6 @@ public class EventCard implements Parcelable {
         dest.writeString(country);
         dest.writeString(city);
         dest.writeString(startDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)); // Formatiranje LocalDateTime u String
+        dest.writeBoolean(isFavorite);
     }
 }

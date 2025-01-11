@@ -4,17 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -78,6 +72,14 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void setupObservers() {
+        authViewModel.user.observe(getViewLifecycleOwner(), user -> {
+            if (user == null) {
+                viewModel.setUserId(null);
+            } else {
+                viewModel.setUserId(user.getUserId());
+            }
+        });
+
         isOrganizer.addSource(viewModel.event, event -> {
             Long userId = authViewModel.getUserId();
             isOrganizer.setValue(event != null && event.getOrganizer().getId().equals(userId));
@@ -102,6 +104,29 @@ public class EventDetailsFragment extends Fragment {
         viewModel.event.observe(getViewLifecycleOwner(), event -> {
             if (event == null) return;
             binding.dateTime.setText(getDateTimeString(event));
+            if (event.getIsFavorite()) {
+                binding.favoriteButton.setImageResource(R.drawable.ic_heart_red);
+            } else {
+                binding.favoriteButton.setImageResource(R.drawable.ic_favorite_border);
+            }
+        });
+
+        viewModel.addToFavoritesSuccessSignal.observe(getViewLifecycleOwner(), succeeded -> {
+            if (succeeded) {
+                Toast.makeText(getContext(), R.string.added_to_favorites, Toast.LENGTH_SHORT).show();
+                viewModel.addToFavoritesSuccessSignal.setValue(false);
+            }
+        });
+
+        viewModel.removeFromFavoritesSuccessSignal.observe(getViewLifecycleOwner(), succeeded -> {
+            if (succeeded) {
+                Toast.makeText(getContext(), R.string.removed_from_favorites, Toast.LENGTH_SHORT).show();
+                viewModel.removeFromFavoritesSuccessSignal.setValue(false);
+            }
+        });
+
+        viewModel.serverError.observe(getViewLifecycleOwner(), errorMessage -> {
+            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
         });
     }
 

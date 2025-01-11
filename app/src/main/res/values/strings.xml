@@ -169,4 +169,6 @@
     <string name="suspensions">Suspensions</string>
     <string name="you_are_suspended">You are suspended!</string>
     <string name="remaining_time">Remaining time:</string>
+    <string name="added_to_favorites">Added to favorites!</string>
+    <string name="removed_from_favorites">Removed from favorites!</string>
 </resources>

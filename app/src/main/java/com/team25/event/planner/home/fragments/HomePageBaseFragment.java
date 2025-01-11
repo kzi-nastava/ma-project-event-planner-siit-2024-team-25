@@ -1,12 +1,6 @@
 package com.team25.event.planner.home.fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SearchView;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +8,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.ViewSwitcher;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.FragmentTransition;
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentHomePageBaseBinding;
 import com.team25.event.planner.databinding.HomePageEventFilterBinding;
 import com.team25.event.planner.databinding.HomePageEventSortBinding;
@@ -37,7 +36,6 @@ import com.team25.event.planner.offering.viewmodel.HomeOfferingViewModel;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -80,6 +78,16 @@ public class HomePageBaseFragment extends Fragment {
                              Bundle savedInstanceState) {
         _binding = FragmentHomePageBaseBinding.inflate(inflater, container, false);
         _binding.setLifecycleOwner(this);
+
+        AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        authViewModel.user.observe(getViewLifecycleOwner(), user -> {
+            if (user == null) {
+                _homeEventViewModel.setUserId(null);
+            } else {
+                _homeEventViewModel.setUserId(user.getUserId());
+            }
+        });
+
         return _binding.getRoot();
     }
 
@@ -106,7 +114,7 @@ public class HomePageBaseFragment extends Fragment {
 
 
     private void psButtonClick() {
-        FragmentTransition.toLeft(new HomeOfferingsFragment(_homeOfferingViewModel,null), requireActivity(), false, _binding.homeContainer.getId());
+        FragmentTransition.toLeft(new HomeOfferingsFragment(_homeOfferingViewModel, null), requireActivity(), false, _binding.homeContainer.getId());
 
         setOfferingFilterDialog();
         setOfferingSortDialog();
@@ -136,7 +144,7 @@ public class HomePageBaseFragment extends Fragment {
 
         Spinner eventTypeSpinner = _filterEventDialog.findViewById(R.id.event_type_filter);
 
-        _homeEventViewModel.allEventTypes.observe(getViewLifecycleOwner(),types ->{
+        _homeEventViewModel.allEventTypes.observe(getViewLifecycleOwner(), types -> {
             ArrayAdapter<EventTypePreviewDTO> adapter = new ArrayAdapter<>(_filterEventDialog.getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(types));
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             eventTypeSpinner.setAdapter(adapter);
@@ -162,12 +170,12 @@ public class HomePageBaseFragment extends Fragment {
         homePageEventFilterBinding.eventEndDate.setMinDate(minDate);
 
         homePageEventFilterBinding.eventStartDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
-            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
+            LocalDate localDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
             _homeEventViewModel.eventFilterDTO.selectedStartDate.setValue(localDate);
         });
 
         homePageEventFilterBinding.eventEndDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
-            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
+            LocalDate localDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
             _homeEventViewModel.eventFilterDTO.selectedEndDate.setValue(localDate);
         });
 
@@ -194,7 +202,7 @@ public class HomePageBaseFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 _homeEventViewModel.eventFilterDTO.name.setValue(newText);
-                if(newText.isEmpty()){
+                if (newText.isEmpty()) {
                     _homeEventViewModel.getAllEvents();
                 }
                 return false;
@@ -248,8 +256,9 @@ public class HomePageBaseFragment extends Fragment {
         homePageEventSortBinding.eventSortCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                _homeEventViewModel.eventFilterDTO.selectedSortBy.setValue((String)parent.getItemAtPosition(position));
+                _homeEventViewModel.eventFilterDTO.selectedSortBy.setValue((String) parent.getItemAtPosition(position));
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -257,8 +266,9 @@ public class HomePageBaseFragment extends Fragment {
         homePageEventSortBinding.eventSortType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                _homeEventViewModel.eventFilterDTO.selectedSortCriteria.setValue((String)parent.getItemAtPosition(position));
+                _homeEventViewModel.eventFilterDTO.selectedSortCriteria.setValue((String) parent.getItemAtPosition(position));
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -281,9 +291,9 @@ public class HomePageBaseFragment extends Fragment {
         View offeringView = homePageOfferingFilterBinding.getRoot();
         homePageOfferingFilterBinding.setViewModel(_homeOfferingViewModel);
         _homeOfferingViewModel.selectedFilterId.observe(getViewLifecycleOwner(), v -> {
-            if(v == R.id.services_radio_button){
+            if (v == R.id.services_radio_button) {
                 homePageOfferingFilterBinding.serviceDateTime.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 homePageOfferingFilterBinding.serviceDateTime.setVisibility(View.GONE);
             }
         });
@@ -292,12 +302,11 @@ public class HomePageBaseFragment extends Fragment {
         _filterOfferingDialog.setContentView(offeringView);
 
 
-
         Spinner offeringEventTypeFilter = _filterOfferingDialog.findViewById(R.id.offering_event_type_filter);
         Spinner offeringCategoryFilter = _filterOfferingDialog.findViewById(R.id.offering_category_filter);
 
 
-        _homeEventViewModel.allEventTypes.observe(getViewLifecycleOwner(),types ->{
+        _homeEventViewModel.allEventTypes.observe(getViewLifecycleOwner(), types -> {
             ArrayAdapter<EventTypePreviewDTO> adapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(types));
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             offeringEventTypeFilter.setAdapter(adapter);
@@ -310,11 +319,12 @@ public class HomePageBaseFragment extends Fragment {
                 EventTypePreviewDTO selectedType = (EventTypePreviewDTO) parent.getItemAtPosition(position);
                 _homeOfferingViewModel.offeringFilterDTO.selectedEventType.setValue(selectedType);
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        _homeOfferingViewModel.allOfferingCategories.observe(getViewLifecycleOwner(),types ->{
+        _homeOfferingViewModel.allOfferingCategories.observe(getViewLifecycleOwner(), types -> {
             ArrayAdapter<OfferingCategoryPreviewDTO> adapter = new ArrayAdapter<>(_filterOfferingDialog.getContext(), android.R.layout.simple_spinner_item, new ArrayList<>(types));
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             offeringCategoryFilter.setAdapter(adapter);
@@ -344,7 +354,7 @@ public class HomePageBaseFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 _homeOfferingViewModel.offeringFilterDTO.name.setValue(newText);
-                if(newText.isEmpty()){
+                if (newText.isEmpty()) {
                     _homeOfferingViewModel.getAllOfferings();
                 }
                 return false;
@@ -357,12 +367,12 @@ public class HomePageBaseFragment extends Fragment {
         homePageOfferingFilterBinding.eventEndDate.setMinDate(minDate);
 
         homePageOfferingFilterBinding.eventStartDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
-            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
+            LocalDate localDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
             _homeOfferingViewModel.offeringFilterDTO.selectedStartDate.setValue(localDate);
         });
 
         homePageOfferingFilterBinding.eventEndDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
-            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
+            LocalDate localDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
             _homeOfferingViewModel.offeringFilterDTO.selectedEndDate.setValue(localDate);
         });
 
@@ -431,8 +441,9 @@ public class HomePageBaseFragment extends Fragment {
         homePageOfferingSortBinding.offeringSortCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                _homeOfferingViewModel.offeringFilterDTO.selectedSortBy.setValue((String)parent.getItemAtPosition(position));
+                _homeOfferingViewModel.offeringFilterDTO.selectedSortBy.setValue((String) parent.getItemAtPosition(position));
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -441,8 +452,9 @@ public class HomePageBaseFragment extends Fragment {
         homePageOfferingSortBinding.offeringSortType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                _homeOfferingViewModel.offeringFilterDTO.selectedSortCriteria.setValue((String)parent.getItemAtPosition(position));
+                _homeOfferingViewModel.offeringFilterDTO.selectedSortCriteria.setValue((String) parent.getItemAtPosition(position));
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }

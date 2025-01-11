@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import retrofit2.http.GET;
 
 @Getter
 @Setter
@@ -29,4 +28,5 @@ public class Event {
     private LocalTime endTime;
     private Location location;
     private EventOrganizerPreview organizer;
+    private Boolean isFavorite;
 }

@@ -5,6 +5,7 @@ import com.team25.event.planner.event.model.Activity;
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.model.EventCard;
 import com.team25.event.planner.event.model.EventRequest;
+import com.team25.event.planner.event.model.FavoriteEventRequest;
 import com.team25.event.planner.event.model.Invitation;
 
 import java.util.List;
@@ -58,4 +59,10 @@ public interface EventApi {
 
     @GET("/api/events/{eventId}")
     Call<Event> getEvent(@Path("eventId") Long eventId);
+
+    @POST("/api/users/{userId}/favorite-events")
+    Call<EventCard> addToFavorites(@Path("userId") Long userId, @Body FavoriteEventRequest favRequest);
+
+    @DELETE("/api/users/{userId}/favorite-events/{favId}")
+    Call<Void> removeFromFavorites(@Path("userId") Long userId, @Path("favId") Long eventId);
 }
