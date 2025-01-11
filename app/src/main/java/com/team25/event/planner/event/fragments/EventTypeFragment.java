@@ -41,7 +41,7 @@ public class EventTypeFragment extends Fragment {
 
         setUpObservers();
 
-        viewModel.fetchOfferings();
+        viewModel.fetchOfferingCategories();
 
         return binding.getRoot();
     }
@@ -67,6 +67,7 @@ public class EventTypeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         viewModel.offeringCategories.observe(getViewLifecycleOwner(), adapter::updateCategories);
+        viewModel.selectedCategoryIds.observe(getViewLifecycleOwner(), adapter::updateSelectedCategoryIds);
 
         viewModel.successSignal.observe(getViewLifecycleOwner(), success -> {
             if (success) {
