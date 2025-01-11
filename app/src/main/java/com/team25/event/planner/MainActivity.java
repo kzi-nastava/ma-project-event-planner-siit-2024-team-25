@@ -150,7 +150,9 @@ public class MainActivity extends AppCompatActivity {
             Bundle data = intent.getExtras();
             if(data != null){
                 Notification notification = (Notification) data.get("notification");
-
+                if(notification == null){
+                    return;
+                }
                 notification.setIsViewed(true);
                 _myNotificationViewModel.updateNotification(notification);
 
