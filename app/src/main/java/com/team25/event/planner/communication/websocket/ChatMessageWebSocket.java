@@ -3,6 +3,11 @@ package com.team25.event.planner.communication.websocket;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
+
+import com.google.gson.Gson;
+import com.team25.event.planner.communication.model.ChatMessage;
+import com.team25.event.planner.communication.model.ChatMessageRequestDTO;
 import com.team25.event.planner.core.ConnectionParams;
 
 import io.reactivex.Flowable;
@@ -13,7 +18,9 @@ import ua.naiksoftware.stomp.dto.StompMessage;
 
 public class ChatMessageWebSocket {
     private static final String SOCKET_URL = "ws://" + ConnectionParams.BASE_URL.replace("http://", "") + "socket";
-    private StompClient stompClient;
+    public StompClient stompClient;
+
+
     public ChatMessageWebSocket(){}
 
     @SuppressLint("CheckResult")
@@ -44,4 +51,5 @@ public class ChatMessageWebSocket {
     public void disconnect(){
         this.stompClient.disconnect();
     }
+
 }

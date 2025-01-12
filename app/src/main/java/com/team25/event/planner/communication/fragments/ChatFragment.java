@@ -99,18 +99,28 @@ public class ChatFragment extends Fragment {
 
         viewModel.getChat(senderId,receiverId);
     }
-    private void setUpListeners() {}
+    private void setUpListeners() {
+        binding.sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.sendMessage();
+            }
+        });
+    }
     private void setUpObservers() {
         viewModel.chatMessages.observe(getViewLifecycleOwner(), res->{
             clearMessages();
-            for (ChatMessage cm:res) {
+            for (int i = res.size() - 1; i >= 0; i--) {
+                ChatMessage cm = res.get(i);
                 if(Objects.equals(cm.getSender().getId(), viewModel.senderId.getValue())){
                     addMessageTextView(cm.getContent(),true, cm.getTimestamp().toString());
                 }else{
                     addMessageTextView(cm.getContent(),false, cm.getTimestamp().toString());
                 }
-
             }
+
+
+
         });
         viewModel.serverError.observe(getViewLifecycleOwner(), mess->{
             if(mess != null){
@@ -122,6 +132,13 @@ public class ChatFragment extends Fragment {
                 binding.loadingSpinner.setVisibility(View.VISIBLE);
             } else {
                 binding.loadingSpinner.setVisibility(View.GONE);
+            }
+        });
+        viewModel.sendMessage.observe(getViewLifecycleOwner(), res->{
+            if(res){
+                viewModel.getChat(senderId,receiverId);
+                viewModel.message.postValue("");
+                viewModel.setCurrentPage(0);
             }
         });
     }
