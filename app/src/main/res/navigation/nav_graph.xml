@@ -228,6 +228,9 @@
         <action
             android:id="@+id/action_eventPurchaseFragment_to_serviceDetailsFragment"
             app:destination="@id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_eventPurchaseFragment_to_productDetailsFragment2"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceDetailsFragment"

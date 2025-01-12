@@ -63,8 +63,7 @@ public class ChatFragment extends Fragment {
         binding.setViewModel(viewModel);
         navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
         if(getArguments()!= null){
-            //receiverId= getArguments().getLong(RECEIVER_ID_ARG, -1L);
-            receiverId = 2L;
+            receiverId= getArguments().getLong(RECEIVER_ID_ARG, -1L);
             receiverName=getArguments().getString(RECEIVER_NAME_ARG, "");
         }
         senderId = authViewModel.getUserId();

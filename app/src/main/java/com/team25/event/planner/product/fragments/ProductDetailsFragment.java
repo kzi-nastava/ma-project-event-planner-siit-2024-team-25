@@ -20,11 +20,17 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.communication.fragments.ChatFragment;
 import com.team25.event.planner.communication.model.ChatMessage;
 import com.team25.event.planner.core.dialogs.DialogHelper;
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentProductDetailsBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
+import com.team25.event.planner.event.fragments.ProductPurchaseListFragment;
 import com.team25.event.planner.event.viewmodel.PurchaseViewModel;
+import com.team25.event.planner.offering.adapters.ProductPurchaseAdapter;
 import com.team25.event.planner.product.adapters.ImageSliderProductAdapter;
 import com.team25.event.planner.product.viewmodel.MyProductsViewModel;
+import com.team25.event.planner.user.model.UserRole;
+
+import java.util.Objects;
 
 
 public class ProductDetailsFragment extends Fragment {
@@ -33,6 +39,7 @@ public class ProductDetailsFragment extends Fragment {
     private FragmentProductDetailsBinding binding;
     private MyProductsViewModel productViewModel;
     private PurchaseViewModel purchaseViewModel;
+    private AuthViewModel authViewModel;
     private ListView listView;
     private final String BUY_PRODUCT = "BUY_PRODUCT";
 
@@ -57,11 +64,12 @@ public class ProductDetailsFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
         productViewModel = new ViewModelProvider(this).get(MyProductsViewModel.class);
         purchaseViewModel = new ViewModelProvider(this).get(PurchaseViewModel.class);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         binding.setViewModel(productViewModel);
         navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
         if (getArguments() != null) {
             _eventId = getArguments().getLong(EventArgumentNames.ID_ARG);
-            _productId = getArguments().getLong(ProductFormFragment.ID_ARG_NAME);
+            _productId = getArguments().getLong(ProductPurchaseListFragment.PRODUCT_ID_ARG);
             purchaseViewModel.eventId.postValue(_eventId);
         }
         return binding.getRoot();
@@ -73,6 +81,11 @@ public class ProductDetailsFragment extends Fragment {
         listView = binding.listView;
         setObservers();
         setListeners();
+        if(Objects.requireNonNull(authViewModel.user.getValue()).getUserRole() == UserRole.EVENT_ORGANIZER){
+            binding.chatButton.setVisibility(View.VISIBLE);
+        }else{
+            binding.chatButton.setVisibility(View.GONE);
+        }
         productViewModel.fetchProduct(_productId);
     }
 
