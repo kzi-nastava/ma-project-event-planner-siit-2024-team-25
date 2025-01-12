@@ -1,6 +1,7 @@
 package com.team25.event.planner.communication.fragments;
 
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,8 +23,10 @@ import android.widget.Toast;
 import com.team25.event.planner.R;
 import com.team25.event.planner.communication.model.ChatMessage;
 import com.team25.event.planner.communication.viewmodel.MyChatMessageViewModel;
+import com.team25.event.planner.core.SharedPrefService;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentChatBinding;
+import com.team25.event.planner.user.model.User;
 
 import java.util.Objects;
 
@@ -36,6 +39,9 @@ public class ChatFragment extends Fragment {
     private MyChatMessageViewModel viewModel;
     private LinearLayout chatMessagesContainer;
     private AuthViewModel authViewModel;
+    private Long receiverId;
+    private String receiverName;
+    private Long senderId;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -53,20 +59,28 @@ public class ChatFragment extends Fragment {
         binding = FragmentChatBinding.inflate(inflater,container,false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         viewModel = new ViewModelProvider(this).get(MyChatMessageViewModel.class);
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         binding.setViewModel(viewModel);
         navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
-        /*if(getArguments()!= null){
-            viewModel.receiverId.postValue(getArguments().getLong(RECEIVER_ID_ARG, -1L));
-            viewModel.receiverName.postValue(getArguments().getString(RECEIVER_NAME_ARG, ""));
-        }*/
-        //mock
-        viewModel.receiverId.postValue(1L);
-        viewModel.receiverName.postValue("admins");
-        viewModel.senderId.postValue(2L);
+        if(getArguments()!= null){
+            //receiverId= getArguments().getLong(RECEIVER_ID_ARG, -1L);
+            receiverId = 2L;
+            receiverName=getArguments().getString(RECEIVER_NAME_ARG, "");
+        }
+        senderId = authViewModel.getUserId();
+        viewModel.receiverId.postValue(receiverId);
+        viewModel.receiverName.postValue(receiverName);
+        viewModel.senderId.postValue(senderId);
+        openWebSocketConnection();
         return binding.getRoot();
     }
 
+    private void openWebSocketConnection(){
+        User user = authViewModel.user.getValue();
+        if(user != null){
+            viewModel.connectToSocket(user);
+        }
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -74,25 +88,27 @@ public class ChatFragment extends Fragment {
         setUpObservers();
         setUpListeners();
 
-        viewModel.getChat();
+        viewModel.getChat(senderId, receiverId);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        chatMessagesContainer = binding.chatMessagesContainer;
         setUpObservers();
         setUpListeners();
 
-        viewModel.getChat();
+        viewModel.getChat(senderId,receiverId);
     }
     private void setUpListeners() {}
     private void setUpObservers() {
         viewModel.chatMessages.observe(getViewLifecycleOwner(), res->{
+            clearMessages();
             for (ChatMessage cm:res) {
                 if(Objects.equals(cm.getSender().getId(), viewModel.senderId.getValue())){
-                    addMessageTextView(cm.getContent(),true);
+                    addMessageTextView(cm.getContent(),true, cm.getTimestamp().toString());
                 }else{
-                    addMessageTextView(cm.getContent(),false);
+                    addMessageTextView(cm.getContent(),false, cm.getTimestamp().toString());
                 }
 
             }
@@ -102,30 +118,62 @@ public class ChatFragment extends Fragment {
                 Toast.makeText(requireContext(), mess, Toast.LENGTH_SHORT).show();
             }
         });
+        viewModel.isLoading.observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading) {
+                binding.loadingSpinner.setVisibility(View.VISIBLE);
+            } else {
+                binding.loadingSpinner.setVisibility(View.GONE);
+            }
+        });
     }
-    public void addMessageTextView(String message, boolean isSender){
-        TextView messageView = new TextView(getContext());
+    public void addMessageTextView(String message, boolean isSender, String date){
+        LinearLayout messageLayout = new LinearLayout(requireContext());
+        messageLayout.setOrientation(LinearLayout.VERTICAL);
+
+        TextView messageView = new TextView(requireContext());
         messageView.setText(message);
         messageView.setPadding(16, 8, 16, 8);
 
+        int leftMargin = 0;
+        int rightMargin = 0;
+
         if (isSender) {
-            messageView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary));
             messageView.setTextColor(Color.WHITE);
             messageView.setGravity(Gravity.END);
+            leftMargin = 128;
+            rightMargin = 8;
         } else {
-            messageView.setBackgroundColor(Color.GRAY);
             messageView.setTextColor(Color.BLACK);
             messageView.setGravity(Gravity.START);
+            rightMargin = 128;
+            leftMargin = 8;
         }
 
+        GradientDrawable backgroundDrawable = new GradientDrawable();
+        backgroundDrawable.setColor(ContextCompat.getColor(requireContext(), isSender ? R.color.primary : Color.GRAY));
+        backgroundDrawable.setCornerRadius(16f);
+        messageView.setBackground(backgroundDrawable);
+
+        TextView dateView = new TextView(requireContext());
+        dateView.setText(date);
+        dateView.setTextSize(12);
+        dateView.setTextColor(Color.GRAY);
+        dateView.setGravity(isSender ? Gravity.END : Gravity.START);
+
+        messageLayout.addView(messageView);
+        messageLayout.addView(dateView);
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        params.setMargins(8, 8, 8, 8);
-        messageView.setLayoutParams(params);
+        params.setMargins(leftMargin, 8, rightMargin, 8);
+        messageLayout.setLayoutParams(params);
 
-        chatMessagesContainer.addView(messageView);
+        chatMessagesContainer.addView(messageLayout);
+        chatMessagesContainer.requestLayout();
+        chatMessagesContainer.invalidate();
+
     }
     public void clearMessages() {
         chatMessagesContainer.removeAllViews();
