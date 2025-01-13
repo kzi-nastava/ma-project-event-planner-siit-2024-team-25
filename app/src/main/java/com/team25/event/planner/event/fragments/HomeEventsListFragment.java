@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.event.adapters.HomeEventListAdapter;
+import com.team25.event.planner.event.model.EventCard;
 import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
 
 public class HomeEventsListFragment extends ListFragment {
@@ -41,7 +42,7 @@ public class HomeEventsListFragment extends ListFragment {
 
         homeEventViewModel.events.observe(getViewLifecycleOwner(), (eventCards -> {
             NavController navController = Navigation.findNavController(requireView());
-            adapter = new HomeEventListAdapter(requireContext(), eventCards, navController);
+            adapter = new HomeEventListAdapter(requireContext(), eventCards, navController, this::onFavoriteToggle);
             setListAdapter(adapter);
         }));
 
@@ -51,7 +52,18 @@ public class HomeEventsListFragment extends ListFragment {
                 homeEventViewModel.getAllEvents();
             }
         });
+        authViewModel.user.observe(getViewLifecycleOwner(), user -> {
+            if (user == null) {
+                homeEventViewModel.setUserId(null);
+            } else {
+                homeEventViewModel.setUserId(user.getUserId());
+            }
+        });
 
         return inflater.inflate(R.layout.fragment_home_events_list, container, false);
+    }
+
+    private void onFavoriteToggle(EventCard event) {
+        homeEventViewModel.toggleFavorite(event);
     }
 }

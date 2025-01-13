@@ -79,6 +79,19 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void setupObservers() {
+        authViewModel.user.observe(getViewLifecycleOwner(), user -> {
+            if (user == null) {
+                viewModel.setUserId(null);
+            } else {
+                viewModel.setUserId(user.getUserId());
+                if (user.getUserRole().equals(UserRole.ADMINISTRATOR)) {
+                    binding.adminActions.setVisibility(View.VISIBLE);
+                } else {
+                    binding.adminActions.setVisibility(View.GONE);
+                }
+            }
+        });
+
         isOrganizer.addSource(viewModel.event, event -> {
             Long userId = authViewModel.getUserId();
             isOrganizer.setValue(event != null && event.getOrganizer().getId().equals(userId));
@@ -100,17 +113,32 @@ public class EventDetailsFragment extends Fragment {
             }
         });
 
-        authViewModel.user.observe(getViewLifecycleOwner(), user -> {
-            if (user.getUserRole().equals(UserRole.ADMINISTRATOR)) {
-                binding.adminActions.setVisibility(View.VISIBLE);
-            } else {
-                binding.adminActions.setVisibility(View.GONE);
-            }
-        });
-
         viewModel.event.observe(getViewLifecycleOwner(), event -> {
             if (event == null) return;
             binding.dateTime.setText(getDateTimeString(event));
+            if (event.getIsFavorite()) {
+                binding.favoriteButton.setImageResource(R.drawable.ic_heart_red);
+            } else {
+                binding.favoriteButton.setImageResource(R.drawable.ic_favorite_border);
+            }
+        });
+
+        viewModel.addToFavoritesSuccessSignal.observe(getViewLifecycleOwner(), succeeded -> {
+            if (succeeded) {
+                Toast.makeText(getContext(), R.string.added_to_favorites, Toast.LENGTH_SHORT).show();
+                viewModel.addToFavoritesSuccessSignal.setValue(false);
+            }
+        });
+
+        viewModel.removeFromFavoritesSuccessSignal.observe(getViewLifecycleOwner(), succeeded -> {
+            if (succeeded) {
+                Toast.makeText(getContext(), R.string.removed_from_favorites, Toast.LENGTH_SHORT).show();
+                viewModel.removeFromFavoritesSuccessSignal.setValue(false);
+            }
+        });
+
+        viewModel.serverError.observe(getViewLifecycleOwner(), errorMessage -> {
+            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
         });
     }
 

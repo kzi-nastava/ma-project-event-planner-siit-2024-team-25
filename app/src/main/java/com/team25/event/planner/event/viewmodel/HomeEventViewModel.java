@@ -15,11 +15,12 @@ import com.team25.event.planner.event.model.EventCard;
 import com.team25.event.planner.event.model.EventFilterDTO;
 import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.event.model.EventTypePreviewDTO;
+import com.team25.event.planner.event.model.FavoriteEventRequest;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,6 +42,9 @@ public class HomeEventViewModel extends ViewModel {
 
     private final MutableLiveData<EventType> _currentEventType = new MutableLiveData<>();
     public final LiveData<EventType> currentEventType = _currentEventType;
+
+    @Setter
+    private Long userId;
 
 
     public HomeEventViewModel() {
@@ -105,7 +109,7 @@ public class HomeEventViewModel extends ViewModel {
         });
     }
 
-    public void restartFilter(){
+    public void restartFilter() {
         this.eventFilterDTO = new EventFilterDTO();
         this.getAllEvents();
     }
@@ -119,7 +123,7 @@ public class HomeEventViewModel extends ViewModel {
             public void onResponse(@NonNull Call<List<EventTypePreviewDTO>> call, @NonNull Response<List<EventTypePreviewDTO>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<EventTypePreviewDTO> list = response.body();
-                    list.add(0,new EventTypePreviewDTO());
+                    list.add(0, new EventTypePreviewDTO());
                     _allEventTypes.setValue(list);
                 } else {
                     Log.e("HomeEventViewModel", "Failed to fetch top events");
@@ -152,5 +156,73 @@ public class HomeEventViewModel extends ViewModel {
                 Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
             }
         });
+    }
+
+    public void toggleFavorite(EventCard event) {
+        EventApi eventApi = ConnectionParams.eventApi;
+
+        if (event == null || userId == null) return;
+
+        if (event.getIsFavorite()) {
+            eventApi.removeFromFavorites(userId, event.getId()).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        event.setIsFavorite(false);
+                        updateTopEvent(event);
+                        updateHomeEvent(event);
+                    } else {
+                        Log.e("HomeEventViewModel", "Failed to remove event " + event.getId() + " from favorites");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    Log.e("HomeEventViewModel", "Failed to remove event " + event.getId() + " from favorites", t);
+                }
+            });
+        } else {
+            eventApi.addToFavorites(userId, new FavoriteEventRequest(userId, event.getId())).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<EventCard> call, @NonNull Response<EventCard> response) {
+                    if (response.isSuccessful()) {
+                        event.setIsFavorite(true);
+                        updateTopEvent(event);
+                        updateHomeEvent(event);
+                    } else {
+                        Log.e("HomeEventViewModel", "Failed to add event " + event.getId() + " to favorites");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<EventCard> call, @NonNull Throwable t) {
+                    Log.e("HomeEventViewModel", "Failed to add event " + event.getId() + " to favorites", t);
+                }
+            });
+        }
+    }
+
+    private void updateTopEvent(EventCard newEvent) {
+        List<EventCard> topEvents = this.topEvents.getValue();
+        if (topEvents == null) return;
+        for (int i = 0; i < topEvents.size(); i++) {
+            if (topEvents.get(i).getId().equals(newEvent.getId())) {
+                topEvents.set(i, newEvent);
+                _topEvents.postValue(topEvents);
+                return;
+            }
+        }
+    }
+
+    private void updateHomeEvent(EventCard newEvent) {
+        List<EventCard> events = this.events.getValue();
+        if (events == null) return;
+        for (int i = 0; i < events.size(); i++) {
+            if (events.get(i).getId().equals(newEvent.getId())) {
+                events.set(i, newEvent);
+                _events.postValue(events);
+                return;
+            }
+        }
     }
 }

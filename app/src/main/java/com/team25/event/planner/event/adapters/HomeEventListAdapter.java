@@ -27,10 +27,17 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
     private List<EventCard> eventCards;
     private NavController navController;
 
-    public HomeEventListAdapter(Context context, List<EventCard> eventCards, NavController navController) {
+    private final FavoriteToggleListener favoriteToggleListener;
+
+    public interface FavoriteToggleListener {
+        void onFavoriteToggle(EventCard event);
+    }
+
+    public HomeEventListAdapter(Context context, List<EventCard> eventCards, NavController navController, FavoriteToggleListener favoriteToggleListener) {
         super(context, R.layout.home_page_event_card, eventCards);
         this.eventCards = eventCards;
         this.navController = navController;
+        this.favoriteToggleListener = favoriteToggleListener;
     }
 
     @Override
@@ -69,20 +76,6 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
         TextView eventLocation = convertView.findViewById(R.id.home_event_location);
 
         eventIcon.setImageResource(R.drawable.ic_heart);
-        boolean[] isClicked = {false};
-        eventIcon.setOnClickListener(v -> {
-            isClicked[0] = !isClicked[0];
-            if (isClicked[0]) {
-                eventIcon.setImageResource(R.drawable.ic_heart_red);
-                Toast.makeText(getContext(), "You add " + event.getName() +
-                        " to your favourite list", Toast.LENGTH_SHORT).show();
-            } else {
-                eventIcon.setImageResource(R.drawable.ic_heart);
-                Toast.makeText(getContext(), "You remove " + event.getName() +
-                        " from your favourite list", Toast.LENGTH_SHORT).show();
-            }
-        });
-
 
         if (event != null) {
             eventName.setText(event.getName());
@@ -98,11 +91,26 @@ public class HomeEventListAdapter extends ArrayAdapter<EventCard> {
             eventDate.setText(formattedDate);
             eventTime.setText(formattedTime);
 
-
-            eventIcon.setImageResource(R.drawable.ic_heart);
             eventLocation.setText(event.getCountry() + ", " + event.getCity());
             eventLocationImage.setImageResource(R.drawable.ic_location);
 
+            if (event.getIsFavorite()) {
+                eventIcon.setImageResource(R.drawable.ic_heart_red);
+            } else {
+                eventIcon.setImageResource(R.drawable.ic_heart);
+            }
+
+            eventIcon.setOnClickListener(v -> {
+                if (!event.getIsFavorite()) {
+                    Toast.makeText(getContext(), "You add " + event.getName() +
+                            " to your favourite list", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "You remove " + event.getName() +
+                            " from your favourite list", Toast.LENGTH_SHORT).show();
+                }
+
+                favoriteToggleListener.onFavoriteToggle(event);
+            });
 
             eventCard.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();

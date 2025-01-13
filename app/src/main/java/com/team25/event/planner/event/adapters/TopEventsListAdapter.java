@@ -26,11 +26,17 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard> {
 
     private List<EventCard> eventCards;
     private NavController navController;
+    private final FavoriteToggleListener favoriteToggleListener;
 
-    public TopEventsListAdapter(Context context, List<EventCard> eventCards, NavController navController) {
+    public interface FavoriteToggleListener {
+        void onFavoriteToggle(EventCard event);
+    }
+
+    public TopEventsListAdapter(Context context, List<EventCard> eventCards, NavController navController, FavoriteToggleListener favoriteToggleListener) {
         super(context, R.layout.home_page_top_event, eventCards);
         this.eventCards = eventCards;
         this.navController = navController;
+        this.favoriteToggleListener = favoriteToggleListener;
     }
 
     @Override
@@ -80,24 +86,25 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard> {
             eventDate.setText(formattedDate);
             eventTime.setText(formattedTime);
 
-
-            eventIcon.setImageResource(R.drawable.ic_heart);
             eventLocation.setText(event.getCountry() + ", " + event.getCity());
             eventLocationImage.setImageResource(R.drawable.ic_location);
 
+            if (event.getIsFavorite()) {
+                eventIcon.setImageResource(R.drawable.ic_heart_red);
+            } else {
+                eventIcon.setImageResource(R.drawable.ic_heart);
+            }
 
-            boolean[] isClicked = {false};
             eventIcon.setOnClickListener(v -> {
-                isClicked[0] = !isClicked[0];
-                if (isClicked[0]) {
-                    eventIcon.setImageResource(R.drawable.ic_heart_red);
+                if (!event.getIsFavorite()) {
                     Toast.makeText(getContext(), "You add " + event.getName() +
                             " to your favourite list", Toast.LENGTH_SHORT).show();
                 } else {
-                    eventIcon.setImageResource(R.drawable.ic_heart);
                     Toast.makeText(getContext(), "You remove " + event.getName() +
                             " from your favourite list", Toast.LENGTH_SHORT).show();
                 }
+
+                favoriteToggleListener.onFavoriteToggle(event);
             });
 
 

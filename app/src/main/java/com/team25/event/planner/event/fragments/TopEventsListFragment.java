@@ -40,7 +40,7 @@ public class TopEventsListFragment extends ListFragment {
                              Bundle savedInstanceState) {
         homeEventViewModel.topEvents.observe(getViewLifecycleOwner(), (eventCards -> {
             NavController navController = Navigation.findNavController(requireView());
-            adapter = new TopEventsListAdapter(requireContext(), eventCards, navController);
+            adapter = new TopEventsListAdapter(requireContext(), eventCards, navController, this::onFavoriteToggle);
             setListAdapter(adapter);
         }));
         AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
@@ -49,18 +49,29 @@ public class TopEventsListFragment extends ListFragment {
                 homeEventViewModel.getTopEvents();
             }
         });
+        authViewModel.user.observe(getViewLifecycleOwner(), user -> {
+            if (user == null) {
+                homeEventViewModel.setUserId(null);
+            } else {
+                homeEventViewModel.setUserId(user.getUserId());
+            }
+        });
         return inflater.inflate(R.layout.fragment_top_event_list, container, false);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        homeEventViewModel = new ViewModelProvider(requireActivity()).get(HomeEventViewModel.class);
+//        homeEventViewModel = new ViewModelProvider(requireActivity()).get(HomeEventViewModel.class);
         if (getArguments() != null) {
             NavController navController = Navigation.findNavController(requireView());
             topEventCards = getArguments().getParcelableArrayList(ARG_PARAM);
-            adapter = new TopEventsListAdapter(getActivity(), topEventCards, navController);
+            adapter = new TopEventsListAdapter(getActivity(), topEventCards, navController, this::onFavoriteToggle);
             setListAdapter(adapter);
         }
+    }
+
+    private void onFavoriteToggle(EventCard event) {
+        homeEventViewModel.toggleFavorite(event);
     }
 }
