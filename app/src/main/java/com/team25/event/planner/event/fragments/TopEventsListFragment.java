@@ -53,7 +53,7 @@ public class TopEventsListFragment extends ListFragment {
             if (user == null) {
                 homeEventViewModel.setUserId(null);
             } else {
-                homeEventViewModel.setUserId(user.getUserId());
+                homeEventViewModel.setUserId(user.getId());
             }
         });
         return inflater.inflate(R.layout.fragment_top_event_list, container, false);

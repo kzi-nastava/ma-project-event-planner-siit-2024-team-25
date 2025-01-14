@@ -8,6 +8,9 @@
     <variable
         name="viewModel"
         type="com.team25.event.planner.communication.viewmodel.MyChatMessageViewModel" />
+    <variable
+        name="blockViewModel"
+        type="com.team25.event.planner.communication.viewmodel.BlockViewModel" />
 </data>
 
     <RelativeLayout
@@ -31,6 +34,16 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/block_user_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_block_user"
+                android:layout_marginRight="15sp"
+                android:onClick="@{() -> blockViewModel.blockUser()}"
+                android:background="?android:attr/selectableItemBackground"
+                app:tint="@color/accent_red" />
 
             <ImageButton
                 android:id="@+id/scroll_up_button"

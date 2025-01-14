@@ -40,7 +40,7 @@ public class NotificationViewModel extends ViewModel {
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
         _notificationWebSocket = new NotificationWebSocket();
         _notificationWebSocket.connect();
-        _notificationWebSocket.subscribeToTopic("/notifications/user/"+currentUser.getUserId())
+        _notificationWebSocket.subscribeToTopic("/notifications/user/"+currentUser.getId())
             .subscribe(stompMessage -> {
                     Notification notification = gson.fromJson(stompMessage.getPayload(), Notification.class);
                     this.showNotification(notification);

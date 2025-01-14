@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
                 headerTitle.setText(user.getName());
                 headerSubtitle.setText(user.getEmail());
 
-                final String profilePicUrl = ConnectionParams.BASE_URL + "/api/users/" + user.getUserId() + "/profile-picture";
+                final String profilePicUrl = ConnectionParams.BASE_URL + "/api/users/" + user.getId() + "/profile-picture";
                 Glide.with(this)
                         .load(profilePicUrl)
                         .placeholder(R.drawable.ic_person)
