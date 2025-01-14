@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
+import com.team25.event.planner.communication.fragments.ChatFragment;
 import com.team25.event.planner.databinding.DialogBookServiceBinding;
 import com.team25.event.planner.databinding.FragmentServiceDetailsBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
@@ -65,6 +68,7 @@ public class ServiceDetailsFragment extends Fragment {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
     private ListView listView;
+    private NavController navController;
 
     public ServiceDetailsFragment() {
     }
@@ -88,6 +92,7 @@ public class ServiceDetailsFragment extends Fragment {
                 false
         );
     }
+
 
 
 
@@ -124,6 +129,7 @@ public class ServiceDetailsFragment extends Fragment {
                 });
             }
         });
+
 
     }
 
@@ -277,6 +283,7 @@ public class ServiceDetailsFragment extends Fragment {
                 _binding.textMinimumArrangement.setVisibility(View.VISIBLE);
             }
         });
+
     }
 
     @Override
@@ -287,9 +294,25 @@ public class ServiceDetailsFragment extends Fragment {
         _binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
         _binding.setLifecycleOwner(getViewLifecycleOwner());
         _binding.setViewModel(_serviceViewModel);
+
         listView = _binding.listView;
+
+        navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
         setupDateTimePickers();
         setupObservable();
+        setupListeners();
         return _binding.getRoot();
+    }
+
+    private void setupListeners() {
+        _binding.chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putLong(ChatFragment.RECEIVER_ID_ARG, _serviceViewModel.currentService.getValue().getOwner().getUserId());
+                bundle.putString(ChatFragment.RECEIVER_NAME_ARG, _serviceViewModel.currentService.getValue().getOwner().getName());
+                navController.navigate(R.id.action_serviceDetailsFragment_to_chatFragment, bundle);
+            }
+        });
     }
 }

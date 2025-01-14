@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.dialogs.DialogHelper;
+import com.team25.event.planner.core.listeners.OnDetailsClickListener;
 import com.team25.event.planner.core.listeners.OnPurchaseClickListener;
 import com.team25.event.planner.databinding.FragmentProductPurchaseListBinding;
 import com.team25.event.planner.event.viewmodel.PurchaseViewModel;
@@ -27,10 +28,12 @@ import com.team25.event.planner.offering.viewmodel.HomeOfferingViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
-public class ProductPurchaseListFragment extends Fragment implements OnPurchaseClickListener {
+public class ProductPurchaseListFragment extends Fragment implements OnPurchaseClickListener, OnDetailsClickListener {
 
+    public static final String PRODUCT_ID_ARG = "PRODUCT_ID_ARG";
    private FragmentProductPurchaseListBinding binding;
    private NavController navController;
    private ProductPurchaseAdapter adapter;
@@ -81,6 +84,7 @@ public class ProductPurchaseListFragment extends Fragment implements OnPurchaseC
     viewModel.products.observe(getViewLifecycleOwner(), res ->{
         adapter = new ProductPurchaseAdapter(requireContext(), res);
         adapter.setPurchaseListener(this);
+        adapter.setDetailsClickListener(this);
         listView.setAdapter(adapter);
     });
     viewModel.purchaseResponse.observe(getViewLifecycleOwner(), check ->{
@@ -98,5 +102,16 @@ public class ProductPurchaseListFragment extends Fragment implements OnPurchaseC
     public void onPurchaseProductClick(Long productId, String productName) {
         this.productName = productName;
         viewModel.purchaseProduct(productId);
+    }
+
+    @Override
+    public void onDetailsClick(Long id) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(PRODUCT_ID_ARG, id);
+        bundle.putLong(EventArgumentNames.ID_ARG,this.eventid);
+        if(Objects.requireNonNull(navController.getCurrentDestination()).getId() == R.id.eventPurchaseFragment){
+            navController.navigate(R.id.action_eventPurchaseFragment_to_productDetailsFragment2, bundle);
+        }
+
     }
 }
