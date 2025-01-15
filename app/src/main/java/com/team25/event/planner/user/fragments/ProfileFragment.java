@@ -103,7 +103,12 @@ public class ProfileFragment extends Fragment {
     }
 
     private void handleCompanyInfo() {
-        // Handle company info action
+        RegularUser user = viewModel.user.getValue();
+        if (user != null && user.getId() != null) {
+            Bundle args = new Bundle();
+            args.putLong(EditCompanyFragment.USER_ID_ARG, viewModel.user.getValue().getId());
+            navController.navigate(R.id.action_profileFragment_to_editCompanyFragment, args);
+        }
     }
 
     private void handleCalendar() {
