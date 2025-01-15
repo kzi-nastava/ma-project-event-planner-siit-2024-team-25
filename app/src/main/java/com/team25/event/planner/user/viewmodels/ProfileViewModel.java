@@ -31,10 +31,8 @@ public class ProfileViewModel extends ViewModel {
         if (userId == null) {
             _user.postValue(null);
         } else {
-            userApi.getUser(userId).enqueue(new ResponseCallback<>(user -> {
-                System.out.println(userId);
-                _user.postValue(user);
-            },
+            userApi.getUser(userId).enqueue(new ResponseCallback<>(
+                    _user::postValue,
                     _serverError, "ProfileViewModel"
             ));
         }

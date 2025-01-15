@@ -24,6 +24,7 @@ import com.team25.event.planner.user.api.LoginApi;
 import com.team25.event.planner.user.api.SuspensionApi;
 import com.team25.event.planner.user.api.UserApi;
 import com.team25.event.planner.user.api.UserReportApi;
+import com.team25.event.planner.user.model.Administrator;
 import com.team25.event.planner.user.model.EventOrganizer;
 import com.team25.event.planner.user.model.Owner;
 import com.team25.event.planner.user.model.RegularUser;
@@ -114,6 +115,8 @@ public class ConnectionParams {
         return RuntimeTypeAdapterFactory
                 .of(RegularUser.class, "userRole")
                 .registerSubtype(EventOrganizer.class, UserRole.EVENT_ORGANIZER.name())
-                .registerSubtype(Owner.class, UserRole.OWNER.name());
+                .registerSubtype(Owner.class, UserRole.OWNER.name())
+                .registerSubtype(Administrator.class, UserRole.ADMINISTRATOR.name())
+                .registerSubtype(RegularUser.class, UserRole.REGULAR.name());
     }
 }

@@ -27,6 +27,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.navigation.NavigationView;
 import com.team25.event.planner.communication.model.Notification;
 import com.team25.event.planner.communication.model.NotificationCategory;
@@ -261,6 +262,7 @@ public class MainActivity extends AppCompatActivity {
                 final String profilePicUrl = ConnectionParams.BASE_URL + "api/users/" + user.getUserId() + "/profile-picture";
                 Glide.with(this)
                         .load(profilePicUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .placeholder(R.drawable.ic_person)
                         .error(R.drawable.ic_person)
                         .circleCrop()

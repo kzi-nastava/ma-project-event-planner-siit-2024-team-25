@@ -14,12 +14,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentProfileBinding;
 import com.team25.event.planner.user.model.EventOrganizer;
 import com.team25.event.planner.user.model.Location;
+import com.team25.event.planner.user.model.RegularUser;
 import com.team25.event.planner.user.viewmodels.ProfileViewModel;
 
 public class ProfileFragment extends Fragment {
@@ -54,6 +56,7 @@ public class ProfileFragment extends Fragment {
                 final String profilePicUrl = ConnectionParams.BASE_URL + "api/users/" + user.getUserId() + "/profile-picture";
                 Glide.with(this)
                         .load(profilePicUrl)
+                        .signature(new ObjectKey(System.currentTimeMillis()))
                         .placeholder(R.drawable.ic_person)
                         .error(R.drawable.ic_person)
                         .circleCrop()
@@ -91,7 +94,12 @@ public class ProfileFragment extends Fragment {
     }
 
     private void handleEditProfile() {
-        // Handle edit profile action
+        RegularUser user = viewModel.user.getValue();
+        if (user != null && user.getId() != null) {
+            Bundle args = new Bundle();
+            args.putLong(EditProfileFragment.USER_ID_ARG, viewModel.user.getValue().getId());
+            navController.navigate(R.id.action_profileFragment_to_editProfileFragment, args);
+        }
     }
 
     private void handleCompanyInfo() {

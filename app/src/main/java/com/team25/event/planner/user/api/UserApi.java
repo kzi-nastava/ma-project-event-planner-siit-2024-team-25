@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface UserApi {
@@ -20,4 +21,7 @@ public interface UserApi {
 
     @GET("/api/users/{userId}")
     Call<RegularUser> getUser(@Path("userId") Long userId);
+
+    @PUT("/api/users/{userId}")
+    Call<RegularUser> updateUser(@Path("userId") Long userId, @Body RequestBody body);
 }
