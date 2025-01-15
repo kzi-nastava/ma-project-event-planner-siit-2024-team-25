@@ -31,8 +31,8 @@ public class ChatRoomViewModel extends ViewModel {
     private final MutableLiveData<String> _serverError = new MutableLiveData<>();
     public final LiveData<String> serverError = _serverError;
 
-    public void getChats(){
-        chatRoomApi.getChats(senderId.getValue(),currentPage,10, "id", "desc").enqueue(new Callback<Page<ChatRoom>>() {
+    public void getChats(Long senderId){
+        chatRoomApi.getChats(senderId,currentPage,10, "id", "desc").enqueue(new Callback<Page<ChatRoom>>() {
             @Override
             public void onResponse(Call<Page<ChatRoom>> call, Response<Page<ChatRoom>> response) {
                 if(response.isSuccessful() && response.body()!= null){
@@ -52,13 +52,13 @@ public class ChatRoomViewModel extends ViewModel {
     public void scrollDown(){
         if(currentPage > 0){
             currentPage--;
-            getChats();
+            getChats(senderId.getValue());
         }
     }
     public void scrollUp(){
         if(currentPage < totalPages-1){
             currentPage++;
-            getChats();
+            getChats(senderId.getValue());
         }
     }
 }

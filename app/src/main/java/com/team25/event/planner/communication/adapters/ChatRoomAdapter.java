@@ -7,75 +7,70 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.team25.event.planner.R;
 import com.team25.event.planner.communication.model.ChatRoom;
 import com.team25.event.planner.core.listeners.OnDetailsClickListener;
+import com.team25.event.planner.databinding.ChatItemBinding;
 
 import java.util.List;
 
-public class ChatRoomAdapter extends ArrayAdapter<ChatRoom> {
+public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatRoomViewHolder>{
     private List<ChatRoom> chats;
     private OnClickChat onClickChat;
-    public interface OnClickChat {
-        void onButtonClick(Long senderId, Long receiverId);
-    }
-    public ChatRoomAdapter(Context context, List<ChatRoom> list){
-        super(context, R.layout.chat_item, list);
-        this.chats = list;
+
+    @NonNull
+    @Override
+    public ChatRoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        ChatItemBinding binding = ChatItemBinding.inflate(inflater,parent,false);
+        return new ChatRoomViewHolder(binding);
     }
 
-    public void setOnClickListener(OnClickChat listener){
+    @Override
+    public void onBindViewHolder(@NonNull ChatRoomViewHolder holder, int position) {
+        final ChatRoom chatRoom = chats.get(position);
+        holder.bind(chatRoom, onClickChat,position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return chats != null ? chats.size() : 0;
+    }
+
+    public interface OnClickChat {
+        void onButtonClick(Long receiverId, String receiverName);
+
+    }
+    public ChatRoomAdapter(List<ChatRoom> list, OnClickChat listener){
+        this.chats = list;
         this.onClickChat = listener;
     }
 
-    @Override
-    public int getCount() {
-        return this.chats.size();
-    }
+    public static class ChatRoomViewHolder extends RecyclerView.ViewHolder{
+        private final ChatItemBinding binding;
 
-    @Nullable
-    @Override
-    public ChatRoom getItem(int position) {
-        return this.chats.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
-    }
-
-    @SuppressLint("SetTextI18n")
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        ChatRoom chatRoom = getItem(position);
-        if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_item,parent,false);
+        public ChatRoomViewHolder(ChatItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
-        RelativeLayout layout = convertView.findViewById(R.id.layout);
-        ImageView image = convertView.findViewById(R.id.profile_image);
-        TextView name = convertView.findViewById(R.id.user_name);
-        TextView role = convertView.findViewById(R.id.user_role);
-        if(chatRoom!= null){
-            Glide.with(this.getContext())
-                    .load(chatRoom.getReceiver().getProfilePictureUrl())
-                    .placeholder(R.drawable.profile_icon)
-                    .into(image);
-            name.setText(chatRoom.getReceiver().getFirstName() + " " + chatRoom.getReceiver().getLastName());
-            role.setText(chatRoom.getReceiver().getUserRole().toString());
-            layout.setOnClickListener( v ->{
-                if(onClickChat!= null){
-                    onClickChat.onButtonClick(chatRoom.getSender().getId(),chatRoom.getReceiver().getId());
-                }
-            });
+
+        @SuppressLint("SetTextI18n")
+        public void bind(ChatRoom chatRoom, OnClickChat onClickChat, int position){
+            binding.setChatRoom(chatRoom);
+            binding.executePendingBindings();
+            binding.userName.setText(chatRoom.getReceiver().getFirstName() + " " + chatRoom.getReceiver().getLastName());
+            binding.userRole.setText(chatRoom.getReceiver().getUserRole().toString());
+            binding.getRoot().setOnClickListener(v->onClickChat.onButtonClick(chatRoom.getReceiver().getId(),chatRoom.getReceiver().getFirstName() + " " + chatRoom.getReceiver().getLastName()));
         }
-        return convertView;
     }
+
 }

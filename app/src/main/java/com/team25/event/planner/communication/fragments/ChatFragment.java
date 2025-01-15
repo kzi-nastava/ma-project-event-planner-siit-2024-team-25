@@ -166,7 +166,7 @@ public class ChatFragment extends Fragment {
         }
 
         GradientDrawable backgroundDrawable = new GradientDrawable();
-        backgroundDrawable.setColor(ContextCompat.getColor(requireContext(), isSender ? R.color.primary : Color.GRAY));
+        backgroundDrawable.setColor(ContextCompat.getColor(requireActivity(), isSender ? R.color.primary : R.color.ic_launcher_background));
         backgroundDrawable.setCornerRadius(16f);
         messageView.setBackground(backgroundDrawable);
 

@@ -1,5 +1,7 @@
 package com.team25.event.planner.communication.fragments;
 
+import static com.team25.event.planner.communication.fragments.ChatFragment.RECEIVER_ID_ARG;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +21,8 @@ import android.widget.ListView;
 import com.team25.event.planner.R;
 import com.team25.event.planner.communication.adapters.ChatRoomAdapter;
 import com.team25.event.planner.communication.viewmodel.ChatRoomViewModel;
-import com.team25.event.planner.communication.viewmodel.MyChatMessageViewModel;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
-import com.team25.event.planner.databinding.FragmentChatBinding;
 import com.team25.event.planner.databinding.FragmentChatRoomBinding;
-import com.team25.event.planner.offering.adapters.ProductPriceListAdapter;
 
 
 public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.OnClickChat {
@@ -30,7 +31,7 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.OnClic
     private ChatRoomViewModel viewModel;
     private AuthViewModel authViewModel;
     private Long senderId;
-    private ListView listView;
+    private RecyclerView listView;
     private NavController navController;
     private ChatRoomAdapter adapter;
 
@@ -61,20 +62,22 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.OnClic
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = binding.listView;
+        listView.setLayoutManager(new LinearLayoutManager(requireContext()));
         setUpObservers();
         setUpListeners();
 
-        viewModel.getChats();
+        viewModel.getChats(senderId);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         listView = binding.listView;
+        listView.setLayoutManager(new LinearLayoutManager(requireContext()));
         setUpObservers();
         setUpListeners();
 
-        viewModel.getChats();
+        viewModel.getChats(senderId);
     }
 
     private void setUpListeners() {
@@ -82,14 +85,17 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.OnClic
 
     private void setUpObservers() {
         viewModel.chats.observe(getViewLifecycleOwner(), res->{
-            adapter = new ChatRoomAdapter(requireContext(), res);
-            adapter.setOnClickListener(this);
+            adapter = new ChatRoomAdapter(res,this);
             listView.setAdapter(adapter);
         });
     }
 
     @Override
-    public void onButtonClick(Long senderId, Long receiverId) {
-
+    public void onButtonClick(Long receiverId, String name) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(ChatFragment.RECEIVER_ID_ARG,receiverId);
+        bundle.putString(ChatFragment.RECEIVER_NAME_ARG, name);
+        navController.navigate(R.id.action_chatRoomFragment_to_chatFragment, bundle);
     }
+
 }

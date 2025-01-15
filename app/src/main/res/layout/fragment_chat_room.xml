@@ -11,11 +11,10 @@
             type="com.team25.event.planner.communication.viewmodel.ChatRoomViewModel" />
     </data>
 
-    <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ChatActivity">
+        android:orientation="vertical">
 
         <!-- Header -->
         <RelativeLayout
@@ -63,21 +62,14 @@
                 app:tint="@android:color/white" />
         </RelativeLayout>
 
-        <!-- Scrollable content -->
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/header"
-            android:padding="16dp">
-            <ListView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@android:color/darker_gray"
                 android:dividerHeight="1dp"
-                tools:listitem="@layout/chat_item"/>
-        </ScrollView>
-    </RelativeLayout>
+                tools:listitem="@layout/chat_item" />
+
+    </LinearLayout>
 
 </layout>

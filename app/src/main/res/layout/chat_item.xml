@@ -1,46 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="8dp">
+<layout        xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="chatRoom"
+            type="com.team25.event.planner.communication.model.ChatRoom" />
+    </data>
+    <LinearLayout
 
-    <!-- Circular Image -->
-    <ImageView
-        android:id="@+id/profile_image"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/profile_icon"
-        android:background="@drawable/circle_shape" />
-
-    <!-- Name -->
-    <TextView
-        android:id="@+id/user_name"
-        android:layout_width="wrap_content"
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/profile_image"
-        android:layout_marginBottom="4dp"
-        android:text="John Doe"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        tools:ignore="HardcodedText" />
+        android:padding="8dp">
 
-    <!-- User Role -->
-    <TextView
-        android:id="@+id/user_role"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_name"
-        android:layout_toEndOf="@id/profile_image"
-        android:text="User Role"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
-        tools:ignore="HardcodedText" />
+        <!-- Circular Image -->
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="16dp"
+            android:scaleType="centerCrop"
+            android:src="@{chatRoom.receiver.profilePictureUrl}"
+            android:background="@drawable/circle_shape" />
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="John Doe"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <!-- User Role -->
+            <TextView
+                android:id="@+id/user_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Role"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+        <!-- Name -->
+
+
+    </LinearLayout>
+</layout>
+
