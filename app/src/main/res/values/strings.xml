@@ -172,4 +172,12 @@
     <string name="added_to_favorites">Added to favorites!</string>
     <string name="removed_from_favorites">Removed from favorites!</string>
     <string name="download_pdf_report">Download PDF Report</string>
+    <string name="deactivate_account">Deactivate Account</string>
+    <string name="change_password">Change Password</string>
+    <string name="favorite_products_services">Favorite Products/Services</string>
+    <string name="calendar">Calendar</string>
+    <string name="favorite_events">Favorite Events</string>
+    <string name="company_info">Company Info</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="full_address">%1$s, %2$s, %3$s</string>
 </resources>
