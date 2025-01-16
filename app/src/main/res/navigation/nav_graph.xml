@@ -108,6 +108,9 @@
         <action
             android:id="@+id/action_profileFragment_to_passwordChangeFragment"
             app:destination="@id/passwordChangeFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_favoriteEventsFragment"
+            app:destination="@id/favoriteEventsFragment" />
     </fragment>
 
     <fragment
@@ -357,4 +360,12 @@
         android:id="@+id/passwordChangeFragment"
         android:name="com.team25.event.planner.user.fragments.PasswordChangeFragment"
         android:label="Change Password" />
+    <fragment
+        android:id="@+id/favoriteEventsFragment"
+        android:name="com.team25.event.planner.event.fragments.FavoriteEventsFragment"
+        android:label="Favorite Events">
+        <action
+            android:id="@+id/action_favoriteEventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
 </navigation>

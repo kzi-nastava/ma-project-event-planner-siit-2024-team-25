@@ -120,15 +120,15 @@ public class ProfileFragment extends Fragment {
     }
 
     private void handleCalendar() {
-        // Handle calendar action
+        // TODO: Handle calendar action
     }
 
     private void handleFavoriteEvents() {
-        // Handle favorite events action
+        navController.navigate(R.id.action_profileFragment_to_favoriteEventsFragment);
     }
 
     private void handleFavoriteProducts() {
-        // Handle favorite products action
+        // TODO: Handle favorite products action
     }
 
     private void handleChangePassword() {

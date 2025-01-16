@@ -60,6 +60,9 @@ public interface EventApi {
     @GET("/api/events/{eventId}")
     Call<Event> getEvent(@Path("eventId") Long eventId);
 
+    @GET("/api/users/{userId}/favorite-events")
+    Call<List<EventCard>> getFavoriteEvents(@Path("userId") Long userId);
+
     @POST("/api/users/{userId}/favorite-events")
     Call<EventCard> addToFavorites(@Path("userId") Long userId, @Body FavoriteEventRequest favRequest);
 
