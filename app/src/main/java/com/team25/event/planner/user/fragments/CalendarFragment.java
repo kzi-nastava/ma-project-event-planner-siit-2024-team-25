@@ -1,6 +1,7 @@
 package com.team25.event.planner.user.fragments;
 
 import android.content.res.ColorStateList;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import androidx.navigation.Navigation;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.kizitonwose.calendar.core.CalendarDay;
 import com.kizitonwose.calendar.core.CalendarMonth;
+import com.kizitonwose.calendar.core.DayPosition;
 import com.kizitonwose.calendar.view.MonthDayBinder;
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder;
 import com.kizitonwose.calendar.view.ViewContainer;
@@ -98,6 +100,10 @@ public class CalendarFragment extends Fragment {
             public void bind(@NonNull DayViewContainer container, @NonNull CalendarDay day) {
                 container.getTextView().setText(String.valueOf(day.getDate().getDayOfMonth()));
 
+                if (!day.getPosition().equals(DayPosition.MonthDate)) {
+                    container.getWrapperView().setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_gray));
+                }
+
                 // Clear previous markers
                 container.getMarkersContainer().removeAllViews();
 
@@ -111,15 +117,24 @@ public class CalendarFragment extends Fragment {
 
                 // Add markers for events
                 for (CalendarEvent event : events) {
-                    View marker = new View(getContext());
+                    TextView marker = new TextView(getContext());
+                    marker.setText(event.getTitle());
+
+                    marker.setLines(1);
+                    marker.setTextSize(8);
+
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            dpToPx(8),
-                            dpToPx(8)
+                            LinearLayout.LayoutParams.MATCH_PARENT,  // full width
+                            LinearLayout.LayoutParams.WRAP_CONTENT  // height of the line
                     );
-                    params.setMargins(dpToPx(2), 0, dpToPx(2), 0);
+                    params.setMargins(0, dpToPx(2), 0, dpToPx(2));
                     marker.setLayoutParams(params);
 
-                    marker.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.circle_background));
+                    // Create a rounded rectangle background
+                    GradientDrawable drawable = new GradientDrawable();
+                    drawable.setShape(GradientDrawable.RECTANGLE);
+                    drawable.setCornerRadius(dpToPx(3));
+                    marker.setBackground(drawable);
 
                     int colorRes;
                     switch (event.getEventType()) {
@@ -135,6 +150,8 @@ public class CalendarFragment extends Fragment {
                     }
                     marker.setBackgroundTintList(ColorStateList.valueOf(
                             ContextCompat.getColor(requireContext(), colorRes)));
+
+                    marker.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
 
                     container.getMarkersContainer().addView(marker);
                 }
@@ -242,11 +259,13 @@ public class CalendarFragment extends Fragment {
 
     @Getter
     private static class DayViewContainer extends ViewContainer {
+        private final View wrapperView;
         private final TextView textView;
         private final LinearLayout markersContainer;
 
         public DayViewContainer(@NonNull View view) {
             super(view);
+            wrapperView = view.findViewById(R.id.wrapperView);
             textView = view.findViewById(R.id.calendarDayText);
             markersContainer = view.findViewById(R.id.eventMarkersContainer);
         }

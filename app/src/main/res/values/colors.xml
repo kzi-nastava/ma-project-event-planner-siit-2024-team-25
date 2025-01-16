@@ -35,6 +35,7 @@
     <color name="accent_blue">#1976D2</color>
     <color name="accent_yellow">#FBC02D</color>
 
+    <color name="light_gray">#eee</color>
 
     <!-- MENU STATES -->
     <color name="menu_item_dark_color_state">#E5DDD8</color>

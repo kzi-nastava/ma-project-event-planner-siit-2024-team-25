@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/primary">
 
     <TextView
         android:id="@+id/headerMonthText"
@@ -11,68 +12,43 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="@android:color/white"
         android:layout_marginBottom="8dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="SUN"
-            android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceCaption" />
+            style="@style/CalendarDayHeader"
+            android:text="S" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="MON"
-            android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceCaption" />
+            style="@style/CalendarDayHeader"
+            android:text="M" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TUE"
-            android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceCaption" />
+            style="@style/CalendarDayHeader"
+            android:text="T" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="WED"
-            android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceCaption" />
+            style="@style/CalendarDayHeader"
+            android:text="W" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="THU"
-            android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceCaption" />
+            style="@style/CalendarDayHeader"
+            android:text="T" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="FRI"
-            android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceCaption" />
+            style="@style/CalendarDayHeader"
+            android:text="F" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="SAT"
-            android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceCaption" />
+            style="@style/CalendarDayHeader"
+            android:text="S" />
 
     </LinearLayout>
 </LinearLayout>
