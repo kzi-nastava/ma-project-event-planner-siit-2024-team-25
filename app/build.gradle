@@ -96,4 +96,7 @@ dependencies {
     implementation libs.okhttp.v3121
     implementation libs.rxjava
     implementation libs.rxandroid
+
+    //noinspection UseTomlInstead
+    implementation "com.kizitonwose.calendar:view:2.6.1"
 }

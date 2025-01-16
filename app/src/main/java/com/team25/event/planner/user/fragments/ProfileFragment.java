@@ -20,9 +20,12 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentProfileBinding;
+import com.team25.event.planner.user.model.Administrator;
 import com.team25.event.planner.user.model.EventOrganizer;
 import com.team25.event.planner.user.model.Location;
+import com.team25.event.planner.user.model.Owner;
 import com.team25.event.planner.user.model.RegularUser;
+import com.team25.event.planner.user.model.UserRole;
 import com.team25.event.planner.user.viewmodels.ProfileViewModel;
 
 public class ProfileFragment extends Fragment {
@@ -120,7 +123,22 @@ public class ProfileFragment extends Fragment {
     }
 
     private void handleCalendar() {
-        // TODO: Handle calendar action
+        RegularUser user = viewModel.user.getValue();
+        if (user != null && user.getId() != null) {
+            UserRole userRole = UserRole.REGULAR;
+            if (user instanceof EventOrganizer) {
+                userRole = UserRole.EVENT_ORGANIZER;
+            } else if (user instanceof Owner) {
+                userRole = UserRole.OWNER;
+            } else if (user instanceof Administrator) {
+                userRole = UserRole.ADMINISTRATOR;
+            }
+
+            Bundle args = new Bundle();
+            args.putLong(CalendarFragment.USER_ID_ARG, user.getId());
+            args.putString(CalendarFragment.USER_ROLE_ARG, userRole.name());
+            navController.navigate(R.id.action_profileFragment_to_calendarFragment, args);
+        }
     }
 
     private void handleFavoriteEvents() {

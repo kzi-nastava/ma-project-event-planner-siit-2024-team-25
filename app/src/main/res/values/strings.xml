@@ -184,4 +184,7 @@
     <string name="old_password">Old Password</string>
     <string name="new_password">New Password</string>
     <string name="account_deactivated_message">Your account has been permanently deactivated.</string>
+    <string name="service_reservations">Service Reservations</string>
+    <string name="attending_events">Attending Events</string>
+    <string name="service_image">Service image</string>
 </resources>
