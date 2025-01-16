@@ -57,7 +57,7 @@ public class ProductFormFragment extends Fragment {
         binding.setViewModel(viewModel);
 
         AuthViewModel authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
-        authViewModel.user.observe(getViewLifecycleOwner(), user -> viewModel.setOwnerId(user.getUserId()));
+        authViewModel.user.observe(getViewLifecycleOwner(), user -> viewModel.setOwnerId(user.getId()));
 
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 

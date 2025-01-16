@@ -56,7 +56,7 @@ public class HomeEventsListFragment extends ListFragment {
             if (user == null) {
                 homeEventViewModel.setUserId(null);
             } else {
-                homeEventViewModel.setUserId(user.getUserId());
+                homeEventViewModel.setUserId(user.getId());
             }
         });
 

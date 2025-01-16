@@ -31,7 +31,7 @@ public class AuthViewModel extends ViewModel {
         if (user.getValue() == null) {
             return null;
         }
-        return user.getValue().getUserId();
+        return user.getValue().getId();
     }
 
     public void setUser(User user) {
