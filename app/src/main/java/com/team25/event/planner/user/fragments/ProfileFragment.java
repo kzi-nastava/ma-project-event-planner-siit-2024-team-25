@@ -1,5 +1,6 @@
 package com.team25.event.planner.user.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +81,13 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
             }
         });
+
+        viewModel.accountDeactivatedSignal.observe(getViewLifecycleOwner(), deactivated -> {
+            if (deactivated) {
+                Toast.makeText(getContext(), R.string.account_deactivated_message, Toast.LENGTH_LONG).show();
+                handleLogOut();
+            }
+        });
     }
 
     private void setupListeners() {
@@ -134,7 +142,12 @@ public class ProfileFragment extends Fragment {
     }
 
     private void handleDeactivateAccount() {
-        // Handle deactivate account action
+        new AlertDialog.Builder(getContext())
+                .setTitle("Are you sure?!")
+                .setMessage("This will permanently deactivate your account.")
+                .setPositiveButton("Deactivate", (dialog, which) -> viewModel.deactivateAccount())
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .create().show();
     }
 
 }

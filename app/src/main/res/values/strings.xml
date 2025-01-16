@@ -183,4 +183,5 @@
     <string name="company_name">Company name</string>
     <string name="old_password">Old Password</string>
     <string name="new_password">New Password</string>
+    <string name="account_deactivated_message">Your account has been permanently deactivated.</string>
 </resources>
