@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.team25.event.planner.BuildConfig;
 import com.team25.event.planner.communication.api.BlockApi;
 import com.team25.event.planner.communication.api.ChatApi;
+import com.team25.event.planner.communication.api.ChatRoomApi;
 import com.team25.event.planner.communication.api.NotificationApi;
 import com.team25.event.planner.core.api.serialization.InstantAdapter;
 import com.team25.event.planner.event.api.BudgetItemApi;
@@ -76,7 +77,7 @@ public class ConnectionParams {
     public static NotificationApi notificationApi;
     public static ChatApi chatApi;
     public static BlockApi blockApi;
-
+    public static ChatRoomApi chatRoomApi;
 
     public static void setup(String jwt, AuthInterceptor.LogoutHandler logoutHandler) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -109,6 +110,7 @@ public class ConnectionParams {
         suspensionApi = retrofit.create(SuspensionApi.class);
         chatApi = retrofit.create(ChatApi.class);
         blockApi = retrofit.create(BlockApi.class);
+        chatRoomApi = retrofit.create(ChatRoomApi.class);
     }
 
 }

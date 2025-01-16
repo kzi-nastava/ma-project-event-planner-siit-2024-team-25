@@ -94,7 +94,6 @@ public class ChatFragment extends Fragment {
         setUpListeners();
 
         blockViewModel.isChatBlocked();
-        viewModel.getChat(senderId, receiverId);
     }
 
     @Override
@@ -105,7 +104,6 @@ public class ChatFragment extends Fragment {
         setUpListeners();
 
         blockViewModel.isChatBlocked();
-        viewModel.getChat(senderId,receiverId);
     }
     private void setUpListeners() {
         binding.sendButton.setOnClickListener(new View.OnClickListener() {
@@ -121,8 +119,10 @@ public class ChatFragment extends Fragment {
                 binding.sendButton.setEnabled(false);
                 binding.messageInput.setText(R.string.current_user_was_blocked);
                 binding.messageInput.setEnabled(false);
+                binding.blockUserButton.setEnabled(false);
             }else{
                 binding.sendButton.setEnabled(true);
+                viewModel.getChat(senderId,receiverId);
             }
         });
         viewModel.chatMessages.observe(getViewLifecycleOwner(), res->{
@@ -183,7 +183,7 @@ public class ChatFragment extends Fragment {
         }
 
         GradientDrawable backgroundDrawable = new GradientDrawable();
-        backgroundDrawable.setColor(ContextCompat.getColor(requireContext(), isSender ? R.color.primary : Color.GRAY));
+        backgroundDrawable.setColor(ContextCompat.getColor(requireActivity(), isSender ? R.color.primary : R.color.ic_launcher_background));
         backgroundDrawable.setCornerRadius(16f);
         messageView.setBackground(backgroundDrawable);
 
