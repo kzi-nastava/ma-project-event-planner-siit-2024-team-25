@@ -124,7 +124,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void handleChangePassword() {
-        // Handle change password action
+        navController.navigate(R.id.action_profileFragment_to_passwordChangeFragment);
     }
 
     private void handleLogOut() {

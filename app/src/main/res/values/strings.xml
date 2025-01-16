@@ -181,4 +181,6 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="full_address">%1$s, %2$s, %3$s</string>
     <string name="company_name">Company name</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
 </resources>
