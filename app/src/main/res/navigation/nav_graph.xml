@@ -334,5 +334,17 @@
         <action
             android:id="@+id/action_chatFragment_to_serviceDetailsFragment"
             app:destination="@id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_chatRoomFragment"
+            app:destination="@id/chat" />
+    </fragment>
+    <fragment
+        android:id="@+id/chat"
+        android:name="com.team25.event.planner.communication.fragments.ChatRoomFragment"
+        android:label="Chat room"
+        tools:layout="@layout/fragment_chat_room" >
+        <action
+            android:id="@+id/action_chatRoomFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
 </navigation>
