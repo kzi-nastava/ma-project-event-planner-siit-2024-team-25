@@ -137,8 +137,16 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:textAppearance="?attr/textAppearanceBody2"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="8dp"
                         tools:text="123 Business St, City, Country" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/showOnMapButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:text="@string/show_on_map"
+                        android:layout_marginBottom="16dp" />
 
                     <!-- Company Pictures Gallery -->
                     <androidx.recyclerview.widget.RecyclerView

@@ -10,11 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.ConnectionParams;
+import com.team25.event.planner.core.fragments.MapFragment;
 import com.team25.event.planner.databinding.FragmentPublicProfileBinding;
 import com.team25.event.planner.user.adapters.CompanyPicturesAdapter;
 import com.team25.event.planner.user.model.EventOrganizer;
@@ -27,6 +30,7 @@ public class PublicProfileFragment extends Fragment {
 
     private FragmentPublicProfileBinding binding;
     private PublicProfileViewModel viewModel;
+    private NavController navController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +39,8 @@ public class PublicProfileFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(PublicProfileViewModel.class);
         binding.setViewModel(viewModel);
+
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 
         if (getArguments() != null) {
             long userId = getArguments().getLong(USER_ID_ARG);
@@ -45,6 +51,7 @@ public class PublicProfileFragment extends Fragment {
         }
 
         setupObservers();
+        setupListeners();
 
         return binding.getRoot();
     }
@@ -88,4 +95,17 @@ public class PublicProfileFragment extends Fragment {
         });
     }
 
+    private void setupListeners() {
+        binding.showOnMapButton.setOnClickListener(v -> showOnMap());
+    }
+
+    private void showOnMap() {
+        final Owner owner = viewModel.owner.getValue();
+        if (owner == null) return;
+
+        Bundle args = new Bundle();
+        args.putString(MapFragment.TITLE_ARG, owner.getCompanyName());
+        args.putParcelable(MapFragment.LOCATION_ARG, owner.getCompanyAddress());
+        navController.navigate(R.id.mapFragment, args);
+    }
 }

@@ -109,7 +109,7 @@ public class ProfileFragment extends Fragment {
         if (user != null && user.getId() != null) {
             Bundle args = new Bundle();
             args.putLong(EditProfileFragment.USER_ID_ARG, viewModel.user.getValue().getId());
-            navController.navigate(R.id.action_profileFragment_to_editProfileFragment, args);
+            navController.navigate(R.id.publicProfileFragment, args);
         }
     }
 
