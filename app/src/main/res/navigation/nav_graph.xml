@@ -375,4 +375,8 @@
         android:id="@+id/calendarFragment"
         android:name="com.team25.event.planner.user.fragments.CalendarFragment"
         android:label="Calendar" />
+    <fragment
+        android:id="@+id/publicProfileFragment"
+        android:name="com.team25.event.planner.user.fragments.PublicProfileFragment"
+        android:label="User" />
 </navigation>
