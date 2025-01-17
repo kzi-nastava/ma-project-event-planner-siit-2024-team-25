@@ -45,7 +45,7 @@ public class FavoriteEventsFragment extends Fragment {
     private void setupObservers() {
         authViewModel.user.observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
-                viewModel.setUserId(user.getUserId());
+                viewModel.setUserId(user.getId());
             }
         });
 

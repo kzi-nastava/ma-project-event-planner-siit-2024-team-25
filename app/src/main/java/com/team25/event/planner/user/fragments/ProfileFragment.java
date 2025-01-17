@@ -55,9 +55,9 @@ public class ProfileFragment extends Fragment {
         authViewModel.user.observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 viewModel.setEmail(user.getEmail());
-                viewModel.setUserId(user.getUserId());
+                viewModel.setUserId(user.getId());
 
-                final String profilePicUrl = ConnectionParams.BASE_URL + "api/users/" + user.getUserId() + "/profile-picture";
+                final String profilePicUrl = ConnectionParams.BASE_URL + "api/users/" + user.getId() + "/profile-picture";
                 Glide.with(this)
                         .load(profilePicUrl)
                         .signature(new ObjectKey(System.currentTimeMillis()))
