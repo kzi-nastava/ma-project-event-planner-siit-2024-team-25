@@ -50,7 +50,7 @@ public class MyProductsFragment extends Fragment {
         setupListeners();
 
         authViewModel.user.observe(getViewLifecycleOwner(), user -> {
-            viewModel.setOwnerId(user == null ? null : user.getUserId());
+            viewModel.setOwnerId(user == null ? null : user.getId());
             viewModel.loadNextPage();
         });
 

@@ -32,7 +32,7 @@ public class MyChatMessageViewModel extends ViewModel {
     public void connectToSocket(User user){
         chatMessageWebSocket = new ChatMessageWebSocket();
         chatMessageWebSocket.connect();
-        chatMessageWebSocket.subscribeToTopic("/chat/user/"+user.getUserId())
+        chatMessageWebSocket.subscribeToTopic("/chat/user/"+user.getId())
                 .subscribe(stompMessage -> {
                     ChatMessage chatMessage = new Gson().fromJson(stompMessage.getPayload(), ChatMessage.class);
                 },

@@ -83,7 +83,7 @@ public class EventDetailsFragment extends Fragment {
             if (user == null) {
                 viewModel.setUserId(null);
             } else {
-                viewModel.setUserId(user.getUserId());
+                viewModel.setUserId(user.getId());
                 if (user.getUserRole().equals(UserRole.ADMINISTRATOR)) {
                     binding.adminActions.setVisibility(View.VISIBLE);
                 } else {
@@ -99,7 +99,7 @@ public class EventDetailsFragment extends Fragment {
 
         isOrganizer.addSource(authViewModel.user, user -> {
             Event event = viewModel.event.getValue();
-            Long userId = user == null ? null : user.getUserId();
+            Long userId = user == null ? null : user.getId();
             isOrganizer.setValue(event != null && event.getOrganizer().getId().equals(userId));
         });
 

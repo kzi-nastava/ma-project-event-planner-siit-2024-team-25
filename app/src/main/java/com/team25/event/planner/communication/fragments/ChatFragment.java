@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.communication.model.ChatMessage;
+import com.team25.event.planner.communication.viewmodel.BlockViewModel;
 import com.team25.event.planner.communication.viewmodel.MyChatMessageViewModel;
 import com.team25.event.planner.core.SharedPrefService;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
@@ -37,6 +38,7 @@ public class ChatFragment extends Fragment {
     private NavController navController;
     private FragmentChatBinding binding;
     private MyChatMessageViewModel viewModel;
+    private BlockViewModel blockViewModel;
     private LinearLayout chatMessagesContainer;
     private AuthViewModel authViewModel;
     private Long receiverId;
@@ -59,8 +61,10 @@ public class ChatFragment extends Fragment {
         binding = FragmentChatBinding.inflate(inflater,container,false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         viewModel = new ViewModelProvider(this).get(MyChatMessageViewModel.class);
+        blockViewModel = new ViewModelProvider(this).get(BlockViewModel.class);
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         binding.setViewModel(viewModel);
+        binding.setBlockViewModel(blockViewModel);
         navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
         if(getArguments()!= null){
             receiverId= getArguments().getLong(RECEIVER_ID_ARG, -1L);
@@ -70,6 +74,8 @@ public class ChatFragment extends Fragment {
         viewModel.receiverId.postValue(receiverId);
         viewModel.receiverName.postValue(receiverName);
         viewModel.senderId.postValue(senderId);
+        blockViewModel.currentUser.setValue(senderId);
+        blockViewModel.blockedUser.setValue(receiverId);
         openWebSocketConnection();
         return binding.getRoot();
     }
@@ -87,7 +93,7 @@ public class ChatFragment extends Fragment {
         setUpObservers();
         setUpListeners();
 
-        viewModel.getChat(senderId, receiverId);
+        blockViewModel.isChatBlocked();
     }
 
     @Override
@@ -97,7 +103,7 @@ public class ChatFragment extends Fragment {
         setUpObservers();
         setUpListeners();
 
-        viewModel.getChat(senderId,receiverId);
+        blockViewModel.isChatBlocked();
     }
     private void setUpListeners() {
         binding.sendButton.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +114,17 @@ public class ChatFragment extends Fragment {
         });
     }
     private void setUpObservers() {
+        blockViewModel.isBlocked.observe(getViewLifecycleOwner(), isBlocked ->{
+            if(isBlocked){
+                binding.sendButton.setEnabled(false);
+                binding.messageInput.setText(R.string.current_user_was_blocked);
+                binding.messageInput.setEnabled(false);
+                binding.blockUserButton.setEnabled(false);
+            }else{
+                binding.sendButton.setEnabled(true);
+                viewModel.getChat(senderId,receiverId);
+            }
+        });
         viewModel.chatMessages.observe(getViewLifecycleOwner(), res->{
             clearMessages();
             for (int i = res.size() - 1; i >= 0; i--) {
@@ -166,7 +183,7 @@ public class ChatFragment extends Fragment {
         }
 
         GradientDrawable backgroundDrawable = new GradientDrawable();
-        backgroundDrawable.setColor(ContextCompat.getColor(requireContext(), isSender ? R.color.primary : Color.GRAY));
+        backgroundDrawable.setColor(ContextCompat.getColor(requireActivity(), isSender ? R.color.primary : R.color.ic_launcher_background));
         backgroundDrawable.setCornerRadius(16f);
         messageView.setBackground(backgroundDrawable);
 

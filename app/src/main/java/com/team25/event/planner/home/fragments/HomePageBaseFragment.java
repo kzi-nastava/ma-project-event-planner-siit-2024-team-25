@@ -84,7 +84,7 @@ public class HomePageBaseFragment extends Fragment {
             if (user == null) {
                 _homeEventViewModel.setUserId(null);
             } else {
-                _homeEventViewModel.setUserId(user.getUserId());
+                _homeEventViewModel.setUserId(user.getId());
             }
         });
 

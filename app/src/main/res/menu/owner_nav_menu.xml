@@ -25,5 +25,9 @@
         android:id="@id/ownerHomePage"
         android:icon="@drawable/ic_shopping_basket"
         android:title="@string/my_services" />
+    <item
+        android:id="@+id/chat"
+        android:icon="@drawable/chat"
+        android:title="@string/chat"/>
 
 </menu>

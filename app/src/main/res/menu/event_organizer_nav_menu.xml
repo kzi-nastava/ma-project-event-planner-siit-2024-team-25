@@ -17,5 +17,9 @@
         android:id="@id/myEventsFragment"
         android:icon="@drawable/ic_event"
         android:title="@string/my_events" />
+    <item
+        android:id="@+id/chat"
+        android:icon="@drawable/chat"
+        android:title="@string/chat"/>
 
 </menu>

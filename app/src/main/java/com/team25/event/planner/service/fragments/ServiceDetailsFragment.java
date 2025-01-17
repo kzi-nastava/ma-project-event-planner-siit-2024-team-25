@@ -309,7 +309,7 @@ public class ServiceDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putLong(ChatFragment.RECEIVER_ID_ARG, _serviceViewModel.currentService.getValue().getOwner().getUserId());
+                bundle.putLong(ChatFragment.RECEIVER_ID_ARG, _serviceViewModel.currentService.getValue().getOwner().getId());
                 bundle.putString(ChatFragment.RECEIVER_NAME_ARG, _serviceViewModel.currentService.getValue().getOwner().getName());
                 navController.navigate(R.id.action_serviceDetailsFragment_to_chatFragment, bundle);
             }

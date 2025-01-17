@@ -17,7 +17,7 @@ import ua.naiksoftware.stomp.StompClient;
 import ua.naiksoftware.stomp.dto.StompMessage;
 
 public class ChatMessageWebSocket {
-    private static final String SOCKET_URL = "ws://" + ConnectionParams.BASE_URL.replace("http://", "") + "socket";
+    private static final String SOCKET_URL = "ws://" + ConnectionParams.BASE_URL.replace("http://", "") + "/socket";
     public StompClient stompClient;
 
 
