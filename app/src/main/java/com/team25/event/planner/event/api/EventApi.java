@@ -7,6 +7,7 @@ import com.team25.event.planner.event.model.EventCard;
 import com.team25.event.planner.event.model.EventRequest;
 import com.team25.event.planner.event.model.FavoriteEventRequest;
 import com.team25.event.planner.event.model.Invitation;
+import com.team25.event.planner.event.model.JoinEventRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -65,4 +66,10 @@ public interface EventApi {
 
     @DELETE("/api/users/{userId}/favorite-events/{favId}")
     Call<Void> removeFromFavorites(@Path("userId") Long userId, @Path("favId") Long eventId);
+
+    @GET("/api/events/{eventId}/attending/{userId}")
+    Call<Boolean> isAttendingEvent(@Path("eventId") Long eventId, @Path("userId") Long userId);
+
+    @POST("/api/events/{eventId}/join")
+    Call<EventCard> joinEvent(@Path("eventId") Long eventId, @Body JoinEventRequest joinEventRequest);
 }
