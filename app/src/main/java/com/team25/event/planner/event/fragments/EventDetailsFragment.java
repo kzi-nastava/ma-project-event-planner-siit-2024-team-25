@@ -226,7 +226,7 @@ public class EventDetailsFragment extends Fragment {
         args.putString(EventArgumentNames.NAME_ARG, event.getName());
         args.putBoolean(EventArgumentNames.IS_ORGANIZER_ARG, Boolean.TRUE.equals(isOrganizer.getValue()));
         args.putBoolean(EventArgumentNames.CAME_FROM_DETAILS_ARG, true);
-        navController.navigate(R.id.agendaFragment, args);
+        navController.navigate(R.id.action_eventDetailsFragment_to_agendaFragment, args);
     }
 
     private void goToInvite() {
