@@ -66,7 +66,7 @@ public class AdminReviews extends Fragment {
         _adminReviewViewModel = new ViewModelProvider(this).get(AdminReviewViewModel.class);
         _navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 
-        setupNotificationList();
+        setupReviewsList();
         setupObservers();
 
         _adminReviewViewModel.loadNextPage();
@@ -74,7 +74,7 @@ public class AdminReviews extends Fragment {
         return _binding.getRoot();
     }
 
-    private void setupNotificationList() {
+    private void setupReviewsList() {
         _adapter = new ReviewCardAdapter(new ArrayList<>(), new ReviewCardAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ReviewCard reviewCard) {

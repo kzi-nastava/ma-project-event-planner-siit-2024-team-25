@@ -174,4 +174,8 @@
     <string name="download_pdf_report">Download PDF Report</string>
     <string name="current_user_was_blocked">Current user was blocked.</string>
     <string name="chat">Chat</string>
+    <string name="reviews">Reviews</string>
+    <string name="comment">Comment:</string>
+    <string name="rating">Rating:</string>
+    <string name="date">Date:</string>
 </resources>

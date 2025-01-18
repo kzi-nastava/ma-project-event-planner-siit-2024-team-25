@@ -347,4 +347,8 @@
             android:id="@+id/action_chatRoomFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/adminReviews"
+        android:name="com.team25.event.planner.review.fragments.AdminReviews"
+        android:label="AdminReviews" />
 </navigation>

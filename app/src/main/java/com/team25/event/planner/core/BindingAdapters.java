@@ -14,8 +14,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Locale;
 
 public class BindingAdapters {
@@ -153,7 +155,7 @@ public class BindingAdapters {
 
     }
 
-    @BindingAdapter("formattedTime")
+    @BindingAdapter("app:formattedTime")
     public static void setFormattedTime(TextView textView, LocalDateTime dateTime) {
         if (dateTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -163,7 +165,7 @@ public class BindingAdapters {
         }
     }
 
-    @BindingAdapter("formattedDate")
+    @BindingAdapter("app:formattedDate")
     public static void setFormattedDate(TextView textView, LocalDateTime dateTime) {
         if (dateTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -173,7 +175,7 @@ public class BindingAdapters {
         }
     }
 
-    @BindingAdapter("formattedDateTime")
+    @BindingAdapter("app:formattedDateTime")
     public static void setFormattedDateTime(TextView textView, LocalDateTime dateTime) {
         if (dateTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -182,5 +184,19 @@ public class BindingAdapters {
             textView.setText("");
         }
     }
+
+    @BindingAdapter("app:dateFormater")
+    public static void setFormattedDate(TextView view, Date date) {
+        if (date != null) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            view.setText(format.format(date));
+        }
+    }
+
+    @BindingAdapter("app:formatInt")
+    public static void setFormattedInt(TextView textView, int rating) {
+        textView.setText(String.valueOf(rating));
+    }
+
 
 }

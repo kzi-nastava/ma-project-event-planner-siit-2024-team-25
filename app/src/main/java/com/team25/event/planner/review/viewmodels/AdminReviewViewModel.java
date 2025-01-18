@@ -12,6 +12,7 @@ import com.team25.event.planner.core.api.ResponseCallback;
 import com.team25.event.planner.core.api.SideEffectResponseCallback;
 import com.team25.event.planner.review.api.ReviewApi;
 import com.team25.event.planner.review.model.ReviewCard;
+import com.team25.event.planner.review.model.ReviewStatus;
 
 import java.util.List;
 
@@ -40,17 +41,17 @@ public class AdminReviewViewModel extends ViewModel {
 
         if (_isEndReached) return;
 
-//        _reviewApi.getReviews(_currentPage).enqueue(new SideEffectResponseCallback<>(
-//                page -> {
-//                    _currentPage++;
-//                    if (page.isLast()) {
-//                        _isEndReached = true;
-//                    }
-//                    _reviews.postValue(page.getContent());
-//                },
-//                () -> _isLoading.postValue(false),
-//                _serverError, "AdminReviewViewModel")
-//        );
+        _reviewApi.getReviews(_currentPage, ReviewStatus.PENDING).enqueue(new SideEffectResponseCallback<>(
+                page -> {
+                    _currentPage++;
+                    if (page.isLast()) {
+                        _isEndReached = true;
+                    }
+                    _reviews.postValue(page.getContent());
+                },
+                () -> _isLoading.postValue(false),
+                _serverError, "AdminReviewViewModel")
+        );
     }
     public boolean isEndReached() {
         return _isEndReached;
@@ -60,6 +61,6 @@ public class AdminReviewViewModel extends ViewModel {
         return isLoading.getValue() == null || isLoading.getValue();
     }
 
-    public void updateReview(Notification notification) {
+    public void updateReview(ReviewCard reviewCard) {
     }
 }
