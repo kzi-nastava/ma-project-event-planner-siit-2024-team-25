@@ -369,7 +369,11 @@
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.team25.event.planner.user.fragments.EditProfileFragment"
-        android:label="Edit Profile" />
+        android:label="Edit Profile" >
+        <action
+            android:id="@+id/action_editProfileFragment_to_nav_graph_registration"
+            app:destination="@id/nav_graph_registration" />
+    </fragment>
     <fragment
         android:id="@+id/editCompanyFragment"
         android:name="com.team25.event.planner.user.fragments.EditCompanyFragment"

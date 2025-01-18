@@ -39,6 +39,7 @@ public class RegisterViewModel extends ViewModel {
         _formStep.setValue(null);
     }
 
+    public final MutableLiveData<Boolean> isUpgrade = new MutableLiveData<>(false);
 
     private final MutableLiveData<UserRole> _userRole = new MutableLiveData<>();
     public final LiveData<UserRole> userRole = _userRole;
@@ -329,10 +330,18 @@ public class RegisterViewModel extends ViewModel {
                         : null
         );
 
-        userApi.register(BodyBuilder.getRegisterFormData(registerRequest)).enqueue(
-                new ResponseCallback<>(
-                        (response) -> _formStep.postValue(RegisterStep.Success),
-                        _serverError, "RegisterViewModel")
-        );
+        if(this.isUpgrade.getValue()){
+            userApi.upgradeProfile(BodyBuilder.getRegisterFormData(registerRequest)).enqueue(
+                    new ResponseCallback<>(
+                            (response) -> _formStep.postValue(RegisterStep.Success),
+                            _serverError, "RegisterViewModel")
+            );
+        }else {
+            userApi.register(BodyBuilder.getRegisterFormData(registerRequest)).enqueue(
+                    new ResponseCallback<>(
+                            (response) -> _formStep.postValue(RegisterStep.Success),
+                            _serverError, "RegisterViewModel")
+            );
+        }
     }
 }

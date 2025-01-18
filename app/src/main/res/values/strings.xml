@@ -193,4 +193,5 @@
     <string name="private_event_label">This event is private.</string>
     <string name="join_event">Join event</string>
     <string name="chat_with_organizer">Chat with organizer</string>
+    <string name="upgrade_account">Upgrade account</string>
 </resources>

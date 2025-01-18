@@ -1,5 +1,7 @@
 package com.team25.event.planner.user.fragments;
 
+import static android.view.View.GONE;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,7 +27,11 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.databinding.FragmentEditProfileBinding;
+import com.team25.event.planner.user.model.Administrator;
+import com.team25.event.planner.user.model.EventOrganizer;
+import com.team25.event.planner.user.model.Owner;
 import com.team25.event.planner.user.model.RegularUser;
+import com.team25.event.planner.user.model.UserRole;
 import com.team25.event.planner.user.viewmodels.EditProfileViewModel;
 
 import java.io.File;
@@ -73,6 +79,17 @@ public class EditProfileFragment extends Fragment {
                 viewModel.onNavigateBackComplete();
             }
         });
+        viewModel.user.observe(getViewLifecycleOwner(), user -> {
+            if(user != null){
+                if(user instanceof RegularUser){
+                    binding.buttonUpgrade.setVisibility(View.VISIBLE);
+                }else{
+                    binding.buttonUpgrade.setVisibility(GONE);
+                }
+            }else{
+                binding.buttonUpgrade.setVisibility(GONE);
+            }
+        });
     }
 
     private void populateUserData(RegularUser user) {
@@ -95,6 +112,13 @@ public class EditProfileFragment extends Fragment {
         binding.profilePicContainer.setOnClickListener(v -> openImagePicker());
         binding.buttonCancel.setOnClickListener(v -> navController.popBackStack());
         binding.buttonSave.setOnClickListener(v -> viewModel.onSubmit());
+        binding.buttonUpgrade.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putLong("userId", viewModel.user.getValue().getId());
+            bundle.putString("firstName", viewModel.user.getValue().getFirstName());
+            bundle.putString("lastName", viewModel.user.getValue().getLastName());
+            navController.navigate(R.id.action_editProfileFragment_to_nav_graph_registration, bundle);
+        });
     }
 
     private void openImagePicker() {

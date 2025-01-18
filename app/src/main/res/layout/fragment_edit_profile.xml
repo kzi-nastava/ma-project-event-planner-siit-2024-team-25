@@ -202,6 +202,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="24dp"
+                android:id="@+id/buttons"
                 app:layout_constraintTop_toBottomOf="@id/organizerFields">
 
                 <com.google.android.material.button.MaterialButton
@@ -221,6 +222,16 @@
                     android:layout_weight="1"
                     android:text="@string/save" />
             </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/buttonUpgrade"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="@string/upgrade_account"
+                app:layout_constraintTop_toBottomOf="@+id/buttons"/>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
