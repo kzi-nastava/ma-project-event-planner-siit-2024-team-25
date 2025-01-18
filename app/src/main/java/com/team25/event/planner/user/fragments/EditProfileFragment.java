@@ -80,14 +80,12 @@ public class EditProfileFragment extends Fragment {
             }
         });
         viewModel.user.observe(getViewLifecycleOwner(), user -> {
-            if(user != null){
-                if(user instanceof RegularUser){
-                    binding.buttonUpgrade.setVisibility(View.VISIBLE);
+            if(user != null) {
+                if (user instanceof Administrator || user instanceof EventOrganizer || user instanceof Owner) {
+                    binding.buttonUpgrade.setVisibility(View.GONE);
                 }else{
-                    binding.buttonUpgrade.setVisibility(GONE);
+                    binding.buttonUpgrade.setVisibility(View.VISIBLE);
                 }
-            }else{
-                binding.buttonUpgrade.setVisibility(GONE);
             }
         });
     }
