@@ -42,8 +42,8 @@
                     android:layout_height="48dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/add_to_favorites"
-                    android:src="@drawable/ic_favorite_border"
                     android:onClick="@{() -> viewModel.toggleFavorite()}"
+                    android:src="@drawable/ic_favorite_border"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -141,10 +141,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/max_participants_label"
-                    tools:text="This event is public."
-                    android:textStyle="bold" />
+                    tools:text="This event is public." />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/actions_card"
@@ -170,19 +170,19 @@
                         <!-- Actions available to everyone -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/show_on_map_button"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="@string/show_on_map"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                            android:text="@string/show_on_map" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/view_agenda_button"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="@string/view_agenda"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                            android:text="@string/view_agenda" />
 
                         <!-- Actions available only to organizer -->
                         <LinearLayout
@@ -194,43 +194,51 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/invite_button"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="@string/invite_people"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                                android:text="@string/invite_people" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/budget_plan_button"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="@string/budget_plan"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                                android:text="@string/budget_plan" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/purchase_button"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="@string/buy_products_services"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                                android:text="@string/buy_products_services" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/purchase_list_button"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="@string/view_purchases"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                                android:text="@string/view_purchases" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/view_stats_button"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/view_stats" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/download_report_button"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="@string/download_pdf_report"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                                android:text="@string/download_pdf_report" />
                         </LinearLayout>
 
                         <!-- Actions available only to admin -->
@@ -242,33 +250,41 @@
                             android:visibility="gone">
 
                             <com.google.android.material.button.MaterialButton
-                                android:id="@+id/download_report_admin_button"
+                                android:id="@+id/view_stats_admin_button"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="@string/download_pdf_report"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                                android:text="@string/view_stats" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/download_report_admin_button"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/download_pdf_report" />
                         </LinearLayout>
 
                         <!-- Join event action -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/join_button"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="@string/join_event"
-                            android:visibility="gone"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                            android:visibility="gone" />
 
                         <!-- Attending user's action -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/chat_button"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="@string/chat_with_organizer"
-                            android:visibility="gone"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                            android:visibility="gone" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

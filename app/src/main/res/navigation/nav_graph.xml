@@ -248,6 +248,9 @@
         <action
             android:id="@+id/action_eventDetailsFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_eventStatsFragment"
+            app:destination="@id/eventStatsFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventPurchaseFragment"
@@ -394,4 +397,12 @@
         android:id="@+id/publicProfileFragment"
         android:name="com.team25.event.planner.user.fragments.PublicProfileFragment"
         android:label="User" />
+    <fragment
+        android:id="@+id/eventStatsFragment"
+        android:name="com.team25.event.planner.event.fragments.EventStatsFragment"
+        android:label="Event Statistics">
+        <action
+            android:id="@+id/action_eventStatsFragment_to_publicProfileFragment"
+            app:destination="@id/publicProfileFragment" />
+    </fragment>
 </navigation>

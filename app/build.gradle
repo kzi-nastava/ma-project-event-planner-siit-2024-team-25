@@ -99,4 +99,6 @@ dependencies {
 
     //noinspection UseTomlInstead
     implementation "com.kizitonwose.calendar:view:2.6.1"
+
+    implementation libs.mpandroidchart
 }

@@ -2,12 +2,14 @@ package com.team25.event.planner.event.api;
 
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.event.model.Activity;
+import com.team25.event.planner.event.model.Attendee;
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.model.EventCard;
 import com.team25.event.planner.event.model.EventRequest;
 import com.team25.event.planner.event.model.FavoriteEventRequest;
 import com.team25.event.planner.event.model.Invitation;
 import com.team25.event.planner.event.model.JoinEventRequest;
+import com.team25.event.planner.event.model.ReviewStats;
 import com.team25.event.planner.user.model.CalendarEvent;
 
 import java.time.LocalDate;
@@ -98,4 +100,10 @@ public interface EventApi {
             @Query("startDate") LocalDate startDate,
             @Query("endDate") LocalDate endDate
     );
+
+    @GET("/api/reviews/event/{eventId}/stats")
+    Call<ReviewStats> getEventReviewStats(@Path("eventId") Long eventId);
+
+    @GET("/api/events/{eventId}/attendees")
+    Call<Page<Attendee>> getEventAttendees(@Path("eventId") Long eventId, @Query("page") int page);
 }
