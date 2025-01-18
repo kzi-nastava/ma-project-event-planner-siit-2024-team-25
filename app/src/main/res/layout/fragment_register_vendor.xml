@@ -27,20 +27,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutCompanyName"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/company_name"
+            app:endIconTint="?attr/colorPrimary"
+            app:errorEnabled="true"
+            app:errorText="@{viewModel.vendorSpecificErrors.companyName}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewRegisterOrganizerTitle"
+            app:startIconDrawable="@drawable/ic_factory"
+            app:startIconTint="?attr/colorPrimary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
+                android:text="@={viewModel.companyName}" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutCountry"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:hint="@string/country"
             app:endIconTint="?attr/colorPrimary"
             app:errorEnabled="true"
             app:errorText="@{viewModel.vendorSpecificErrors.addressCountry}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewRegisterOrganizerTitle"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayoutCompanyName"
             app:startIconDrawable="@drawable/ic_location"
             app:startIconTint="?attr/colorPrimary">
 
@@ -115,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 tools:text="🇷🇸 +381"
-                app:bindText="@{viewModel.phoneNumber}"/>
+                app:bindText="@{viewModel.phoneNumber}" />
         </com.fredporciuncula.phonemoji.PhonemojiTextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout

@@ -54,6 +54,7 @@ public class RegisterViewModel extends ViewModel {
     public final MutableLiveData<String> addressCity = new MutableLiveData<>();
     public final MutableLiveData<String> address = new MutableLiveData<>();
     public final MutableLiveData<String> phoneNumber = new MutableLiveData<>("");
+    public final MutableLiveData<String> companyName = new MutableLiveData<>();
     public final MutableLiveData<String> description = new MutableLiveData<>();
     public final MutableLiveData<List<byte[]>> pictures = new MutableLiveData<>();
 
@@ -93,6 +94,7 @@ public class RegisterViewModel extends ViewModel {
     @Data
     @Builder(toBuilder = true)
     public static class VendorSpecificErrorUiState {
+        private final String companyName;
         private final String addressCountry;
         private final String addressCity;
         private final String address;
@@ -239,6 +241,7 @@ public class RegisterViewModel extends ViewModel {
     }
 
     private boolean validateVendorSpecificForm() {
+        String companyName = this.companyName.getValue();
         String addressCountry = this.addressCountry.getValue();
         String addressCity = this.addressCity.getValue();
         String address = this.address.getValue();
@@ -248,6 +251,11 @@ public class RegisterViewModel extends ViewModel {
 
         VendorSpecificErrorUiState.VendorSpecificErrorUiStateBuilder errorUiStateBuilder = VendorSpecificErrorUiState.builder();
         boolean isValid = true;
+
+        if (companyName == null || companyName.isEmpty()) {
+            errorUiStateBuilder.companyName("Please enter company name.");
+            isValid = false;
+        }
 
         if (addressCountry == null || addressCountry.isEmpty()) {
             errorUiStateBuilder.addressCountry("Please enter a state.");
@@ -309,7 +317,7 @@ public class RegisterViewModel extends ViewModel {
                         : null,
                 userRole.getValue() == UserRole.OWNER
                         ? new OwnerInfo(
-                        null, // company name
+                        companyName.getValue(),
                         new Location(
                                 addressCountry.getValue(),
                                 addressCity.getValue(),
