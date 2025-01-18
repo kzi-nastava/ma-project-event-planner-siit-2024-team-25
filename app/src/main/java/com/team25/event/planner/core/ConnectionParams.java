@@ -3,13 +3,13 @@ package com.team25.event.planner.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import com.team25.event.planner.BuildConfig;
 import com.team25.event.planner.communication.api.BlockApi;
 import com.team25.event.planner.communication.api.ChatApi;
 import com.team25.event.planner.communication.api.ChatRoomApi;
 import com.team25.event.planner.communication.api.NotificationApi;
 import com.team25.event.planner.core.api.serialization.InstantAdapter;
-import com.team25.event.planner.event.api.BudgetItemApi;
 import com.team25.event.planner.core.api.serialization.LocalDateAdapter;
 import com.team25.event.planner.core.api.serialization.LocalDateTimeAdapter;
 import com.team25.event.planner.core.api.serialization.LocalTimeAdapter;
@@ -18,17 +18,20 @@ import com.team25.event.planner.event.api.EventApi;
 import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.offering.Api.OfferingApi;
 import com.team25.event.planner.offering.Api.OfferingCategoryApi;
-
 import com.team25.event.planner.offering.Api.PriceListApi;
-
 import com.team25.event.planner.product.api.ProductApi;
-
 import com.team25.event.planner.service.api.PurchaseApi;
 import com.team25.event.planner.service.api.ServiceApi;
+import com.team25.event.planner.user.api.AccountApi;
 import com.team25.event.planner.user.api.LoginApi;
 import com.team25.event.planner.user.api.SuspensionApi;
 import com.team25.event.planner.user.api.UserApi;
 import com.team25.event.planner.user.api.UserReportApi;
+import com.team25.event.planner.user.model.Administrator;
+import com.team25.event.planner.user.model.EventOrganizer;
+import com.team25.event.planner.user.model.Owner;
+import com.team25.event.planner.user.model.RegularUser;
+import com.team25.event.planner.user.model.UserRole;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -47,6 +50,7 @@ public class ConnectionParams {
             .registerTypeAdapter(LocalTime.class, new LocalTimeAdapter())
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .registerTypeAdapter(Instant.class, new InstantAdapter())
+            .registerTypeAdapterFactory(getUserTypeAdapterFactory())
             .create();
 
     public static Retrofit retrofit;
@@ -54,6 +58,8 @@ public class ConnectionParams {
     public static EventApi eventApi;
 
     public static UserApi userApi;
+
+    public static AccountApi accountApi;
 
     public static LoginApi loginApi;
 
@@ -96,6 +102,7 @@ public class ConnectionParams {
     public static void setupServices() {
         eventApi = retrofit.create(EventApi.class);
         userApi = retrofit.create(UserApi.class);
+        accountApi = retrofit.create(AccountApi.class);
         loginApi = retrofit.create(LoginApi.class);
         offeringApi = retrofit.create(OfferingApi.class);
         eventTypeApi = retrofit.create(EventTypeApi.class);
@@ -113,4 +120,12 @@ public class ConnectionParams {
         chatRoomApi = retrofit.create(ChatRoomApi.class);
     }
 
+    private static RuntimeTypeAdapterFactory<RegularUser> getUserTypeAdapterFactory() {
+        return RuntimeTypeAdapterFactory
+                .of(RegularUser.class, "userRole")
+                .registerSubtype(EventOrganizer.class, UserRole.EVENT_ORGANIZER.name())
+                .registerSubtype(Owner.class, UserRole.OWNER.name())
+                .registerSubtype(Administrator.class, UserRole.ADMINISTRATOR.name())
+                .registerSubtype(RegularUser.class, UserRole.REGULAR.name());
+    }
 }

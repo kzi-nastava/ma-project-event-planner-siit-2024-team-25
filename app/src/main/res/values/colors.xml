@@ -35,6 +35,7 @@
     <color name="accent_blue">#1976D2</color>
     <color name="accent_yellow">#FBC02D</color>
 
+    <color name="light_gray">#eee</color>
 
     <!-- MENU STATES -->
     <color name="menu_item_dark_color_state">#E5DDD8</color>
@@ -43,4 +44,9 @@
     <color name="ucrop_color_toolbar">@color/primary</color>
     <color name="ucrop_color_statusbar">@color/primary_dark</color>
     <color name="ucrop_color_widget_active">@color/primary</color>
+
+    <!-- CALENDAR -->
+    <color name="attending_event_color">#303C6C</color>
+    <color name="organizer_event_color">#377A75</color>
+    <color name="service_reservations_color">#7A3879</color>
 </resources>
