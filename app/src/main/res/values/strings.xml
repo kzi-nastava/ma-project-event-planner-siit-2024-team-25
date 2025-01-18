@@ -189,4 +189,8 @@
     <string name="service_image">Service image</string>
     <string name="current_user_was_blocked">Current user was blocked.</string>
     <string name="chat">Chat</string>
+    <string name="public_event_label">This event is public.</string>
+    <string name="private_event_label">This event is private.</string>
+    <string name="join_event">Join event</string>
+    <string name="chat_with_organizer">Chat with organizer</string>
 </resources>
