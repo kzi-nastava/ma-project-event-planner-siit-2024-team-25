@@ -8,7 +8,9 @@ import com.team25.event.planner.event.model.EventRequest;
 import com.team25.event.planner.event.model.FavoriteEventRequest;
 import com.team25.event.planner.event.model.Invitation;
 import com.team25.event.planner.event.model.JoinEventRequest;
+import com.team25.event.planner.user.model.CalendarEvent;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +63,9 @@ public interface EventApi {
     @GET("/api/events/{eventId}")
     Call<Event> getEvent(@Path("eventId") Long eventId);
 
+    @GET("/api/users/{userId}/favorite-events")
+    Call<List<EventCard>> getFavoriteEvents(@Path("userId") Long userId);
+
     @POST("/api/users/{userId}/favorite-events")
     Call<EventCard> addToFavorites(@Path("userId") Long userId, @Body FavoriteEventRequest favRequest);
 
@@ -72,4 +77,25 @@ public interface EventApi {
 
     @POST("/api/events/{eventId}/join")
     Call<EventCard> joinEvent(@Path("eventId") Long eventId, @Body JoinEventRequest joinEventRequest);
+
+    @GET("/api/users/{userId}/calendar")
+    Call<List<CalendarEvent>> getCalendarEvents(
+            @Path("userId") Long userId,
+            @Query("startDate") LocalDate startDate,
+            @Query("endDate") LocalDate endDate
+    );
+
+    @GET("/api/events/attending/{userId}")
+    Call<List<EventCard>> getAttendingEvents(
+            @Path("userId") Long userId,
+            @Query("startDate") LocalDate startDate,
+            @Query("endDate") LocalDate endDate
+    );
+
+    @GET("/api/events/organizer/{organizerId}")
+    Call<List<EventCard>> getOrganizerEventsOverlappingDateRange(
+            @Path("organizerId") Long organizerId,
+            @Query("startDate") LocalDate startDate,
+            @Query("endDate") LocalDate endDate
+    );
 }

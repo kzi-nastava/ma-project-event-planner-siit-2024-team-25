@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.team25.event.planner.user.viewmodels.RegisterViewModel" />
+            type="com.team25.event.planner.user.viewmodels.EditCompanyViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +36,7 @@
             android:hint="@string/company_name"
             app:endIconTint="?attr/colorPrimary"
             app:errorEnabled="true"
-            app:errorText="@{viewModel.vendorSpecificErrors.companyName}"
+            app:errorText="@{viewModel.errors.companyName}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewRegisterOrganizerTitle"
@@ -58,7 +58,7 @@
             android:hint="@string/country"
             app:endIconTint="?attr/colorPrimary"
             app:errorEnabled="true"
-            app:errorText="@{viewModel.vendorSpecificErrors.addressCountry}"
+            app:errorText="@{viewModel.errors.addressCountry}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textInputLayoutCompanyName"
@@ -80,7 +80,7 @@
             android:hint="@string/city"
             app:endIconTint="?attr/colorPrimary"
             app:errorEnabled="true"
-            app:errorText="@{viewModel.vendorSpecificErrors.addressCity}"
+            app:errorText="@{viewModel.errors.addressCity}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textInputLayoutCountry"
@@ -102,7 +102,7 @@
             android:hint="@string/address"
             app:endIconTint="?attr/colorPrimary"
             app:errorEnabled="true"
-            app:errorText="@{viewModel.vendorSpecificErrors.address}"
+            app:errorText="@{viewModel.errors.address}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textInputLayoutCity"
@@ -124,7 +124,7 @@
             android:hint="@string/phone_number"
             app:endIconTint="?attr/colorPrimary"
             app:errorEnabled="true"
-            app:errorText="@{viewModel.vendorSpecificErrors.phoneNumber}"
+            app:errorText="@{viewModel.errors.phoneNumber}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayoutAddress"
@@ -147,7 +147,7 @@
             android:hint="@string/description"
             app:endIconTint="?attr/colorPrimary"
             app:errorEnabled="true"
-            app:errorText="@{viewModel.vendorSpecificErrors.description}"
+            app:errorText="@{viewModel.errors.description}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textInputLayoutPhone"
@@ -170,25 +170,25 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonPrevious"
+                android:id="@+id/buttonCancel"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:onClick="@{() -> viewModel.onVendorSpecificBack()}"
-                android:text="@string/back"
+                android:text="@string/cancel"
                 app:layout_constraintEnd_toStartOf="@+id/buttonNext"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_add_other_option" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonNext"
+                android:id="@+id/buttonSave"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:onClick="@{() -> viewModel.onVendorSpecificNext()}"
-                android:text="@string/finish"
+                android:onClick="@{() -> viewModel.onSubmit()}"
+                android:text="@string/save"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/buttonPrevious"
                 app:layout_constraintTop_toBottomOf="@+id/iv_add_other_option" />
