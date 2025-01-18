@@ -12,15 +12,15 @@ import com.team25.event.planner.communication.model.Notification;
 import com.team25.event.planner.databinding.NotificationCardBinding;
 import com.team25.event.planner.databinding.ReviewCardBinding;
 import com.team25.event.planner.review.model.ReviewCard;
+import com.team25.event.planner.user.model.UserReportResponse;
 
 import java.util.List;
 
 public class ReviewCardAdapter extends RecyclerView.Adapter<ReviewCardAdapter.ReviewViewHolder> {
     private final List<ReviewCard> _reviews;
     private final ReviewCardAdapter.OnItemClickListener onItemClickListener;
-
     public interface OnItemClickListener {
-        void onItemClick(ReviewCard reviewCard);
+        void onItemClick(ReviewCard reviewCard, int position);
     }
 
     public ReviewCardAdapter(List<ReviewCard> reviews, ReviewCardAdapter.OnItemClickListener onItemClickListener) {
@@ -40,7 +40,7 @@ public class ReviewCardAdapter extends RecyclerView.Adapter<ReviewCardAdapter.Re
             binding.setReview(reviewCard);
             binding.executePendingBindings();
 
-            binding.getRoot().setOnClickListener(v -> listener.onItemClick(reviewCard));
+            binding.getRoot().setOnClickListener(v -> listener.onItemClick(reviewCard, position));
         }
     }
 
@@ -63,9 +63,25 @@ public class ReviewCardAdapter extends RecyclerView.Adapter<ReviewCardAdapter.Re
         return _reviews != null ? _reviews.size() : 0;
     }
 
-    public void addReview(List<ReviewCard> newReviews) {
+    public void addReview(List<ReviewCard> newReviews, Boolean isUpdate) {
         int oldSize = _reviews.size();
-        _reviews.addAll(newReviews);
-        notifyItemRangeInserted(oldSize, newReviews.size());
+        if(isUpdate){
+            for (ReviewCard review : newReviews) {
+                if (!_reviews.contains(review)) {
+                    _reviews.add(review);
+                }
+            }
+            notifyItemRangeInserted(oldSize, _reviews.size() - oldSize);
+        }else{
+            _reviews.addAll(newReviews);
+            notifyItemRangeInserted(oldSize, newReviews.size());
+        }
     }
+
+    public void removeReview(int position) {
+        _reviews.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, _reviews.size() - position);
+    }
+
 }

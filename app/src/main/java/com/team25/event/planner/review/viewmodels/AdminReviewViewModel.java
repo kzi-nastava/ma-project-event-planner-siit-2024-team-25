@@ -13,6 +13,7 @@ import com.team25.event.planner.core.api.SideEffectResponseCallback;
 import com.team25.event.planner.review.api.ReviewApi;
 import com.team25.event.planner.review.model.ReviewCard;
 import com.team25.event.planner.review.model.ReviewStatus;
+import com.team25.event.planner.review.model.ReviewUpdateRequestDTO;
 
 import java.util.List;
 
@@ -24,6 +25,9 @@ public class AdminReviewViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>(false);
     public final LiveData<Boolean> isLoading = _isLoading;
+
+    public final MutableLiveData<Boolean> isUpdate = new MutableLiveData<>(false);
+
 
     private final MutableLiveData<String> _serverError = new MutableLiveData<>();
     public final LiveData<String> serverError = _serverError;
@@ -39,7 +43,10 @@ public class AdminReviewViewModel extends ViewModel {
         if (isLoading()) return;
         _isLoading.setValue(true);
 
-        if (_isEndReached) return;
+        if (_isEndReached) {
+            _isLoading.setValue(false);
+            return;
+        };
 
         _reviewApi.getReviews(_currentPage, ReviewStatus.PENDING).enqueue(new SideEffectResponseCallback<>(
                 page -> {
@@ -61,6 +68,11 @@ public class AdminReviewViewModel extends ViewModel {
         return isLoading.getValue() == null || isLoading.getValue();
     }
 
-    public void updateReview(ReviewCard reviewCard) {
+    public void updateReview(ReviewCard reviewCard, ReviewStatus status) {
+        ReviewUpdateRequestDTO requestDTO = new ReviewUpdateRequestDTO(status);
+        this._reviewApi.updateReview(reviewCard.getId(), requestDTO).enqueue(new ResponseCallback<>(
+                _review::postValue,
+                _serverError, "AdminReviewViewModel"
+        ));
     }
 }

@@ -25,9 +25,12 @@ import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentAdminReviewsBinding;
 import com.team25.event.planner.databinding.FragmentNotificationBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
+import com.team25.event.planner.offering.dialogs.YesOrNoDialogFragment;
 import com.team25.event.planner.product.fragments.ProductFormFragment;
 import com.team25.event.planner.review.adapters.ReviewCardAdapter;
+import com.team25.event.planner.review.dialogs.ApproveReviewDialog;
 import com.team25.event.planner.review.model.ReviewCard;
+import com.team25.event.planner.review.model.ReviewStatus;
 import com.team25.event.planner.review.viewmodels.AdminReviewViewModel;
 import com.team25.event.planner.user.model.UserRole;
 
@@ -76,13 +79,45 @@ public class AdminReviews extends Fragment {
 
     private void setupReviewsList() {
         _adapter = new ReviewCardAdapter(new ArrayList<>(), new ReviewCardAdapter.OnItemClickListener() {
+
             @Override
-            public void onItemClick(ReviewCard reviewCard) {
+            public void onItemClick(ReviewCard reviewCard, int position) {
+
+                _adminReviewViewModel.review.observe(getViewLifecycleOwner(), review -> {
+                    if(review != null && Objects.equals(reviewCard.getId(), review.getId())){
+                        Toast.makeText(getContext(), "You updated review", Toast.LENGTH_SHORT).show();
+                        _adapter.removeReview(position);
+                        _adminReviewViewModel.isUpdate.setValue(true);
+                        _adminReviewViewModel.loadNextPage();
+                    }
+                });
+
+                ApproveReviewDialog dialog = new ApproveReviewDialog(new ApproveReviewDialog.ApproveReviewDialogListener() {
+
+                    @Override
+                    public void onApprove() {
+                        _adminReviewViewModel.updateReview(reviewCard, ReviewStatus.APPROVED);
+                    }
+
+                    @Override
+                    public void onReject() {
+                        _adminReviewViewModel.updateReview(reviewCard, ReviewStatus.DENIED);
+                    }
+
+                    @Override
+                    public void refresh() {
+                    }
+                });
+
+                dialog.show(getParentFragmentManager(), "ConfirmDialogFragment");
             }
         });
         _binding.recyclerViewReviews.setAdapter(_adapter);
 
-        _adminReviewViewModel.reviews.observe(getViewLifecycleOwner(), _adapter::addReview);
+        _adminReviewViewModel.reviews.observe(getViewLifecycleOwner(), reviewCards -> {
+            _adapter.addReview(reviewCards, this._adminReviewViewModel.isUpdate.getValue());
+            _adminReviewViewModel.isUpdate.setValue(Boolean.FALSE.equals(_adminReviewViewModel.isUpdate.getValue()));
+        });
 
         _binding.recyclerViewReviews.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -120,5 +155,7 @@ public class AdminReviews extends Fragment {
                 Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
             }
         });
+
+
     }
 }
