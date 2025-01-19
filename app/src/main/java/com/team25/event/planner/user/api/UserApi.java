@@ -1,5 +1,7 @@
 package com.team25.event.planner.user.api;
 
+import android.app.DownloadManager;
+
 import com.team25.event.planner.user.model.RegisterQuickResponse;
 import com.team25.event.planner.user.model.RegisterResponse;
 import com.team25.event.planner.user.model.RegularUser;
@@ -24,4 +26,6 @@ public interface UserApi {
 
     @PUT("/api/users/{userId}")
     Call<RegularUser> updateUser(@Path("userId") Long userId, @Body RequestBody body);
+    @POST("/api/auth/upgrade")
+    Call<RegisterResponse> upgradeProfile(@Body RequestBody body);
 }
