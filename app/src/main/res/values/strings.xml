@@ -202,5 +202,6 @@
     <string name="rating_distribution">Rating Distribution</string>
     <string name="right_chevron">right chevron</string>
     <string name="upgrade_account">Upgrade account</string>
+    <string name="save_as_pdf">Save as PDF</string>
     >>>>>>> develop
 </resources>

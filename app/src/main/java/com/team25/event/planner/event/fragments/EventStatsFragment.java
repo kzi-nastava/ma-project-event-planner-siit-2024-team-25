@@ -1,6 +1,10 @@
 package com.team25.event.planner.event.fragments;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +27,7 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.databinding.FragmentEventStatsBinding;
 import com.team25.event.planner.event.adapters.AttendeeListAdapter;
 import com.team25.event.planner.event.model.ReviewStats;
@@ -53,6 +58,7 @@ public class EventStatsFragment extends Fragment {
         parseArguments();
         setupAttendeeList();
         setupObservers();
+        setupListeners();
 
         return binding.getRoot();
     }
@@ -159,5 +165,36 @@ public class EventStatsFragment extends Fragment {
 
         chart.animateY(1000);
         chart.invalidate();
+    }
+
+    private void setupListeners() {
+        binding.btnDownload.setOnClickListener(v -> downloadReport());
+    }
+
+    private void downloadReport() {
+        final Long eventId = viewModel.getEventId();
+        final String eventName = viewModel.eventName.getValue();
+        if (eventId == null || eventName == null) {
+            Toast.makeText(getContext(), "Unable to download report", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final String url = ConnectionParams.BASE_URL + "api/events/" + eventId + "/stats/report";
+        final String filename = "event_stats_" + eventId + "_" + System.currentTimeMillis() + ".pdf";
+
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.setTitle(eventName + " statistics report");
+        request.setDescription("Downloading PDF report with event stats for " + eventName + "...");
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+
+        DownloadManager downloadManager = (DownloadManager) requireContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        if (downloadManager != null) {
+            downloadManager.enqueue(request);
+            Toast.makeText(requireContext(), "Download started!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "Unable to download report", Toast.LENGTH_SHORT).show();
+        }
     }
 }
