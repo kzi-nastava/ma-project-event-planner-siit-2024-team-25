@@ -14,12 +14,9 @@ import com.team25.event.planner.event.model.ReviewStats;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-
 public class EventStatsViewModel extends ViewModel {
     private final EventApi eventApi = ConnectionParams.eventApi;
 
-    @Getter
     private Long eventId;
 
     private final MutableLiveData<String> _eventName = new MutableLiveData<>();
