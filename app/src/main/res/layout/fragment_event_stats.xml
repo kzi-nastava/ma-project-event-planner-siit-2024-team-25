@@ -21,15 +21,31 @@
             android:padding="16dp">
 
             <!-- Event Name -->
-            <TextView
-                android:id="@+id/tvEventName"
+            <LinearLayout
+                android:id="@+id/llHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.eventName}"
-                android:textAppearance="?attr/textAppearanceHeadline5"
-                android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Event Name" />
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tvEventName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{viewModel.eventName}"
+                    android:textAppearance="?attr/textAppearanceHeadline5"
+                    android:textStyle="bold"
+                    tools:text="Event Name" />
+
+                <ImageButton
+                    android:id="@+id/btn_download"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@string/save_as_pdf"
+                    android:src="@drawable/ic_download"
+                    app:tint="?attr/colorPrimary" />
+            </LinearLayout>
 
             <!-- Stats Cards Container -->
             <LinearLayout
@@ -38,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/tvEventName">
+                app:layout_constraintTop_toBottomOf="@id/llHeader">
 
                 <!-- Attendees Card -->
                 <com.google.android.material.card.MaterialCardView
