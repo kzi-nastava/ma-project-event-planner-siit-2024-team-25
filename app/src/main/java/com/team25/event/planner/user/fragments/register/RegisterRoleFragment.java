@@ -14,13 +14,18 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.SharedPrefService;
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentRegisterRoleBinding;
+import com.team25.event.planner.user.model.RegularUser;
+import com.team25.event.planner.user.model.User;
 import com.team25.event.planner.user.viewmodels.RegisterViewModel;
 
 public class RegisterRoleFragment extends Fragment {
     FragmentRegisterRoleBinding binding;
     private RegisterViewModel viewModel;
     private NavController navController;
+    private AuthViewModel authViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,6 +39,24 @@ public class RegisterRoleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         navController = Navigation.findNavController(view);
+
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        SharedPrefService sharedPrefService = new SharedPrefService(getActivity());
+        authViewModel.initialize(sharedPrefService);
+
+        if (getArguments() != null) {
+            authViewModel.user.observe(getViewLifecycleOwner(), user -> {
+                Long userId = getArguments().getLong("userId");
+                String firstName = getArguments().getString("firstName");
+                String lastName = getArguments().getString("lastName");
+                if(userId.equals(user.getId())){
+                    viewModel.isUpgrade.setValue(true);
+                    viewModel.email.setValue(user.getEmail());
+                    viewModel.lastName.setValue(lastName);
+                    viewModel.firstName.setValue(firstName);
+                }
+            });
+        }
 
         viewModel = new ViewModelProvider(
                 navController.getViewModelStoreOwner(R.id.nav_graph_registration)

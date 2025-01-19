@@ -30,4 +30,9 @@
         android:id="@+id/suspendedUsers"
         android:icon="@drawable/ic_delete"
         android:title="@string/suspensions"/>
+
+    <item
+        android:id="@+id/adminReviews"
+        android:icon="@drawable/ic_review"
+        android:title="@string/reviews"/>
 </menu>
