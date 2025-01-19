@@ -4,7 +4,10 @@ import com.team25.event.planner.offering.model.ProductPurchaseRequestDTO;
 import com.team25.event.planner.offering.model.ProductPurchaseResponseDTO;
 import com.team25.event.planner.service.dto.ServicePurchaseRequestDTO;
 import com.team25.event.planner.service.dto.ServicePurchaseResponseDTO;
+import com.team25.event.planner.user.model.PurchaseServiceCard;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -22,7 +25,7 @@ public interface PurchaseApi {
                                                  @Body ServicePurchaseRequestDTO purchase);
 
     @POST("api/purchase/events/{eventId}/products")
-    Call<ProductPurchaseResponseDTO> purchaseProduct(@Path("eventId")Long eventId,
+    Call<ProductPurchaseResponseDTO> purchaseProduct(@Path("eventId") Long eventId,
                                                      @Body ProductPurchaseRequestDTO requestDTO);
 
     @GET("/api/purchase/service/{serviceId}/available")
@@ -32,4 +35,11 @@ public interface PurchaseApi {
     @GET("/api/purchase/event/{eventId}/budget")
     Call<Double> getLeftMoneyFromBudgetItem(@Path(value = "eventId") Long eventId,
                                             @Query(value = "categoryId") Long categoryId);
+
+    @GET("/api/purchase/")
+    Call<List<PurchaseServiceCard>> getOwnerPurchases(
+            @Query("ownerId") Long ownerId,
+            @Query("startDate") LocalDate startDate,
+            @Query("endDate") LocalDate endDate
+    );
 }

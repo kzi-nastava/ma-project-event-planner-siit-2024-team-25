@@ -97,8 +97,24 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.team25.event.planner.user.fragments.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editCompanyFragment"
+            app:destination="@id/editCompanyFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_passwordChangeFragment"
+            app:destination="@id/passwordChangeFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_favoriteEventsFragment"
+            app:destination="@id/favoriteEventsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/offeringCategoryFragment"
@@ -215,11 +231,23 @@
     <fragment
         android:id="@+id/eventDetailsFragment"
         android:name="com.team25.event.planner.event.fragments.EventDetailsFragment"
-        android:label="fragment_event_details"
+        android:label="Event details"
         tools:layout="@layout/fragment_event_details">
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_eventInvitation"
+            app:destination="@id/eventInvitation" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_agendaFragment"
+            app:destination="@id/agendaFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
         <action
             android:id="@+id/action_eventDetailsFragment_to_budgetItemFragment"
             app:destination="@id/budgetItemFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventPurchaseFragment"
@@ -238,15 +266,6 @@
         android:label="fragment_service_details"
         tools:layout="@layout/fragment_service_details">
         <action
-            android:id="@+id/action_eventDetailsFragment_to_eventInvitation"
-            app:destination="@id/eventInvitation" />
-        <action
-            android:id="@+id/action_eventDetailsFragment_to_agendaFragment"
-            app:destination="@id/agendaFragment" />
-        <action
-            android:id="@+id/action_eventDetailsFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
-        <action
             android:id="@+id/action_serviceDetailsFragment_to_ownerHomePage"
             app:destination="@id/ownerHomePage" />
         <action
@@ -261,7 +280,7 @@
         android:id="@+id/priceListPage"
         android:name="com.team25.event.planner.offering.fragments.PriceListBaseFragment"
         android:label="fragment_price_list_base"
-        tools:layout="@layout/fragment_price_list_base" >
+        tools:layout="@layout/fragment_price_list_base">
         <action
             android:id="@+id/action_priceListPage_to_editPriceListItemFragment"
             app:destination="@id/editPriceListItemFragment" />
@@ -270,7 +289,7 @@
         android:id="@+id/editPriceListItemFragment"
         android:name="com.team25.event.planner.offering.fragments.EditPriceListItemFragment"
         android:label="fragment_edit_price_list_item"
-        tools:layout="@layout/fragment_edit_price_list_item" >
+        tools:layout="@layout/fragment_edit_price_list_item">
         <action
             android:id="@+id/action_editPriceListItemFragment_to_priceListPage"
             app:destination="@id/priceListPage" />
@@ -327,7 +346,7 @@
         android:id="@+id/chatFragment"
         android:name="com.team25.event.planner.communication.fragments.ChatFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" >
+        tools:layout="@layout/fragment_chat">
         <action
             android:id="@+id/action_chatFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment" />
@@ -342,7 +361,7 @@
         android:id="@+id/chat"
         android:name="com.team25.event.planner.communication.fragments.ChatRoomFragment"
         android:label="Chat room"
-        tools:layout="@layout/fragment_chat_room" >
+        tools:layout="@layout/fragment_chat_room">
         <action
             android:id="@+id/action_chatRoomFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
@@ -351,4 +370,33 @@
         android:id="@+id/adminReviews"
         android:name="com.team25.event.planner.review.fragments.AdminReviews"
         android:label="AdminReviews" />
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.team25.event.planner.user.fragments.EditProfileFragment"
+        android:label="Edit Profile" />
+    <fragment
+        android:id="@+id/editCompanyFragment"
+        android:name="com.team25.event.planner.user.fragments.EditCompanyFragment"
+        android:label="Edit Company Info" />
+    <fragment
+        android:id="@+id/passwordChangeFragment"
+        android:name="com.team25.event.planner.user.fragments.PasswordChangeFragment"
+        android:label="Change Password" />
+    <fragment
+        android:id="@+id/favoriteEventsFragment"
+        android:name="com.team25.event.planner.event.fragments.FavoriteEventsFragment"
+        android:label="Favorite Events">
+        <action
+            android:id="@+id/action_favoriteEventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.team25.event.planner.user.fragments.CalendarFragment"
+        android:label="Calendar" />
+    <fragment
+        android:id="@+id/publicProfileFragment"
+        android:name="com.team25.event.planner.user.fragments.PublicProfileFragment"
+        android:label="User" />
 </navigation>

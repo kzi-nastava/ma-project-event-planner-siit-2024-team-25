@@ -20,11 +20,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.communication.fragments.ChatFragment;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.fragments.MapFragment;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentEventDetailsBinding;
 import com.team25.event.planner.event.model.Event;
+import com.team25.event.planner.event.model.PrivacyType;
 import com.team25.event.planner.event.viewmodel.EventDetailsViewModel;
 import com.team25.event.planner.user.model.UserRole;
 
@@ -111,15 +113,65 @@ public class EventDetailsFragment extends Fragment {
                 binding.organizerActions.setVisibility(View.GONE);
                 binding.viewAgendaButton.setText(R.string.view_agenda);
             }
+
+            if (!isOrganizer && Boolean.TRUE.equals(viewModel.isAttending.getValue())) {
+                binding.chatButton.setVisibility(View.VISIBLE);
+            } else {
+                binding.chatButton.setVisibility(View.GONE);
+            }
+
+            boolean isPublic = viewModel.event.getValue() != null && viewModel.event.getValue().getPrivacyType().equals(PrivacyType.PUBLIC);
+            if (isPublic && !isOrganizer && !Boolean.TRUE.equals(viewModel.isAttending.getValue())) {
+                binding.joinButton.setVisibility(View.VISIBLE);
+            } else {
+                binding.joinButton.setVisibility(View.GONE);
+            }
         });
 
         viewModel.event.observe(getViewLifecycleOwner(), event -> {
             if (event == null) return;
             binding.dateTime.setText(getDateTimeString(event));
+            if (event.getPrivacyType().equals(PrivacyType.PUBLIC)) {
+                binding.privacyType.setText(R.string.public_event_label);
+                binding.inviteButton.setVisibility(View.GONE);
+            } else {
+                binding.privacyType.setText(R.string.private_event_label);
+                binding.inviteButton.setVisibility(View.VISIBLE);
+            }
             if (event.getIsFavorite()) {
                 binding.favoriteButton.setImageResource(R.drawable.ic_heart_red);
             } else {
                 binding.favoriteButton.setImageResource(R.drawable.ic_favorite_border);
+            }
+
+            boolean isOrganizer = Boolean.TRUE.equals(this.isOrganizer.getValue());
+            boolean isAttending = Boolean.TRUE.equals(viewModel.isAttending.getValue());
+            if (isAttending && !isOrganizer) {
+                binding.chatButton.setVisibility(View.VISIBLE);
+            } else {
+                binding.chatButton.setVisibility(View.GONE);
+            }
+            if (event.getPrivacyType().equals(PrivacyType.PUBLIC) && !isOrganizer && !isAttending) {
+                binding.joinButton.setVisibility(View.VISIBLE);
+            } else {
+                binding.joinButton.setVisibility(View.GONE);
+            }
+
+            viewModel.checkAttendance();
+        });
+
+        viewModel.isAttending.observe(getViewLifecycleOwner(), isAttending -> {
+            if (isAttending && !Boolean.TRUE.equals(isOrganizer.getValue())) {
+                binding.chatButton.setVisibility(View.VISIBLE);
+            } else {
+                binding.chatButton.setVisibility(View.GONE);
+            }
+
+            boolean isPublic = viewModel.event.getValue() != null && viewModel.event.getValue().getPrivacyType().equals(PrivacyType.PUBLIC);
+            if (isPublic && !isAttending && !Boolean.TRUE.equals(isOrganizer.getValue())) {
+                binding.joinButton.setVisibility(View.VISIBLE);
+            } else {
+                binding.joinButton.setVisibility(View.GONE);
             }
         });
 
@@ -149,6 +201,8 @@ public class EventDetailsFragment extends Fragment {
         binding.budgetPlanButton.setOnClickListener(v -> goToBudgetPlan());
         binding.purchaseButton.setOnClickListener(v -> goToPurchase());
         binding.purchaseListButton.setOnClickListener(v -> goToPurchaseList());
+        binding.joinButton.setOnClickListener(v -> joinEvent());
+        binding.chatButton.setOnClickListener(v -> goToChat());
         binding.downloadReportButton.setOnClickListener(v -> downloadReport());
         binding.downloadReportAdminButton.setOnClickListener(v -> downloadReport());
     }
@@ -172,7 +226,7 @@ public class EventDetailsFragment extends Fragment {
         args.putString(EventArgumentNames.NAME_ARG, event.getName());
         args.putBoolean(EventArgumentNames.IS_ORGANIZER_ARG, Boolean.TRUE.equals(isOrganizer.getValue()));
         args.putBoolean(EventArgumentNames.CAME_FROM_DETAILS_ARG, true);
-        navController.navigate(R.id.agendaFragment, args);
+        navController.navigate(R.id.action_eventDetailsFragment_to_agendaFragment, args);
     }
 
     private void goToInvite() {
@@ -205,6 +259,20 @@ public class EventDetailsFragment extends Fragment {
 
     private void goToPurchaseList() {
         // TODO: Implement
+    }
+
+    private void joinEvent() {
+        viewModel.joinEvent();
+    }
+
+    private void goToChat() {
+        final Event event = viewModel.event.getValue();
+        if (event == null) return;
+
+        Bundle args = new Bundle();
+        args.putLong(ChatFragment.RECEIVER_ID_ARG, event.getOrganizer().getId());
+        args.putString(ChatFragment.RECEIVER_NAME_ARG, event.getOrganizer().getName());
+        navController.navigate(R.id.action_eventDetailsFragment_to_chatFragment, args);
     }
 
     private void downloadReport() {

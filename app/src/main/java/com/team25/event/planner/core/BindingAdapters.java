@@ -1,6 +1,7 @@
 package com.team25.event.planner.core;
 
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -93,6 +94,12 @@ public class BindingAdapters {
     @BindingAdapter("app:errorText")
     public static void setErrorMessage(TextInputLayout view, String errorMessage) {
         view.setError(errorMessage);
+
+        if (!TextUtils.isEmpty(errorMessage)
+                && view.getEndIconMode() == TextInputLayout.END_ICON_PASSWORD_TOGGLE
+        ) {
+            view.setErrorIconDrawable(null);
+        }
     }
 
     // used for phone number input

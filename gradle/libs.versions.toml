@@ -2,6 +2,7 @@
 agp = "8.7.2"
 coreSplashscreenVersion = "1.0.1"
 glide = "4.16.0"
+gsonExtras = "0.2.1"
 imagepicker = "2.1"
 javaWebsocket = "1.5.3"
 javaWebsocketVersion = "1.5.2"
@@ -40,6 +41,7 @@ tyrusStandaloneClient = "2.1.1"
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreenVersion" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+gson-extras = { module = "org.danilopianini:gson-extras", version.ref = "gsonExtras" }
 imagepicker = { module = "com.github.dhaval2404:imagepicker", version.ref = "imagepicker" }
 java-websocket = { module = "org.java-websocket:Java-WebSocket", version.ref = "javaWebsocket" }
 java-websocket-v152 = { module = "org.java-websocket:Java-WebSocket", version.ref = "javaWebsocketVersion" }
