@@ -29,6 +29,7 @@ import com.team25.event.planner.event.adapters.HomeEventListAdapter;
 import com.team25.event.planner.event.adapters.MyEventAdapter;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.viewmodel.MyEventsViewModel;
+import com.team25.event.planner.product.fragments.ProductFormFragment;
 import com.team25.event.planner.user.model.UserRole;
 
 import java.util.ArrayList;
@@ -97,8 +98,8 @@ public class NotificationFragment extends Fragment {
                                 bundle.putLong(EventArgumentNames.ID_ARG, notification.getEntityId());
                                 _navController.navigate(R.id.eventDetailsFragment, bundle);
                             }else if(notificationCategory == NotificationCategory.PRODUCT){
-//                    bundle.putLong(EventArgumentNames.ID_ARG, entityId);
-//                    navController.navigate(R.id.productDetailsFragment, bundle);
+                                bundle.putLong(ProductFormFragment.ID_ARG_NAME, notification.getEntityId());
+                                _navController.navigate(R.id.productDetailsFragment, bundle);
                             }else if(notificationCategory == NotificationCategory.SERVICE){
                                 bundle.putLong("OFFERING_ID", notification.getEntityId());
                                 _navController.navigate(R.id.serviceDetailsFragment, bundle);

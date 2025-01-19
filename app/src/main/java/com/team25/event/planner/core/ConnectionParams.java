@@ -20,6 +20,7 @@ import com.team25.event.planner.offering.Api.OfferingApi;
 import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.offering.Api.PriceListApi;
 import com.team25.event.planner.product.api.ProductApi;
+import com.team25.event.planner.review.api.ReviewApi;
 import com.team25.event.planner.service.api.PurchaseApi;
 import com.team25.event.planner.service.api.ServiceApi;
 import com.team25.event.planner.user.api.AccountApi;
@@ -84,6 +85,7 @@ public class ConnectionParams {
     public static ChatApi chatApi;
     public static BlockApi blockApi;
     public static ChatRoomApi chatRoomApi;
+    public static ReviewApi reviewApi;
 
     public static void setup(String jwt, AuthInterceptor.LogoutHandler logoutHandler) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -118,6 +120,7 @@ public class ConnectionParams {
         chatApi = retrofit.create(ChatApi.class);
         blockApi = retrofit.create(BlockApi.class);
         chatRoomApi = retrofit.create(ChatRoomApi.class);
+        reviewApi = retrofit.create(ReviewApi.class);
     }
 
     private static RuntimeTypeAdapterFactory<RegularUser> getUserTypeAdapterFactory() {

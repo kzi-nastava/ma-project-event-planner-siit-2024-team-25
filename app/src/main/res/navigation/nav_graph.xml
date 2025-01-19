@@ -367,6 +367,11 @@
             app:destination="@id/chatFragment" />
     </fragment>
     <fragment
+        android:id="@+id/adminReviews"
+        android:name="com.team25.event.planner.review.fragments.AdminReviews"
+        android:label="AdminReviews" />
+
+    <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.team25.event.planner.user.fragments.EditProfileFragment"
         android:label="Edit Profile" />
