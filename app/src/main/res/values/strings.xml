@@ -197,5 +197,10 @@
     <string name="private_event_label">This event is private.</string>
     <string name="join_event">Join event</string>
     <string name="chat_with_organizer">Chat with organizer</string>
+    <string name="view_stats">View Stats</string>
+    <string name="attendees">Attendees</string>
+    <string name="rating_distribution">Rating Distribution</string>
+    <string name="right_chevron">right chevron</string>
     <string name="upgrade_account">Upgrade account</string>
+    >>>>>>> develop
 </resources>

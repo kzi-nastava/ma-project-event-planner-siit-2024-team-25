@@ -203,6 +203,8 @@ public class EventDetailsFragment extends Fragment {
         binding.purchaseListButton.setOnClickListener(v -> goToPurchaseList());
         binding.joinButton.setOnClickListener(v -> joinEvent());
         binding.chatButton.setOnClickListener(v -> goToChat());
+        binding.viewStatsButton.setOnClickListener(v -> goToStats());
+        binding.viewStatsAdminButton.setOnClickListener(v -> goToStats());
         binding.downloadReportButton.setOnClickListener(v -> downloadReport());
         binding.downloadReportAdminButton.setOnClickListener(v -> downloadReport());
     }
@@ -273,6 +275,16 @@ public class EventDetailsFragment extends Fragment {
         args.putLong(ChatFragment.RECEIVER_ID_ARG, event.getOrganizer().getId());
         args.putString(ChatFragment.RECEIVER_NAME_ARG, event.getOrganizer().getName());
         navController.navigate(R.id.action_eventDetailsFragment_to_chatFragment, args);
+    }
+
+    private void goToStats() {
+        final Event event = viewModel.event.getValue();
+        if (event == null) return;
+
+        Bundle args = new Bundle();
+        args.putLong(EventArgumentNames.ID_ARG, event.getId());
+        args.putString(EventArgumentNames.NAME_ARG, event.getName());
+        navController.navigate(R.id.action_eventDetailsFragment_to_eventStatsFragment, args);
     }
 
     private void downloadReport() {
