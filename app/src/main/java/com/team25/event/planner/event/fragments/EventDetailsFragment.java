@@ -260,7 +260,10 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void goToPurchaseList() {
-        // TODO: Implement
+        Bundle bundle = new Bundle();
+        bundle.putLong(EventArgumentNames.ID_ARG, _eventId);
+        bundle.putString(EventArgumentNames.NAME_ARG,viewModel.event.getValue().getName());
+
     }
 
     private void joinEvent() {
