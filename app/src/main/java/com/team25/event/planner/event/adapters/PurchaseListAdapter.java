@@ -27,7 +27,7 @@ public class PurchaseListAdapter extends ArrayAdapter<PurchaseResponseDTO> {
 
     public PurchaseListAdapter(Context context, List<PurchaseResponseDTO> list, boolean eventReview){
         super(context, R.layout.purchase_list_item);
-        purchaseList = list;
+        this.purchaseList = list;
         this.eventReview = eventReview;
     }
 
@@ -61,12 +61,12 @@ public class PurchaseListAdapter extends ArrayAdapter<PurchaseResponseDTO> {
         TextView price = convertView.findViewById(R.id.pricePurchaseList);
         MaterialButton button = convertView.findViewById(R.id.postReviewBtn);
         if(dto!=null){
-            if(eventReview){
+            if(!eventReview){
                 name.setText(dto.getEvent().getName());
             }else{
                 name.setText(dto.getOffering().getName());
             }
-            price.setText((int) dto.getPrice().getAmount());
+            price.setText(String.valueOf(dto.getPrice().getAmount()));
             button.setOnClickListener(v->{
                 if(onClickReviewListener!= null){
                     onClickReviewListener.onClick(dto.getId());

@@ -1,5 +1,7 @@
 package com.team25.event.planner.event.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -96,6 +98,7 @@ public class PurchaseViewModel extends ViewModel {
         purchaseApi.getPurchaseByEvent(eventId).enqueue(new Callback<List<PurchaseResponseDTO>>() {
             @Override
             public void onResponse(Call<List<PurchaseResponseDTO>> call, Response<List<PurchaseResponseDTO>> response) {
+                Log.d("API_CALL", "Response Body: " + response.body());
                 if(response.isSuccessful() && response.body()!=null){
                     _purchaseList.postValue(response.body());
                 }else{
@@ -105,7 +108,8 @@ public class PurchaseViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<List<PurchaseResponseDTO>> call, Throwable t) {
-
+                purchaseResponse.postValue(false);
+                Log.e("API_CALL", "Network failure: " + t.getMessage());
             }
         });
     }

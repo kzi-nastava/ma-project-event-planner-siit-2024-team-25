@@ -263,7 +263,8 @@ public class EventDetailsFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putLong(EventArgumentNames.ID_ARG, _eventId);
         bundle.putString(EventArgumentNames.NAME_ARG,viewModel.event.getValue().getName());
-
+        bundle.putBoolean(PurchaseListFragment.EVENT_REVIEW, true);
+        navController.navigate(R.id.action_eventDetailsFragment_to_purchaseListFragment,bundle);
     }
 
     private void joinEvent() {

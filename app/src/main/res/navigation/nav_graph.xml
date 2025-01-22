@@ -251,6 +251,9 @@
         <action
             android:id="@+id/action_eventDetailsFragment_to_eventStatsFragment"
             app:destination="@id/eventStatsFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_purchaseListFragment"
+            app:destination="@id/purchaseListFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventPurchaseFragment"
@@ -413,5 +416,14 @@
         <action
             android:id="@+id/action_eventStatsFragment_to_publicProfileFragment"
             app:destination="@id/publicProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/purchaseListFragment"
+        android:name="com.team25.event.planner.event.fragments.PurchaseListFragment"
+        android:label="fragment_purchase_list"
+        tools:layout="@layout/fragment_purchase_list" >
+        <action
+            android:id="@+id/action_purchaseListFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
 </navigation>

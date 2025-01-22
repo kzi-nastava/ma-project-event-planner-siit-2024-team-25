@@ -44,7 +44,7 @@ public interface PurchaseApi {
             @Query("endDate") LocalDate endDate
     );
     @GET("/api/purchase/events/{eventId}")
-    Call<List<PurchaseResponseDTO>> getPurchaseByEvent(@Path("eventId")Long eventId);
+    Call<List<PurchaseResponseDTO>> getPurchaseByEvent(@Path(value = "eventId")Long eventId);
     @GET("/api/purchase/offerings/{offeringId}")
     Call<List<PurchaseResponseDTO>> getPurchaseByOffering(@Path("offeringId")Long offeringId);
 }
