@@ -254,6 +254,9 @@
         <action
             android:id="@+id/action_eventDetailsFragment_to_purchaseListFragment"
             app:destination="@id/purchaseListFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_reviewListFragment"
+            app:destination="@id/reviewListFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventPurchaseFragment"
@@ -424,6 +427,15 @@
         tools:layout="@layout/fragment_purchase_list" >
         <action
             android:id="@+id/action_purchaseListFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reviewListFragment"
+        android:name="com.team25.event.planner.review.fragments.ReviewListFragment"
+        android:label="fragment_review_list"
+        tools:layout="@layout/fragment_review_list" >
+        <action
+            android:id="@+id/action_reviewListFragment_to_eventDetailsFragment"
             app:destination="@id/eventDetailsFragment" />
     </fragment>
 </navigation>
