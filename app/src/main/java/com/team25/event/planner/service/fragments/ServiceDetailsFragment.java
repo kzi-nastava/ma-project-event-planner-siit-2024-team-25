@@ -1,5 +1,7 @@
 package com.team25.event.planner.service.fragments;
 
+import static com.team25.event.planner.product.fragments.ProductDetailsFragment.OFFERING_NAME;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -28,9 +30,11 @@ import com.team25.event.planner.communication.fragments.ChatFragment;
 import com.team25.event.planner.databinding.DialogBookServiceBinding;
 import com.team25.event.planner.databinding.FragmentServiceDetailsBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
+import com.team25.event.planner.event.fragments.PurchaseListFragment;
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.viewmodel.EventViewModel;
 
+import com.team25.event.planner.review.fragments.ReviewListFragment;
 import com.team25.event.planner.service.dto.ServiceCreateResponseDTO;
 import com.team25.event.planner.service.model.Service;
 import com.team25.event.planner.service.viewModels.BookServiceViewModel;
@@ -312,6 +316,27 @@ public class ServiceDetailsFragment extends Fragment {
                 bundle.putLong(ChatFragment.RECEIVER_ID_ARG, _serviceViewModel.currentService.getValue().getOwner().getId());
                 bundle.putString(ChatFragment.RECEIVER_NAME_ARG, _serviceViewModel.currentService.getValue().getOwner().getName());
                 navController.navigate(R.id.action_serviceDetailsFragment_to_chatFragment, bundle);
+            }
+        });
+        _binding.viewPurchaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(PurchaseListFragment.EVENT_REVIEW, false);
+                bundle.putLong(OFFERING_ID, _serviceId);
+                bundle.putString(OFFERING_NAME, _serviceViewModel.currentService.getValue().getName());
+                navController.navigate(R.id.action_serviceDetailsFragment_to_purchaseListFragment, bundle);
+            }
+        });
+        _binding.viewReviewsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(PurchaseListFragment.EVENT_REVIEW, false);
+                bundle.putLong(ReviewListFragment.OFFERING_ID,_serviceId);
+                bundle.putString(ReviewListFragment.OFFERING_EVENT_NAME, _serviceViewModel.currentService.getValue().getName());
+                navController.navigate(R.id.action_serviceDetailsFragment_to_reviewListFragment, bundle);
+
             }
         });
     }

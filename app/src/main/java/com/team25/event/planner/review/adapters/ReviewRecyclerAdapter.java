@@ -26,6 +26,11 @@ public class ReviewRecyclerAdapter extends RecyclerView.Adapter<ReviewRecyclerAd
         this.reviewList = reviewList;
         this.dateFormat = new SimpleDateFormat("dd:MM:yyyy");
     }
+    public void updateData(List<ReviewResponseDTO> newList) {
+        this.reviewList.clear();
+        this.reviewList.addAll(newList);
+        notifyDataSetChanged();
+    }
 
     // ViewHolder Class
     public static class ReviewViewHolder extends RecyclerView.ViewHolder {

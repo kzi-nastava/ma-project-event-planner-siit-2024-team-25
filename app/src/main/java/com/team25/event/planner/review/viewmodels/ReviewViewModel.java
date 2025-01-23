@@ -15,6 +15,7 @@ import com.team25.event.planner.review.model.ReviewResponseDTO;
 import java.lang.invoke.MutableCallSite;
 import java.util.List;
 
+import lombok.Getter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,14 +24,17 @@ public class ReviewViewModel extends ViewModel {
     private ReviewApi reviewApi = ConnectionParams.reviewApi;
     private MutableLiveData<List<ReviewResponseDTO>> _reviews = new MutableLiveData<>();
     public LiveData<List<ReviewResponseDTO>> reviews = _reviews;
-    private MutableLiveData<Boolean> _eventReview = new MutableLiveData<>();
-    public LiveData<Boolean> eventReview = _eventReview;
+    public MutableLiveData<Boolean> _eventReview = new MutableLiveData<>();
+
     private MutableLiveData<Long> _eventId = new MutableLiveData<>();;
     public LiveData<Long> eventId = _eventId;
     private MutableLiveData<Long> _offeringId = new MutableLiveData<>();;
     public LiveData<Long> offeringId = _offeringId;
+    @Getter
     private int currentPage;
+    @Getter
     private int totalPages;
+    public MutableLiveData<Boolean> paginationChanged = new MutableLiveData<>();
     private final MutableLiveData<String> _serverError = new MutableLiveData<>();
     public final LiveData<String> serverError = _serverError;
     private final MutableLiveData<Boolean> _created = new MutableLiveData<>();
@@ -62,6 +66,7 @@ public class ReviewViewModel extends ViewModel {
                 if(response.isSuccessful() && response.body()!= null){
                     _reviews.postValue(response.body().getContent());
                     totalPages = response.body().getTotalPages();
+                    paginationChanged.postValue(true);
                 }else{
                     ErrorParse.catchError(response);
                 }
@@ -80,6 +85,7 @@ public class ReviewViewModel extends ViewModel {
                 if(response.isSuccessful() && response.body()!= null){
                     _reviews.postValue(response.body().getContent());
                     totalPages = response.body().getTotalPages();
+                    paginationChanged.postValue(true);
                 }else{
                     ErrorParse.catchError(response);
                 }
@@ -92,11 +98,12 @@ public class ReviewViewModel extends ViewModel {
         });
     }
 
-    public void getReviews(){
-        if(Boolean.TRUE.equals(eventReview.getValue())){
-            getReviewsByEvent(eventId.getValue());
+    public void getReviews(Long id){
+        paginationChanged.postValue(true);
+        if(Boolean.TRUE.equals(_eventReview.getValue())){
+            getReviewsByEvent(id);
         }else{
-            getReviewByOffering(offeringId.getValue());
+            getReviewByOffering(id);
         }
     }
 
@@ -104,17 +111,17 @@ public class ReviewViewModel extends ViewModel {
         currentPage = 0;
     }
 
-    public void getNextPage(){
+    public void getNextPage(Long id){
         if(this.currentPage+1 < this.totalPages){
             this.currentPage++;
-            getReviews();
+            getReviews(id);
         }
     }
 
-    public void getPreviousPage(){
+    public void getPreviousPage(Long id){
         if(this.currentPage > 0){
             this.currentPage--;
-            getReviews();
+            getReviews(id);
         }
     }
 }

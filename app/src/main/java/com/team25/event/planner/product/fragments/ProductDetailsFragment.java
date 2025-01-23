@@ -24,10 +24,14 @@ import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentProductDetailsBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.fragments.ProductPurchaseListFragment;
+import com.team25.event.planner.event.fragments.PurchaseListFragment;
 import com.team25.event.planner.event.viewmodel.PurchaseViewModel;
 import com.team25.event.planner.offering.adapters.ProductPurchaseAdapter;
 import com.team25.event.planner.product.adapters.ImageSliderProductAdapter;
 import com.team25.event.planner.product.viewmodel.MyProductsViewModel;
+import com.team25.event.planner.review.fragments.ReviewListFragment;
+import com.team25.event.planner.service.fragments.ServiceDetailsFragment;
+import com.team25.event.planner.service.fragments.ServiceListFragment;
 import com.team25.event.planner.user.model.UserRole;
 
 import java.util.Objects;
@@ -35,6 +39,8 @@ import java.util.Objects;
 
 public class ProductDetailsFragment extends Fragment {
 
+    public final static String OFFERING_ID = "OFFERING_ID";
+    public final static String OFFERING_NAME = "OFFERING_NAME";
     private NavController navController;
     private FragmentProductDetailsBinding binding;
     private MyProductsViewModel productViewModel;
@@ -86,6 +92,12 @@ public class ProductDetailsFragment extends Fragment {
         }else{
             binding.chatButton.setVisibility(View.GONE);
         }
+            if(_eventId != 0L){
+                binding.buyButton.setVisibility(View.VISIBLE);
+            }else{
+                binding.buyButton.setVisibility(View.GONE);
+            }
+
         productViewModel.fetchProduct(_productId);
     }
 
@@ -99,13 +111,7 @@ public class ProductDetailsFragment extends Fragment {
             ViewPager2 viewPager = binding.imageSlider;
             viewPager.setAdapter(adapter);
         });
-        productViewModel.available.observe(getViewLifecycleOwner(), check ->{
-            if(check && _eventId != 0L){
-                binding.buyButton.setVisibility(View.VISIBLE);
-            }else{
-                binding.buyButton.setVisibility(View.GONE);
-            }
-        });
+
         purchaseViewModel.purchaseResponse.observe(getViewLifecycleOwner(), check ->{
             if (check) {
                 DialogHelper.showSuccessDialog(requireContext(), "Successfully bought product: " + productViewModel.name.getValue());
@@ -129,6 +135,26 @@ public class ProductDetailsFragment extends Fragment {
                 bundle.putLong(ChatFragment.RECEIVER_ID_ARG, productViewModel.selectedProduct.getValue().getOwnerInfo().getId());
                 bundle.putString(ChatFragment.RECEIVER_NAME_ARG, productViewModel.selectedProduct.getValue().getOwnerInfo().getName());
                 navController.navigate(R.id.action_productDetailsFragment_to_chatFragment, bundle);
+            }
+        });
+        binding.viewPurchaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(PurchaseListFragment.EVENT_REVIEW, false);
+                bundle.putLong(OFFERING_ID, _productId);
+                bundle.putString(OFFERING_NAME, productViewModel.selectedProduct.getValue().getName());
+                navController.navigate(R.id.action_productDetailsFragment_to_purchaseListFragment, bundle);
+            }
+        });
+        binding.viewReviewsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(PurchaseListFragment.EVENT_REVIEW, false);
+                bundle.putLong(ReviewListFragment.OFFERING_ID,_productId);
+                bundle.putString(ReviewListFragment.OFFERING_EVENT_NAME, productViewModel.selectedProduct.getValue().getName());
+                navController.navigate(R.id.action_productDetailsFragment_to_reviewListFragment, bundle);
             }
         });
     }

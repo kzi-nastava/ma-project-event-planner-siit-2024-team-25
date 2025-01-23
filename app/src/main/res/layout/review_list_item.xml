@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/submittedCategoryItem"
     android:orientation="horizontal"
-    android:layout_marginBottom="5sp">
+    android:layout_marginBottom="8sp">
 
     <TextView
         android:id="@+id/userName"

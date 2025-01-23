@@ -26,6 +26,7 @@ import com.team25.event.planner.databinding.FragmentPurchaseListBinding;
 import com.team25.event.planner.event.adapters.PurchaseListAdapter;
 import com.team25.event.planner.event.viewmodel.PurchaseViewModel;
 import com.team25.event.planner.offering.adapters.ProductPurchaseAdapter;
+import com.team25.event.planner.product.fragments.ProductDetailsFragment;
 import com.team25.event.planner.review.model.ReviewRequestDTO;
 import com.team25.event.planner.review.model.ReviewType;
 import com.team25.event.planner.review.viewmodels.ReviewViewModel;
@@ -78,7 +79,10 @@ public class PurchaseListFragment extends Fragment implements PurchaseListAdapte
                 this.eventId = id;
                 this.offeringEventName = name;
             }else{
-
+                Long id = getArguments().getLong(ProductDetailsFragment.OFFERING_ID);
+                String name = getArguments().getString(ProductDetailsFragment.OFFERING_NAME);
+                this.offeringId = id;
+                this.offeringEventName = name;
             }
         }
 
@@ -96,7 +100,12 @@ public class PurchaseListFragment extends Fragment implements PurchaseListAdapte
         }
         setObservers();
         setListeners();
-        viewModel.getPurchaseByEvent(this.eventId);
+        if(eventReview){
+            viewModel.getPurchaseByEvent(this.eventId);
+        }else{
+            viewModel.getPurchaseByOffering(this.offeringId);
+        }
+
     }
 
     @Override
@@ -104,7 +113,6 @@ public class PurchaseListFragment extends Fragment implements PurchaseListAdapte
         super.onResume();
         setObservers();
         setListeners();
-        viewModel.getPurchaseByEvent(this.eventId);
     }
 
     private void setListeners() {
@@ -167,7 +175,11 @@ public class PurchaseListFragment extends Fragment implements PurchaseListAdapte
     }
 
     private void sendRatingToServer(int rating, String comment, Long id){
-        ReviewRequestDTO requestDTO = new ReviewRequestDTO(comment,rating, ReviewType.OFFERING_REVIEW,id,userId);
+        ReviewType reviewType = ReviewType.OFFERING_REVIEW;
+        if(!eventReview){
+            reviewType = ReviewType.EVENT_REVIEW;
+        }
+        ReviewRequestDTO requestDTO = new ReviewRequestDTO(comment,rating, reviewType,id,userId);
         reviewViewModel.postReview(requestDTO);
     }
 }

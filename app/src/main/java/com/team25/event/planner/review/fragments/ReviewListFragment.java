@@ -1,5 +1,6 @@
 package com.team25.event.planner.review.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,8 @@ import com.team25.event.planner.event.adapters.PurchaseListAdapter;
 import com.team25.event.planner.event.fragments.PurchaseListFragment;
 import com.team25.event.planner.review.adapters.ReviewRecyclerAdapter;
 import com.team25.event.planner.review.viewmodels.ReviewViewModel;
+
+import java.util.ArrayList;
 
 
 public class ReviewListFragment extends Fragment {
@@ -60,9 +63,11 @@ public class ReviewListFragment extends Fragment {
         if(getArguments()!= null){
             Boolean eventReview = getArguments().getBoolean(PurchaseListFragment.EVENT_REVIEW);
             this.eventReviews = eventReview;
+            viewModel._eventReview.postValue(this.eventReviews);
             if(eventReview){
                 this.eventId = getArguments().getLong(EVENT_ID);
                 this.offeringEventName = getArguments().getString(OFFERING_EVENT_NAME);
+
             }else{
                 this.offeringId = getArguments().getLong(OFFERING_ID);
                 this.offeringEventName = getArguments().getString(OFFERING_EVENT_NAME);
@@ -76,6 +81,8 @@ public class ReviewListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = binding.recyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new ReviewRecyclerAdapter(requireContext(), new ArrayList<>());
+        recyclerView.setAdapter(adapter);
         binding.title.setText(offeringEventName + "`s reviews");
         setObservers();
         setListeners();
@@ -92,12 +99,50 @@ public class ReviewListFragment extends Fragment {
     }
 
     private void setListeners() {
+        binding.btnPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(eventReviews){
+                    viewModel.getPreviousPage(eventId);
+                }else{
+                    viewModel.getPreviousPage(offeringId);
+                }
+
+            }
+        });
+        binding.btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(eventReviews){
+                    viewModel.getNextPage(eventId);
+                }else{
+                    viewModel.getNextPage(offeringId);
+                }
+
+            }
+        });
+
     }
 
+    @SuppressLint("SetTextI18n")
     private void setObservers() {
         viewModel.reviews.observe(getViewLifecycleOwner(), lists->{
-            adapter = new ReviewRecyclerAdapter(requireContext(), lists);
-            recyclerView.setAdapter(adapter);
+            adapter.updateData(lists);
+        });
+        viewModel.paginationChanged.observe(getViewLifecycleOwner(), check->{
+            if(check){
+                binding.tvPageInfo.setText(String.valueOf(viewModel.getCurrentPage()+1) + " / " + String.valueOf(viewModel.getTotalPages()));
+                if(viewModel.getCurrentPage() == 0){
+                    binding.btnPrevious.setEnabled(false);
+                }else{
+                    binding.btnPrevious.setEnabled(true);
+                }
+                if(viewModel.getCurrentPage()+1 == viewModel.getTotalPages()){
+                    binding.btnNext.setEnabled(false);
+                }else{
+                    binding.btnNext.setEnabled(true);
+                }
+            }
         });
     }
 }
