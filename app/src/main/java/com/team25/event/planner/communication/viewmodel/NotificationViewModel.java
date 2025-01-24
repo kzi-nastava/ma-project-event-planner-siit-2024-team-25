@@ -49,6 +49,12 @@ public class NotificationViewModel extends ViewModel {
                 });
     }
 
+    public void disconnect(){
+        if(_notificationWebSocket!=null){
+            _notificationWebSocket.disconnect();
+        }
+    }
+
     private void showNotification(Notification notification) {
         NotificationManager notificationManager = (NotificationManager) _fragmentActivity.getSystemService(Context.NOTIFICATION_SERVICE);
 
