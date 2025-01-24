@@ -251,6 +251,12 @@
         <action
             android:id="@+id/action_eventDetailsFragment_to_eventStatsFragment"
             app:destination="@id/eventStatsFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_purchaseListFragment"
+            app:destination="@id/purchaseListFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_reviewListFragment"
+            app:destination="@id/reviewListFragment" />
     </fragment>
     <fragment
         android:id="@+id/eventPurchaseFragment"
@@ -274,6 +280,12 @@
         <action
             android:id="@+id/action_serviceDetailsFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_purchaseListFragment"
+            app:destination="@id/purchaseListFragment" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_reviewListFragment"
+            app:destination="@id/reviewListFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -344,6 +356,12 @@
         <action
             android:id="@+id/action_productDetailsFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_purchaseListFragment"
+            app:destination="@id/purchaseListFragment" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_reviewListFragment"
+            app:destination="@id/reviewListFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
@@ -413,5 +431,35 @@
         <action
             android:id="@+id/action_eventStatsFragment_to_publicProfileFragment"
             app:destination="@id/publicProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/purchaseListFragment"
+        android:name="com.team25.event.planner.event.fragments.PurchaseListFragment"
+        android:label="fragment_purchase_list"
+        tools:layout="@layout/fragment_purchase_list" >
+        <action
+            android:id="@+id/action_purchaseListFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+        <action
+            android:id="@+id/action_purchaseListFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_purchaseListFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reviewListFragment"
+        android:name="com.team25.event.planner.review.fragments.ReviewListFragment"
+        android:label="fragment_review_list"
+        tools:layout="@layout/fragment_review_list" >
+        <action
+            android:id="@+id/action_reviewListFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+        <action
+            android:id="@+id/action_reviewListFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_reviewListFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
 </navigation>

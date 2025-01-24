@@ -1,11 +1,16 @@
 package com.team25.event.planner.event.viewmodel;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.team25.event.planner.core.ConnectionParams;
+import com.team25.event.planner.core.ErrorParse;
 import com.team25.event.planner.core.Page;
+import com.team25.event.planner.event.fragments.PurchaseListFragment;
+import com.team25.event.planner.event.model.PurchaseResponseDTO;
 import com.team25.event.planner.offering.Api.OfferingApi;
 import com.team25.event.planner.offering.model.OfferingFilterDTO;
 import com.team25.event.planner.offering.model.ProductCard;
@@ -24,6 +29,9 @@ public class PurchaseViewModel extends ViewModel {
     public final MutableLiveData<List<ProductCard>> products = new MutableLiveData<>();
     private final OfferingApi offeringApi = ConnectionParams.offeringApi;
     private final PurchaseApi purchaseApi = ConnectionParams.purchaseApi;
+
+    private final MutableLiveData<List<PurchaseResponseDTO>> _purchaseList = new MutableLiveData<>();
+    public final LiveData<List<PurchaseResponseDTO>> purchaseList = _purchaseList;
     private final MutableLiveData<Integer> _currentPage = new MutableLiveData<>(0);
     public final LiveData<Integer> currentPage = _currentPage;
     private final MutableLiveData<Integer> _totalPage = new MutableLiveData<>();
@@ -84,5 +92,43 @@ public class PurchaseViewModel extends ViewModel {
             this._currentPage.setValue(this._currentPage.getValue()-1);
             getAllProducts();
         }
+    }
+
+    public void getPurchaseByEvent(Long eventId){
+        purchaseApi.getPurchaseByEvent(eventId).enqueue(new Callback<List<PurchaseResponseDTO>>() {
+            @Override
+            public void onResponse(Call<List<PurchaseResponseDTO>> call, Response<List<PurchaseResponseDTO>> response) {
+                Log.d("API_CALL", "Response Body: " + response.body());
+                if(response.isSuccessful() && response.body()!=null){
+                    _purchaseList.postValue(response.body());
+                }else{
+                    ErrorParse.catchError(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<PurchaseResponseDTO>> call, Throwable t) {
+                purchaseResponse.postValue(false);
+                Log.e("API_CALL", "Network failure: " + t.getMessage());
+            }
+        });
+    }
+
+    public void getPurchaseByOffering(Long offeringId){
+        purchaseApi.getPurchaseByOffering(offeringId).enqueue(new Callback<List<PurchaseResponseDTO>>() {
+            @Override
+            public void onResponse(Call<List<PurchaseResponseDTO>> call, Response<List<PurchaseResponseDTO>> response) {
+                if(response.isSuccessful() && response.body()!=null){
+                    _purchaseList.postValue(response.body());
+                }else{
+                    ErrorParse.catchError(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<PurchaseResponseDTO>> call, Throwable t) {
+
+            }
+        });
     }
 }
