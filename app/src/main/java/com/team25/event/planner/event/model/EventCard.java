@@ -23,14 +23,16 @@ public class EventCard implements Parcelable {
     private LocalDateTime startDateTime;
     private String city;
     private String country;
-    private String organizerName;
+    private String organizerFirstName;
+    private String organizerLastName;
     private Boolean isFavorite;
 
     protected EventCard(Parcel in) {
         id = in.readLong();
         name = in.readString();
         description = in.readString();
-        organizerName = in.readString();
+        organizerFirstName = in.readString();
+        organizerLastName = in.readString();
         country = in.readString();
         city = in.readString();
         startDateTime = LocalDateTime.parse(in.readString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME); // Parsiranje u LocalDateTime
@@ -58,7 +60,8 @@ public class EventCard implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeString(name);
-        dest.writeString(organizerName);
+        dest.writeString(organizerFirstName);
+        dest.writeString(organizerLastName);
         dest.writeString(description);
         dest.writeString(country);
         dest.writeString(city);
