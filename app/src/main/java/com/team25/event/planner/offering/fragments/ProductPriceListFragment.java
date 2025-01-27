@@ -1,5 +1,8 @@
 package com.team25.event.planner.offering.fragments;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +21,7 @@ import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
 import com.team25.event.planner.core.listeners.OnEditPriceListClickListener;
 import com.team25.event.planner.databinding.FragmentProductPriceListBinding;
@@ -91,6 +96,7 @@ public class ProductPriceListFragment extends Fragment implements OnEditPriceLis
     }
 
     private void setUpListeners() {
+        binding.buttonDownloadPdf.setOnClickListener(v -> downloadReport());
     }
 
     private void setUpObservers() {
@@ -113,5 +119,39 @@ public class ProductPriceListFragment extends Fragment implements OnEditPriceLis
         bundle.putDouble(PRICE_ARG_NAME, price);
         bundle.putDouble(DISCOUNT_ARG_NAME, discount);
         navController.navigate(R.id.action_priceListPage_to_editPriceListItemFragment, bundle);
+    }
+    private void downloadReport() {
+        final Long ownerId = viewModel.ownerId.getValue();
+        if (ownerId == null) {
+            Toast.makeText(getContext(), "Unable to download report", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(viewModel.priceListItems.getValue().isEmpty()){
+            Toast.makeText(getContext(), "There is no offering items", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final String url = ConnectionParams.BASE_URL + "api/price-list/" + ownerId + "/price-list-report";
+        final String filename = "price_list_" + ownerId + "_" + System.currentTimeMillis() + ".pdf";
+
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.setTitle("Price list report");
+        request.setDescription("Downloading PDF report with price list...");
+        if(isProductsView){
+            request.addRequestHeader("isProductList", "true");
+        }else{
+            request.addRequestHeader("isProductList", "false");
+        }
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
+
+        DownloadManager downloadManager = (DownloadManager) requireContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        if (downloadManager != null) {
+            downloadManager.enqueue(request);
+            Toast.makeText(requireContext(), "Download started!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "Unable to download report", Toast.LENGTH_SHORT).show();
+        }
     }
 }

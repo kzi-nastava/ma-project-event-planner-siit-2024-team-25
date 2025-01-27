@@ -1,5 +1,8 @@
 package com.team25.event.planner.offering.viewmodel;
 
+import android.util.Log;
+
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,10 +14,16 @@ import com.team25.event.planner.offering.Api.PriceListApi;
 import com.team25.event.planner.offering.model.PriceListItemRequestDTO;
 import com.team25.event.planner.offering.model.PriceListItemResponseDTO;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import lombok.Builder;
 import lombok.Data;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -150,4 +159,5 @@ public class PriceListViewModel extends ViewModel {
         priceText.setValue(String.valueOf(price));
         discountText.setValue(String.valueOf(discount));
     }
+
 }
