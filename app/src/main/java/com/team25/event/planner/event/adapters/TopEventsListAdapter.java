@@ -74,7 +74,7 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard> {
 
         if (event != null) {
             eventName.setText(event.getName());
-            eventOrganizer.setText(event.getOrganizerName());
+            eventOrganizer.setText(String.format("%s %s", event.getOrganizerFirstName(), event.getOrganizerLastName()));
 
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -86,7 +86,7 @@ public class TopEventsListAdapter extends ArrayAdapter<EventCard> {
             eventDate.setText(formattedDate);
             eventTime.setText(formattedTime);
 
-            eventLocation.setText(event.getCountry() + ", " + event.getCity());
+            eventLocation.setText(String.format("%s, %s", event.getCountry(), event.getCity()));
             eventLocationImage.setImageResource(R.drawable.ic_location);
 
             if (event.getIsFavorite()) {
