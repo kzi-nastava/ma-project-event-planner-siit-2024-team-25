@@ -1,5 +1,7 @@
 package com.team25.event.planner.event.fragments;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,6 +34,7 @@ import com.team25.event.planner.offering.viewmodel.HomeOfferingViewModel;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -53,6 +56,10 @@ public class EventPurchaseFragment extends Fragment {
     private HomeOfferingViewModel _homeOfferingViewModel;
     private HomeEventViewModel _homeEventViewModel;
     private FragmentEventPurchaseBinding _binding;
+    private HomePageOfferingFilterBinding _homePageOfferingFilterBinding;
+
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     public EventPurchaseFragment() {
 
@@ -117,21 +124,96 @@ public class EventPurchaseFragment extends Fragment {
         });
     }
 
+    private void setupOfferingFilterDateTimePickers() {
+        _homePageOfferingFilterBinding.startDateInput.setOnClickListener(v -> showOfferingFilterDatePicker(true));
+        _homePageOfferingFilterBinding.endDateInput.setOnClickListener(v -> showOfferingFilterDatePicker(false));
+        _homePageOfferingFilterBinding.startTimeInput.setOnClickListener(v -> showOfferingFilterTimePicker(true));
+        _homePageOfferingFilterBinding.endTimeInput.setOnClickListener(v -> showOfferingFilterTimePicker(false));
+    }
+    private void showOfferingFilterDatePicker(boolean isStartDate) {
+        int year = LocalDate.now().getYear();
+        int month = LocalDate.now().getMonthValue();
+        int day = LocalDate.now().getDayOfMonth();
+
+        if(_homeOfferingViewModel.offeringFilterDTO.getSelectedStartDate().getValue() != null && isStartDate){
+            year = _homeOfferingViewModel.offeringFilterDTO.getSelectedStartDate().getValue().getYear();
+            month = _homeOfferingViewModel.offeringFilterDTO.getSelectedStartDate().getValue().getMonthValue();
+            day = _homeOfferingViewModel.offeringFilterDTO.getSelectedStartDate().getValue().getDayOfMonth();
+        }else if(_homeOfferingViewModel.offeringFilterDTO.getSelectedEndDate().getValue() != null && !isStartDate){
+            year = _homeOfferingViewModel.offeringFilterDTO.getSelectedEndDate().getValue().getYear();
+            month = _homeOfferingViewModel.offeringFilterDTO.getSelectedEndDate().getValue().getMonthValue();
+            day = _homeOfferingViewModel.offeringFilterDTO.getSelectedEndDate().getValue().getDayOfMonth();
+        }
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                requireContext(),
+                (viewObj, selectedYear, selectedMonth, selectedDay) -> {
+                    LocalDate selectedDate = LocalDate.of(selectedYear, selectedMonth + 1, selectedDay);
+                    if (isStartDate) {
+                        _homeOfferingViewModel.offeringFilterDTO.getSelectedStartDate().setValue(selectedDate);
+                        _homePageOfferingFilterBinding.startDateInput.setText(selectedDate.format(dateFormatter));
+                        showOfferingFilterTimePicker(true);
+                    } else {
+                        _homeOfferingViewModel.offeringFilterDTO.getSelectedEndDate().setValue(selectedDate);
+                        _homePageOfferingFilterBinding.endDateInput.setText(selectedDate.format(dateFormatter));
+                        showOfferingFilterTimePicker(false);
+                    }
+                },
+                year,
+                month,
+                day
+        );
+        datePickerDialog.show();
+    }
+    private void showOfferingFilterTimePicker(boolean isStartTime) {
+        int currentHour = LocalTime.now().getHour();
+        int currentMinute = LocalTime.now().getMinute();
+
+        if(_homeOfferingViewModel.offeringFilterDTO.getSelectedStartTime().getValue() != null && isStartTime){
+            currentHour = _homeOfferingViewModel.offeringFilterDTO.getSelectedStartTime().getValue().getHour();
+            currentMinute = _homeOfferingViewModel.offeringFilterDTO.getSelectedStartTime().getValue().getMinute();
+        }else if(_homeOfferingViewModel.offeringFilterDTO.getSelectedEndTime().getValue() != null && !isStartTime){
+            currentHour = _homeOfferingViewModel.offeringFilterDTO.getSelectedEndTime().getValue().getHour();
+            currentMinute = _homeOfferingViewModel.offeringFilterDTO.getSelectedEndTime().getValue().getMinute();
+        }
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                requireContext(),
+                (view, hourOfDay, minute) -> {
+                    LocalTime selectedTime = LocalTime.of(hourOfDay, minute);
+                    if (isStartTime) {
+                        _homeOfferingViewModel.offeringFilterDTO.getSelectedStartTime().setValue(selectedTime);
+                        _homePageOfferingFilterBinding.startTimeInput.setText(selectedTime.format(timeFormatter));
+                    } else {
+                        _homeOfferingViewModel.offeringFilterDTO.getSelectedEndTime().setValue(selectedTime);
+                        _homePageOfferingFilterBinding.endTimeInput.setText(selectedTime.format(timeFormatter));
+                    }
+                },
+                currentHour,
+                currentMinute,
+                true
+        );
+
+        timePickerDialog.show();
+    }
     public void setOfferingFilterDialog(String selectedType) {
-        HomePageOfferingFilterBinding homePageOfferingFilterBinding = DataBindingUtil.inflate(
+        _homePageOfferingFilterBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
                 R.layout.home_page_offering_filter,
                 null,
                 false
         );
 
-        View offeringView = homePageOfferingFilterBinding.getRoot();
-        homePageOfferingFilterBinding.setViewModel(_homeOfferingViewModel);
+        View offeringView = _homePageOfferingFilterBinding.getRoot();
+        _homePageOfferingFilterBinding.setViewModel(_homeOfferingViewModel);
+
+        setupOfferingFilterDateTimePickers();
+
         _homeOfferingViewModel.selectedFilterId.observe(getViewLifecycleOwner(), v -> {
             if(v == R.id.services_radio_button){
-                homePageOfferingFilterBinding.serviceDateTime.setVisibility(View.VISIBLE);
+                _homePageOfferingFilterBinding.serviceDateTime.setVisibility(View.VISIBLE);
             }else {
-                homePageOfferingFilterBinding.serviceDateTime.setVisibility(View.GONE);
+                _homePageOfferingFilterBinding.serviceDateTime.setVisibility(View.GONE);
             }
         });
         _homeOfferingViewModel.selectedFilterId.setValue(R.id.all_radio_button);
@@ -210,42 +292,15 @@ public class EventPurchaseFragment extends Fragment {
             }
         });
 
-        Calendar calendar = Calendar.getInstance();
-        long minDate = calendar.getTimeInMillis();
-        homePageOfferingFilterBinding.eventStartDate.setMinDate(minDate);
-        homePageOfferingFilterBinding.eventEndDate.setMinDate(minDate);
 
-        homePageOfferingFilterBinding.eventStartDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
-            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
-            _homeOfferingViewModel.offeringFilterDTO.selectedStartDate.setValue(localDate);
-        });
-
-        homePageOfferingFilterBinding.eventEndDate.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
-            LocalDate localDate = LocalDate.of(year, monthOfYear+1, dayOfMonth);
-            _homeOfferingViewModel.offeringFilterDTO.selectedEndDate.setValue(localDate);
-        });
-
-        homePageOfferingFilterBinding.eventStartTime.setIs24HourView(true);
-        homePageOfferingFilterBinding.eventStartTime.setOnTimeChangedListener((view, hourOfDay, minute) -> {
-            LocalTime selectedTime = LocalTime.of(hourOfDay, minute);
-            _homeOfferingViewModel.offeringFilterDTO.selectedStartTime.setValue(selectedTime);
-        });
-
-        homePageOfferingFilterBinding.eventEndTime.setIs24HourView(true);
-        homePageOfferingFilterBinding.eventEndTime.setOnTimeChangedListener((view, hourOfDay, minute) -> {
-            LocalTime selectedTime = LocalTime.of(hourOfDay, minute);
-            _homeOfferingViewModel.offeringFilterDTO.selectedEndTime.setValue(selectedTime);
-        });
-
-
-        ImageView filter = homePageOfferingFilterBinding.offeringFilterButton;
+        ImageView filter = _homePageOfferingFilterBinding.offeringFilterButton;
         filter.setOnClickListener(v -> {
             setFilterCriteria(selectedType);
             _filterOfferingDialog.dismiss();
             _homeOfferingViewModel.getOfferings();
         });
 
-        homePageOfferingFilterBinding.imageRestart.setOnClickListener(v -> {
+        _homePageOfferingFilterBinding.imageRestart.setOnClickListener(v -> {
             _binding.searchView.setQuery("", false);
             _homeOfferingViewModel.restartFilter();
             setFilterCriteria(selectedType);
