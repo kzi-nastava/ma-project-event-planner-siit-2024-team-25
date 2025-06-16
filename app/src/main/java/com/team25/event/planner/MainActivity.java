@@ -181,7 +181,11 @@ public class MainActivity extends AppCompatActivity {
                     if (userRole == UserRole.ADMINISTRATOR) {
                         navController.navigate(R.id.offeringCategoryFragment);
                     } else {
-                        navController.navigate(R.id.ownerHomePage);
+                        if(notification.getTitle().contains("Product")){
+                            navController.navigate(R.id.myProductsFragment);
+                        } else if (notification.getTitle().contains("Service")) {
+                            navController.navigate(R.id.ownerHomePage);
+                        }
                     }
                 } else if (notificationCategory == NotificationCategory.EVENT) {
                     bundle.putLong(EventArgumentNames.ID_ARG, notification.getEntityId());
