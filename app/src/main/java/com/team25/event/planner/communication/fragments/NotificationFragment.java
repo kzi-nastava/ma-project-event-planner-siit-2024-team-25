@@ -104,8 +104,12 @@ public class NotificationFragment extends Fragment {
                             if(notificationCategory == NotificationCategory.OFFERING_CATEGORY){
                                 if(userRole == UserRole.ADMINISTRATOR){
                                     _navController.navigate(R.id.offeringCategoryFragment);
-                                }else{
-                                    _navController.navigate(R.id.ownerHomePage);
+                                }else {
+                                    if(notification.getTitle().contains("Product")){
+                                        _navController.navigate(R.id.myProductsFragment);
+                                    } else if (notification.getTitle().contains("Service")) {
+                                        _navController.navigate(R.id.ownerHomePage);
+                                    }
                                 }
                             }else if(notificationCategory == NotificationCategory.EVENT){
                                 bundle.putLong(EventArgumentNames.ID_ARG, notification.getEntityId());
