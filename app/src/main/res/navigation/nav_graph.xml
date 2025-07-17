@@ -272,7 +272,7 @@
     <fragment
         android:id="@+id/serviceDetailsFragment"
         android:name="com.team25.event.planner.service.fragments.ServiceDetailsFragment"
-        android:label="fragment_service_details"
+        android:label="Service details"
         tools:layout="@layout/fragment_service_details">
         <action
             android:id="@+id/action_serviceDetailsFragment_to_ownerHomePage"
@@ -348,7 +348,7 @@
     <fragment
         android:id="@+id/productDetailsFragment"
         android:name="com.team25.event.planner.product.fragments.ProductDetailsFragment"
-        android:label="ProductDetails"
+        android:label="Product details"
         tools:layout="@layout/fragment_product_details">
         <action
             android:id="@+id/action_productDetailsFragment_to_myProductsFragment"

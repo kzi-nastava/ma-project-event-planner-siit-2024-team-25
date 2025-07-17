@@ -29,4 +29,9 @@ public interface PriceListApi {
     );
     @GET("api/price-list/{offeringId}")
     Call<PriceListItemResponseDTO> getPriceListItem(@Path("offeringId") Long offeringId);
+    @GET("api/price-list/{ownerId}/price-list-report")
+    Call<ResponseBody> downloadFile(
+            @Query("ownerId") String ownerId,
+            @Query("isProductList") boolean isProductList
+    );
 }

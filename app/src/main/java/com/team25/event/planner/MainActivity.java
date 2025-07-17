@@ -3,6 +3,7 @@ package com.team25.event.planner;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +21,7 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -108,13 +110,32 @@ public class MainActivity extends AppCompatActivity {
 
         setupNavigationView();
         setupAuthInterceptor();
-        openWebSocket();
+        setupObserver();
     }
 
-    private void openWebSocket() {
+    private void setupObserver(){
+        authViewModel.notification.observeForever(notification -> {
+            Log.d("AuthViewModel", "Notification value changed: " + notification);
+            if(notification){
+                this.openWebSocket();
+            } else if (!notification) {
+                this.closeWebSocket();
+            }
+        });
+    }
+
+    public void openWebSocket() {
         this.authViewModel.user.observe(this, user -> {
             if (user != null) {
                 _notificationViewModel.connectToSocket(user);
+            }
+        });
+    }
+
+    public void closeWebSocket() {
+        this.authViewModel.user.observe(this, user -> {
+            if (user != null) {
+                _notificationViewModel.disconnect();
             }
         });
     }
@@ -160,7 +181,11 @@ public class MainActivity extends AppCompatActivity {
                     if (userRole == UserRole.ADMINISTRATOR) {
                         navController.navigate(R.id.offeringCategoryFragment);
                     } else {
-                        navController.navigate(R.id.ownerHomePage);
+                        if(notification.getTitle().contains("Product")){
+                            navController.navigate(R.id.myProductsFragment);
+                        } else if (notification.getTitle().contains("Service")) {
+                            navController.navigate(R.id.ownerHomePage);
+                        }
                     }
                 } else if (notificationCategory == NotificationCategory.EVENT) {
                     bundle.putLong(EventArgumentNames.ID_ARG, notification.getEntityId());
