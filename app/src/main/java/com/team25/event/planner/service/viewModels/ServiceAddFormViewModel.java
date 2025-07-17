@@ -18,8 +18,11 @@ import com.team25.event.planner.service.dto.ServiceCreateRequestDTO;
 import com.team25.event.planner.service.dto.ServiceCreateResponseDTO;
 import com.team25.event.planner.service.enums.ReservationType;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -27,6 +30,9 @@ import java.util.stream.Collectors;
 
 import lombok.Builder;
 import lombok.Data;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,6 +74,11 @@ public class ServiceAddFormViewModel extends ViewModel {
     public final MutableLiveData<Long> serviceId = new MutableLiveData<>();
     public final MutableLiveData<List<EventType>> eventTypesLive = new MutableLiveData<>();
     public final MutableLiveData<OfferingCategory> offeringCategoryMutableLiveData = new MutableLiveData<>();
+    public final MutableLiveData<List<File>> newImages = new MutableLiveData<>(new ArrayList<>());
+    public final MutableLiveData<List<String>> imagesToDelete = new MutableLiveData<>(new ArrayList<>());
+
+    private final MutableLiveData<List<String>> _existingImages = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<String>> existingImages = _existingImages;
 
     public void removeImageUrl(String url) {
         if (images.getValue() != null) {
@@ -129,7 +140,9 @@ public class ServiceAddFormViewModel extends ViewModel {
         ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = ErrorUiState.builder();
         boolean isValid = true;
 
-        if(images.getValue()==null || images.getValue().isEmpty()){
+        if ((newImages.getValue() == null || newImages.getValue().isEmpty()) &&
+                (existingImages.getValue() == null || existingImages.getValue().isEmpty())
+        ){
             errorUiStateBuilder.image("You choose at least 1 image");
             isValid = false;
         }
@@ -279,10 +292,44 @@ public class ServiceAddFormViewModel extends ViewModel {
             }
         });
     }
+    public Map<String, RequestBody> convertToRequestBodyMap(ServiceCreateRequestDTO dto) {
+        Map<String, RequestBody> map = new HashMap<>();
 
+        if (dto.getName() != null)
+            map.put("name", createPart(dto.getName()));
+
+        map.put("description", createPart(dto.getDescription()));
+        map.put("price", createPart(String.valueOf(dto.getPrice())));
+        map.put("discount", createPart(String.valueOf(dto.getDiscount())));
+        map.put("visible", createPart(String.valueOf(dto.isVisible())));
+        map.put("available", createPart(String.valueOf(dto.isAvailable())));
+        map.put("specifics", createPart(dto.getSpecifics()));
+        map.put("reservationType", createPart(dto.getReservationType().name()));
+        map.put("duration", createPart(String.valueOf(dto.getDuration())));
+        map.put("reservationDeadline", createPart(String.valueOf(dto.getReservationDeadline())));
+        map.put("cancellationDeadline", createPart(String.valueOf(dto.getCancellationDeadline())));
+        map.put("minimumArrangement", createPart(String.valueOf(dto.getMinimumArrangement())));
+        map.put("maximumArrangement", createPart(String.valueOf(dto.getMaximumArrangement())));
+        map.put("offeringCategoryID", createPart(String.valueOf(dto.getOfferingCategoryID())));
+        map.put("offeringCategoryName", createPart(dto.getOfferingCategoryName()));
+        map.put("ownerId", createPart(String.valueOf(dto.getOwnerId())));
+
+        // eventTypesIDs[0], eventTypesIDs[1], ...
+        List<Long> ids = dto.getEventTypesIDs();
+        if (ids != null) {
+            for (int i = 0; i < ids.size(); i++) {
+                map.put("eventTypesIDs[" + i + "]", createPart(String.valueOf(ids.get(i))));
+            }
+        }
+
+        return map;
+    }
+
+    private RequestBody createPart(String value) {
+        return RequestBody.create(MediaType.parse("text/plain"), value == null ? "" : value);
+    }
 
     public void createService() {
-
         serviceCreateRequestDTO = new ServiceCreateRequestDTO();
         serviceCreateRequestDTO.setName(name.getValue());
         serviceCreateRequestDTO.setDescription(description.getValue());
@@ -306,12 +353,28 @@ public class ServiceAddFormViewModel extends ViewModel {
         }
         serviceCreateRequestDTO.setOwnerId(ownerId.getValue());
 
-        serviceCreateRequestDTO.setImages(images.getValue());
+        serviceCreateRequestDTO.setImages(newImages.getValue());
+        serviceCreateRequestDTO.setImagesToDelete(imagesToDelete.getValue());
+
+        Map<String, RequestBody> partMap = convertToRequestBodyMap(serviceCreateRequestDTO);
+        List<MultipartBody.Part> imageParts = new ArrayList<>();
+
+        for (File file : newImages.getValue()) {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+
+            MultipartBody.Part body = MultipartBody.Part.createFormData(
+                    "images",
+                    file.getName(),
+                    requestFile
+            );
+
+            imageParts.add(body);
+        }
 
 
         Call<ResponseBody> call = Boolean.TRUE.equals(isEditMode.getValue()) ?
                                     serviceApi.updateService(serviceId.getValue(),serviceCreateRequestDTO)
-                                    :serviceApi.createService(serviceCreateRequestDTO);
+                                    :serviceApi.createService(partMap, imageParts);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -324,7 +387,7 @@ public class ServiceAddFormViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                errorMessageFromServer.setValue("Networking problem" + t.toString());
+                errorMessageFromServer.setValue("Networking problem " + t.toString());
             }
         });
 
@@ -354,12 +417,11 @@ public class ServiceAddFormViewModel extends ViewModel {
     private void fetchFullService(ServiceCreateResponseDTO dto) {
         List<Call<EventType>> eventTypeCalls = new ArrayList<>();
         for (Long eventTypeId : dto.getEventTypesIDs()) {
-            eventTypeCalls.add(eventTypeApi.getEventType(eventTypeId)); // API poziv za EventType
+            eventTypeCalls.add(eventTypeApi.getEventType(eventTypeId));
         }
 
-        Call<OfferingCategory> categoryCall = offeringCategoryApi.getOfferingCategory(dto.getOfferingCategoryID()); // API poziv za Category
+        Call<OfferingCategory> categoryCall = offeringCategoryApi.getOfferingCategory(dto.getOfferingCategoryID());
 
-        // Paralelno dohvaćanje svih EventType modela
         List<EventType> eventTypes = new ArrayList<>();
         AtomicBoolean categoryFetched = new AtomicBoolean(false);
         AtomicReference<OfferingCategory> category = new AtomicReference<>();
@@ -420,5 +482,26 @@ public class ServiceAddFormViewModel extends ViewModel {
         eventTypeIds.setValue(new ArrayList<>());
         offeringCategoryId.setValue(null);
         images.setValue(new ArrayList<>());
+    }
+
+    public void removeNewImage(File image) {
+        List<File> currentImages = newImages.getValue();
+        if (currentImages != null && currentImages.remove(image)) {
+            newImages.setValue(currentImages);
+        }
+    }
+
+    public void removeExistingImage(String url) {
+        List<String> existingImages = this.existingImages.getValue();
+        if (existingImages == null) return;
+        if (existingImages.remove(url)) {
+            List<String> imagesToDelete = this.imagesToDelete.getValue();
+            if (imagesToDelete == null) {
+                imagesToDelete = new ArrayList<>();
+            }
+            imagesToDelete.add(url);
+            this.imagesToDelete.setValue(imagesToDelete);
+            this._existingImages.setValue(existingImages);
+        }
     }
 }
