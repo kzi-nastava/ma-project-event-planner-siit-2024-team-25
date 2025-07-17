@@ -360,6 +360,8 @@ public class ServiceAddFormViewModel extends ViewModel {
         serviceCreateRequestDTO.setOfferingCategoryID(offeringCategoryId.getValue());
         if(offeringCategoryId.getValue() == null){
             serviceCreateRequestDTO.setOfferingCategoryName(categoryInput.getValue());
+            serviceCreateRequestDTO.setOfferingCategoryID(-1L);
+            offeringCategoryId.setValue(-1L);
         }
         serviceCreateRequestDTO.setOwnerId(ownerId.getValue());
 

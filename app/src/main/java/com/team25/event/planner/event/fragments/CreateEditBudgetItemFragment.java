@@ -102,6 +102,7 @@ public class CreateEditBudgetItemFragment extends Fragment {
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                viewModel.isSuitableCategoryForEvent();
                 viewModel.saveBudgetItem();
             }
         });
@@ -130,6 +131,7 @@ public class CreateEditBudgetItemFragment extends Fragment {
                             .setMessage("You successfully " + s + " budget item")
                             .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                             .show();
+                    viewModel.resetSuccess();
             }
 
 
@@ -146,7 +148,7 @@ public class CreateEditBudgetItemFragment extends Fragment {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     OfferingCategory selectedCategory = (OfferingCategory) parent.getItemAtPosition(position);
                     viewModel.offeringCategoryId.setValue(selectedCategory.getId());
-                    viewModel.isSuitableCategoryForEvent();
+
                 }
 
                 @Override

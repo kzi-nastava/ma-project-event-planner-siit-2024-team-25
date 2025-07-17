@@ -6,11 +6,13 @@ import com.team25.event.planner.offering.model.PriceListItemResponseDTO;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface PriceListApi {
     @GET("api/price-list/{ownerId}/products")
@@ -20,7 +22,11 @@ public interface PriceListApi {
     Call<List<PriceListItemResponseDTO>> getServices(@Path("ownerId") Long ownerId);
     @PUT("api/price-list/{offeringId}")
     Call<PriceListItemResponseDTO> editOfferingCategory(@Path("offeringId") Long offeringId, @Body PriceListItemRequestDTO requestDTO);
-
+    @GET("api/price-list/{ownerId}/price-list-report")
+    Call<ResponseBody> getPriceListReport(
+            @Path("ownerId") Long ownerId,
+            @Query("isProductList") boolean isProductList
+    );
     @GET("api/price-list/{offeringId}")
     Call<PriceListItemResponseDTO> getPriceListItem(@Path("offeringId") Long offeringId);
 }

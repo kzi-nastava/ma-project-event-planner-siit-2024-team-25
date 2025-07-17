@@ -1,14 +1,24 @@
 package com.team25.event.planner.offering.fragments;
 
+import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +32,14 @@ import com.team25.event.planner.core.listeners.OnEditPriceListClickListener;
 import com.team25.event.planner.databinding.FragmentProductPriceListBinding;
 import com.team25.event.planner.offering.adapters.ProductPriceListAdapter;
 import com.team25.event.planner.offering.viewmodel.PriceListViewModel;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import okhttp3.ResponseBody;
 
 
 public class ProductPriceListFragment extends Fragment implements OnEditPriceListClickListener {
@@ -39,6 +57,7 @@ public class ProductPriceListFragment extends Fragment implements OnEditPriceLis
     public ProductPriceListFragment(boolean flag, Long id) {
         isProductsView = flag;
         ownerId = id;
+
     }
 
     public static ProductPriceListFragment newInstance(boolean flag, Long id){
@@ -58,7 +77,7 @@ public class ProductPriceListFragment extends Fragment implements OnEditPriceLis
         binding = FragmentProductPriceListBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         viewModel = new ViewModelProvider(this).get(PriceListViewModel.class);
-        viewModel.ownerId.postValue(this.ownerId);
+        viewModel.ownerId.setValue(this.ownerId);
         binding.setViewModel(viewModel);
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         return binding.getRoot();
@@ -91,6 +110,12 @@ public class ProductPriceListFragment extends Fragment implements OnEditPriceLis
     }
 
     private void setUpListeners() {
+        binding.buttonDownloadPdf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.generatePDF(isProductsView);
+            }
+        });
     }
 
     private void setUpObservers() {
@@ -102,6 +127,12 @@ public class ProductPriceListFragment extends Fragment implements OnEditPriceLis
         viewModel.serverError.observe(getViewLifecycleOwner(), mess->{
             if(mess != null){
                 Toast.makeText(requireContext(), mess, Toast.LENGTH_SHORT).show();
+                viewModel.clearError();
+            }
+        });
+        viewModel.pdfData.observe(getViewLifecycleOwner(), responseBody -> {
+            if(responseBody != null) {
+                saveFile(responseBody, requireContext());
             }
         });
     }
@@ -114,4 +145,50 @@ public class ProductPriceListFragment extends Fragment implements OnEditPriceLis
         bundle.putDouble(DISCOUNT_ARG_NAME, discount);
         navController.navigate(R.id.action_priceListPage_to_editPriceListItemFragment, bundle);
     }
+
+    public void saveFile(ResponseBody body, Context context) {
+        ContentResolver resolver = context.getContentResolver();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "price-list-report");
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
+        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+
+        Uri uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+
+        try (OutputStream outputStream = resolver.openOutputStream(uri);
+             InputStream inputStream = body.byteStream()) {
+
+            byte[] buffer = new byte[4096];
+            int read;
+
+            while ((read = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, read);
+            }
+
+            outputStream.flush();
+
+            Toast.makeText(context, "File saved to Downloads: " , Toast.LENGTH_LONG).show();
+
+            // Otvori fajl odmah ako želiš (intent)
+            openPdfFile(context, uri);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Failed to save file", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openPdfFile(Context context, Uri uri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "application/pdf");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        try {
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, "No app found to open PDF", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }

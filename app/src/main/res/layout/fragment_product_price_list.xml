@@ -5,10 +5,7 @@
             name="viewModel"
             type="com.team25.event.planner.offering.viewmodel.PriceListViewModel" />
     </data>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -76,6 +73,6 @@
                 android:text="Download PDF"
                 android:layout_marginTop="16dp" />
         </LinearLayout>
-    </ScrollView>
+
 </layout>
 
