@@ -23,7 +23,7 @@ public abstract class Offering {
     protected String description;
     protected double price;
     protected double discount;
-    protected int imageURL;
+    protected String image;
     protected boolean visible;
     protected boolean available;
     protected ProductServiceType status;

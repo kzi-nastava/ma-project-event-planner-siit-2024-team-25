@@ -59,7 +59,7 @@ public class ServiceViewModel extends ViewModel {
             @Override
             public void onResponse(Call<Service> call, Response<Service> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    _currentService.postValue(response.body());
+
                     fillForm(response.body());
                 } else {
                     _serverError.postValue("Error fetch service");
@@ -98,6 +98,11 @@ public class ServiceViewModel extends ViewModel {
         List<String> res = service.getEventTypes().stream().map(EventType::getName).collect(Collectors.toList());
         eventTypeNames.postValue(res);
         ownerName.postValue(service.getOwner().getName());
-        images.postValue(service.getImages());
+        images.setValue(
+                service.getImages().stream().map(imageId ->
+                        ConnectionParams.BASE_URL + "api/services/" + service.getId() + "/images/" + imageId
+                ).collect(Collectors.toList())
+        );
+        _currentService.postValue(service);
     }
  }

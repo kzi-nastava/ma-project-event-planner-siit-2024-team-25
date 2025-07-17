@@ -25,7 +25,7 @@ public class FileUtils {
                         try (InputStream inputStream = context.getContentResolver().openInputStream(uri);
                              FileOutputStream outputStream = new FileOutputStream(file)) {
                             if (inputStream != null) {
-                                byte[] buffer = new byte[1024];
+                                byte[] buffer = new byte[8192]; // do not change this number of bytes
                                 while ((inputStream.read(buffer)) != -1) {
                                     outputStream.write(buffer);
                                 }

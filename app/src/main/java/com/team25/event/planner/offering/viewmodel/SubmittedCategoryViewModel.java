@@ -77,9 +77,14 @@ public class SubmittedCategoryViewModel extends ViewModel {
     }
 
     // id for offering, id submitted category, id already existed category = choose
-    public void changeOfferingsCategory(Long newCategoryId, Integer size){
+    public void approveOfferingsCategory(Long newCategoryId, Integer size){
+
+        OfferingCategory request = new OfferingCategory();
+        request.setId(categoryId.getValue());
+        request.setName(name.getValue());
+        request.setDescription(description.getValue());
         if(validSpinner(size)){
-            offeringApi.updateOfferingsCategory(offeringId.getValue(),categoryId.getValue(),newCategoryId).enqueue(new Callback<ResponseBody>() {
+            offeringCategoryApi.approveOfferingCategory(categoryId.getValue(),request, offeringId.getValue()).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if(response.isSuccessful() && response.body()!=null){

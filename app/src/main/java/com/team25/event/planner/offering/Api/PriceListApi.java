@@ -22,7 +22,11 @@ public interface PriceListApi {
     Call<List<PriceListItemResponseDTO>> getServices(@Path("ownerId") Long ownerId);
     @PUT("api/price-list/{offeringId}")
     Call<PriceListItemResponseDTO> editOfferingCategory(@Path("offeringId") Long offeringId, @Body PriceListItemRequestDTO requestDTO);
-
+    @GET("api/price-list/{ownerId}/price-list-report")
+    Call<ResponseBody> getPriceListReport(
+            @Path("ownerId") Long ownerId,
+            @Query("isProductList") boolean isProductList
+    );
     @GET("api/price-list/{offeringId}")
     Call<PriceListItemResponseDTO> getPriceListItem(@Path("offeringId") Long offeringId);
     @GET("api/price-list/{ownerId}/price-list-report")

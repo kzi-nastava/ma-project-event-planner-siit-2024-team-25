@@ -64,6 +64,9 @@ public class BudgetItemViewModel extends ViewModel {
         private final String offeringCategory;
     }
 
+    public void resetSuccess() {
+        _success.setValue(false);
+    }
     private final MutableLiveData<ErrorUiState> _errors = new MutableLiveData<>();
     public final LiveData<ErrorUiState> errors = _errors;
 
@@ -288,7 +291,7 @@ public class BudgetItemViewModel extends ViewModel {
 
            @Override
            public void onFailure(Call<Boolean> call, Throwable t) {
-               _serverError.postValue("Network problem");
+               _serverError.postValue("Network problem"+ t.toString());
            }
        });
     }

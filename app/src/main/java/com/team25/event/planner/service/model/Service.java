@@ -35,11 +35,11 @@ public class Service extends Offering implements Parcelable {
 
     public Service(){}
 
-    public Service(Long id, String name, String description, int imageURL){
+    public Service(Long id, String name, String description, String imageURL){
         this.id = id;
         this.name = name;
         this.description = description;
-        this.imageURL = imageURL;
+        this.image = imageURL;
     }
 
     protected Service(Parcel in){
@@ -48,7 +48,7 @@ public class Service extends Offering implements Parcelable {
         description = in.readString();
         price = in.readDouble();
         discount = in.readDouble();
-        imageURL = in.readInt();
+        image = in.readString();
         visible = in.readByte() != 0;
         available = in.readByte() != 0;
         status = ProductServiceType.valueOf(in.readString());
@@ -74,7 +74,7 @@ public class Service extends Offering implements Parcelable {
         dest.writeString(description);
         dest.writeDouble(price);
         dest.writeDouble(discount);
-        dest.writeInt(imageURL);
+        dest.writeString(image);
         dest.writeByte((byte) (visible ? 1 : 0));
         dest.writeByte((byte) (available ? 1 : 0));
         dest.writeString(status.name());
