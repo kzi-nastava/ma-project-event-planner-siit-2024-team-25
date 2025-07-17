@@ -322,6 +322,15 @@ public class ServiceAddFormViewModel extends ViewModel {
                 map.put("eventTypesIDs[" + i + "]", createPart(String.valueOf(ids.get(i))));
             }
         }
+        List<String> imagesToDelete = dto.getImagesToDelete();
+        if (imagesToDelete != null) {
+            for (int i = 0; i < imagesToDelete.size(); i++) {
+                String fullUrl = imagesToDelete.get(i);
+                String fileName = fullUrl.substring(fullUrl.lastIndexOf('/') + 1);
+                map.put("imagesToDelete[" + i + "]", createPart(fileName));
+            }
+        }
+
 
         return map;
     }
@@ -354,7 +363,7 @@ public class ServiceAddFormViewModel extends ViewModel {
         }
         serviceCreateRequestDTO.setOwnerId(ownerId.getValue());
 
-        serviceCreateRequestDTO.setImages(newImages.getValue());
+        //serviceCreateRequestDTO.setImages(newImages.getValue());
         serviceCreateRequestDTO.setImagesToDelete(imagesToDelete.getValue());
 
         Map<String, RequestBody> partMap = convertToRequestBodyMap(serviceCreateRequestDTO);
@@ -487,7 +496,7 @@ public class ServiceAddFormViewModel extends ViewModel {
         maxArrangement.setValue(0);
         eventTypeIds.setValue(new ArrayList<>());
         offeringCategoryId.setValue(null);
-        images.setValue(new ArrayList<>());
+        _existingImages.setValue(new ArrayList<>());
     }
 
     public void removeNewImage(File image) {

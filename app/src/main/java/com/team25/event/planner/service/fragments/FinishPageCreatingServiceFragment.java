@@ -217,7 +217,27 @@ public class FinishPageCreatingServiceFragment extends Fragment {
 
         imagesLiveData.observe(getViewLifecycleOwner(), images -> imagesAdapter.refreshImages(images));
     }
+    private void observeImageSources() {
+        imagesLiveData.addSource(mViewModel.newImages, newImages -> combineImages());
+        imagesLiveData.addSource(mViewModel.existingImages, existingImages -> combineImages());
+    }
 
+    private void combineImages() {
+        List<String> existingImages = mViewModel.existingImages.getValue();
+        List<File> newImages = mViewModel.newImages.getValue();
+
+        List<ServiceImage> combined = new ArrayList<>();
+
+        if (existingImages != null) {
+            combined.addAll(existingImages.stream().map(ServiceImage::fromUrl).collect(Collectors.toList()));
+        }
+
+        if (newImages != null) {
+            combined.addAll(newImages.stream().map(ServiceImage::fromFile).collect(Collectors.toList()));
+        }
+
+        imagesLiveData.setValue(combined);
+    }
     private final ActivityResultLauncher<Intent> startForProfileImageResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         int resultCode = result.getResultCode();
         Intent data = result.getData();
