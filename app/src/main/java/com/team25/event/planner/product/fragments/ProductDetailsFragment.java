@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.communication.fragments.ChatFragment;
@@ -116,8 +117,11 @@ public class ProductDetailsFragment extends Fragment {
             if (check) {
                 DialogHelper.showSuccessDialog(requireContext(), "Successfully bought product: " + productViewModel.name.getValue());
             } else {
-                DialogHelper.showErrorDialog(requireContext(), "Error occurred, try again.");
+                DialogHelper.showErrorDialog(requireContext(), check.toString());
             }
+        });
+        purchaseViewModel.serverError.observe(getViewLifecycleOwner(), msg -> {
+            Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show();
         });
     }
 
