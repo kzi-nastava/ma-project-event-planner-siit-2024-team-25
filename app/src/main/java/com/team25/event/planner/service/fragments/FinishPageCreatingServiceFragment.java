@@ -168,12 +168,20 @@ public class FinishPageCreatingServiceFragment extends Fragment {
         });
     }
     public void setObservers(){
-
+        mViewModel.errors.observe(getViewLifecycleOwner(), errors -> {
+            if (errors != null && errors.getImage() != null) {
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Failed")
+                        .setMessage("You must chose 1 image at least")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+            }
+        });
         mViewModel._addedService.observe(getViewLifecycleOwner(), check ->{
             if(check){
                 new AlertDialog.Builder(requireContext())
                         .setTitle("Information")
-                        .setMessage("You successfully added a new service")
+                        .setMessage("You successfully saved a service")
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
                 navController.navigate(R.id.action_finishPageCreateingCerviceFragment_to_ownerHomePage);

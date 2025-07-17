@@ -11,6 +11,7 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.event.model.EventType;
+import com.team25.event.planner.event.model.EventTypePreviewDTO;
 import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.service.api.ServiceApi;
@@ -373,7 +374,7 @@ public class ServiceAddFormViewModel extends ViewModel {
 
 
         Call<ResponseBody> call = Boolean.TRUE.equals(isEditMode.getValue()) ?
-                                    serviceApi.updateService(serviceId.getValue(),serviceCreateRequestDTO)
+                                    serviceApi.updateService(serviceId.getValue(),partMap, imageParts)
                                     :serviceApi.createService(partMap, imageParts);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -410,17 +411,22 @@ public class ServiceAddFormViewModel extends ViewModel {
         minArrangement.setValue(service.getMinimumArrangement());
         maxArrangement.setValue(service.getMaximumArrangement());
         confirmationType.setValue(service.getReservationType());
-        images.setValue(service.getImages());
+        imagesToDelete.setValue(new ArrayList<>());
+        _existingImages.setValue(
+                service.getImages().stream().map(imageId ->
+                        ConnectionParams.BASE_URL + "api/services/" + serviceId.getValue() + "/images/" + imageId
+                ).collect(Collectors.toList())
+        );
 
         syncFront();
     }
     private void fetchFullService(ServiceCreateResponseDTO dto) {
         List<Call<EventType>> eventTypeCalls = new ArrayList<>();
-        for (Long eventTypeId : dto.getEventTypesIDs()) {
-            eventTypeCalls.add(eventTypeApi.getEventType(eventTypeId));
+        for (EventTypePreviewDTO e : dto.getEventTypes()) {
+            eventTypeCalls.add(eventTypeApi.getEventType(e.getId()));
         }
 
-        Call<OfferingCategory> categoryCall = offeringCategoryApi.getOfferingCategory(dto.getOfferingCategoryID());
+        Call<OfferingCategory> categoryCall = offeringCategoryApi.getOfferingCategory(dto.getOfferingCategory().getId());
 
         List<EventType> eventTypes = new ArrayList<>();
         AtomicBoolean categoryFetched = new AtomicBoolean(false);

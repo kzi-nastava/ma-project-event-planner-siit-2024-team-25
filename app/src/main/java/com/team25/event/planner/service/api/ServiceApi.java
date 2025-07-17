@@ -27,7 +27,7 @@ import retrofit2.http.QueryMap;
 
 public interface ServiceApi {
     @GET("/api/services")
-    Call<Page<ServiceCard>> getServices(@QueryMap Map<String, String> filters
+    Call<Page<Service>> getServices(@QueryMap Map<String, String> filters
     );
     @GET("/api/services/{id}")
     Call<ServiceCreateResponseDTO> getServiceResponse(@Path("id")Long id);
@@ -42,9 +42,10 @@ public interface ServiceApi {
 
     @POST("api/services")
     Call<ResponseBody> createService(@Body ServiceCreateRequestDTO requestDTO);
+    @Multipart
     @PUT("api/services/{id}")
     Call<ResponseBody> updateService(@Path("id")Long id,
-                                     @Body ServiceCreateRequestDTO requestDTO);
+                                     @PartMap Map<String, RequestBody> requestDTO, @Part List<MultipartBody.Part> images);
 
     @DELETE("api/services/{id}")
     Call<ResponseBody> deleteService(@Path("id") Long id);

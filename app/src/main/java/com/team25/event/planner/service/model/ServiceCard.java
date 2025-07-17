@@ -34,6 +34,8 @@ public class ServiceCard implements Parcelable {
         image = in.readString();
     }
 
+    public ServiceCard(){}
+
     public static final Creator<ServiceCard> CREATOR = new Creator<ServiceCard>() {
         @Override
         public ServiceCard createFromParcel(Parcel in) {

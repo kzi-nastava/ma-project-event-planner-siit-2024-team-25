@@ -10,9 +10,11 @@ import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.service.api.ServiceApi;
 import com.team25.event.planner.service.dto.ServiceFilterDTO;
+import com.team25.event.planner.service.model.Service;
 import com.team25.event.planner.service.model.ServiceCard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,13 +114,13 @@ public class ServiceCardsViewModel extends ViewModel {
 
     public void getServices(Map<String, String> queryMap) {
         ServiceApi serviceApi = ConnectionParams.serviceApi;
-        Call<Page<ServiceCard>> call = serviceApi.getServices(queryMap);
+        Call<Page<Service>> call = serviceApi.getServices(queryMap);
 
-        call.enqueue(new Callback<Page<ServiceCard>>() {
+        call.enqueue(new Callback<Page<Service>>() {
             @Override
-            public void onResponse(Call<Page<ServiceCard>> call, Response<Page<ServiceCard>> response) {
+            public void onResponse(Call<Page<Service>> call, Response<Page<Service>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    _services.setValue(response.body().getContent());
+                    fetchService(response.body().getContent());
                     filterDTO.setName(null);
                     filterDTO.setAvailable(null);
                     filterDTO.setPrice(null);
@@ -130,9 +132,36 @@ public class ServiceCardsViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<Page<ServiceCard>> call, Throwable t) {
+            public void onFailure(Call<Page<Service>> call, Throwable t) {
                 Log.e("ServiceCardsViewModel", "Error fetching services: " + t.getMessage());
             }
         });
+    }
+
+    private void fetchService(List<Service> originalServices){
+
+        List<ServiceCard> modifiedServices = new ArrayList<>();
+
+        for (Service service : originalServices) {
+            ServiceCard modifiedService = new ServiceCard();
+
+            modifiedService.setId(service.getId());
+            modifiedService.setName(service.getName());
+            modifiedService.setDescription(service.getDescription());
+            modifiedService.setPrice(service.getPrice());
+
+            String image = service.getImage();
+
+            if (image != null && !image.isEmpty()) {
+                modifiedService.setImage(image);
+            } else {
+                modifiedService.setImage(null);
+            }
+
+            modifiedServices.add(modifiedService);
+        }
+
+        _services.setValue(modifiedServices);
+
     }
 }

@@ -16,7 +16,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.team25.event.planner.R;
+import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
 import com.team25.event.planner.core.listeners.OnDetailsClickListener;
 import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
@@ -77,7 +79,11 @@ public class ServiceCardsAdapter extends ArrayAdapter<ServiceCard> {
         ImageButton deleteButton = convertView.findViewById(R.id.deleteButton);
 
         if(serviceCard != null){
-            imageView.setImageResource(R.drawable.profile_icon);
+            Glide.with(convertView.getContext())
+                    .load(ConnectionParams.BASE_URL + "api/services/" + serviceCard.getId() + "/images/" + serviceCard.getImage())
+                    .placeholder(R.drawable.ic_image_placeholder)
+                    .error(R.drawable.ic_image_error)
+                    .into(imageView);
             productTitle.setText(serviceCard.getName());
             productDescription.setText(serviceCard.getDescription());
             priceText.setText(serviceCard.getPrice().toString() + "e");

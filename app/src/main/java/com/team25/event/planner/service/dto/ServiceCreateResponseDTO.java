@@ -1,5 +1,8 @@
 package com.team25.event.planner.service.dto;
 
+import com.team25.event.planner.event.model.EventTypePreviewDTO;
+import com.team25.event.planner.event.model.OfferingCategoryPreviewDTO;
+import com.team25.event.planner.product.model.OwnerPreview;
 import com.team25.event.planner.service.enums.ProductServiceType;
 import com.team25.event.planner.service.enums.ReservationType;
 
@@ -25,7 +28,8 @@ public class ServiceCreateResponseDTO {
     private int cancellationDeadline;
     private int minimumArrangement;
     private int maximumArrangement;
-    private List<Long> eventTypesIDs;
-    private Long OfferingCategoryID;
-    private Long ownerID;
+    private List<EventTypePreviewDTO> eventTypes;
+    private OfferingCategoryPreviewDTO offeringCategory;
+    private OwnerPreview owner;
+    private Boolean isFavorite;
 }
