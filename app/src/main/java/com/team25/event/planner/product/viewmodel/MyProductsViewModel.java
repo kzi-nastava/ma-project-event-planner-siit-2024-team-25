@@ -147,7 +147,11 @@ public class MyProductsViewModel extends ViewModel {
         List<String> res = product.getEventTypes().stream().map(com.team25.event.planner.product.model.EventType::getName).collect(Collectors.toList());
         eventTypeNames.postValue(res);
         ownerName.postValue(product.getOwnerInfo().getName());
-        images.postValue(product.getImages());
+        images.setValue(
+                product.getImages().stream().map(imageId ->
+                        ConnectionParams.BASE_URL + "api/products/" + product.getId() + "/images/" + imageId
+                ).collect(Collectors.toList())
+        );
         available.postValue(product.isAvailable());
     }
 }

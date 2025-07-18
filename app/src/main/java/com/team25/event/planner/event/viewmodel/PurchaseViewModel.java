@@ -40,6 +40,9 @@ public class PurchaseViewModel extends ViewModel {
     public MutableLiveData<Long> eventId = new MutableLiveData<>();
     public MutableLiveData<Boolean> purchaseResponse = new MutableLiveData<>();
 
+    private final MutableLiveData<String> _serverError = new MutableLiveData<>();
+    public final LiveData<String> serverError = _serverError;
+
     public PurchaseViewModel(){
         _currentPage.postValue(0);
     }
@@ -70,7 +73,7 @@ public class PurchaseViewModel extends ViewModel {
                 if (response.isSuccessful() && response.body() != null) {
                     purchaseResponse.postValue(true);
                 }else{
-                    purchaseResponse.postValue(false);
+                    _serverError.setValue(ErrorParse.catchError(response));
                 }
             }
 
@@ -102,7 +105,7 @@ public class PurchaseViewModel extends ViewModel {
                 if(response.isSuccessful() && response.body()!=null){
                     _purchaseList.postValue(response.body());
                 }else{
-                    ErrorParse.catchError(response);
+                    _serverError.setValue(ErrorParse.catchError(response));
                 }
             }
 

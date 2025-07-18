@@ -17,7 +17,7 @@ import ua.naiksoftware.stomp.StompClient;
 import ua.naiksoftware.stomp.dto.StompMessage;
 
 public class ChatMessageWebSocket {
-    private static final String SOCKET_URL = "ws://" + ConnectionParams.BASE_URL.replace("http://", "") + "/socket";
+    private static final String SOCKET_URL = "ws://" + ConnectionParams.BASE_URL.replace("http://", "") + "socket";
     public StompClient stompClient;
 
 
@@ -26,6 +26,7 @@ public class ChatMessageWebSocket {
     @SuppressLint("CheckResult")
     public void connect(){
         stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SOCKET_URL);
+        Log.d(SOCKET_URL, "url");
         stompClient.connect();
         stompClient.lifecycle()
                 .subscribeOn(AndroidSchedulers.mainThread())

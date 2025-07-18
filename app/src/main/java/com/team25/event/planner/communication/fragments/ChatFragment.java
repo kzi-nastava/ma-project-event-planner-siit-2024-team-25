@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,7 +77,7 @@ public class ChatFragment extends Fragment {
         viewModel.senderId.postValue(senderId);
         blockViewModel.currentUser.setValue(senderId);
         blockViewModel.blockedUser.setValue(receiverId);
-        openWebSocketConnection();
+        //openWebSocketConnection();
         return binding.getRoot();
     }
 
@@ -129,6 +130,7 @@ public class ChatFragment extends Fragment {
             clearMessages();
             for (int i = res.size() - 1; i >= 0; i--) {
                 ChatMessage cm = res.get(i);
+
                 if(Objects.equals(cm.getSender().getId(), viewModel.senderId.getValue())){
                     addMessageTextView(cm.getContent(),true, cm.getTimestamp().toString());
                 }else{
@@ -153,9 +155,14 @@ public class ChatFragment extends Fragment {
         });
         viewModel.sendMessage.observe(getViewLifecycleOwner(), res->{
             if(res){
-                viewModel.getChat(senderId,receiverId);
                 viewModel.message.postValue("");
                 viewModel.setCurrentPage(0);
+            }
+        });
+
+        viewModel.canOpenConnection.observe(getViewLifecycleOwner(), check -> {
+            if(check){
+                openWebSocketConnection();
             }
         });
     }
