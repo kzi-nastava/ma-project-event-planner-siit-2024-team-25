@@ -155,15 +155,11 @@ public class ChatFragment extends Fragment {
         });
         viewModel.sendMessage.observe(getViewLifecycleOwner(), res->{
             if(res){
-                //viewModel.getChat(senderId,receiverId);
                 viewModel.message.postValue("");
                 viewModel.setCurrentPage(0);
             }
         });
-        viewModel.getNewMessageLiveData().observe(getViewLifecycleOwner(), chatMessage -> {
-            // Ovdje osveži adapter, dodaj poruku u listu i notifyDataSetChanged ili submitList itd.
-            Log.d(chatMessage.getContent(), "chat");
-        });
+
         viewModel.canOpenConnection.observe(getViewLifecycleOwner(), check -> {
             if(check){
                 openWebSocketConnection();
