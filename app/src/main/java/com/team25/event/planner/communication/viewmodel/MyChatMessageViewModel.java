@@ -17,6 +17,7 @@ import com.team25.event.planner.core.ErrorParse;
 import com.team25.event.planner.core.Page;
 import com.team25.event.planner.user.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,14 +28,35 @@ import retrofit2.Response;
 public class MyChatMessageViewModel extends ViewModel {
     private ChatApi chatApi = ConnectionParams.chatApi;
     private ChatMessageWebSocket chatMessageWebSocket;
+    private final MutableLiveData<ChatMessage> newMessageLiveData = new MutableLiveData<>();
+    public LiveData<ChatMessage> getNewMessageLiveData() {
+        return newMessageLiveData;
+    }
 
     @SuppressLint("CheckResult")
     public void connectToSocket(User user){
         chatMessageWebSocket = new ChatMessageWebSocket();
         chatMessageWebSocket.connect();
-        chatMessageWebSocket.subscribeToTopic("/chat/user/"+user.getId())
+        chatMessageWebSocket.subscribeToTopic("/topic/" + chatId)
                 .subscribe(stompMessage -> {
                     ChatMessage chatMessage = new Gson().fromJson(stompMessage.getPayload(), ChatMessage.class);
+
+                            List<ChatMessage> currentList = _chatMessages.getValue();
+                            assert currentList != null;
+                            boolean alreadyExists = currentList.stream()
+                                    .anyMatch(msg -> msg.getId().equals(chatMessage.getId()));
+                            if(!alreadyExists){
+                                currentList = new ArrayList<>();
+                                currentList.add(chatMessage);
+                                currentList.addAll(chatMessages.getValue());
+
+
+                                currentList.remove(currentList.size()-1);
+
+                                _chatMessages.postValue(currentList);
+                            }
+
+                    Log.d(chatMessage.getContent(), "CHAT");
                 },
                         throwable -> {
                             Log.e("WebSocket", "Error receiving message", throwable);
@@ -46,7 +68,7 @@ public class MyChatMessageViewModel extends ViewModel {
     public void sendMessage() {
         if (!Objects.equals(message.getValue(), "") && chatMessageWebSocket.stompClient != null && chatMessageWebSocket.stompClient.isConnected()) {
             String destination = "/app/chat";
-            String payload = new Gson().toJson(new ChatMessageRequestDTO(senderId.getValue(), receiverId.getValue(), message.getValue()));
+            String payload = new Gson().toJson(new ChatMessageRequestDTO(senderId.getValue(), receiverId.getValue(), message.getValue(), chatId));
 
             chatMessageWebSocket.stompClient.send(destination, payload)
                     .subscribe(() -> {
@@ -63,9 +85,11 @@ public class MyChatMessageViewModel extends ViewModel {
     public final MutableLiveData<Boolean> sendMessage = new MutableLiveData<>();
     private int _currentPage = 0;
     private int _totalPages = 0;
+    public String chatId = "";
     public final MutableLiveData<Long> senderId = new MutableLiveData<>();
     public final MutableLiveData<Long> receiverId = new MutableLiveData<>();
     public final MutableLiveData<String> receiverName = new MutableLiveData<>();
+
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>(false);
     public final LiveData<Boolean> isLoading = _isLoading;
 
@@ -82,6 +106,8 @@ public class MyChatMessageViewModel extends ViewModel {
     public void setCurrentPage(int n){
         _currentPage = n;
     }
+    private final MutableLiveData<Boolean> _canOpenConnection = new MutableLiveData<>();
+    public final LiveData<Boolean> canOpenConnection = _canOpenConnection;
 
     public void getChat(Long senderId, Long receiverId){
         if(isLoading())return;
@@ -91,6 +117,8 @@ public class MyChatMessageViewModel extends ViewModel {
             public void onResponse(Call<Page<ChatMessage>> call, Response<Page<ChatMessage>> response) {
                 if(response.isSuccessful() && response.body()!=null){
                     _chatMessages.postValue(response.body().getContent());//fill front
+                    chatId = response.body().getContent().get(0).getChatId();
+                    _canOpenConnection.setValue(true);
                     _isLoading.postValue(false);
                     _totalPages = response.body().getTotalPages();
                 }else{
@@ -100,7 +128,7 @@ public class MyChatMessageViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<Page<ChatMessage>> call, Throwable t) {
-                _serverError.postValue("Network problem");
+                _serverError.postValue("Network problem: chat");
             }
         });
     }

@@ -108,7 +108,8 @@ public class ProductDetailsFragment extends Fragment {
             listView.setAdapter(adapter);
         });
         productViewModel.images.observe(getViewLifecycleOwner(), res->{
-            ImageSliderProductAdapter adapter = new ImageSliderProductAdapter(res);
+            com.team25.event.planner.service.adapters.ImageSliderAdapter adapter = new com.team25.event.planner.service.adapters.ImageSliderAdapter(res);
+
             ViewPager2 viewPager = binding.imageSlider;
             viewPager.setAdapter(adapter);
         });
