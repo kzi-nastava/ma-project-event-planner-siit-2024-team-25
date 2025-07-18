@@ -1,5 +1,7 @@
 package com.team25.event.planner.product.fragments;
 
+import static com.team25.event.planner.user.fragments.PublicProfileFragment.USER_ID_ARG;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +25,7 @@ import com.team25.event.planner.communication.model.ChatMessage;
 import com.team25.event.planner.core.dialogs.DialogHelper;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentProductDetailsBinding;
+import com.team25.event.planner.event.adapters.AttendeeListAdapter;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.fragments.ProductPurchaseListFragment;
 import com.team25.event.planner.event.fragments.PurchaseListFragment;
@@ -33,6 +36,7 @@ import com.team25.event.planner.product.viewmodel.MyProductsViewModel;
 import com.team25.event.planner.review.fragments.ReviewListFragment;
 import com.team25.event.planner.service.fragments.ServiceDetailsFragment;
 import com.team25.event.planner.service.fragments.ServiceListFragment;
+import com.team25.event.planner.user.model.User;
 import com.team25.event.planner.user.model.UserRole;
 
 import java.util.Objects;
@@ -82,17 +86,16 @@ public class ProductDetailsFragment extends Fragment {
         return binding.getRoot();
     }
 
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = binding.listView;
         setObservers();
         setListeners();
-        if(Objects.requireNonNull(authViewModel.user.getValue()).getUserRole() == UserRole.EVENT_ORGANIZER){
-            binding.chatButton.setVisibility(View.VISIBLE);
-        }else{
-            binding.chatButton.setVisibility(View.GONE);
-        }
+        setButtonsOptions();
+
             if(_eventId != 0L){
                 binding.buyButton.setVisibility(View.VISIBLE);
             }else{
@@ -162,5 +165,33 @@ public class ProductDetailsFragment extends Fragment {
                 navController.navigate(R.id.action_productDetailsFragment_to_reviewListFragment, bundle);
             }
         });
+        binding.viewOwnerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putLong(USER_ID_ARG, productViewModel.selectedProduct.getValue().getOwnerInfo().getId());
+                navController.navigate(R.id.action_productDetailsFragment_to_publicProfileFragment, bundle);
+            }
+        });
+    }
+    private void setButtonsOptions(){
+        if(authViewModel.user.getValue() == null){
+            binding.chatButton.setVisibility(View.GONE);
+            binding.favoriteButton.setVisibility(View.GONE);
+            binding.viewPurchaseButton.setVisibility(View.GONE);
+            return;
+        }
+        binding.favoriteButton.setVisibility(View.VISIBLE);
+        UserRole userRole = authViewModel.user.getValue().getUserRole();
+        if(!userRole.equals(UserRole.EVENT_ORGANIZER)){
+            binding.chatButton.setVisibility(View.GONE);
+        }else{
+            binding.chatButton.setVisibility(View.VISIBLE);
+        }
+        if(userRole.equals(UserRole.OWNER)){
+            binding.viewPurchaseButton.setVisibility(View.VISIBLE);
+        }else{
+            binding.viewPurchaseButton.setVisibility(View.GONE);
+        }
     }
 }

@@ -29,6 +29,7 @@ public abstract class Offering {
     protected ProductServiceType status;
     protected User owner;
     protected List<String> images;
+    protected boolean isFavorite;
 
     public Offering(){}
 

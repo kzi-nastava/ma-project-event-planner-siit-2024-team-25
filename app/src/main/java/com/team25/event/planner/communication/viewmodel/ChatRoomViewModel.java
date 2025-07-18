@@ -11,7 +11,10 @@ import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.ErrorParse;
 import com.team25.event.planner.core.Page;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +39,22 @@ public class ChatRoomViewModel extends ViewModel {
             @Override
             public void onResponse(Call<Page<ChatRoom>> call, Response<Page<ChatRoom>> response) {
                 if(response.isSuccessful() && response.body()!= null){
-                    _chats.postValue(response.body().getContent());
+                    List<ChatRoom> originalList = response.body().getContent();
+
+                    List<ChatRoom> distinctList = new ArrayList<>(
+                            originalList.stream()
+                                    .collect(
+                                            Collectors.toMap(
+                                                    ChatRoom::getChatId,
+                                                    chat -> chat,
+                                                    (existing, replacement) -> existing,
+                                                    LinkedHashMap::new
+                                            )
+                                    )
+                                    .values()
+                    );
+
+                    _chats.postValue(distinctList);
                     totalPages = response.body().getTotalPages();
                 }else{
                   _serverError.postValue(ErrorParse.catchError(response));
