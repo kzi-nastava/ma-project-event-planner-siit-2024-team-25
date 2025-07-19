@@ -84,6 +84,13 @@ public class ServiceDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
         if (getArguments() != null) {
             _eventId = getArguments().getLong(EventArgumentNames.ID_ARG);
             _serviceId = getArguments().getLong(OFFERING_ID);
@@ -99,9 +106,18 @@ public class ServiceDetailsFragment extends Fragment {
                 null,
                 false
         );
+        _binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
+        _binding.setLifecycleOwner(getViewLifecycleOwner());
+        _binding.setViewModel(_serviceViewModel);
+
+        listView = _binding.listView;
+
+        navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        setupDateTimePickers();
+
+        return _binding.getRoot();
     }
-
-
 
 
     @Override
@@ -109,55 +125,18 @@ public class ServiceDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        _eventViewModel.currentEvent.observe(getViewLifecycleOwner(),event -> {
-            this._event.setValue(event);
-            setUpBookDialog();
-        });
 
-        _serviceViewModel.currentService.observe(getViewLifecycleOwner(), service -> {
-            this._service.setValue(service);
-            if(service.isFavorite()){
-                _binding.favoriteButton.setImageResource(R.drawable.ic_heart_red);
-                _serviceViewModel.favInd = true;
-            }else{
-                _serviceViewModel.favInd = false;
-            }
-
-            Double tootalPrice = this._service.getValue().getPrice();
-            if(this._service.getValue().getDiscount() > 0){
-                tootalPrice  = tootalPrice*(100-this._service.getValue().getDiscount())/100;
-            }
-            _bookServiceViewModel.purchase.getPrice().setValue(tootalPrice.toString());
-        });
-        _serviceViewModel.getService(_serviceId);
-
-        _bookService.observe(getViewLifecycleOwner(), isBookService -> {
-            if (isBookService != null) {
-                _binding.bookService.setVisibility(isBookService ? View.VISIBLE : View.GONE);
-                if(_bookService.getValue() != null && Boolean.TRUE.equals(_bookService.getValue())){
-                    _eventViewModel.getEvent(_eventId);
-                }
-
-
-                _binding.bookService.setOnClickListener(v -> {
-                    _bookServiceDialog.show();
-                });
-            }
-        });
-        _serviceViewModel.fav.observe(getViewLifecycleOwner(), check -> {
-            if(check){
-                Toast.makeText(getContext(), "added to favorite services", Toast.LENGTH_SHORT).show();
-                _binding.favoriteButton.setImageResource(R.drawable.ic_heart);
-            }else{
-                Toast.makeText(getContext(), "Deleted from favorite services", Toast.LENGTH_SHORT).show();
-                _binding.favoriteButton.setImageResource(R.drawable.ic_heart_red);
-            }
-        });
         setupObservable();
         setupListeners();
         setButtonsOptions();
 
 
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        setupObservable();
+        setupListeners();
     }
 
     private void setUpBookDialog(){
@@ -271,15 +250,59 @@ public class ServiceDetailsFragment extends Fragment {
     }
 
     private void setupObservable(){
+        _eventViewModel.currentEvent.observe(getViewLifecycleOwner(),event -> {
+            this._event.setValue(event);
+            setUpBookDialog();
+        });
 
+        _serviceViewModel.currentService.observe(getViewLifecycleOwner(), service -> {
+            this._service.setValue(service);
+            if(service.isFavorite()){
+                _binding.favoriteButton.setImageResource(R.drawable.ic_heart_red);
+                _serviceViewModel.favInd = true;
+            }else{
+                _serviceViewModel.favInd = false;
+            }
+
+            Double tootalPrice = this._service.getValue().getPrice();
+            if(this._service.getValue().getDiscount() > 0){
+                tootalPrice  = tootalPrice*(100-this._service.getValue().getDiscount())/100;
+            }
+            _bookServiceViewModel.purchase.getPrice().setValue(tootalPrice.toString());
+        });
+        _serviceViewModel.getService(_serviceId);
+
+        _bookService.observe(getViewLifecycleOwner(), isBookService -> {
+            if (isBookService != null) {
+                _binding.bookService.setVisibility(isBookService ? View.VISIBLE : View.GONE);
+                if(_bookService.getValue() != null && Boolean.TRUE.equals(_bookService.getValue())){
+                    _eventViewModel.getEvent(_eventId);
+                }
+
+
+                _binding.bookService.setOnClickListener(v -> {
+                    _bookServiceDialog.show();
+                });
+            }
+        });
+        _serviceViewModel.fav.observe(getViewLifecycleOwner(), check -> {
+            if(check){
+                Toast.makeText(getContext(), "Added to favorite services", Toast.LENGTH_SHORT).show();
+                _binding.favoriteButton.setImageResource(R.drawable.ic_heart_red);
+            }else{
+                Toast.makeText(getContext(), "Removed from favorite services", Toast.LENGTH_SHORT).show();
+                _binding.favoriteButton.setImageResource(R.drawable.ic_favorite_border);
+            }
+        });
+
+        _serviceViewModel.serverError.observe(getViewLifecycleOwner(), msg -> {
+            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        });
 
         _bookServiceViewModel.purchase.getSelectedStartTime().observe(getViewLifecycleOwner(), localTime -> {
         });
 
-        _dialogBookServiceBinding.bookServiceButton.setOnClickListener(v -> {
-            _bookServiceViewModel.bookService(this._eventId, this._serviceId);
-            _bookServiceDialog.dismiss();
-        });
+
 
         _bookServiceViewModel.responseDTO.observe(getViewLifecycleOwner(), response -> {
             Toast.makeText(getContext(), "You've successfully booked this service for your event!", Toast.LENGTH_LONG).show();
@@ -315,25 +338,14 @@ public class ServiceDetailsFragment extends Fragment {
 
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
 
-
-        _binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
-        _binding.setLifecycleOwner(getViewLifecycleOwner());
-        _binding.setViewModel(_serviceViewModel);
-
-        listView = _binding.listView;
-
-        navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
-        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
-        setupDateTimePickers();
-
-        return _binding.getRoot();
-    }
 
     private void setupListeners() {
+
+        _dialogBookServiceBinding.bookServiceButton.setOnClickListener(v -> {
+            _bookServiceViewModel.bookService(this._eventId, this._serviceId);
+            _bookServiceDialog.dismiss();
+        });
 
         _binding.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override

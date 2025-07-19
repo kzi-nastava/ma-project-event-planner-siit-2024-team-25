@@ -114,6 +114,9 @@
         <action
             android:id="@+id/action_profileFragment_to_calendarFragment"
             app:destination="@id/calendarFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_favoriteOfferingFragment"
+            app:destination="@id/favoriteOfferingFragment" />
     </fragment>
 
     <fragment
@@ -474,5 +477,13 @@
         <action
             android:id="@+id/action_reviewListFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteOfferingFragment"
+        android:name="com.team25.event.planner.offering.fragments.FavoriteOfferingFragment"
+        android:label="FavoriteOfferingFragment" >
+        <action
+            android:id="@+id/action_favoriteOfferingFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 </navigation>

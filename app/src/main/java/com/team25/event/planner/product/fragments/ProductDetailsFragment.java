@@ -127,6 +127,23 @@ public class ProductDetailsFragment extends Fragment {
         purchaseViewModel.serverError.observe(getViewLifecycleOwner(), msg -> {
             Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show();
         });
+        productViewModel.selectedProduct.observe(getViewLifecycleOwner(), product -> {
+            if(product.isFavorite()){
+                binding.favoriteButton.setImageResource(R.drawable.ic_heart_red);
+                productViewModel.favInd = true;
+            }else{
+                productViewModel.favInd = false;
+            }
+        });
+        productViewModel.fav.observe(getViewLifecycleOwner(), check -> {
+            if(check){
+                Toast.makeText(getContext(), "Added to favorite products", Toast.LENGTH_SHORT).show();
+                binding.favoriteButton.setImageResource(R.drawable.ic_heart_red);
+            }else{
+                Toast.makeText(getContext(), "Removed from favorite products", Toast.LENGTH_SHORT).show();
+                binding.favoriteButton.setImageResource(R.drawable.ic_favorite_border);
+            }
+        });
     }
 
     private void setListeners(){
@@ -171,6 +188,16 @@ public class ProductDetailsFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putLong(USER_ID_ARG, productViewModel.selectedProduct.getValue().getOwnerInfo().getId());
                 navController.navigate(R.id.action_productDetailsFragment_to_publicProfileFragment, bundle);
+            }
+        });
+        binding.favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (productViewModel.favInd) {
+                    productViewModel.deleteFavoriteProduct(_productId, authViewModel.getUserId());
+                }else{
+                    productViewModel.favoriteProduct(_productId, authViewModel.getUserId());
+                }
             }
         });
     }

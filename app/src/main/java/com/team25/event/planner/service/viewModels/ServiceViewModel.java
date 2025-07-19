@@ -19,6 +19,7 @@ import com.team25.event.planner.service.dto.ServiceCreateResponseDTO;
 import com.team25.event.planner.service.enums.ReservationType;
 import com.team25.event.planner.service.model.Offering;
 import com.team25.event.planner.service.model.Service;
+import com.team25.event.planner.service.model.ServiceCard;
 import com.team25.event.planner.user.api.UserApi;
 
 import java.util.List;
@@ -64,37 +65,35 @@ public class ServiceViewModel extends ViewModel {
 
 
     public void favoriteService(Long serviceId, Long userId){
-        _userApi.favoriteService(userId, new FavoruriteOfferingDTO(serviceId)).enqueue(new Callback<Offering>() {
+        _userApi.favoriteService(userId, new FavoruriteOfferingDTO(serviceId)).enqueue(new Callback<ServiceCard>() {
             @Override
-            public void onResponse(Call<Offering> call, Response<Offering> response) {
-                if (response.isSuccessful() && response.body() != null) {
+            public void onResponse(Call<ServiceCard> call, Response<ServiceCard> response) {
+
+                if (response.isSuccessful()) {
                         _fav.setValue(true);
                         favInd = true;
                 } else {
-                    _serverError.postValue("Error fetch service");
+                    _serverError.postValue("Error favorite service");
                 }
             }
 
             @Override
-            public void onFailure(Call<Offering> call, Throwable t) {
+            public void onFailure(Call<ServiceCard> call, Throwable t) {
                 _serverError.postValue("Error, network problem");
             }
         });
     }
     public void deleteFavoriteService(Long serviceId, Long userId){
-        _userApi.deleteFavoriteService(userId, serviceId).enqueue(new Callback<Offering>() {
+        _userApi.deleteFavoriteService(userId, serviceId).enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Offering> call, Response<Offering> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    _fav.setValue(false);
-                    favInd = false;
-                } else {
-                    _serverError.postValue("Error fetch service");
-                }
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                _fav.setValue(false);
+                favInd = false;
+
             }
 
             @Override
-            public void onFailure(Call<Offering> call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 _serverError.postValue("Error, network problem");
             }
         });

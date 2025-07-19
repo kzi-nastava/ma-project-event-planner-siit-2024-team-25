@@ -19,4 +19,5 @@ public class Product {
     private List<EventType> eventTypes;
     private OfferingCategory offeringCategory;
     private OwnerPreview ownerInfo;
+    private boolean isFavorite;
 }
