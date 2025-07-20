@@ -50,7 +50,8 @@ public class MyChatMessageViewModel extends ViewModel {
                             boolean alreadyExists = true;
                             if(!currentList.isEmpty()){
                                 alreadyExists = currentList.stream()
-                                        .anyMatch(msg -> msg.getId().equals(chatMessage.getId()));
+                                        .anyMatch(msg -> Objects.equals(msg.getId(), chatMessage.getId()));
+
                             }
 
 

@@ -119,9 +119,9 @@ public class ProductDetailsFragment extends Fragment {
 
         purchaseViewModel.purchaseResponse.observe(getViewLifecycleOwner(), check ->{
             if (check) {
-                DialogHelper.showSuccessDialog(requireContext(), "Successfully bought product: " + productViewModel.name.getValue());
+                Toast.makeText(requireActivity(), "Successfully bought product: " + productViewModel.name.getValue(), Toast.LENGTH_SHORT).show();
             } else {
-                DialogHelper.showErrorDialog(requireContext(), check.toString());
+                Toast.makeText(requireActivity(), check.toString(), Toast.LENGTH_SHORT).show();
             }
         });
         purchaseViewModel.serverError.observe(getViewLifecycleOwner(), msg -> {

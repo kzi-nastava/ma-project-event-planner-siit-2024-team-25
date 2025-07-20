@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import lombok.Getter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,7 +37,11 @@ public class ServiceCardsViewModel extends ViewModel {
     public final LiveData<List<ServiceCard>> services = _services;
     public ServiceFilterDTO filterDTO = new ServiceFilterDTO();
 
-
+    @Getter
+    private int currentPage = 0;
+    @Getter
+    private int totalPages;
+    public MutableLiveData<Boolean> paginationChanged = new MutableLiveData<>();
     public ServiceCardsViewModel() {
 
     }
@@ -114,7 +119,7 @@ public class ServiceCardsViewModel extends ViewModel {
 
     public void getServices(Map<String, String> queryMap) {
         ServiceApi serviceApi = ConnectionParams.serviceApi;
-        Call<Page<Service>> call = serviceApi.getServices(queryMap);
+        Call<Page<Service>> call = serviceApi.getServices(queryMap, currentPage);
 
         call.enqueue(new Callback<Page<Service>>() {
             @Override
@@ -126,6 +131,10 @@ public class ServiceCardsViewModel extends ViewModel {
                     filterDTO.setPrice(null);
                     filterDTO.setEventTypeId(null);
                     filterDTO.setOfferingCategoryId(null);
+                    totalPages = response.body().getTotalPages();
+
+                    paginationChanged.postValue(false);
+                    paginationChanged.postValue(true);
                 } else {
                     Log.e("ServiceCardsViewModel", "Error fetching services: ");
                 }
@@ -163,5 +172,23 @@ public class ServiceCardsViewModel extends ViewModel {
 
         _services.setValue(modifiedServices);
 
+    }
+
+    public void getNextPage(){
+        if(this.currentPage+1 < this.totalPages){
+            this.currentPage++;
+            paginationChanged.postValue(false);
+            paginationChanged.postValue(true);
+            getServices(buildQueryMap(filterDTO));
+        }
+    }
+
+    public void getPreviousPage(){
+        if(this.currentPage > 0){
+            this.currentPage--;
+            paginationChanged.postValue(false);
+            paginationChanged.postValue(true);
+            getServices(buildQueryMap(filterDTO));
+        }
     }
 }

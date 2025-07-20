@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentCreateEditOfferingCategoryBinding;
@@ -78,6 +79,16 @@ public class CreateEditOfferingCategoryFragment extends Fragment {
             if(isCreated){
                 navController.navigate(R.id.action_createEditOfferingCategoryFragment_to_offeringCategoryFragment);
             }
+        });
+        viewModel.successUpdate.observe(getViewLifecycleOwner(), check -> {
+            if(!check.isEmpty()){
+                Toast.makeText(requireContext(), "You successfully " + check + " offering category", Toast.LENGTH_SHORT).show();
+                if(!check.equals("deleted")){
+                    navController.navigate(R.id.action_createEditOfferingCategoryFragment_to_offeringCategoryFragment);
+                }
+
+            }
+
         });
     }
 
