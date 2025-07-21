@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentReviewListBinding;
@@ -126,6 +127,11 @@ public class ReviewListFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void setObservers() {
+        viewModel.created.observe(getViewLifecycleOwner(), check -> {
+            if(check){
+                Toast.makeText(requireContext(), "You successfully created a review", Toast.LENGTH_SHORT).show();
+            }
+        });
         viewModel.reviews.observe(getViewLifecycleOwner(), lists->{
             adapter.updateData(lists);
         });

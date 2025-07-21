@@ -90,9 +90,9 @@ public class ProductPurchaseListFragment extends Fragment implements OnPurchaseC
     });
     viewModel.purchaseResponse.observe(getViewLifecycleOwner(), check ->{
         if (check) {
-            DialogHelper.showSuccessDialog(requireContext(), "Successfully bought product: " + productName);
+            Toast.makeText(requireActivity(), "Successfully bought product: " + productName, Toast.LENGTH_SHORT).show();
         } else {
-            DialogHelper.showErrorDialog(requireContext(), "Error occurred, try again.");
+            Toast.makeText(requireActivity(), "Error occurred, try again.", Toast.LENGTH_SHORT).show();
         }
     });
         viewModel.serverError.observe(getViewLifecycleOwner(), msg -> {

@@ -42,16 +42,26 @@ public class MyChatMessageViewModel extends ViewModel {
                     ChatMessage chatMessage = new Gson().fromJson(stompMessage.getPayload(), ChatMessage.class);
 
                             List<ChatMessage> currentList = _chatMessages.getValue();
-                            assert currentList != null;
-                            boolean alreadyExists = currentList.stream()
-                                    .anyMatch(msg -> msg.getId().equals(chatMessage.getId()));
-                            if(!alreadyExists){
+
+                            if (currentList == null) {
                                 currentList = new ArrayList<>();
-                                currentList.add(chatMessage);
-                                currentList.addAll(chatMessages.getValue());
+                            }
+
+                            boolean alreadyExists = true;
+                            if(!currentList.isEmpty()){
+                                alreadyExists = currentList.stream()
+                                        .anyMatch(msg -> Objects.equals(msg.getId(), chatMessage.getId()));
+
+                            }
 
 
-                                currentList.remove(currentList.size()-1);
+                            if (!alreadyExists) {
+                                currentList.add(0, chatMessage);
+
+                                while (currentList.size() > 7) {
+                                    currentList.remove(currentList.size() - 1);
+                                    _totalPages += 1;
+                                }
 
                                 _chatMessages.postValue(currentList);
                             }

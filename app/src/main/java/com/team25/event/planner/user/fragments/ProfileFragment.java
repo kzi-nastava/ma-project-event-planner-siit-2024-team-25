@@ -102,6 +102,7 @@ public class ProfileFragment extends Fragment {
         binding.btnChangePassword.setOnClickListener(v -> handleChangePassword());
         binding.btnLogout.setOnClickListener(v -> handleLogOut());
         binding.btnDeactivate.setOnClickListener(v -> handleDeactivateAccount());
+
     }
 
     private void handleEditProfile() {
@@ -146,7 +147,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void handleFavoriteProducts() {
-        // TODO: Handle favorite products action
+        navController.navigate(R.id.action_profileFragment_to_favoriteOfferingFragment);
     }
 
     private void handleChangePassword() {

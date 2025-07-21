@@ -104,6 +104,7 @@ public class PublicProfileFragment extends Fragment {
     private void setupListeners() {
         binding.showOnMapButton.setOnClickListener(v -> showOnMap());
         binding.reportButton.setOnClickListener(v -> showReportDialog());
+
     }
 
     private void showOnMap() {

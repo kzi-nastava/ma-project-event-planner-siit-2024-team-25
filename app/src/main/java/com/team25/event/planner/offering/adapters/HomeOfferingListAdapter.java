@@ -35,6 +35,7 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
 
     private NavController _navController;
 
+
     public HomeOfferingListAdapter(Context context, List<OfferingCard> offerings, NavController navController, Long eventId) {
         super(context, R.layout.home_page_top_offer, offerings);
         this.offeringCards = offerings;

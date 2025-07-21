@@ -106,7 +106,7 @@ public class BudgetItemListFragment extends Fragment implements OnEditButtonClic
             }
         });
         viewModel.serverError.observe(getViewLifecycleOwner(), mess->{
-            if(mess != null){
+            if(mess != null && !mess.isEmpty()){
                 Toast.makeText(requireContext(), mess, Toast.LENGTH_SHORT).show();
 
             }

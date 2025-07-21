@@ -27,6 +27,7 @@ import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.offering.viewmodel.OfferingCategoryViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 public class OfferingCategoryBaseFragment extends Fragment implements OnEditButtonClickListener, OnDeleteButtonClickListener {
     public static final String ID_ARG_NAME = "offeringCategoryId";
@@ -98,9 +99,9 @@ public class OfferingCategoryBaseFragment extends Fragment implements OnEditButt
             }
         });
 
-        offeringCategoryViewModel.success.observe(getViewLifecycleOwner(), check ->{
-            if(check){
-                offeringCategoryViewModel.fetchOfferingCategories();
+        offeringCategoryViewModel.successUpdate.observe(getViewLifecycleOwner(), mess -> {
+            if(Objects.equals(mess, "deleted")){
+                Toast.makeText(requireContext(), "You successfully " + mess + " offering category", Toast.LENGTH_SHORT).show();
             }
         });
         offeringCategoryViewModel.serverError.observe(getViewLifecycleOwner(), mess->{

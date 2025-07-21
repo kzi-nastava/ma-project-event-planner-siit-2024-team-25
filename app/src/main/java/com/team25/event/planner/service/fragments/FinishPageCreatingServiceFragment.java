@@ -170,30 +170,21 @@ public class FinishPageCreatingServiceFragment extends Fragment {
     public void setObservers(){
         mViewModel.errors.observe(getViewLifecycleOwner(), errors -> {
             if (errors != null && errors.getImage() != null) {
-                new AlertDialog.Builder(requireContext())
-                        .setTitle("Failed")
-                        .setMessage("You must chose 1 image at least")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                Toast.makeText(requireContext(),"You must chose 1 image at least", Toast.LENGTH_SHORT).show();
+
             }
         });
         mViewModel._addedService.observe(getViewLifecycleOwner(), check ->{
             if(check){
-                new AlertDialog.Builder(requireContext())
-                        .setTitle("Information")
-                        .setMessage("You successfully saved a service")
-                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                        .show();
+                Toast.makeText(requireContext(),"You successfully saved a service", Toast.LENGTH_SHORT).show();
+
                 navController.navigate(R.id.action_finishPageCreateingCerviceFragment_to_ownerHomePage);
             }
         });
 
         mViewModel.errorMessageFromServer.observe(getViewLifecycleOwner(), errorMessage -> {
-            new AlertDialog.Builder(requireContext())
-                    .setTitle("Information")
-                    .setMessage(errorMessage)
-                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                    .show();
+            Toast.makeText(requireContext(),errorMessage, Toast.LENGTH_SHORT).show();
+
         });
         imagesLiveData.addSource(mViewModel.newImages, newImages -> {
             List<String> existingImages = mViewModel.existingImages.getValue();

@@ -3,6 +3,7 @@ package com.team25.event.planner.service.fragments;
 
 import static com.team25.event.planner.service.fragments.OwnerHomePage.SERVICE_ID_ARG_NAME;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,14 +14,20 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.listeners.OnDeleteButtonClickListener;
 import com.team25.event.planner.core.listeners.OnDetailsClickListener;
 import com.team25.event.planner.core.listeners.OnEditButtonClickListener;
 
+import com.team25.event.planner.databinding.FragmentServiceContainerBinding;
 import com.team25.event.planner.event.adapters.TopEventsListAdapter;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.viewmodel.HomeEventViewModel;
@@ -35,7 +42,12 @@ import java.util.HashMap;
 
 public class ServiceListFragment extends ListFragment implements OnEditButtonClickListener, OnDeleteButtonClickListener, OnDetailsClickListener {
     private ServiceCardsAdapter adapter;
+    private FragmentServiceContainerBinding binding;
     private ServiceCardsViewModel serviceCardsViewModel;
+    private Button btnNext;
+    private Button btnPrevious;
+    private TextView tvPageInfo;
+
     private NavController navController;
     private ServiceAddFormViewModel mViewModel;
     private boolean filter;
@@ -65,37 +77,55 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_service_list, container, false);
+
+        btnNext = view.findViewById(R.id.btnNext);
+        btnPrevious = view.findViewById(R.id.btnPrevious);
+        tvPageInfo = view.findViewById(R.id.tvPageInfo);
+
         serviceCardsViewModel = new ViewModelProvider(requireActivity()).get(ServiceCardsViewModel.class);
         if(filter){
             serviceCardsViewModel.setupFilter(nameFilter, priceFilter, availableFilter, eventTypeId, offeringCategoryId);
         }else{
             serviceCardsViewModel.filterServices();
         }
+        btnNext.setOnClickListener(v -> serviceCardsViewModel.getNextPage());
+        btnPrevious.setOnClickListener(v -> serviceCardsViewModel.getPreviousPage());
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         mViewModel = new ViewModelProvider(
                 NavHostFragment.findNavController(this).getViewModelStoreOwner(R.id.nav_graph)
         ).get(ServiceAddFormViewModel.class);
 
-        setObserves();
-        return inflater.inflate(R.layout.fragment_service_list, container, false);
+
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setObserves();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         setObserves();
-        if(!filter){
-            serviceCardsViewModel.filterServices();
-        }
+
 
     }
 
+    @SuppressLint("SetTextI18n")
     public void setObserves(){
+        serviceCardsViewModel.paginationChanged.observe(getViewLifecycleOwner(), changed -> {
+            if (changed) {
+                int current = serviceCardsViewModel.getCurrentPage() + 1;
+                int total = serviceCardsViewModel.getTotalPages();
+                tvPageInfo.setText(current + " / " + total);
+
+                btnPrevious.setEnabled(serviceCardsViewModel.getCurrentPage() != 0);
+                btnNext.setEnabled(current != total);
+            }
+        });
         serviceCardsViewModel.services.observe(getViewLifecycleOwner(), (serviceCard ->{
             adapter = new ServiceCardsAdapter(requireContext(), serviceCard);
             setListAdapter(adapter);
@@ -103,12 +133,15 @@ public class ServiceListFragment extends ListFragment implements OnEditButtonCli
             adapter.setOnDeleteButtonClickListener(this);
             adapter.setOnDetailsClick(this);
             adapter.notifyDataSetChanged();
+
         }));
         mViewModel.isDeleted.observe(getViewLifecycleOwner(), deleted ->{
             if(deleted){
                 serviceCardsViewModel.getServices(new HashMap<>());
+                Toast.makeText(requireContext(), "You deleted the service", Toast.LENGTH_SHORT).show();
             }
         });
+
 
     }
     @Override

@@ -130,7 +130,7 @@ public class ChatFragment extends Fragment {
             clearMessages();
             for (int i = res.size() - 1; i >= 0; i--) {
                 ChatMessage cm = res.get(i);
-
+                if(cm.getSender()==null) continue;;
                 if(Objects.equals(cm.getSender().getId(), viewModel.senderId.getValue())){
                     addMessageTextView(cm.getContent(),true, cm.getTimestamp().toString());
                 }else{

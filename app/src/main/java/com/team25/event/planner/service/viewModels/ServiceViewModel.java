@@ -12,11 +12,15 @@ import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.model.EventType;
 
 
+import com.team25.event.planner.offering.model.FavoruriteOfferingDTO;
 import com.team25.event.planner.product.model.Product;
 import com.team25.event.planner.service.api.ServiceApi;
 import com.team25.event.planner.service.dto.ServiceCreateResponseDTO;
 import com.team25.event.planner.service.enums.ReservationType;
+import com.team25.event.planner.service.model.Offering;
 import com.team25.event.planner.service.model.Service;
+import com.team25.event.planner.service.model.ServiceCard;
+import com.team25.event.planner.user.api.UserApi;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +35,7 @@ import retrofit2.Response;
 public class ServiceViewModel extends ViewModel {
 
     private ServiceApi _serviceApi = ConnectionParams.serviceApi;
+    private UserApi _userApi = ConnectionParams.userApi;
     private final MutableLiveData<Service> _currentService = new MutableLiveData<>();
     public LiveData<Service> currentService = _currentService;
     private MutableLiveData<String> _serverError = new MutableLiveData<>();
@@ -53,7 +58,46 @@ public class ServiceViewModel extends ViewModel {
     public final MutableLiveData<List<String>> images = new MutableLiveData<>();
     public final MutableLiveData<Boolean> showDuration = new MutableLiveData<>();
 
+    private MutableLiveData<Boolean> _fav = new MutableLiveData<>();
+    public LiveData<Boolean> fav = _fav;
 
+    public boolean favInd;
+
+
+    public void favoriteService(Long serviceId, Long userId){
+        _userApi.favoriteService(userId, new FavoruriteOfferingDTO(serviceId)).enqueue(new Callback<ServiceCard>() {
+            @Override
+            public void onResponse(Call<ServiceCard> call, Response<ServiceCard> response) {
+
+                if (response.isSuccessful()) {
+                        _fav.setValue(true);
+                        favInd = true;
+                } else {
+                    _serverError.postValue("Error favorite service");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServiceCard> call, Throwable t) {
+                _serverError.postValue("Error, network problem");
+            }
+        });
+    }
+    public void deleteFavoriteService(Long serviceId, Long userId){
+        _userApi.deleteFavoriteService(userId, serviceId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                _fav.setValue(false);
+                favInd = false;
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                _serverError.postValue("Error, network problem");
+            }
+        });
+    }
     public void getService(Long serviceId) {
         _serviceApi.getService(serviceId).enqueue(new Callback<Service>() {
             @Override
