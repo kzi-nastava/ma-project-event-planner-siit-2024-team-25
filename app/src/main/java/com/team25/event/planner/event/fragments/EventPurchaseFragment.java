@@ -16,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -85,12 +87,12 @@ public class EventPurchaseFragment extends Fragment {
         return _binding.getRoot();
     }
 
-    private void changeButton(Button newButton, Button oldButton) {
-        newButton.setBackgroundColor(getResources().getColor(R.color.white));
-        newButton.setOnClickListener(null);
-        newButton.setTextColor(getResources().getColor(R.color.primary));
-        oldButton.setBackgroundColor(getResources().getColor(R.color.primary));
-        oldButton.setTextColor(getResources().getColor(R.color.white));
+    private void changeButton(Button oldButton, Button newButton) {
+        oldButton.setBackgroundColor(getResources().getColor(R.color.white));
+        oldButton.setOnClickListener(null);
+        oldButton.setTextColor(getResources().getColor(R.color.primary));
+        newButton.setBackgroundColor(getResources().getColor(R.color.primary));
+        newButton.setTextColor(getResources().getColor(R.color.white));
     }
 
     private void productsButtonClick() {
@@ -251,24 +253,9 @@ public class EventPurchaseFragment extends Fragment {
         offeringEventTypeFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                EventTypePreviewDTO selectedType = (EventTypePreviewDTO) parent.getItemAtPosition(position);
-                _homeOfferingViewModel.offeringFilterDTO.selectedEventType.setValue(selectedType);
+                EventTypePreviewDTO selectedEventType = (EventTypePreviewDTO) parent.getItemAtPosition(position);
+                _homeOfferingViewModel.offeringFilterDTO.selectedEventType.setValue(selectedEventType);
             }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        offeringCategoryFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                OfferingCategoryPreviewDTO selectedType = (OfferingCategoryPreviewDTO) parent.getItemAtPosition(position);
-                _homeOfferingViewModel.offeringFilterDTO.selectedCategoryType.setValue(selectedType);
-                if(selectedType.getId() != null){
-                    _homeOfferingViewModel.getLeftMoneyForBudgetItem(_eventId, selectedType.getId());
-                }
-            }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -292,10 +279,9 @@ public class EventPurchaseFragment extends Fragment {
             }
         });
 
-
+        setFilterCriteria(selectedType);
         ImageView filter = _homePageOfferingFilterBinding.offeringFilterButton;
         filter.setOnClickListener(v -> {
-            setFilterCriteria(selectedType);
             _filterOfferingDialog.dismiss();
             _homeOfferingViewModel.getOfferings();
         });
@@ -303,7 +289,6 @@ public class EventPurchaseFragment extends Fragment {
         _homePageOfferingFilterBinding.imageRestart.setOnClickListener(v -> {
             _binding.searchView.setQuery("", false);
             _homeOfferingViewModel.restartFilter();
-            setFilterCriteria(selectedType);
             _homeOfferingViewModel.getOfferings();
             _filterOfferingDialog.dismiss();
         });
@@ -311,8 +296,6 @@ public class EventPurchaseFragment extends Fragment {
         _filterButton.setOnClickListener(v -> {
             _filterOfferingDialog.show();
         });
-
-        setFilterCriteria(selectedType);
     }
 
     private void setFilterCriteria(String selectedType){
@@ -406,7 +389,5 @@ public class EventPurchaseFragment extends Fragment {
                 servicesButtonClick();
             }
         });
-
-        _productsButton.callOnClick();
     }
 }
