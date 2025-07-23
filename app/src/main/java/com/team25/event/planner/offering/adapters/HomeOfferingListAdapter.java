@@ -80,8 +80,8 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
             offerOwner.setText(offeringCard.getOwnerName());
 
 
-            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-            String formattedPrice = currencyFormatter.format(offeringCard.getPrice());
+            String formattedPrice = new DecimalFormat("#,##0.00 $").format(offeringCard.getPrice());
+            offerPrice.setText(formattedPrice);
             String formattedDate = formattedPrice;
             offerPrice.setText(formattedDate);
             //offerIcon.setImageResource(R.drawable.ic_heart);
