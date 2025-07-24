@@ -87,7 +87,7 @@ public class ReportViewModel extends ViewModel {
 
     public void suspendUser() {
         SuspensionRequest request = SuspensionRequest.builder()
-                .userId(currentReport.getValue().getUserId())
+                .userId(currentReport.getValue().getReportedUserId())
                 .reportId(currentReport.getValue().getId()).build();
         _suspensionApi.suspendUser(request).enqueue(new ResponseCallback<>(
                 _currentSuspension::postValue,
