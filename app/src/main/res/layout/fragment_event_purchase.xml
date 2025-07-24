@@ -112,7 +112,6 @@
 
                             >
 
-
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/products_button"
                                 android:layout_width="wrap_content"
@@ -131,17 +130,13 @@
                                 android:backgroundTint="@color/primary" />
 
                         </com.google.android.material.button.MaterialButtonToggleGroup>
-
-
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <FrameLayout
                         android:id="@+id/home_container"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         app:layout_constraintTop_toBottomOf="@id/home_container_nav"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
                         android:paddingBottom="20dp"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

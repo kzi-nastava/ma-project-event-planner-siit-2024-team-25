@@ -123,9 +123,6 @@ public class ServiceDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-
         setupObservable();
         setupListeners();
         setButtonsOptions();
@@ -135,8 +132,6 @@ public class ServiceDetailsFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        setupObservable();
-        setupListeners();
     }
 
     private void setUpBookDialog(){
