@@ -26,6 +26,7 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentRegisterGeneralInfoBinding;
 import com.team25.event.planner.databinding.FragmentRegisterQuickBinding;
+import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.user.model.UserRole;
 import com.team25.event.planner.user.viewmodels.RegisterQuickViewModel;
 import com.team25.event.planner.user.viewmodels.RegisterViewModel;
@@ -94,9 +95,10 @@ public class RegisterQuickFragment extends Fragment {
         _registerQuickViewModel.loggedIn.observe(getViewLifecycleOwner(), loggedIn ->{
             if(loggedIn){
                 Bundle bundle = new Bundle();
-                bundle.putString("invitationCode", _invitationCode);
-                bundle.putLong("eventId", _eventId);
+                bundle.putString(EventArgumentNames.INVITATION_CODE_ARG, _invitationCode);
+                bundle.putLong(EventArgumentNames.ID_ARG, _eventId);
 
+                navController.popBackStack();
                 navController.navigate(R.id.eventDetailsFragment, bundle);
             }
         });

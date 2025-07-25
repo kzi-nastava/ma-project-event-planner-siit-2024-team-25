@@ -162,6 +162,11 @@ public class MainActivity extends AppCompatActivity {
                     bundle.putLong("eventId", eventId);
 
                     navController.navigate(R.id.loginFragment, bundle);
+                }else if(path != null && path.startsWith("/service/services")){
+                    Long serviceId = Long.valueOf(data.getPathSegments().get(2));
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("OFFERING_ID", serviceId);
+                    navController.navigate(R.id.serviceDetailsFragment, bundle);
                 }
             }
         } else if (intent != null) {
