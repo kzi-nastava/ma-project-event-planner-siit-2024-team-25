@@ -26,6 +26,7 @@ public class MyEventsFragment extends Fragment {
     private FragmentMyEventsBinding binding;
     private MyEventsViewModel viewModel;
     private NavController navController;
+    private MyEventAdapter adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,13 +41,20 @@ public class MyEventsFragment extends Fragment {
         setupObservers();
         setupListeners();
 
-        viewModel.loadNextPage();
-
         return binding.getRoot();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            adapter.clear();
+            viewModel.reload();
+        }
+    }
+
     private void setupEventList() {
-        MyEventAdapter adapter = new MyEventAdapter(new ArrayList<>(), (event) -> {
+        adapter = new MyEventAdapter(new ArrayList<>(), (event) -> {
             Bundle bundle = new Bundle();
             bundle.putLong(EventArgumentNames.ID_ARG, event.getId());
             navController.navigate(R.id.action_myEventsFragment_to_eventDetailsFragment, bundle);

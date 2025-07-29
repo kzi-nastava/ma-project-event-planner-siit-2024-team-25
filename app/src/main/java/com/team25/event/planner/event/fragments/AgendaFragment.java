@@ -31,6 +31,8 @@ public class AgendaFragment extends Fragment {
     private AgendaViewModel viewModel;
     private NavController navController;
 
+    private long eventId = -1;
+    private String eventName;
     private boolean isEditable = false;
     private boolean cameFromDetails = false;
 
@@ -57,12 +59,12 @@ public class AgendaFragment extends Fragment {
         Bundle args = getArguments();
         if (args == null) return;
 
-        long eventId = args.getLong(EventArgumentNames.ID_ARG);
+        eventId = args.getLong(EventArgumentNames.ID_ARG);
         if (eventId != -1) {
             viewModel.setEventId(eventId);
         }
 
-        String eventName = args.getString(EventArgumentNames.NAME_ARG);
+        eventName = args.getString(EventArgumentNames.NAME_ARG);
         binding.tvEventName.setText(eventName);
 
         isEditable = args.getBoolean(EventArgumentNames.IS_ORGANIZER_ARG);
@@ -115,7 +117,11 @@ public class AgendaFragment extends Fragment {
                     if (cameFromDetails) {
                         navController.popBackStack(R.id.eventDetailsFragment, false);
                     } else {
-                        // TODO: navController.navigate(R.id.ACTION_AGENDA_FRAGMENT_TO_BUDGET_PLANNING_FRAGMENT)
+                        Bundle args = new Bundle();
+                        args.putLong(EventArgumentNames.ID_ARG, eventId);
+                        args.putString(EventArgumentNames.NAME_ARG, eventName);
+                        args.putBoolean(EventArgumentNames.CAME_FROM_DETAILS_ARG, false);
+                        navController.navigate(R.id.action_agendaFragment_to_budgetItemFragment, args);
                     }
                     return true;
                 }

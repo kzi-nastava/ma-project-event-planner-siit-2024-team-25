@@ -63,4 +63,10 @@ public class MyEventAdapter extends RecyclerView.Adapter<MyEventAdapter.EventVie
         events.addAll(newEvents);
         notifyItemRangeInserted(oldSize, newEvents.size());
     }
+
+    public void clear() {
+        int oldSize = events.size();
+        events.clear();
+        notifyItemRangeRemoved(0, oldSize);
+    }
 }
