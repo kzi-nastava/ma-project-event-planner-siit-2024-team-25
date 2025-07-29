@@ -1,5 +1,6 @@
 package com.team25.event.planner.service.api;
 
+import com.team25.event.planner.event.model.PurchaseResponseDTO;
 import com.team25.event.planner.offering.model.ProductPurchaseRequestDTO;
 import com.team25.event.planner.offering.model.ProductPurchaseResponseDTO;
 import com.team25.event.planner.service.dto.ServicePurchaseRequestDTO;
@@ -42,4 +43,8 @@ public interface PurchaseApi {
             @Query("startDate") LocalDate startDate,
             @Query("endDate") LocalDate endDate
     );
+    @GET("/api/purchase/events/{eventId}")
+    Call<List<PurchaseResponseDTO>> getPurchaseByEvent(@Path(value = "eventId")Long eventId);
+    @GET("/api/purchase/offerings/{offeringId}")
+    Call<List<PurchaseResponseDTO>> getPurchaseByOffering(@Path("offeringId")Long offeringId);
 }

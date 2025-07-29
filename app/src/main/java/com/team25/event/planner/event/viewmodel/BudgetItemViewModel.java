@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.airbnb.lottie.L;
 import com.google.gson.Gson;
 import com.team25.event.planner.core.ConnectionParams;
-import com.team25.event.planner.core.model.ApiError;
+import com.team25.event.planner.core.ErrorParse;
 import com.team25.event.planner.event.api.BudgetItemApi;
 import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.event.model.BudgetItem;
@@ -57,6 +57,7 @@ public class BudgetItemViewModel extends ViewModel {
     public final MutableLiveData<Boolean> isEditMode = new MutableLiveData<>(false);
     public final MutableLiveData<Boolean> isOfferingCategorySuitable = new MutableLiveData<>(false);
 
+
     @Data
     @Builder(toBuilder = true)
     public static class ErrorUiState{
@@ -64,6 +65,19 @@ public class BudgetItemViewModel extends ViewModel {
         private final String offeringCategory;
     }
 
+    public void resetSuccess() {
+        _success.setValue(false);
+    }
+
+    public void resetServerError(){
+        _serverError.postValue("");
+    }
+    public void setIsOfferingCategorySuitable(boolean check){
+        isOfferingCategorySuitable.setValue(check);
+    }
+    public void setIsNotReadyTOCreate(){
+        flagCreateBudgetItem.setValue(false);
+    }
     private final MutableLiveData<ErrorUiState> _errors = new MutableLiveData<>();
     public final LiveData<ErrorUiState> errors = _errors;
 
@@ -73,23 +87,11 @@ public class BudgetItemViewModel extends ViewModel {
     public final MutableLiveData<String> eventName = new MutableLiveData<>();
     public final MutableLiveData<Long> eventTypeId = new MutableLiveData<>();
 
-    public final MutableLiveData<Long> offeringCategoryId = new MutableLiveData<>();
+    public final MutableLiveData<Long> offeringCategoryId = new MutableLiveData<>(null);
     private final MutableLiveData<List<OfferingCategory>> _allCategories = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<OfferingCategory>> allCategories = _allCategories;
+    public MutableLiveData<Boolean> flagCreateBudgetItem = new MutableLiveData<>();
 
-    private void catchError(Response<?> response){
-        try (ResponseBody errorBody = response.errorBody()) {
-            if (errorBody != null) {
-                Gson gson = new Gson();
-                ApiError apiError = gson.fromJson(errorBody.charStream(), ApiError.class);
-                _serverError.postValue(apiError.getMessage());
-            } else {
-                _serverError.postValue("Unknown error occurred");
-            }
-        } catch (Exception e) {
-            _serverError.postValue("Error parsing server response");
-        }
-    }
     public void fetchSuitableOfferingCategories(){
         eventTypeApi.getOfferingCategoriesByEventType(eventTypeId.getValue()).enqueue(new Callback<List<OfferingCategory>>() {
             @Override
@@ -97,7 +99,7 @@ public class BudgetItemViewModel extends ViewModel {
                 if(response.isSuccessful() && response.body()!=null){
                     _allCategories.postValue(response.body());
                 }else{
-                    catchError(response);
+                    _serverError.postValue(ErrorParse.catchError(response));
                 }
             }
 
@@ -124,8 +126,9 @@ public class BudgetItemViewModel extends ViewModel {
                     if(response.isSuccessful() && response.body()!=null){
                         _success.postValue(true);
                         _successAllItems.postValue(true);
+                        flagCreateBudgetItem.setValue(false);
                     }else{
-                        catchError(response);
+                        _serverError.postValue(ErrorParse.catchError(response));
                     }
                 }
 
@@ -145,7 +148,7 @@ public class BudgetItemViewModel extends ViewModel {
                 if(response.isSuccessful() && response.body()!=null){
                     fillForm(response.body());
                 }else{
-                    catchError(response);
+                    _serverError.postValue(ErrorParse.catchError(response));
                 }
             }
 
@@ -162,7 +165,7 @@ public class BudgetItemViewModel extends ViewModel {
                 if(response.isSuccessful() && response.body()!=null){
                     _deleted.setValue(true);
                 }else{
-                    catchError(response);
+                    _serverError.postValue(ErrorParse.catchError(response));
                 }
             }
 
@@ -187,7 +190,7 @@ public class BudgetItemViewModel extends ViewModel {
                     _allBudgetItems.postValue(budgetItems);
                     _successAllItems.postValue(true);
                 } else {
-                    catchError(response);
+                    _serverError.postValue(ErrorParse.catchError(response));
                 }
             }
 
@@ -218,7 +221,7 @@ public class BudgetItemViewModel extends ViewModel {
                     budgetItem.setOfferingCategory(response.body());
                     updateBudgetItemsLiveData(budgetItem);
                 } else {
-                    _serverError.postValue("Error fetching category details");
+                    _serverError.postValue(ErrorParse.catchError(response));
                 }
             }
 
@@ -269,20 +272,28 @@ public class BudgetItemViewModel extends ViewModel {
         _errors.setValue(errorUiStateBuilder.build());
         return isValid;
     }
+    public boolean checkOfferingCategoryId(){
+        ErrorUiState.ErrorUiStateBuilder errorUiStateBuilder = ErrorUiState.builder();
+        if(offeringCategoryId.getValue()==null){
+            errorUiStateBuilder.offeringCategory("You must choose an offering category");
+            _errors.setValue(errorUiStateBuilder.build());
+            return false;
+        }
+        return true;
+
+    }
 
     public void isSuitableCategoryForEvent(){
        budgetItemApi.isOfferingCategorySuitableForEvent(offeringCategoryId.getValue(), eventId.getValue()).enqueue(new Callback<Boolean>() {
            @Override
            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                if(response.isSuccessful() && response.body()!=null){
-                   if(response.body()){
-                       isOfferingCategorySuitable.setValue(false);
-                   }else{
-                       isOfferingCategorySuitable.setValue(true);
-                   }
+                   flagCreateBudgetItem.setValue(true);
+                   isOfferingCategorySuitable.setValue(!response.body());
+
 
                }else{
-                   catchError(response);
+                   _serverError.postValue(ErrorParse.catchError(response));
                }
            }
 

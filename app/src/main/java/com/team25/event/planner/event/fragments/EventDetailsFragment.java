@@ -28,6 +28,7 @@ import com.team25.event.planner.databinding.FragmentEventDetailsBinding;
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.model.PrivacyType;
 import com.team25.event.planner.event.viewmodel.EventDetailsViewModel;
+import com.team25.event.planner.review.fragments.ReviewListFragment;
 import com.team25.event.planner.user.model.UserRole;
 
 import java.time.format.DateTimeFormatter;
@@ -207,6 +208,7 @@ public class EventDetailsFragment extends Fragment {
         binding.viewStatsAdminButton.setOnClickListener(v -> goToStats());
         binding.downloadReportButton.setOnClickListener(v -> downloadReport());
         binding.downloadReportAdminButton.setOnClickListener(v -> downloadReport());
+        binding.reviewsListButton.setOnClickListener(v->goToReviewList());
     }
 
     private void showOnMap() {
@@ -262,7 +264,18 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void goToPurchaseList() {
-        // TODO: Implement
+        Bundle bundle = new Bundle();
+        bundle.putLong(EventArgumentNames.ID_ARG, _eventId);
+        bundle.putString(EventArgumentNames.NAME_ARG,viewModel.event.getValue().getName());
+        bundle.putBoolean(PurchaseListFragment.EVENT_REVIEW, true);
+        navController.navigate(R.id.action_eventDetailsFragment_to_purchaseListFragment,bundle);
+    }
+    private void goToReviewList(){
+        Bundle bundle = new Bundle();
+        bundle.putString(ReviewListFragment.OFFERING_EVENT_NAME, viewModel.event.getValue().getName());
+        bundle.putLong(ReviewListFragment.EVENT_ID, _eventId);
+        bundle.putBoolean(PurchaseListFragment.EVENT_REVIEW,true);
+        navController.navigate(R.id.action_eventDetailsFragment_to_reviewListFragment, bundle);
     }
 
     private void joinEvent() {

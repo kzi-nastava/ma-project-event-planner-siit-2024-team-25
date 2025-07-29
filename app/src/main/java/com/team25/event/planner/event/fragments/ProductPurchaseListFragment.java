@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.dialogs.DialogHelper;
@@ -89,11 +90,14 @@ public class ProductPurchaseListFragment extends Fragment implements OnPurchaseC
     });
     viewModel.purchaseResponse.observe(getViewLifecycleOwner(), check ->{
         if (check) {
-            DialogHelper.showSuccessDialog(requireContext(), "Successfully bought product: " + productName);
+            Toast.makeText(requireActivity(), "Successfully bought product: " + productName, Toast.LENGTH_SHORT).show();
         } else {
-            DialogHelper.showErrorDialog(requireContext(), "Error occurred, try again.");
+            Toast.makeText(requireActivity(), "Error occurred, try again.", Toast.LENGTH_SHORT).show();
         }
     });
+        viewModel.serverError.observe(getViewLifecycleOwner(), msg -> {
+            Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show();
+        });
  }
 
 

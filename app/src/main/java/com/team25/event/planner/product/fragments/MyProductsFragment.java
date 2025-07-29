@@ -20,6 +20,7 @@ import com.team25.event.planner.R;
 import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentMyProductsBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
+import com.team25.event.planner.event.fragments.ProductPurchaseListFragment;
 import com.team25.event.planner.offering.dialogs.YesOrNoDialogFragment;
 import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.product.adapters.MyProductsAdapter;
@@ -65,7 +66,7 @@ public class MyProductsFragment extends Fragment {
                 new ArrayList<>(),
                 product -> {
                     Bundle bundle = new Bundle();
-                    bundle.putLong(ProductFormFragment.ID_ARG_NAME, product.getId());
+                    bundle.putLong(ProductPurchaseListFragment.PRODUCT_ID_ARG, product.getId());
                     bundle.putLong(EventArgumentNames.ID_ARG, 0L);
                     navController.navigate(R.id.action_myProductsFragment_to_productDetailsFragment, bundle);
                 },

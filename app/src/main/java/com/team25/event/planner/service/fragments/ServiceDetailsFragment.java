@@ -1,5 +1,8 @@
 package com.team25.event.planner.service.fragments;
 
+import static com.team25.event.planner.product.fragments.ProductDetailsFragment.OFFERING_NAME;
+import static com.team25.event.planner.user.fragments.PublicProfileFragment.USER_ID_ARG;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -25,16 +28,20 @@ import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.team25.event.planner.R;
 import com.team25.event.planner.communication.fragments.ChatFragment;
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.DialogBookServiceBinding;
 import com.team25.event.planner.databinding.FragmentServiceDetailsBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
+import com.team25.event.planner.event.fragments.PurchaseListFragment;
 import com.team25.event.planner.event.model.Event;
 import com.team25.event.planner.event.viewmodel.EventViewModel;
 
+import com.team25.event.planner.review.fragments.ReviewListFragment;
 import com.team25.event.planner.service.dto.ServiceCreateResponseDTO;
 import com.team25.event.planner.service.model.Service;
 import com.team25.event.planner.service.viewModels.BookServiceViewModel;
 import com.team25.event.planner.service.viewModels.ServiceViewModel;
+import com.team25.event.planner.user.model.UserRole;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -57,6 +64,7 @@ public class ServiceDetailsFragment extends Fragment {
 
     private Long _eventId;
     private Long _serviceId;
+    private AuthViewModel authViewModel;
 
     private final MutableLiveData<Event> _event = new MutableLiveData<>();
     public LiveData<Event> event = _event;
@@ -76,12 +84,19 @@ public class ServiceDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
         if (getArguments() != null) {
             _eventId = getArguments().getLong(EventArgumentNames.ID_ARG);
             _serviceId = getArguments().getLong(OFFERING_ID);
             _bookService.setValue(getArguments().getBoolean(BOOK_SERVICE));
         }
-
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
         _eventViewModel = new EventViewModel();
         _serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
         _bookServiceViewModel = new BookServiceViewModel();
@@ -91,46 +106,32 @@ public class ServiceDetailsFragment extends Fragment {
                 null,
                 false
         );
+        _binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
+        _binding.setLifecycleOwner(getViewLifecycleOwner());
+        _binding.setViewModel(_serviceViewModel);
+
+        listView = _binding.listView;
+
+        navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        setupDateTimePickers();
+
+        return _binding.getRoot();
     }
-
-
 
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        _eventViewModel.currentEvent.observe(getViewLifecycleOwner(),event -> {
-            this._event.setValue(event);
-            setUpBookDialog();
-        });
-
-        _serviceViewModel.currentService.observe(getViewLifecycleOwner(), service -> {
-            this._service.setValue(service);
-
-            Double tootalPrice = this._service.getValue().getPrice();
-            if(this._service.getValue().getDiscount() > 0){
-                tootalPrice  = tootalPrice*(100-this._service.getValue().getDiscount())/100;
-            }
-            _bookServiceViewModel.purchase.getPrice().setValue(tootalPrice.toString());
-        });
-        _serviceViewModel.getService(_serviceId);
-
-        _bookService.observe(getViewLifecycleOwner(), isBookService -> {
-            if (isBookService != null) {
-                _binding.bookService.setVisibility(isBookService ? View.VISIBLE : View.GONE);
-                if(_bookService.getValue() != null && Boolean.TRUE.equals(_bookService.getValue())){
-                    _eventViewModel.getEvent(_eventId);
-                }
+        setupObservable();
+        setupListeners();
+        setButtonsOptions();
 
 
-                _binding.bookService.setOnClickListener(v -> {
-                    _bookServiceDialog.show();
-                });
-            }
-        });
-
-
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
     }
 
     private void setUpBookDialog(){
@@ -244,13 +245,59 @@ public class ServiceDetailsFragment extends Fragment {
     }
 
     private void setupObservable(){
+        _eventViewModel.currentEvent.observe(getViewLifecycleOwner(),event -> {
+            this._event.setValue(event);
+            setUpBookDialog();
+        });
+
+        _serviceViewModel.currentService.observe(getViewLifecycleOwner(), service -> {
+            this._service.setValue(service);
+            if(service.isFavorite()){
+                _binding.favoriteButton.setImageResource(R.drawable.ic_heart_red);
+                _serviceViewModel.favInd = true;
+            }else{
+                _serviceViewModel.favInd = false;
+            }
+
+            Double tootalPrice = this._service.getValue().getPrice();
+            if(this._service.getValue().getDiscount() > 0){
+                tootalPrice  = tootalPrice*(100-this._service.getValue().getDiscount())/100;
+            }
+            _bookServiceViewModel.purchase.getPrice().setValue(tootalPrice.toString());
+        });
+        _serviceViewModel.getService(_serviceId);
+
+        _bookService.observe(getViewLifecycleOwner(), isBookService -> {
+            if (isBookService != null) {
+                _binding.bookService.setVisibility(isBookService ? View.VISIBLE : View.GONE);
+                if(_bookService.getValue() != null && Boolean.TRUE.equals(_bookService.getValue())){
+                    _eventViewModel.getEvent(_eventId);
+                }
+
+
+                _binding.bookService.setOnClickListener(v -> {
+                    _bookServiceDialog.show();
+                });
+            }
+        });
+        _serviceViewModel.fav.observe(getViewLifecycleOwner(), check -> {
+            if(check){
+                Toast.makeText(getContext(), "Added to favorite services", Toast.LENGTH_SHORT).show();
+                _binding.favoriteButton.setImageResource(R.drawable.ic_heart_red);
+            }else{
+                Toast.makeText(getContext(), "Removed from favorite services", Toast.LENGTH_SHORT).show();
+                _binding.favoriteButton.setImageResource(R.drawable.ic_favorite_border);
+            }
+        });
+
+        _serviceViewModel.serverError.observe(getViewLifecycleOwner(), msg -> {
+            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+        });
+
         _bookServiceViewModel.purchase.getSelectedStartTime().observe(getViewLifecycleOwner(), localTime -> {
         });
 
-        _dialogBookServiceBinding.bookServiceButton.setOnClickListener(v -> {
-            _bookServiceViewModel.bookService(this._eventId, this._serviceId);
-            _bookServiceDialog.dismiss();
-        });
+
 
         _bookServiceViewModel.responseDTO.observe(getViewLifecycleOwner(), response -> {
             Toast.makeText(getContext(), "You've successfully booked this service for your event!", Toast.LENGTH_LONG).show();
@@ -286,25 +333,26 @@ public class ServiceDetailsFragment extends Fragment {
 
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
 
-
-        _binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
-        _binding.setLifecycleOwner(getViewLifecycleOwner());
-        _binding.setViewModel(_serviceViewModel);
-
-        listView = _binding.listView;
-
-        navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
-        setupDateTimePickers();
-        setupObservable();
-        setupListeners();
-        return _binding.getRoot();
-    }
 
     private void setupListeners() {
+
+        _dialogBookServiceBinding.bookServiceButton.setOnClickListener(v -> {
+            _bookServiceViewModel.bookService(this._eventId, this._serviceId);
+            _bookServiceDialog.dismiss();
+        });
+
+        _binding.favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (_serviceViewModel.favInd) {
+                    _serviceViewModel.deleteFavoriteService(_serviceId, authViewModel.getUserId());
+                }else{
+                    _serviceViewModel.favoriteService(_serviceId, authViewModel.getUserId());
+                }
+            }
+        });
+
         _binding.chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -314,5 +362,55 @@ public class ServiceDetailsFragment extends Fragment {
                 navController.navigate(R.id.action_serviceDetailsFragment_to_chatFragment, bundle);
             }
         });
+        _binding.viewPurchaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(PurchaseListFragment.EVENT_REVIEW, false);
+                bundle.putLong(OFFERING_ID, _serviceId);
+                bundle.putString(OFFERING_NAME, _serviceViewModel.currentService.getValue().getName());
+                navController.navigate(R.id.action_serviceDetailsFragment_to_purchaseListFragment, bundle);
+            }
+        });
+        _binding.viewReviewsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(PurchaseListFragment.EVENT_REVIEW, false);
+                bundle.putLong(ReviewListFragment.OFFERING_ID,_serviceId);
+                bundle.putString(ReviewListFragment.OFFERING_EVENT_NAME, _serviceViewModel.currentService.getValue().getName());
+                navController.navigate(R.id.action_serviceDetailsFragment_to_reviewListFragment, bundle);
+
+            }
+        });
+        _binding.viewOwnerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putLong(USER_ID_ARG, service.getValue().getOwner().getId());
+                navController.navigate(R.id.action_serviceDetailsFragment_to_publicProfileFragment, bundle);
+            }
+        });
+    }
+    private void setButtonsOptions(){
+        if(authViewModel.user.getValue() == null){
+            _binding.chatButton.setVisibility(View.GONE);
+            _binding.favoriteButton.setVisibility(View.GONE);
+            _binding.viewPurchaseButton.setVisibility(View.GONE);
+            return;
+        }
+        _binding.favoriteButton.setVisibility(View.VISIBLE);
+        UserRole userRole = authViewModel.user.getValue().getUserRole();
+        if(!userRole.equals(UserRole.EVENT_ORGANIZER)){
+            _binding.chatButton.setVisibility(View.GONE);
+
+        }else{
+            _binding.chatButton.setVisibility(View.VISIBLE);
+        }
+        if(userRole.equals(UserRole.OWNER)){
+            _binding.viewPurchaseButton.setVisibility(View.VISIBLE);
+        }else{
+            _binding.viewPurchaseButton.setVisibility(View.GONE);
+        }
     }
 }

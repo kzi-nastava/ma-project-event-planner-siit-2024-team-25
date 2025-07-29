@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.FragmentCreateEditBudgetItemBinding;
@@ -38,7 +39,6 @@ public class CreateEditBudgetItemFragment extends Fragment {
     private NavController navController;
     private BudgetItemViewModel viewModel;
     private Spinner categorySpinner;
-
 
     public CreateEditBudgetItemFragment() {
         // Required empty public constructor
@@ -61,6 +61,7 @@ public class CreateEditBudgetItemFragment extends Fragment {
         navController = Navigation.findNavController(requireActivity(),R.id.nav_host_fragment );
 
         if(getArguments()!=null){
+
             binding.title.setText("Edit the budget item");
             viewModel.isEditMode.setValue(true);
             Long budgetItemId = getArguments().getLong(BUDGET_ITEM_ID);
@@ -102,13 +103,33 @@ public class CreateEditBudgetItemFragment extends Fragment {
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.saveBudgetItem();
+
+                if(Boolean.TRUE.equals(viewModel.isEditMode.getValue())){
+                    viewModel.setIsOfferingCategorySuitable(false);
+                    viewModel.saveBudgetItem();
+                }else{
+                    if(viewModel.checkOfferingCategoryId()){
+                        viewModel.isSuitableCategoryForEvent();
+                    }
+
+                }
+
             }
         });
 
     }
 
+
     private void setUpObservers() {
+        viewModel.isOfferingCategorySuitable.observe(getViewLifecycleOwner(), check -> {
+            if(Boolean.TRUE.equals(viewModel.flagCreateBudgetItem.getValue())){
+                viewModel.setIsNotReadyTOCreate();
+                viewModel.saveBudgetItem();
+
+            }
+
+
+        });
         viewModel.allCategories.observe(getViewLifecycleOwner(), offeringCategories -> {
             List<OfferingCategory> updatedCategories = new ArrayList<>();
             updatedCategories.add(new OfferingCategory(null, "Select an offering category"));
@@ -125,16 +146,22 @@ public class CreateEditBudgetItemFragment extends Fragment {
                     if(Boolean.FALSE.equals(viewModel.isEditMode.getValue())){
                         s = "added";
                     }
-                    new AlertDialog.Builder(requireActivity())
-                            .setTitle("Information")
-                            .setMessage("You successfully " + s + " budget item")
-                            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                            .show();
+
+                    Toast.makeText(requireContext(),"You successfully " + s + " budget item", Toast.LENGTH_SHORT).show();
+                    viewModel.resetSuccess();
             }
 
 
 
             }
+        });
+        viewModel.serverError.observe(getViewLifecycleOwner(), msg -> {
+            if(!Objects.equals(msg, "")){
+
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                viewModel.resetServerError();
+            }
+
         });
     }
 
@@ -146,7 +173,7 @@ public class CreateEditBudgetItemFragment extends Fragment {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     OfferingCategory selectedCategory = (OfferingCategory) parent.getItemAtPosition(position);
                     viewModel.offeringCategoryId.setValue(selectedCategory.getId());
-                    viewModel.isSuitableCategoryForEvent();
+
                 }
 
                 @Override

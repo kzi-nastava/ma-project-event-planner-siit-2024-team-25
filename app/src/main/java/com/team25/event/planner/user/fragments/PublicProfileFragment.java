@@ -1,5 +1,6 @@
 package com.team25.event.planner.user.fragments;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,21 +10,26 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.fragments.MapFragment;
 import com.team25.event.planner.databinding.FragmentPublicProfileBinding;
+import com.team25.event.planner.databinding.ReportDialogBinding;
 import com.team25.event.planner.user.adapters.CompanyPicturesAdapter;
 import com.team25.event.planner.user.model.EventOrganizer;
 import com.team25.event.planner.user.model.Location;
 import com.team25.event.planner.user.model.Owner;
+import com.team25.event.planner.user.model.RegularUser;
 import com.team25.event.planner.user.viewmodels.PublicProfileViewModel;
+import com.team25.event.planner.user.viewmodels.UserReportViewModel;
 
 public class PublicProfileFragment extends Fragment {
     public static final String USER_ID_ARG = "USER_ID";
@@ -97,6 +103,8 @@ public class PublicProfileFragment extends Fragment {
 
     private void setupListeners() {
         binding.showOnMapButton.setOnClickListener(v -> showOnMap());
+        binding.reportButton.setOnClickListener(v -> showReportDialog());
+
     }
 
     private void showOnMap() {
@@ -107,5 +115,62 @@ public class PublicProfileFragment extends Fragment {
         args.putString(MapFragment.TITLE_ARG, owner.getCompanyName());
         args.putParcelable(MapFragment.LOCATION_ARG, owner.getCompanyAddress());
         navController.navigate(R.id.mapFragment, args);
+    }
+
+    private UserReportViewModel reportViewModel;
+    private Observer<String> serverErrorObserver;
+    private Observer<Boolean> reportSendObserver;
+
+    private void showReportDialog() {
+        RegularUser user = viewModel.user.getValue();
+        if (user == null) {
+            return;
+        }
+
+        removeObservers();
+
+        ReportDialogBinding reportBinding = ReportDialogBinding.inflate(getLayoutInflater());
+
+        reportViewModel = new ViewModelProvider(this,
+                new UserReportViewModel.Factory(user.getId())).get(UserReportViewModel.class);
+
+        reportBinding.setViewModel(reportViewModel);
+        reportBinding.setLifecycleOwner(this);
+
+        Dialog dialog = new MaterialAlertDialogBuilder(requireContext())
+                .setView(reportBinding.getRoot())
+                .create();
+
+        serverErrorObserver = errorMessage -> {
+            if (errorMessage != null) {
+                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+            }
+        };
+
+        reportSendObserver = isReportSent -> {
+            if (isReportSent) {
+                Toast.makeText(getContext(), R.string.report_sent_successfully, Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                reportViewModel.onReportDone();
+            }
+        };
+
+        reportViewModel.serverError.observe(getViewLifecycleOwner(), serverErrorObserver);
+        reportViewModel.isReportSend.observe(getViewLifecycleOwner(), reportSendObserver);
+
+        dialog.show();
+    }
+
+    private void removeObservers() {
+        if (reportViewModel != null) {
+            if (serverErrorObserver != null) {
+                reportViewModel.serverError.removeObserver(serverErrorObserver);
+                serverErrorObserver = null;
+            }
+            if (reportSendObserver != null) {
+                reportViewModel.isReportSend.removeObserver(reportSendObserver);
+                reportSendObserver = null;
+            }
+        }
     }
 }

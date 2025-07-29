@@ -65,8 +65,9 @@ public class LoginFragment extends Fragment {
                 if (this._invitationCode != null) {
                     Bundle bundle = new Bundle();
                     bundle.putString(EventArgumentNames.INVITATION_CODE_ARG, _invitationCode);
-                    bundle.putLong(EventArgumentNames.NAME_ARG, _eventId);
+                    bundle.putLong(EventArgumentNames.ID_ARG, _eventId);
 
+                    navController.popBackStack();
                     navController.navigate(R.id.eventDetailsFragment, bundle);
                 } else {
                     navController.navigate(R.id.action_loginFragment_to_homeFragment);

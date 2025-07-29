@@ -35,4 +35,9 @@ public interface OfferingCategoryApi {
     @DELETE("api/offering-categories/{id}")
     Call<ResponseBody> deleteOfferingCategory(@Path("id") Long id);
 
+    @PUT("api/offering-categories/{id}/approve")
+    Call<ResponseBody> approveOfferingCategory(@Path("id") Long id,
+                                               @Body OfferingCategory request,
+                                               @Query("offeringId") Long offeringId);
+
 }

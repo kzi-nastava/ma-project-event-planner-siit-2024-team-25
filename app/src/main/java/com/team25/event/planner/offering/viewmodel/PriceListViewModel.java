@@ -1,5 +1,10 @@
 package com.team25.event.planner.offering.viewmodel;
 
+import android.util.Log;
+
+
+import androidx.core.content.ContextCompat;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,15 +16,24 @@ import com.team25.event.planner.offering.Api.PriceListApi;
 import com.team25.event.planner.offering.model.PriceListItemRequestDTO;
 import com.team25.event.planner.offering.model.PriceListItemResponseDTO;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import lombok.Builder;
 import lombok.Data;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PriceListViewModel extends ViewModel {
+    private final MutableLiveData<ResponseBody> _pdfData = new MutableLiveData<>();
+    public LiveData<ResponseBody> pdfData = _pdfData;
+
     public final MutableLiveData<Long> ownerId = new MutableLiveData<>();
 
     private final PriceListApi priceListApi = ConnectionParams.priceListApi;
@@ -102,7 +116,7 @@ public class PriceListViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<List<PriceListItemResponseDTO>> call, Throwable t) {
-                _serverError.postValue("Network problem");
+                _serverError.postValue("Network problemmm");
             }
         });
     }
@@ -120,7 +134,9 @@ public class PriceListViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<List<PriceListItemResponseDTO>> call, Throwable t) {
-                _serverError.postValue("Network problem");
+                Log.e("RETROFIT", "Update failed", t);
+                _serverError.postValue("Error: " + t.getClass().getSimpleName() + " - " + t.getMessage());
+
             }
         });
     }
@@ -140,14 +156,37 @@ public class PriceListViewModel extends ViewModel {
 
                 @Override
                 public void onFailure(Call<PriceListItemResponseDTO> call, Throwable t) {
-                    _serverError.postValue("Network problem");
+                    _serverError.postValue("Network problem update" + t.toString());
                 }
             });
         }
 
     }
+
+    public void generatePDF(boolean isProduct){
+        priceListApi.getPriceListReport(ownerId.getValue(), isProduct).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _pdfData.postValue(response.body());
+                } else {
+                    _serverError.postValue("Network problem");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                _serverError.postValue("Network problem" + t.toString());
+            }
+        });
+    }
     public void fillForm(Double price, Double discount){
         priceText.setValue(String.valueOf(price));
         discountText.setValue(String.valueOf(discount));
     }
+
+    public void clearError() {
+        _serverError.setValue(null);
+    }
+
 }

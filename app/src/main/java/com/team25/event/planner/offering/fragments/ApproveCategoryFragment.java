@@ -44,7 +44,7 @@ public class ApproveCategoryFragment extends Fragment {
     private Spinner spinner;
     private HashMap<Integer,Long> createdCategories = new HashMap<>();
     private Long acceptedOfferingCategoryId;
-    private Boolean isUpdateCategory = true;
+    private Boolean isUpdateCategory = false;
 
 
     public ApproveCategoryFragment() {
@@ -146,7 +146,7 @@ public class ApproveCategoryFragment extends Fragment {
                 if(isUpdateCategory){
                     viewModel.updateOfferingCategory();
                 }else{
-                    viewModel.changeOfferingsCategory(acceptedOfferingCategoryId, createdCategories.size());
+                    viewModel.approveOfferingsCategory(acceptedOfferingCategoryId, createdCategories.size());
                 }
 
             }

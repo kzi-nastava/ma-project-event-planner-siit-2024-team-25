@@ -296,6 +296,26 @@
                         android:text="View owner company"
                         android:id="@+id/viewOwnerButton"/>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10sp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View purchases"
+                        android:layout_marginRight="10sp"
+                        android:id="@+id/viewPurchaseButton"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10sp"
+                        android:layout_marginRight="20sp"
+                        android:text="View reviews"
+                        android:id="@+id/viewReviewsButton"/>
+                </LinearLayout>
                 <Button
                     android:id="@+id/book_service"
                     android:layout_width="wrap_content"

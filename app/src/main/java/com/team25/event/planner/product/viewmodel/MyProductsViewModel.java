@@ -11,10 +11,13 @@ import com.team25.event.planner.core.api.SideEffectResponseCallback;
 import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.offering.Api.OfferingCategoryApi;
+import com.team25.event.planner.offering.model.FavoruriteOfferingDTO;
 import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.offering.model.OfferingCategory;
+import com.team25.event.planner.offering.model.ProductCard;
 import com.team25.event.planner.product.api.ProductApi;
 import com.team25.event.planner.product.model.Product;
+import com.team25.event.planner.user.api.UserApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ import retrofit2.Response;
 public class MyProductsViewModel extends ViewModel {
     private final ProductApi productApi = ConnectionParams.productApi;
     private final EventTypeApi eventTypeApi = ConnectionParams.eventTypeApi;
+    private final UserApi userApi = ConnectionParams.userApi;
     private final OfferingCategoryApi offeringCategoryApi = ConnectionParams.offeringCategoryApi;
 
     private final MutableLiveData<Product> _selectedProduct = new MutableLiveData<>();
@@ -62,8 +66,49 @@ public class MyProductsViewModel extends ViewModel {
     private final MutableLiveData<String> _serverError = new MutableLiveData<>();
     public final LiveData<String> serverError = _serverError;
 
+    private MutableLiveData<Boolean> _fav = new MutableLiveData<>();
+    public LiveData<Boolean> fav = _fav;
+
+    public boolean favInd;
+
     @Setter
     private Long ownerId;
+
+
+    public void favoriteProduct(Long productId, Long userId){
+        userApi.favoriteProduct(userId, new FavoruriteOfferingDTO(productId)).enqueue(new Callback<ProductCard>() {
+            @Override
+            public void onResponse(Call<ProductCard> call, Response<ProductCard> response) {
+                if (response.isSuccessful()) {
+                    _fav.setValue(true);
+                    favInd = true;
+                } else {
+                    _serverError.postValue("Error favorite product");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductCard> call, Throwable t) {
+                _serverError.postValue("network problem");
+            }
+        });
+    }
+
+    public void deleteFavoriteProduct(Long productId, Long userId){
+        userApi.deleteFavoriteProduct(userId, productId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                _fav.setValue(false);
+                favInd = false;
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                _serverError.postValue("network problem");
+            }
+        });
+    }
+
 
     public void loadNextPage() {
         if (isLoading() || isEndReached) return;
@@ -147,7 +192,11 @@ public class MyProductsViewModel extends ViewModel {
         List<String> res = product.getEventTypes().stream().map(com.team25.event.planner.product.model.EventType::getName).collect(Collectors.toList());
         eventTypeNames.postValue(res);
         ownerName.postValue(product.getOwnerInfo().getName());
-        images.postValue(product.getImages());
+        images.setValue(
+                product.getImages().stream().map(imageId ->
+                        ConnectionParams.BASE_URL + "api/products/" + product.getId() + "/images/" + imageId
+                ).collect(Collectors.toList())
+        );
         available.postValue(product.isAvailable());
     }
 }

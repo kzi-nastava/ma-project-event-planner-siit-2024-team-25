@@ -15,10 +15,13 @@ import androidx.navigation.NavController;
 
 import com.google.android.material.card.MaterialCardView;
 import com.team25.event.planner.R;
+import com.team25.event.planner.event.fragments.ProductPurchaseListFragment;
 import com.team25.event.planner.offering.model.OfferingCard;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
 
@@ -60,7 +63,7 @@ public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
         TextView offerName = convertView.findViewById(R.id.top_offer_name);
         TextView offerOwner = convertView.findViewById(R.id.top_offer_owner);
         TextView offerPrice = convertView.findViewById(R.id.top_offer_price);
-        ImageView offerIcon = convertView.findViewById(R.id.top_offer_picture);
+        //ImageView offerIcon = convertView.findViewById(R.id.top_offer_picture);
         TextView offerRating = convertView.findViewById(R.id.top_offer_rating);
         ImageView starImage = convertView.findViewById(R.id.top_offer_star_image);
 
@@ -68,19 +71,18 @@ public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
             offerName.setText(offeringCard.getName());
             offerOwner.setText(offeringCard.getOwnerName());
 
-            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-            String formattedPrice = currencyFormatter.format(offeringCard.getPrice());
+            String formattedPrice = new DecimalFormat("#,##0.00 $").format(offeringCard.getPrice());
             offerPrice.setText(formattedPrice);
-            offerIcon.setImageResource(R.drawable.ic_heart);
+            //offerIcon.setImageResource(R.drawable.ic_heart);
 
-            NumberFormat ratingFormatter = NumberFormat.getNumberInstance();
+            NumberFormat ratingFormatter = NumberFormat.getNumberInstance(Locale.US);
             ratingFormatter.setMinimumFractionDigits(1);
             String formattedRating = ratingFormatter.format(offeringCard.getRating());
             offerRating.setText(formattedRating);
             starImage.setImageResource(R.drawable.ic_star);
 
             boolean[] isClicked = {false};
-            offerIcon.setOnClickListener(v -> {
+            /*offerIcon.setOnClickListener(v -> {
                 isClicked[0] = !isClicked[0];
                 if(isClicked[0]){
                     offerIcon.setImageResource(R.drawable.ic_heart_red);
@@ -92,7 +94,7 @@ public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
                     Toast.makeText(getContext(), "You remove " + offeringCard.getName() +
                             " from your favourite list", Toast.LENGTH_SHORT).show();
                 }
-            });
+            });*/
 
             offerCard.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
@@ -100,7 +102,8 @@ public class TopOfferingsListAdapter extends ArrayAdapter<OfferingCard> {
                 if(offeringCard.isService()){
                     _navController.navigate(R.id.serviceDetailsFragment, bundle);
                 }else{
-                    ///TO-DO: navController.navigate(R.id.productDetailsFragment, bundle);
+                    bundle.putLong(ProductPurchaseListFragment.PRODUCT_ID_ARG, offeringCard.getId());
+                    _navController.navigate(R.id.productDetailsFragment, bundle);
                 }
             });
 

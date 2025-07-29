@@ -116,8 +116,8 @@ public class BudgetItemListFragment extends Fragment implements OnEditButtonClic
                 viewModel.fetchBudgetItems();
             }
         });
-        viewModel.serverError.observe(getViewLifecycleOwner(), mess -> {
-            if (mess != null) {
+        viewModel.serverError.observe(getViewLifecycleOwner(), mess->{
+            if(mess != null && !mess.isEmpty()){
                 Toast.makeText(requireContext(), mess, Toast.LENGTH_SHORT).show();
 
             }

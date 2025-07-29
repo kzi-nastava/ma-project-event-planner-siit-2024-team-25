@@ -17,11 +17,14 @@ import androidx.navigation.NavController;
 import com.google.android.material.card.MaterialCardView;
 import com.team25.event.planner.R;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
+import com.team25.event.planner.event.fragments.ProductPurchaseListFragment;
 import com.team25.event.planner.offering.model.OfferingCard;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
 
@@ -31,6 +34,7 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
     private Long _eventId;
 
     private NavController _navController;
+
 
     public HomeOfferingListAdapter(Context context, List<OfferingCard> offerings, NavController navController, Long eventId) {
         super(context, R.layout.home_page_top_offer, offerings);
@@ -67,7 +71,7 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
         TextView offerName = convertView.findViewById(R.id.home_offering_name);
         TextView offerOwner = convertView.findViewById(R.id.home_offering_owner);
         TextView offerPrice = convertView.findViewById(R.id.home_offering_price);
-        ImageView offerIcon = convertView.findViewById(R.id.home_offering_picture);
+        //ImageView offerIcon = convertView.findViewById(R.id.home_offering_picture);
         TextView offerRating = convertView.findViewById(R.id.home_offer_rating);
         ImageView starImage = convertView.findViewById(R.id.home_offer_star_image);
 
@@ -75,11 +79,13 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
             offerName.setText(offeringCard.getName());
             offerOwner.setText(offeringCard.getOwnerName());
 
-            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-            String formattedPrice = currencyFormatter.format(offeringCard.getPrice());
+
+            String formattedPrice = new DecimalFormat("#,##0.00 $").format(offeringCard.getPrice());
+            offerPrice.setText(formattedPrice);
             String formattedDate = formattedPrice;
             offerPrice.setText(formattedDate);
-            offerIcon.setImageResource(R.drawable.ic_heart);
+            //offerIcon.setImageResource(R.drawable.ic_heart);
+
 
             NumberFormat ratingFormatter = NumberFormat.getNumberInstance();
             ratingFormatter.setMinimumFractionDigits(1);
@@ -88,7 +94,7 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
             starImage.setImageResource(R.drawable.ic_star);
 
             boolean[] isClicked = {false};
-            offerIcon.setOnClickListener(v -> {
+            /*offerIcon.setOnClickListener(v -> {
                 isClicked[0] = !isClicked[0];
                 if(isClicked[0]){
                     offerIcon.setImageResource(R.drawable.ic_heart_red);
@@ -100,7 +106,7 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
                     Toast.makeText(getContext(), "You remove " + offeringCard.getName() +
                             " from your favourite list", Toast.LENGTH_SHORT).show();
                 }
-            });
+            });*/
 
 
             offerCard.setOnClickListener(v -> {
@@ -112,13 +118,14 @@ public class HomeOfferingListAdapter extends ArrayAdapter<OfferingCard> {
                     if(offeringCard.isService()){
                         _navController.navigate(R.id.action_eventPurchaseFragment_to_serviceDetailsFragment, bundle);
                     }else{
-                        ///TO-DO: navController.navigate(R.id.action_eventPurchaseFragment_to_productDetailsFragment, bundle);
-                    }
+                        bundle.putLong(ProductPurchaseListFragment.PRODUCT_ID_ARG, offeringCard.getId());
+                        _navController.navigate(R.id.action_eventPurchaseFragment_to_productDetailsFragment2, bundle);                    }
                 }else{
                     if(offeringCard.isService()){
                         _navController.navigate(R.id.serviceDetailsFragment, bundle);
                     }else{
-                        ///TO-DO: navController.navigate(R.id.productDetailsPragment, bundle);
+                        bundle.putLong(ProductPurchaseListFragment.PRODUCT_ID_ARG, offeringCard.getId());
+                        _navController.navigate(R.id.productDetailsFragment, bundle);
                     }
                 }
 

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.team25.event.planner.MainActivity;
 import com.team25.event.planner.R;
 import com.team25.event.planner.communication.adapters.NotificationsListAdapter;
 import com.team25.event.planner.communication.model.Notification;
@@ -72,11 +73,23 @@ public class NotificationFragment extends Fragment {
 
         setupNotificationList();
         setupObservers();
+        setupListener();
 
         _notificationViewModel.loadNextPage();
 
         return _binding.getRoot();
     }
+
+    private void setupListener() {
+        _binding.toggleNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                _authViewModel.notificationOn();
+            } else {
+                _authViewModel.notificationOff();
+            }
+        });
+    }
+
 
     private void setupNotificationList() {
         _adapter = new NotificationsListAdapter(new ArrayList<>(), new NotificationsListAdapter.OnItemClickListener() {
@@ -91,8 +104,12 @@ public class NotificationFragment extends Fragment {
                             if(notificationCategory == NotificationCategory.OFFERING_CATEGORY){
                                 if(userRole == UserRole.ADMINISTRATOR){
                                     _navController.navigate(R.id.offeringCategoryFragment);
-                                }else{
-                                    _navController.navigate(R.id.ownerHomePage);
+                                }else {
+                                    if(notification.getTitle().contains("Product")){
+                                        _navController.navigate(R.id.myProductsFragment);
+                                    } else if (notification.getTitle().contains("Service")) {
+                                        _navController.navigate(R.id.ownerHomePage);
+                                    }
                                 }
                             }else if(notificationCategory == NotificationCategory.EVENT){
                                 bundle.putLong(EventArgumentNames.ID_ARG, notification.getEntityId());
@@ -160,6 +177,18 @@ public class NotificationFragment extends Fragment {
         _notificationViewModel.serverError.observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {
                 Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        _authViewModel.notification.observe(getViewLifecycleOwner(), notification -> {
+            if(notification){
+                ((MainActivity) requireActivity()).openWebSocket();
+                _binding.toggleNotifications.setText("Notifications on");
+                _binding.toggleNotifications.setChecked(true);
+            }else if(!notification){
+                ((MainActivity) requireActivity()).closeWebSocket();
+                _binding.toggleNotifications.setText("Notifications off");
+                _binding.toggleNotifications.setChecked(false);
             }
         });
     }
