@@ -28,6 +28,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.team25.event.planner.R;
 import com.team25.event.planner.core.ConnectionParams;
+import com.team25.event.planner.core.viewmodel.AuthViewModel;
 import com.team25.event.planner.databinding.FragmentEventStatsBinding;
 import com.team25.event.planner.event.adapters.AttendeeListAdapter;
 import com.team25.event.planner.event.model.ReviewStats;
@@ -42,6 +43,7 @@ public class EventStatsFragment extends Fragment {
 
     private FragmentEventStatsBinding binding;
     private EventStatsViewModel viewModel;
+    private AuthViewModel authViewModel;
     private NavController navController;
     private AttendeeListAdapter adapter;
 
@@ -52,6 +54,8 @@ public class EventStatsFragment extends Fragment {
 
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
+        
         viewModel = new ViewModelProvider(this).get(EventStatsViewModel.class);
         binding.setViewModel(viewModel);
 
@@ -186,7 +190,8 @@ public class EventStatsFragment extends Fragment {
         request.setTitle(eventName + " statistics report");
         request.setDescription("Downloading PDF report with event stats for " + eventName + "...");
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
+        request.addRequestHeader("Authorization", "Bearer " + authViewModel.jwt.getValue());
+        request.setMimeType("application/pdf");
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
 
         DownloadManager downloadManager = (DownloadManager) requireContext().getSystemService(Context.DOWNLOAD_SERVICE);
