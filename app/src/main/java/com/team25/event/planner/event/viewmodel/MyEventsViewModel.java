@@ -52,4 +52,10 @@ public class MyEventsViewModel extends ViewModel {
     public boolean isLoading() {
         return isLoading.getValue() == null || isLoading.getValue();
     }
+
+    public void reload() {
+        currentPage = 0;
+        isEndReached = false;
+        loadNextPage();
+    }
 }

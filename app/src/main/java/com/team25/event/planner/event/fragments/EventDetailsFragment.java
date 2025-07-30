@@ -251,7 +251,9 @@ public class EventDetailsFragment extends Fragment {
         Bundle args = new Bundle();
         args.putLong(EventArgumentNames.ID_ARG, event.getId());
         args.putString(EventArgumentNames.NAME_ARG, event.getName());
-        args.putLong(EventArgumentNames.EVENT_TYPE_ID, event.getEventType().id);
+        if (event.getEventType() != null) {
+            args.putLong(EventArgumentNames.EVENT_TYPE_ID, event.getEventType().id);
+        }
         navController.navigate(R.id.action_eventDetailsFragment_to_budgetItemFragment, args);
     }
 
@@ -316,7 +318,8 @@ public class EventDetailsFragment extends Fragment {
         request.setTitle(event.getName() + " details report");
         request.setDescription("Downloading PDF report with event details for " + event.getName() + "...");
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
+        request.addRequestHeader("Authorization", "Bearer " + authViewModel.jwt.getValue());
+        request.setMimeType("application/pdf");
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
 
         DownloadManager downloadManager = (DownloadManager) requireContext().getSystemService(Context.DOWNLOAD_SERVICE);

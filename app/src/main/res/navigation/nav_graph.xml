@@ -230,7 +230,11 @@
     <fragment
         android:id="@+id/agendaFragment"
         android:name="com.team25.event.planner.event.fragments.AgendaFragment"
-        android:label="Agenda" />
+        android:label="Agenda">
+        <action
+            android:id="@+id/action_agendaFragment_to_budgetItemFragment"
+            app:destination="@id/budgetItemFragment" />
+    </fragment>
     <fragment
         android:id="@+id/eventDetailsFragment"
         android:name="com.team25.event.planner.event.fragments.EventDetailsFragment"
@@ -404,7 +408,7 @@
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.team25.event.planner.user.fragments.EditProfileFragment"
-        android:label="Edit Profile" >
+        android:label="Edit Profile">
         <action
             android:id="@+id/action_editProfileFragment_to_nav_graph_registration"
             app:destination="@id/nav_graph_registration" />

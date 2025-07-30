@@ -203,6 +203,7 @@
     <string name="right_chevron">right chevron</string>
     <string name="upgrade_account">Upgrade account</string>
     <string name="save_as_pdf">Save as PDF</string>
+    <string name="budget_finish_message">Successfully saved budget plan!</string>
     <string name="report_sent_successfully">Report sent successfully!</string>
     >>>>>>> develop
 </resources>
