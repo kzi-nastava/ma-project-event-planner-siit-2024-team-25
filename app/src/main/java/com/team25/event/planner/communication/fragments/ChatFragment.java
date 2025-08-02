@@ -84,7 +84,7 @@ public class ChatFragment extends Fragment {
     private void openWebSocketConnection(){
         User user = authViewModel.user.getValue();
         if(user != null){
-            viewModel.connectToSocket(user);
+            viewModel.connectToSocket();
         }
     }
     @Override
