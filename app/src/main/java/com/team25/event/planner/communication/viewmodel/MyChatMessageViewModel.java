@@ -34,7 +34,11 @@ public class MyChatMessageViewModel extends ViewModel {
     }
 
     @SuppressLint("CheckResult")
-    public void connectToSocket(User user){
+    public void connectToSocket(){
+        if (chatId == null || chatId.isEmpty()) {
+            Log.e("WebSocket", "Chat ID not set yet!");
+            return;
+        }
         chatMessageWebSocket = new ChatMessageWebSocket();
         chatMessageWebSocket.connect();
         chatMessageWebSocket.subscribeToTopic("/topic/" + chatId)
@@ -47,7 +51,7 @@ public class MyChatMessageViewModel extends ViewModel {
                                 currentList = new ArrayList<>();
                             }
 
-                            boolean alreadyExists = true;
+                            boolean alreadyExists = false;
                             if(!currentList.isEmpty()){
                                 alreadyExists = currentList.stream()
                                         .anyMatch(msg -> Objects.equals(msg.getId(), chatMessage.getId()));
@@ -66,7 +70,6 @@ public class MyChatMessageViewModel extends ViewModel {
                                 _chatMessages.postValue(currentList);
                             }
 
-                    Log.d(chatMessage.getContent(), "CHAT");
                 },
                         throwable -> {
                             Log.e("WebSocket", "Error receiving message", throwable);
@@ -116,7 +119,7 @@ public class MyChatMessageViewModel extends ViewModel {
     public void setCurrentPage(int n){
         _currentPage = n;
     }
-    private final MutableLiveData<Boolean> _canOpenConnection = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> _canOpenConnection = new MutableLiveData<>(false);
     public final LiveData<Boolean> canOpenConnection = _canOpenConnection;
 
     public void getChat(Long senderId, Long receiverId){
@@ -127,7 +130,12 @@ public class MyChatMessageViewModel extends ViewModel {
             public void onResponse(Call<Page<ChatMessage>> call, Response<Page<ChatMessage>> response) {
                 if(response.isSuccessful() && response.body()!=null){
                     _chatMessages.postValue(response.body().getContent());//fill front
-                    chatId = response.body().getContent().get(0).getChatId();
+                    if(response.body().getContent().isEmpty()){
+                        chatId = senderId.toString() + "_" + receiverId.toString();
+                    }else{
+                        chatId = response.body().getContent().get(0).getChatId();
+                    }
+
                     _canOpenConnection.setValue(true);
                     _isLoading.postValue(false);
                     _totalPages = response.body().getTotalPages();

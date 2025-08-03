@@ -162,7 +162,7 @@ public class BudgetItemViewModel extends ViewModel {
         budgetItemApi.deleteBudgetItem(id).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful() && response.body()!=null){
+                if(response.isSuccessful()){
                     _deleted.setValue(true);
                 }else{
                     _serverError.postValue(ErrorParse.catchError(response));
