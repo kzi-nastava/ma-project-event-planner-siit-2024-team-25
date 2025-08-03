@@ -1,7 +1,7 @@
 package com.team25.event.planner.product.api;
 
 import com.team25.event.planner.core.Page;
-import com.team25.event.planner.offering.model.OfferingCard;
+import com.team25.event.planner.product.model.MyProductCard;
 import com.team25.event.planner.product.model.Product;
 
 import java.util.Map;
@@ -19,7 +19,7 @@ import retrofit2.http.QueryMap;
 
 public interface ProductApi {
     @GET("/api/products/owner/{ownerId}")
-    Call<Page<OfferingCard>> getOwnerProducts(
+    Call<Page<MyProductCard>> getOwnerProducts(
             @Path("ownerId") Long ownerId,
             @Query("page") int page,
             @QueryMap Map<String, Object> filters

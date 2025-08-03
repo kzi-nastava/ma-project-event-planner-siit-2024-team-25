@@ -6,22 +6,24 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.team25.event.planner.R;
 import com.team25.event.planner.databinding.ItemMyProductBinding;
-import com.team25.event.planner.offering.model.OfferingCard;
+import com.team25.event.planner.product.model.MyProductCard;
 
 import java.util.List;
 
 public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.ProductViewHolder> {
-    private final List<OfferingCard> products;
+    private final List<MyProductCard> products;
     private final MyProductsAdapter.OnItemClickListener onItemClickListener;
     private final MyProductsAdapter.OnItemClickListener onEditClickListener;
     private final MyProductsAdapter.OnItemClickListener onDeleteClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(OfferingCard product);
+        void onItemClick(MyProductCard product);
     }
 
-    public MyProductsAdapter(List<OfferingCard> products, MyProductsAdapter
+    public MyProductsAdapter(List<MyProductCard> products, MyProductsAdapter
             .OnItemClickListener onItemClickListener, OnItemClickListener onEditClickListener, OnItemClickListener onDeleteClickListener) {
         this.products = products;
         this.onItemClickListener = onItemClickListener;
@@ -38,7 +40,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
         }
 
         public void bind(
-                OfferingCard product,
+                MyProductCard product,
                 MyProductsAdapter.OnItemClickListener onClickListener,
                 MyProductsAdapter.OnItemClickListener onEditListener,
                 MyProductsAdapter.OnItemClickListener onDeleteListener
@@ -48,6 +50,12 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
             binding.getRoot().setOnClickListener(v -> onClickListener.onItemClick(product));
             binding.editButton.setOnClickListener(v -> onEditListener.onItemClick(product));
             binding.deleteButton.setOnClickListener(v -> onDeleteListener.onItemClick(product));
+            Glide.with(itemView.getContext())
+                    .load(product.getThumbnail())
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_image_placeholder)
+                    .error(R.drawable.ic_image_error)
+                    .into(binding.productImage);
         }
     }
 
@@ -61,7 +69,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
 
     @Override
     public void onBindViewHolder(@NonNull MyProductsAdapter.ProductViewHolder holder, int position) {
-        final OfferingCard product = products.get(position);
+        final MyProductCard product = products.get(position);
         holder.bind(product, onItemClickListener, onEditClickListener, onDeleteClickListener);
     }
 
@@ -70,7 +78,7 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
         return products != null ? products.size() : 0;
     }
 
-    public void addProducts(List<OfferingCard> newProducts) {
+    public void addProducts(List<MyProductCard> newProducts) {
         int oldSize = products.size();
         products.addAll(newProducts);
         notifyItemRangeInserted(oldSize, newProducts.size());

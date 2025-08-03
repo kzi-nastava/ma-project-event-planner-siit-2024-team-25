@@ -7,7 +7,7 @@
 
         <variable
             name="product"
-            type="com.team25.event.planner.offering.model.OfferingCard" />
+            type="com.team25.event.planner.product.model.MyProductCard" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

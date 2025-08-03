@@ -96,6 +96,7 @@ public class ProductFormViewModel extends ViewModel {
     }
 
     public void loadProduct(Long productId) {
+        this.productId = productId;
         if (productId == null) {
             resetForm();
             return;

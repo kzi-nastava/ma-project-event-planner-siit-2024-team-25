@@ -12,10 +12,10 @@ import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.offering.model.FavoruriteOfferingDTO;
-import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.offering.model.ProductCard;
 import com.team25.event.planner.product.api.ProductApi;
+import com.team25.event.planner.product.model.MyProductCard;
 import com.team25.event.planner.product.model.Product;
 import com.team25.event.planner.user.api.UserApi;
 
@@ -46,8 +46,8 @@ public class MyProductsViewModel extends ViewModel {
     public final MutableLiveData<String> ownerName = new MutableLiveData<>();
     public final MutableLiveData<List<String>> images = new MutableLiveData<>();
 
-    private final MutableLiveData<List<OfferingCard>> _products = new MutableLiveData<>(new ArrayList<>());
-    public final LiveData<List<OfferingCard>> products = _products;
+    private final MutableLiveData<List<MyProductCard>> _products = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<MyProductCard>> products = _products;
 
     private final MutableLiveData<List<EventType>> _eventTypes = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<EventType>> eventTypes = _eventTypes;
@@ -69,13 +69,16 @@ public class MyProductsViewModel extends ViewModel {
     private MutableLiveData<Boolean> _fav = new MutableLiveData<>();
     public LiveData<Boolean> fav = _fav;
 
+    private final MutableLiveData<Boolean> _refreshSignal = new MutableLiveData<>(false);
+    public final LiveData<Boolean> refreshSignal = _refreshSignal;
+
     public boolean favInd;
 
     @Setter
     private Long ownerId;
 
 
-    public void favoriteProduct(Long productId, Long userId){
+    public void favoriteProduct(Long productId, Long userId) {
         userApi.favoriteProduct(userId, new FavoruriteOfferingDTO(productId)).enqueue(new Callback<ProductCard>() {
             @Override
             public void onResponse(Call<ProductCard> call, Response<ProductCard> response) {
@@ -94,7 +97,7 @@ public class MyProductsViewModel extends ViewModel {
         });
     }
 
-    public void deleteFavoriteProduct(Long productId, Long userId){
+    public void deleteFavoriteProduct(Long productId, Long userId) {
         userApi.deleteFavoriteProduct(userId, productId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -121,7 +124,11 @@ public class MyProductsViewModel extends ViewModel {
                             if (page.isLast()) {
                                 isEndReached = true;
                             }
-                            _products.postValue(page.getContent());
+                            List<MyProductCard> products = page.getContent();
+                            for (MyProductCard p : products) {
+                                p.setThumbnail(ConnectionParams.BASE_URL + "api/products/" + p.getId() + "/images/" + p.getThumbnail());
+                            }
+                            _products.postValue(products);
                         },
                         () -> _isLoading.postValue(false),
                         _serverError, "MyEventsViewModel"
@@ -134,6 +141,7 @@ public class MyProductsViewModel extends ViewModel {
     public void reload() {
         currentPage = 0;
         isEndReached = false;
+        _products.postValue(new ArrayList<>());
         loadNextPage();
     }
 
@@ -165,14 +173,15 @@ public class MyProductsViewModel extends ViewModel {
                 _serverError, "MyProductsViewModel"
         ));
     }
-    public void fetchProduct(Long id){
+
+    public void fetchProduct(Long id) {
         productApi.getProduct(id).enqueue(new Callback<Product>() {
             @Override
             public void onResponse(Call<Product> call, Response<Product> response) {
-                if(response.isSuccessful() && response.body()!= null){
+                if (response.isSuccessful() && response.body() != null) {
                     _selectedProduct.postValue(response.body());
                     fillForm(response.body());
-                }else{
+                } else {
                     _serverError.postValue(ErrorParse.catchError(response));
                 }
             }
@@ -183,6 +192,7 @@ public class MyProductsViewModel extends ViewModel {
             }
         });
     }
+
     private void fillForm(Product product) {
         name.postValue(product.getName());
         description.postValue(product.getDescription());
@@ -198,5 +208,9 @@ public class MyProductsViewModel extends ViewModel {
                 ).collect(Collectors.toList())
         );
         available.postValue(product.isAvailable());
+    }
+
+    public void onRefreshHandleComplete() {
+        _refreshSignal.setValue(false);
     }
 }

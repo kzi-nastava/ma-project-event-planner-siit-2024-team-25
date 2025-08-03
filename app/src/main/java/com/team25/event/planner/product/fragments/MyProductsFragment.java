@@ -22,8 +22,8 @@ import com.team25.event.planner.databinding.FragmentMyProductsBinding;
 import com.team25.event.planner.event.fragments.EventArgumentNames;
 import com.team25.event.planner.event.fragments.ProductPurchaseListFragment;
 import com.team25.event.planner.offering.dialogs.YesOrNoDialogFragment;
-import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.product.adapters.MyProductsAdapter;
+import com.team25.event.planner.product.model.MyProductCard;
 import com.team25.event.planner.product.viewmodel.MyProductsViewModel;
 
 import java.util.ArrayList;
@@ -108,7 +108,7 @@ public class MyProductsFragment extends Fragment {
         viewModel.reload();
     }
 
-    private void openDeleteDialog(OfferingCard product) {
+    private void openDeleteDialog(MyProductCard product) {
         YesOrNoDialogFragment dialog = new YesOrNoDialogFragment(new YesOrNoDialogFragment.ConfirmDialogListener() {
             @Override
             public void onConfirm() {
@@ -140,6 +140,14 @@ public class MyProductsFragment extends Fragment {
         viewModel.serverError.observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {
                 Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        viewModel.refreshSignal.observe(getViewLifecycleOwner(), succeeded -> {
+            if (succeeded) {
+                Toast.makeText(getContext(), "Successfully changed the password!", Toast.LENGTH_SHORT).show();
+                navController.popBackStack();
+                viewModel.onRefreshHandleComplete();
             }
         });
     }
