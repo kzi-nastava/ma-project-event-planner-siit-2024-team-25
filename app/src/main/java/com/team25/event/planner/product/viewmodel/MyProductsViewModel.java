@@ -12,10 +12,10 @@ import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.event.model.EventType;
 import com.team25.event.planner.offering.Api.OfferingCategoryApi;
 import com.team25.event.planner.offering.model.FavoruriteOfferingDTO;
-import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.offering.model.OfferingCategory;
 import com.team25.event.planner.offering.model.ProductCard;
 import com.team25.event.planner.product.api.ProductApi;
+import com.team25.event.planner.product.model.MyProductCard;
 import com.team25.event.planner.product.model.Product;
 import com.team25.event.planner.user.api.UserApi;
 
@@ -46,8 +46,8 @@ public class MyProductsViewModel extends ViewModel {
     public final MutableLiveData<String> ownerName = new MutableLiveData<>();
     public final MutableLiveData<List<String>> images = new MutableLiveData<>();
 
-    private final MutableLiveData<List<OfferingCard>> _products = new MutableLiveData<>(new ArrayList<>());
-    public final LiveData<List<OfferingCard>> products = _products;
+    private final MutableLiveData<List<MyProductCard>> _products = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<MyProductCard>> products = _products;
 
     private final MutableLiveData<List<EventType>> _eventTypes = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<EventType>> eventTypes = _eventTypes;
@@ -124,7 +124,11 @@ public class MyProductsViewModel extends ViewModel {
                             if (page.isLast()) {
                                 isEndReached = true;
                             }
-                            _products.postValue(page.getContent());
+                            List<MyProductCard> products = page.getContent();
+                            for (MyProductCard p : products) {
+                                p.setThumbnail(ConnectionParams.BASE_URL + "api/products/" + p.getId() + "/images/" + p.getThumbnail());
+                            }
+                            _products.postValue(products);
                         },
                         () -> _isLoading.postValue(false),
                         _serverError, "MyEventsViewModel"
