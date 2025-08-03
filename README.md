@@ -39,7 +39,7 @@ Open the mobile app project using Android Studio
 In the mobile app project root, create a file named local.properties and add the following:
 
 sdk.dir=YOUR_ANDROID_SDK_PATH
-ip_address=http://YOUR_IP_ADDRESS:8080
+ip_address=http://YOUR_IP_ADDRESS:8080/
 
 # Finding Your IP Address on Windows
 
