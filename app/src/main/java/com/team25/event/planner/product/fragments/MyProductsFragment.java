@@ -142,6 +142,14 @@ public class MyProductsFragment extends Fragment {
                 Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
             }
         });
+
+        viewModel.refreshSignal.observe(getViewLifecycleOwner(), succeeded -> {
+            if (succeeded) {
+                Toast.makeText(getContext(), "Successfully changed the password!", Toast.LENGTH_SHORT).show();
+                navController.popBackStack();
+                viewModel.onRefreshHandleComplete();
+            }
+        });
     }
 
     private void setupListeners() {

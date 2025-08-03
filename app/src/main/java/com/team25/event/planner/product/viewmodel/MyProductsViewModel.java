@@ -69,13 +69,16 @@ public class MyProductsViewModel extends ViewModel {
     private MutableLiveData<Boolean> _fav = new MutableLiveData<>();
     public LiveData<Boolean> fav = _fav;
 
+    private final MutableLiveData<Boolean> _refreshSignal = new MutableLiveData<>(false);
+    public final LiveData<Boolean> refreshSignal = _refreshSignal;
+
     public boolean favInd;
 
     @Setter
     private Long ownerId;
 
 
-    public void favoriteProduct(Long productId, Long userId){
+    public void favoriteProduct(Long productId, Long userId) {
         userApi.favoriteProduct(userId, new FavoruriteOfferingDTO(productId)).enqueue(new Callback<ProductCard>() {
             @Override
             public void onResponse(Call<ProductCard> call, Response<ProductCard> response) {
@@ -94,7 +97,7 @@ public class MyProductsViewModel extends ViewModel {
         });
     }
 
-    public void deleteFavoriteProduct(Long productId, Long userId){
+    public void deleteFavoriteProduct(Long productId, Long userId) {
         userApi.deleteFavoriteProduct(userId, productId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -134,6 +137,7 @@ public class MyProductsViewModel extends ViewModel {
     public void reload() {
         currentPage = 0;
         isEndReached = false;
+        _products.postValue(new ArrayList<>());
         loadNextPage();
     }
 
@@ -165,14 +169,15 @@ public class MyProductsViewModel extends ViewModel {
                 _serverError, "MyProductsViewModel"
         ));
     }
-    public void fetchProduct(Long id){
+
+    public void fetchProduct(Long id) {
         productApi.getProduct(id).enqueue(new Callback<Product>() {
             @Override
             public void onResponse(Call<Product> call, Response<Product> response) {
-                if(response.isSuccessful() && response.body()!= null){
+                if (response.isSuccessful() && response.body() != null) {
                     _selectedProduct.postValue(response.body());
                     fillForm(response.body());
-                }else{
+                } else {
                     _serverError.postValue(ErrorParse.catchError(response));
                 }
             }
@@ -183,6 +188,7 @@ public class MyProductsViewModel extends ViewModel {
             }
         });
     }
+
     private void fillForm(Product product) {
         name.postValue(product.getName());
         description.postValue(product.getDescription());
@@ -198,5 +204,9 @@ public class MyProductsViewModel extends ViewModel {
                 ).collect(Collectors.toList())
         );
         available.postValue(product.isAvailable());
+    }
+
+    public void onRefreshHandleComplete() {
+        _refreshSignal.setValue(false);
     }
 }
