@@ -17,22 +17,22 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface EventTypeApi {
-    @GET("/api/event-types")
+    @GET("api/event-types")
     Call<List<EventType>> getEventTypes();
 
-    @GET("/api/event-types/{id}")
+    @GET("api/event-types/{id}")
     Call<EventType> getEventType(@Path("id") Long id);
-    @GET("/api/event-types/{id}/offering-categories")
+    @GET("api/event-types/{id}/offering-categories")
     Call<List<OfferingCategory>> getOfferingCategoriesByEventType(@Path("id") Long id);
-    @POST("/api/event-types")
+    @POST("api/event-types")
     Call<EventType> createEventType(@Body EventTypeRequest eventType);
 
-    @PUT("/api/event-types/{id}")
+    @PUT("api/event-types/{id}")
     Call<EventType> updateEventType(@Path("id") Long id, @Body EventTypeRequest eventType);
 
-    @GET("/api/event-types/all")
+    @GET("api/event-types/all")
     Call<List<EventTypePreviewDTO>> getAllEventTypes();
 
-    @GET("/api/event-types/event/{eventId}")
+    @GET("api/event-types/event/{eventId}")
     Call<EventType> getEventTypeByEvent(@Path(value = "eventId") Long eventId);
 }

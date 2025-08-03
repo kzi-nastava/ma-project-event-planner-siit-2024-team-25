@@ -8,9 +8,9 @@ import retrofit2.http.DELETE;
 import retrofit2.http.PUT;
 
 public interface AccountApi {
-    @PUT("/api/auth/password-reset")
+    @PUT("api/auth/password-reset")
     Call<Void> changePassword(@Body PasswordChangeRequest passwordChangeRequest);
 
-    @DELETE("/api/auth/deactivate")
+    @DELETE("api/auth/deactivate")
     Call<Void> deactivateAccount();
 }

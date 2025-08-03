@@ -20,7 +20,7 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface PurchaseApi {
-    @POST("/api/purchase/event/{eventId}/service/{serviceId}")
+    @POST("api/purchase/event/{eventId}/service/{serviceId}")
     Call<ServicePurchaseResponseDTO> bookService(@Path(value = "eventId") Long eventId,
                                                  @Path(value = "serviceId") Long serviceId,
                                                  @Body ServicePurchaseRequestDTO purchase);
@@ -29,22 +29,22 @@ public interface PurchaseApi {
     Call<ProductPurchaseResponseDTO> purchaseProduct(@Path("eventId") Long eventId,
                                                      @Body ProductPurchaseRequestDTO requestDTO);
 
-    @GET("/api/purchase/service/{serviceId}/available")
+    @GET("api/purchase/service/{serviceId}/available")
     Call<Boolean> isServiceAvailable(@Path(value = "serviceId") Long serviceId,
                                      @QueryMap Map<String, String> purchase);
 
-    @GET("/api/purchase/event/{eventId}/budget")
+    @GET("api/purchase/event/{eventId}/budget")
     Call<Double> getLeftMoneyFromBudgetItem(@Path(value = "eventId") Long eventId,
                                             @Query(value = "categoryId") Long categoryId);
 
-    @GET("/api/purchase/")
+    @GET("api/purchase/")
     Call<List<PurchaseServiceCard>> getOwnerPurchases(
             @Query("ownerId") Long ownerId,
             @Query("startDate") LocalDate startDate,
             @Query("endDate") LocalDate endDate
     );
-    @GET("/api/purchase/events/{eventId}")
+    @GET("api/purchase/events/{eventId}")
     Call<List<PurchaseResponseDTO>> getPurchaseByEvent(@Path(value = "eventId")Long eventId);
-    @GET("/api/purchase/offerings/{offeringId}")
+    @GET("api/purchase/offerings/{offeringId}")
     Call<List<PurchaseResponseDTO>> getPurchaseByOffering(@Path("offeringId")Long offeringId);
 }

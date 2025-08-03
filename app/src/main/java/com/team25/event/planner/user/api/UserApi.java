@@ -23,18 +23,18 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface UserApi {
-    @POST("/api/auth/register")
+    @POST("api/auth/register")
     Call<RegisterResponse> register(@Body RequestBody body);
 
-    @POST("/api/auth/register/quick")
+    @POST("api/auth/register/quick")
     Call<RegisterQuickResponse> registerQuick(@Body RequestBody body);
 
-    @GET("/api/users/{userId}")
+    @GET("api/users/{userId}")
     Call<RegularUser> getUser(@Path("userId") Long userId);
 
-    @PUT("/api/users/{userId}")
+    @PUT("api/users/{userId}")
     Call<RegularUser> updateUser(@Path("userId") Long userId, @Body RequestBody body);
-    @POST("/api/auth/upgrade")
+    @POST("api/auth/upgrade")
     Call<RegisterResponse> upgradeProfile(@Body RequestBody body);
 
     @GET("api/users/{id}/favourite-services")

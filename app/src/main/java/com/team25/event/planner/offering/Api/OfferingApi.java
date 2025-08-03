@@ -15,27 +15,27 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface OfferingApi {
-    @GET("/api/offerings/top")
+    @GET("api/offerings/top")
     Call<Page<OfferingCard>> getTopOfferings();
 
-    @GET("/api/offerings/")
+    @GET("api/offerings/")
     Call<Page<OfferingCard>> getAllOfferings(
             @Query("page") int page,
             @QueryMap Map<String, Object> filter
     );
 
-    @GET("/api/products/all")
+    @GET("api/products/all")
     Call<Page<OfferingCard>> getAllProducts(
             @Query("page") int page,
             @QueryMap Map<String, Object> filter
     );
 
-    @GET("/api/products/all")
+    @GET("api/products/all")
     Call<Page<ProductCard>> getProductsPurchase(
             @Query("page") int page,
             @QueryMap Map<String, Object> filter
     );
-    @GET("/api/services/all")
+    @GET("api/services/all")
     Call<Page<OfferingCard>> getAllServices(
             @Query("page") int page,
             @QueryMap Map<String, Object> filter
