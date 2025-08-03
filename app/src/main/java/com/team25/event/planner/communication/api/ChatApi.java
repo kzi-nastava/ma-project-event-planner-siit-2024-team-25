@@ -10,7 +10,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ChatApi {
-    @GET("/api/messages/{senderId}/{recipientId}")
+    @GET("api/messages/{senderId}/{recipientId}")
     Call<Page<ChatMessage>> getChatMessages(
             @Path("senderId") Long senderId,
             @Path("recipientId") Long recipientId,

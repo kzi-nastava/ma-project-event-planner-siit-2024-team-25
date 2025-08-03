@@ -10,7 +10,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ChatRoomApi {
-    @GET("/api/chats/{senderId}")
+    @GET("api/chats/{senderId}")
     Call<Page<ChatRoom>> getChats(
             @Path("senderId") Long senderId,
             @Query("page") int page,

@@ -12,9 +12,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface NotificationApi {
-    @GET("/api/notifications/")
+    @GET("api/notifications/")
     Call<Page<Notification>> getMyNotifications(@Query("page") int page);
 
-    @PUT("/api/notifications/")
+    @PUT("api/notifications/")
     Call<Notification> toggleViewed(@Body NotificationRequestDTO notification);
 }

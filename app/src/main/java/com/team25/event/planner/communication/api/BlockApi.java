@@ -10,9 +10,9 @@ import retrofit2.http.Path;
 
 public interface BlockApi {
 
-    @POST("/api/users/block")
+    @POST("api/users/block")
     Call<Boolean> blockUser(@Body BlockUserRequestDTO requestDTO);
 
-    @GET("/api/users/block/{blockedUserId}")
+    @GET("api/users/block/{blockedUserId}")
     Call<Boolean> isBlocked(@Path("blockedUserId") Long blockedUserId);
 }

@@ -16,20 +16,20 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ReviewApi {
-    @GET("/api/reviews")
+    @GET("api/reviews")
     Call<Page<ReviewCard>> getReviews(@Query("page") int page, @Query("status") ReviewStatus status);
 
-    @PUT("/api/reviews/{reviewId}")
+    @PUT("api/reviews/{reviewId}")
     Call<ReviewCard> updateReview(@Path("reviewId") Long reviewId, @Body ReviewUpdateRequestDTO requestDTO);
 
-    @POST("/api/reviews")
+    @POST("api/reviews")
     Call<ReviewCard> createReview(@Body ReviewRequestDTO requestDTO);
 
-    @GET("/api/reviews/events/{eventId}")
+    @GET("api/reviews/events/{eventId}")
     Call<Page<ReviewResponseDTO>> getReviewsByEvent(@Path("eventId")Long eventId,
                                                     @Query("page") int page);
 
-    @GET("/api/reviews/offerings/{offeringId}")
+    @GET("api/reviews/offerings/{offeringId}")
     Call<Page<ReviewResponseDTO>> getReviewsByOffering(@Path("offeringId")Long offeringId,
                                                        @Query("page") int page);
 }

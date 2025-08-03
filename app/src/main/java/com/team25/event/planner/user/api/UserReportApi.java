@@ -9,6 +9,6 @@ import retrofit2.http.POST;
 
 public interface UserReportApi {
 
-    @POST("/api/users/report")
+    @POST("api/users/report")
     Call<ResponseBody> reportUser(@Body UserReportRequest userReportRequest);
 }

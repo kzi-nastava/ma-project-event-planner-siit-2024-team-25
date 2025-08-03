@@ -18,13 +18,13 @@ import retrofit2.http.Query;
 
 public interface SuspensionApi {
 
-    @GET("/api/users/reports")
+    @GET("api/users/reports")
     Call<Page<UserReportResponse>> getAllReports(@Query("page") int page, @Query("viewed") boolean isViewed);
 
-    @PUT("/api/users/report")
+    @PUT("api/users/report")
     Call<UserReportResponse> updateReport(@Body UserReportUpdateRequest request);
-    @POST("/api/users/suspend")
+    @POST("api/users/suspend")
     Call<SuspensionResponse> suspendUser(@Body SuspensionRequest request);
-    @GET("/api/users/suspended")
+    @GET("api/users/suspended")
     Call<Page<SuspensionResponse>> getAllSuspensions(@Query("page") int page);
 }
