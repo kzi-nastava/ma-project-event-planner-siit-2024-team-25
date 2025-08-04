@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".event.fragments.ProductPurchaseListFragment">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.team25.event.planner.event.viewmodel.PurchaseViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/offering_pagination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/offering_prev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primary"
+                app:icon="@drawable/ic_left"
+                app:iconGravity="start"
+                app:iconTint="@color/white"
+                android:onClick="@{() -> viewModel.getPreviousPage()}" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/offering_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primary"
+                android:textColor="@color/white"
+                android:text="@{String.valueOf(viewModel.currentPage + 1) + '/' + String.valueOf(viewModel.totalPage)}" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/offering_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primary"
+                app:icon="@drawable/ic_right"
+                app:iconGravity="end"
+                app:iconTint="@color/white"
+                android:onClick="@{() -> viewModel.getNextPage()}" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/offering_pagination"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:listitem="@layout/product_purchase_card_item" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

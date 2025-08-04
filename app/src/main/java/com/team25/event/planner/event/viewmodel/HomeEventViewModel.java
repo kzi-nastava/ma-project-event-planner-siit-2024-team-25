@@ -1,41 +1,228 @@
 package com.team25.event.planner.event.viewmodel;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.team25.event.planner.core.ConnectionParams;
+import com.team25.event.planner.core.Page;
+import com.team25.event.planner.event.api.EventApi;
+import com.team25.event.planner.event.api.EventTypeApi;
 import com.team25.event.planner.event.model.EventCard;
+import com.team25.event.planner.event.model.EventFilterDTO;
+import com.team25.event.planner.event.model.EventType;
+import com.team25.event.planner.event.model.EventTypePreviewDTO;
+import com.team25.event.planner.event.model.FavoriteEventRequest;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import lombok.Setter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeEventViewModel extends ViewModel {
 
 
     private final MutableLiveData<List<EventCard>> _events = new MutableLiveData<>(new ArrayList<>());
     public final LiveData<List<EventCard>> events = _events;
-    public final MutableLiveData<String> country = new MutableLiveData<>();
-    public HomeEventViewModel(){
+    private final MutableLiveData<List<EventCard>> _topEvents = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<EventCard>> topEvents = _topEvents;
+    private final MutableLiveData<Integer> _currentPage = new MutableLiveData<>();
+    public final LiveData<Integer> currentPage = _currentPage;
+    private final MutableLiveData<Integer> _totalPage = new MutableLiveData<>();
+    public final LiveData<Integer> totalPage = _totalPage;
+    public EventFilterDTO eventFilterDTO = new EventFilterDTO();
+    private final MutableLiveData<List<EventTypePreviewDTO>> _allEventTypes = new MutableLiveData<>(new ArrayList<>());
+    public final LiveData<List<EventTypePreviewDTO>> allEventTypes = _allEventTypes;
 
-        List<EventCard> eventCards = new ArrayList<>();
-        eventCards.add(new EventCard(1, "Concert", "Stefan", new Date(), "Uzice"));
-        eventCards.add(new EventCard(2, "Concert", "Petar", new Date(), "Uzice"));
-        eventCards.add(new EventCard(3, "Concert", "Milos", new Date(),"Uzice"));
-        eventCards.add(new EventCard(4, "Concert", "Nikola", new Date(),"Uzice"));
-        eventCards.add(new EventCard(5, "Concert", "Milan", new Date(),"Uzice"));
-        eventCards.add(new EventCard(6, "Concert", "Stefan", new Date(),"Uzice"));
-        eventCards.add(new EventCard(7, "Concert", "Petar", new Date(),"Uzice"));
-        eventCards.add(new EventCard(8, "Concert", "Milos", new Date(),"Uzice"));
-        eventCards.add(new EventCard(9, "Concert", "Nikola", new Date(),"Uzice"));
-        eventCards.add(new EventCard(10, "Concert", "Milan", new Date(),"Uzice"));
-        _events.setValue(eventCards);
+    private final MutableLiveData<EventType> _currentEventType = new MutableLiveData<>();
+    public final LiveData<EventType> currentEventType = _currentEventType;
+
+    @Setter
+    private Long userId;
+
+
+    public HomeEventViewModel() {
+        _currentPage.setValue(0);
     }
 
-    public void filter() {
+    public void getAllEvents() {
+        EventApi eventApi = ConnectionParams.eventApi;
+        Call<Page<EventCard>> call = eventApi.getAllEvents(currentPage.getValue(), this.eventFilterDTO.buildQuery());
 
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Page<EventCard>> call, @NonNull Response<Page<EventCard>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _events.setValue(response.body().getContent());
+                    _totalPage.setValue(response.body().getTotalPages());
+                } else {
+                    Log.e("HomeEventViewModel", "Failed to fetch top events");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Page<EventCard>> call, @NonNull Throwable t) {
+                Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
+            }
+        });
     }
 
-    public void sort() {
+    public void getNextPage() {
+        if (_currentPage.getValue() + 1 < _totalPage.getValue()) {
+            this._currentPage.setValue(this._currentPage.getValue() + 1);
+            this.getAllEvents();
+        }
+    }
+
+    public void getPreviousPage() {
+        if (_currentPage.getValue() > 0) {
+            this._currentPage.setValue(this._currentPage.getValue() - 1);
+            this.getAllEvents();
+        }
+    }
+
+    public void getTopEvents() {
+
+        EventApi eventApi = ConnectionParams.eventApi;
+        Call<Page<EventCard>> call = eventApi.getTopEvents();
+
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Page<EventCard>> call, @NonNull Response<Page<EventCard>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _topEvents.setValue(response.body().getContent());
+                } else {
+                    Log.e("HomeEventViewModel", "Failed to fetch top events");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Page<EventCard>> call, @NonNull Throwable t) {
+                Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
+            }
+        });
+    }
+
+    public void restartFilter() {
+        this.eventFilterDTO = new EventFilterDTO();
+        this.getAllEvents();
+    }
+
+    public void getEventTypes() {
+        EventTypeApi eventTypeApi = ConnectionParams.eventTypeApi;
+        Call<List<EventTypePreviewDTO>> call = eventTypeApi.getAllEventTypes();
+
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<EventTypePreviewDTO>> call, @NonNull Response<List<EventTypePreviewDTO>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<EventTypePreviewDTO> list = response.body();
+                    list.add(0, new EventTypePreviewDTO());
+                    _allEventTypes.setValue(list);
+                } else {
+                    Log.e("HomeEventViewModel", "Failed to fetch top events");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<EventTypePreviewDTO>> call, @NonNull Throwable t) {
+                Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
+            }
+        });
+    }
+
+    public void getEventTypeByEvent(Long eventId) {
+        EventTypeApi eventTypeApi = ConnectionParams.eventTypeApi;
+        Call<EventType> call = eventTypeApi.getEventTypeByEvent(eventId);
+
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<EventType> call, @NonNull Response<EventType> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _currentEventType.setValue(response.body());
+                } else {
+                    Log.e("HomeEventViewModel", "Failed to fetch top events");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<EventType> call, @NonNull Throwable t) {
+                Log.e("HomeEventViewModel", "Error fetching top events: " + t.getMessage());
+            }
+        });
+    }
+
+    public void toggleFavorite(EventCard event) {
+        EventApi eventApi = ConnectionParams.eventApi;
+
+        if (event == null || userId == null) return;
+
+        if (event.getIsFavorite()) {
+            eventApi.removeFromFavorites(userId, event.getId()).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        event.setIsFavorite(false);
+                        updateTopEvent(event);
+                        updateHomeEvent(event);
+                    } else {
+                        Log.e("HomeEventViewModel", "Failed to remove event " + event.getId() + " from favorites");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    Log.e("HomeEventViewModel", "Failed to remove event " + event.getId() + " from favorites", t);
+                }
+            });
+        } else {
+            eventApi.addToFavorites(userId, new FavoriteEventRequest(userId, event.getId())).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<EventCard> call, @NonNull Response<EventCard> response) {
+                    if (response.isSuccessful()) {
+                        event.setIsFavorite(true);
+                        updateTopEvent(event);
+                        updateHomeEvent(event);
+                    } else {
+                        Log.e("HomeEventViewModel", "Failed to add event " + event.getId() + " to favorites");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<EventCard> call, @NonNull Throwable t) {
+                    Log.e("HomeEventViewModel", "Failed to add event " + event.getId() + " to favorites", t);
+                }
+            });
+        }
+    }
+
+    private void updateTopEvent(EventCard newEvent) {
+        List<EventCard> topEvents = this.topEvents.getValue();
+        if (topEvents == null) return;
+        for (int i = 0; i < topEvents.size(); i++) {
+            if (topEvents.get(i).getId().equals(newEvent.getId())) {
+                topEvents.set(i, newEvent);
+                _topEvents.postValue(topEvents);
+                return;
+            }
+        }
+    }
+
+    private void updateHomeEvent(EventCard newEvent) {
+        List<EventCard> events = this.events.getValue();
+        if (events == null) return;
+        for (int i = 0; i < events.size(); i++) {
+            if (events.get(i).getId().equals(newEvent.getId())) {
+                events.set(i, newEvent);
+                _events.postValue(events);
+                return;
+            }
+        }
     }
 }

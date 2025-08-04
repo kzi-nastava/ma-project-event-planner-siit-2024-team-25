@@ -1,20 +1,33 @@
 package com.team25.event.planner.user.viewmodels;
 
-import android.net.Uri;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.team25.event.planner.core.ConnectionParams;
 import com.team25.event.planner.core.Validation;
+import com.team25.event.planner.core.api.ResponseCallback;
+import com.team25.event.planner.user.api.BodyBuilder;
+import com.team25.event.planner.user.api.UserApi;
+import com.team25.event.planner.user.model.EventOrganizerInfo;
+import com.team25.event.planner.user.model.Location;
+import com.team25.event.planner.user.model.OwnerInfo;
+import com.team25.event.planner.user.model.RegisterRequest;
 import com.team25.event.planner.user.model.UserRole;
 
+import java.io.File;
 import java.util.List;
 
 import lombok.Builder;
 import lombok.Data;
 
 public class RegisterViewModel extends ViewModel {
+    private final UserApi userApi;
+
+    public RegisterViewModel() {
+        this.userApi = ConnectionParams.userApi;
+    }
+
     public enum RegisterStep {
         RoleChoice, GeneralInfo, OrganizerSpecific, VendorSpecific, Success
     }
@@ -26,6 +39,7 @@ public class RegisterViewModel extends ViewModel {
         _formStep.setValue(null);
     }
 
+    public final MutableLiveData<Boolean> isUpgrade = new MutableLiveData<>(false);
 
     private final MutableLiveData<UserRole> _userRole = new MutableLiveData<>();
     public final LiveData<UserRole> userRole = _userRole;
@@ -35,18 +49,22 @@ public class RegisterViewModel extends ViewModel {
     public final MutableLiveData<String> confirmPassword = new MutableLiveData<>();
     public final MutableLiveData<String> firstName = new MutableLiveData<>();
     public final MutableLiveData<String> lastName = new MutableLiveData<>();
-    public final MutableLiveData<Uri> profilePicture = new MutableLiveData<>();
+    public final MutableLiveData<File> profilePicture = new MutableLiveData<>();
 
     public final MutableLiveData<String> addressCountry = new MutableLiveData<>();
     public final MutableLiveData<String> addressCity = new MutableLiveData<>();
     public final MutableLiveData<String> address = new MutableLiveData<>();
     public final MutableLiveData<String> phoneNumber = new MutableLiveData<>("");
+    public final MutableLiveData<String> companyName = new MutableLiveData<>();
     public final MutableLiveData<String> description = new MutableLiveData<>();
     public final MutableLiveData<List<byte[]>> pictures = new MutableLiveData<>();
 
 
     private final MutableLiveData<String> _roleChoiceError = new MutableLiveData<>();
     public final LiveData<String> roleChoiceError = _roleChoiceError;
+
+    private final MutableLiveData<String> _serverError = new MutableLiveData<>();
+    public final LiveData<String> serverError = _serverError;
 
     @Data
     @Builder(toBuilder = true)
@@ -77,6 +95,7 @@ public class RegisterViewModel extends ViewModel {
     @Data
     @Builder(toBuilder = true)
     public static class VendorSpecificErrorUiState {
+        private final String companyName;
         private final String addressCountry;
         private final String addressCity;
         private final String address;
@@ -91,7 +110,7 @@ public class RegisterViewModel extends ViewModel {
     public void onRoleChoiceNext(UserRole userRole) {
         if (userRole == null) {
             _roleChoiceError.postValue("Please select a user role.");
-        } else if (!userRole.equals(UserRole.EventOrganizer) && !userRole.equals(UserRole.Vendor)) {
+        } else if (!userRole.equals(UserRole.EVENT_ORGANIZER) && !userRole.equals(UserRole.OWNER)) {
             _roleChoiceError.postValue("Unsupported user type.");
         } else {
             _roleChoiceError.postValue(null);
@@ -108,7 +127,7 @@ public class RegisterViewModel extends ViewModel {
         if (validateGeneralInfoForm()) {
             UserRole userRole = this.userRole.getValue();
 
-            if (userRole != null && userRole.equals(UserRole.EventOrganizer)) {
+            if (userRole != null && userRole.equals(UserRole.EVENT_ORGANIZER)) {
                 _formStep.postValue(RegisterStep.OrganizerSpecific);
             } else {
                 _formStep.postValue(RegisterStep.VendorSpecific);
@@ -122,7 +141,6 @@ public class RegisterViewModel extends ViewModel {
         String confirmPassword = this.confirmPassword.getValue();
         String firstName = this.firstName.getValue();
         String lastName = this.lastName.getValue();
-        Uri profilePicture = this.profilePicture.getValue();
 
         GeneralInfoErrorUiState.GeneralInfoErrorUiStateBuilder errorUiStateBuilder = GeneralInfoErrorUiState.builder();
         boolean isValid = true;
@@ -172,7 +190,7 @@ public class RegisterViewModel extends ViewModel {
 
     public void onOrganizerSpecificNext() {
         if (validateOrganizerSpecificForm()) {
-            _formStep.postValue(RegisterStep.Success);
+            register();
         }
     }
 
@@ -219,11 +237,12 @@ public class RegisterViewModel extends ViewModel {
 
     public void onVendorSpecificNext() {
         if (validateVendorSpecificForm()) {
-            _formStep.postValue(RegisterStep.Success);
+            register();
         }
     }
 
     private boolean validateVendorSpecificForm() {
+        String companyName = this.companyName.getValue();
         String addressCountry = this.addressCountry.getValue();
         String addressCity = this.addressCity.getValue();
         String address = this.address.getValue();
@@ -233,6 +252,11 @@ public class RegisterViewModel extends ViewModel {
 
         VendorSpecificErrorUiState.VendorSpecificErrorUiStateBuilder errorUiStateBuilder = VendorSpecificErrorUiState.builder();
         boolean isValid = true;
+
+        if (companyName == null || companyName.isEmpty()) {
+            errorUiStateBuilder.companyName("Please enter company name.");
+            isValid = false;
+        }
 
         if (addressCountry == null || addressCountry.isEmpty()) {
             errorUiStateBuilder.addressCountry("Please enter a state.");
@@ -272,5 +296,52 @@ public class RegisterViewModel extends ViewModel {
 
     public void onGoToLogin() {
         goToLogin.postValue(true);
+    }
+
+    public void register() {
+        RegisterRequest registerRequest = new RegisterRequest(
+                email.getValue(),
+                password.getValue(),
+                firstName.getValue(),
+                lastName.getValue(),
+                profilePicture.getValue(),
+                userRole.getValue(),
+                userRole.getValue() == UserRole.EVENT_ORGANIZER
+                        ? new EventOrganizerInfo(
+                        new Location(
+                                addressCountry.getValue(),
+                                addressCity.getValue(),
+                                address.getValue()
+                        ),
+                        phoneNumber.getValue()
+                )
+                        : null,
+                userRole.getValue() == UserRole.OWNER
+                        ? new OwnerInfo(
+                        companyName.getValue(),
+                        new Location(
+                                addressCountry.getValue(),
+                                addressCity.getValue(),
+                                address.getValue()
+                        ),
+                        phoneNumber.getValue(),
+                        description.getValue()
+                )
+                        : null
+        );
+
+        if(this.isUpgrade.getValue()){
+            userApi.upgradeProfile(BodyBuilder.getRegisterFormData(registerRequest)).enqueue(
+                    new ResponseCallback<>(
+                            (response) -> _formStep.postValue(RegisterStep.Success),
+                            _serverError, "RegisterViewModel")
+            );
+        }else {
+            userApi.register(BodyBuilder.getRegisterFormData(registerRequest)).enqueue(
+                    new ResponseCallback<>(
+                            (response) -> _formStep.postValue(RegisterStep.Success),
+                            _serverError, "RegisterViewModel")
+            );
+        }
     }
 }

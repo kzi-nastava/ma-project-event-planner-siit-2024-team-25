@@ -26,14 +26,13 @@ import java.util.ArrayList;
 public class HomeOfferingsFragment extends Fragment {
 
     private HomeOfferingViewModel homeOfferingViewModel;
-    private FragmentEventsBinding binding;
+    private FragmentHomeOfferingsBinding binding;
+    private Long _eventId;
 
-    public static TopEventsFragment newInstance() {
-        return new TopEventsFragment();
-    }
-
-    public HomeOfferingsFragment(HomeOfferingViewModel homeOfferingViewModel){
+    public HomeOfferingsFragment(HomeOfferingViewModel homeOfferingViewModel, Long eventId){
         this.homeOfferingViewModel = homeOfferingViewModel;
+        this._eventId = eventId;
+
     }
 
     @Override
@@ -42,8 +41,9 @@ public class HomeOfferingsFragment extends Fragment {
 
 
 
-        binding = FragmentEventsBinding.inflate(inflater, container, false);
-
+        binding = FragmentHomeOfferingsBinding.inflate(inflater, container, false);
+        binding.setViewModel(homeOfferingViewModel);
+        binding.setLifecycleOwner(this);
         return binding.getRoot();
     }
 
@@ -55,7 +55,7 @@ public class HomeOfferingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        FragmentTransition.toRight(HomeOfferingsListFragment.newInstance(homeOfferingViewModel), requireActivity(), false, binding.EventsContainer.getId());
+        FragmentTransition.toRight(HomeOfferingsListFragment.newInstance(homeOfferingViewModel, this._eventId), requireActivity(), false, binding.offeringsContainer.getId());
     }
 
     @Override

@@ -17,10 +17,6 @@ public class EventsFragment extends Fragment {
     private HomeEventViewModel homeEventViewModel;
     private FragmentEventsBinding binding;
 
-    public static TopEventsFragment newInstance() {
-        return new TopEventsFragment();
-    }
-
     public EventsFragment(HomeEventViewModel homeEventViewModel){
         this.homeEventViewModel = homeEventViewModel;
     }
@@ -32,7 +28,8 @@ public class EventsFragment extends Fragment {
 
 
         binding = FragmentEventsBinding.inflate(inflater, container, false);
-
+        binding.setViewModel(homeEventViewModel);
+        binding.setLifecycleOwner(this);
         return binding.getRoot();
     }
 

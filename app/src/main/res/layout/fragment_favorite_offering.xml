@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.team25.event.planner.offering.viewmodel.FavoriteOfferingViewModel" />
+    </data>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".offering.fragments.FavoriteOfferingFragment">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- TABS -->
+            <LinearLayout
+                android:id="@+id/tabContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#EEEEEE"
+                android:padding="8dp"
+                android:layout_marginBottom="20dp">
+
+                <Button
+                    android:id="@+id/btnProducts"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Products"
+                    android:backgroundTint="@color/accent_blue"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btnServices"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Services"
+                    android:backgroundTint="@android:color/darker_gray"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <!-- LISTVIEW CONTENT -->
+            <ListView
+                android:id="@+id/listViewFavorites"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                tools:listitem="@android:layout/simple_list_item_1"
+                android:layout_margin="10dp"/>
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>

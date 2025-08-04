@@ -2,6 +2,7 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,9 +48,10 @@
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/event_sort_category"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:textColor="@color/primary"
-                    android:layout_marginBottom="12dp"/>
+                    android:layout_marginBottom="12dp"
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -62,9 +64,10 @@
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/event_sort_type"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:textColor="@color/primary"
-                    android:layout_marginBottom="12dp"/>
+                    android:layout_marginBottom="12dp"
+                    />
 
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="match_parent"

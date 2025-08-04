@@ -7,21 +7,25 @@ import androidx.annotation.NonNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class OfferingCard implements Parcelable {
-    private int id;
+    private Long id;
     private String name;
     private double price;
-    private String owner;
+    private String ownerName;
     private double rating;
+    private boolean isService;
 
     protected OfferingCard(Parcel in) {
-        id = in.readInt();
+        id = in.readLong();
         name = in.readString();
         price = in.readDouble();
-        owner = in.readString();
+        ownerName = in.readString();
+        isService = in.readBoolean();
     }
 
 
@@ -33,11 +37,12 @@ public class OfferingCard implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeLong(id);
         dest.writeString(name);
         dest.writeDouble(price);
-        dest.writeString(owner);
+        dest.writeString(ownerName);
         dest.writeDouble(rating);
+        dest.writeBoolean(isService);
     }
 
     public static final Creator<OfferingCard> CREATOR = new Creator<OfferingCard>() {

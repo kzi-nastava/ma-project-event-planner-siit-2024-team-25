@@ -6,19 +6,23 @@
     app:startDestination="@id/homeFragment">
 
 
-
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.team25.event.planner.home.fragments.HomePageBaseFragment"
         android:label="Event Planner"
-        tools:layout="@layout/fragment_home_page_base" >
-
+        tools:layout="@layout/fragment_home_page_base">
+        <action
+            android:id="@+id/action_homeFragment_to_eventPurchaseFragment"
+            app:destination="@id/eventPurchaseFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.team25.event.planner.user.fragments.LoginFragment"
         android:label="Login"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -29,34 +33,461 @@
     <include app:graph="@navigation/nav_graph_registration" />
     <fragment
         android:id="@+id/ownerHomePage"
-        android:name="com.team25.event.planner.product_service.fragments.OwnerHomePage"
-        android:label="OwnerHomePage" >
+        android:name="com.team25.event.planner.service.fragments.OwnerHomePage"
+        android:label="OwnerHomePage">
         <action
             android:id="@+id/action_ownerHomePage_to_serviceAddForm"
             app:destination="@id/serviceAddForm" />
+        <action
+            android:id="@+id/action_ownerHomePage_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAddForm"
-        android:name="com.team25.event.planner.product_service.fragments.ServiceAddForm"
-        android:label="fragment_service_add_form"
-        tools:layout="@layout/fragment_service_add_form" >
+        android:name="com.team25.event.planner.service.fragments.ServiceAddForm"
+        android:label="Create a service"
+        tools:layout="@layout/fragment_service_add_form">
         <action
             android:id="@+id/action_serviceAddForm_to_secondPageCreatingServiceFragment"
             app:destination="@id/secondPageCreatingServiceFragment" />
+        <action
+            android:id="@+id/action_serviceAddForm_to_ownerHomePage"
+            app:destination="@id/ownerHomePage" />
     </fragment>
     <fragment
         android:id="@+id/secondPageCreatingServiceFragment"
-        android:name="com.team25.event.planner.product_service.fragments.SecondPageCreatingServiceFragment"
-        android:label="fragment_second_page_creating"
-        tools:layout="@layout/fragment_second_page_creating" >
+        android:name="com.team25.event.planner.service.fragments.SecondPageCreatingServiceFragment"
+        android:label="Create a service"
+        tools:layout="@layout/fragment_second_page_creating">
         <action
             android:id="@+id/action_secondPageCreatingServiceFragment_to_finishPageCreateingCerviceFragment"
             app:destination="@id/finishPageCreateingCerviceFragment" />
+        <action
+            android:id="@+id/action_secondPageCreatingServiceFragment_to_serviceAddForm"
+            app:destination="@id/serviceAddForm" />
     </fragment>
     <fragment
         android:id="@+id/finishPageCreateingCerviceFragment"
-        android:name="com.team25.event.planner.product_service.fragments.FinishPageCreatingServiceFragment"
-        android:label="fragment_finish_page_createing_cervice"
-        tools:layout="@layout/fragment_finish_page_creating_service" />
+        android:name="com.team25.event.planner.service.fragments.FinishPageCreatingServiceFragment"
+        android:label="Create a service"
+        tools:layout="@layout/fragment_finish_page_creating_service">
+        <action
+            android:id="@+id/action_finishPageCreateingCerviceFragment_to_ownerHomePage"
+            app:destination="@id/ownerHomePage"
+            app:popUpTo="@+id/ownerHomePage"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_finishPageCreateingCerviceFragment_to_secondPageCreatingServiceFragment"
+            app:destination="@id/secondPageCreatingServiceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventTypeListFragment"
+        android:name="com.team25.event.planner.event.fragments.EventTypeListFragment"
+        android:label="fragment_event_type_list"
+        tools:layout="@layout/fragment_event_type_list">
+        <action
+            android:id="@+id/action_eventTypeListFragment_to_eventTypeFragment"
+            app:destination="@id/eventTypeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventTypeFragment"
+        android:name="com.team25.event.planner.event.fragments.EventTypeFragment"
+        android:label="fragment_event_type"
+        tools:layout="@layout/fragment_event_type" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.team25.event.planner.user.fragments.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editCompanyFragment"
+            app:destination="@id/editCompanyFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_passwordChangeFragment"
+            app:destination="@id/passwordChangeFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_favoriteEventsFragment"
+            app:destination="@id/favoriteEventsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_favoriteOfferingFragment"
+            app:destination="@id/favoriteOfferingFragment" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/offeringCategoryFragment"
+        android:name="com.team25.event.planner.offering.fragments.OfferingCategoryBaseFragment"
+        android:label="Offering category"
+        tools:layout="@layout/fragment_offering_category_base">
+        <action
+            android:id="@+id/action_offeringCategoryFragment_to_createEditOfferingCategoryFragment"
+            app:destination="@id/createEditOfferingCategoryFragment" />
+        <action
+            android:id="@+id/action_offeringCategoryFragment_to_submittedOfferingCategoryFragment"
+            app:destination="@id/submittedOfferingCategoryFragment"
+            app:popUpTo="@id/submittedOfferingCategoryFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEditOfferingCategoryFragment"
+        android:name="com.team25.event.planner.offering.fragments.CreateEditOfferingCategoryFragment"
+        android:label="Handle offering category"
+        tools:layout="@layout/fragment_create_edit_offering_category">
+        <action
+            android:id="@+id/action_createEditOfferingCategoryFragment_to_offeringCategoryFragment"
+            app:destination="@id/offeringCategoryFragment"
+            app:popUpTo="@id/offeringCategoryFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/submittedOfferingCategoryFragment"
+        android:name="com.team25.event.planner.offering.fragments.SubmittedOfferingCategoryFragment"
+        android:label="Submitted offering category"
+        tools:layout="@layout/fragment_submitted_offering_category">
+        <action
+            android:id="@+id/action_submittedOfferingCategoryFragment_to_offeringCategoryFragment"
+            app:destination="@id/offeringCategoryFragment"
+            app:popUpTo="@id/offeringCategoryFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_submittedOfferingCategoryFragment_to_approveCategoryFragment"
+            app:destination="@id/approveCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/approveCategoryFragment"
+        android:name="com.team25.event.planner.offering.fragments.ApproveCategoryFragment"
+        android:label="Approve category"
+        tools:layout="@layout/fragment_approve_category">
+        <action
+            android:id="@+id/action_approveCategoryFragment_to_submittedOfferingCategoryFragment"
+            app:destination="@id/submittedOfferingCategoryFragment"
+            app:popUpTo="@id/submittedOfferingCategoryFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/budgetItemFragment"
+        android:name="com.team25.event.planner.event.fragments.BudgetItemListFragment"
+        android:label="Budget items"
+        tools:layout="@layout/fragment_budget_item_list">
+        <action
+            android:id="@+id/action_budgetItemFragment_to_createEditBudgetItemFragment"
+            app:destination="@id/createEditBudgetItemFragment" />
+        <action
+            android:id="@+id/action_budgetItemFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEditBudgetItemFragment"
+        android:name="com.team25.event.planner.event.fragments.CreateEditBudgetItemFragment"
+        android:label="Handle budget item"
+        tools:layout="@layout/fragment_create_edit_budget_item">
+        <action
+            android:id="@+id/action_createEditBudgetItemFragment_to_budgetItemFragment"
+            app:destination="@id/budgetItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerQuickFragment"
+        android:name="com.team25.event.planner.user.fragments.register.RegisterQuickFragment"
+        android:label="Register" />
+    <fragment
+        android:id="@+id/myEventsFragment"
+        android:name="com.team25.event.planner.event.fragments.MyEventsFragment"
+        android:label="My Events"
+        tools:layout="@layout/fragment_my_events">
+        <action
+            android:id="@+id/action_myEventsFragment_to_eventFormFragment"
+            app:destination="@id/eventFormFragment" />
+        <action
+            android:id="@+id/action_myEventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventFormFragment"
+        android:name="com.team25.event.planner.event.fragments.EventFormFragment"
+        android:label="Create Event"
+        tools:layout="@layout/fragment_event_form">
+        <action
+            android:id="@+id/action_eventFormFragment_to_agendaFragment"
+            app:destination="@id/agendaFragment" />
+        <action
+            android:id="@+id/action_eventFormFragment_to_eventInvitation"
+            app:destination="@id/eventInvitation" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventInvitation"
+        android:name="com.team25.event.planner.event.fragments.EventInvitation"
+        android:label="Send invitations"
+        tools:layout="@layout/fragment_event_invitation">
+        <action
+            android:id="@+id/action_eventInvitation_to_agendaFragment"
+            app:destination="@id/agendaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/agendaFragment"
+        android:name="com.team25.event.planner.event.fragments.AgendaFragment"
+        android:label="Agenda">
+        <action
+            android:id="@+id/action_agendaFragment_to_budgetItemFragment"
+            app:destination="@id/budgetItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.team25.event.planner.event.fragments.EventDetailsFragment"
+        android:label="Event details"
+        tools:layout="@layout/fragment_event_details">
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_eventInvitation"
+            app:destination="@id/eventInvitation" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_agendaFragment"
+            app:destination="@id/agendaFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_budgetItemFragment"
+            app:destination="@id/budgetItemFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_eventStatsFragment"
+            app:destination="@id/eventStatsFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_purchaseListFragment"
+            app:destination="@id/purchaseListFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_reviewListFragment"
+            app:destination="@id/reviewListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventPurchaseFragment"
+        android:name="com.team25.event.planner.event.fragments.EventPurchaseFragment"
+        android:label="Purchase for event">
+        <action
+            android:id="@+id/action_eventPurchaseFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_eventPurchaseFragment_to_productDetailsFragment2"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.team25.event.planner.service.fragments.ServiceDetailsFragment"
+        android:label="Service details"
+        tools:layout="@layout/fragment_service_details">
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_ownerHomePage"
+            app:destination="@id/ownerHomePage" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_purchaseListFragment"
+            app:destination="@id/purchaseListFragment" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_reviewListFragment"
+            app:destination="@id/reviewListFragment" />
+        <action
+            android:id="@+id/action_serviceDetailsFragment_to_publicProfileFragment"
+            app:destination="@id/publicProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.team25.event.planner.core.fragments.MapFragment"
+        android:label="MapFragment" />
+    <fragment
+        android:id="@+id/priceListPage"
+        android:name="com.team25.event.planner.offering.fragments.PriceListBaseFragment"
+        android:label="fragment_price_list_base"
+        tools:layout="@layout/fragment_price_list_base">
+        <action
+            android:id="@+id/action_priceListPage_to_editPriceListItemFragment"
+            app:destination="@id/editPriceListItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPriceListItemFragment"
+        android:name="com.team25.event.planner.offering.fragments.EditPriceListItemFragment"
+        android:label="Handle price list item"
+        tools:layout="@layout/fragment_edit_price_list_item">
+        <action
+            android:id="@+id/action_editPriceListItemFragment_to_priceListPage"
+            app:destination="@id/priceListPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/myProductsFragment"
+        android:name="com.team25.event.planner.product.fragments.MyProductsFragment"
+        android:label="My Products">
+        <action
+            android:id="@+id/action_myProductsFragment_to_productFormFragment"
+            app:destination="@id/productFormFragment" />
+        <action
+            android:id="@+id/action_myProductsFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productFormFragment"
+        android:name="com.team25.event.planner.product.fragments.ProductFormFragment"
+        android:label="Product" />
+
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.team25.event.planner.communication.fragments.NotificationFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/reportedUsers"
+        android:name="com.team25.event.planner.user.fragments.ReportedUsers"
+        android:label="Reported users"
+        tools:layout="@layout/fragment_reported_users" />
+    <fragment
+        android:id="@+id/suspendedUsers"
+        android:name="com.team25.event.planner.user.fragments.SuspendedUsers"
+        android:label="Suspended users"
+        tools:layout="@layout/fragment_suspended_users" />
+    <fragment
+        android:id="@+id/suspensionPage"
+        android:name="com.team25.event.planner.user.fragments.SuspensionPage"
+        android:label="Suspension"
+        tools:layout="@layout/fragment_suspension_page" />
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.team25.event.planner.product.fragments.ProductDetailsFragment"
+        android:label="Product details"
+        tools:layout="@layout/fragment_product_details">
+        <action
+            android:id="@+id/action_productDetailsFragment_to_myProductsFragment"
+            app:destination="@id/myProductsFragment" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_purchaseListFragment"
+            app:destination="@id/purchaseListFragment" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_reviewListFragment"
+            app:destination="@id/reviewListFragment" />
+        <action
+            android:id="@+id/action_productDetailsFragment_to_publicProfileFragment"
+            app:destination="@id/publicProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.team25.event.planner.communication.fragments.ChatFragment"
+        android:label="Chat"
+        tools:layout="@layout/fragment_chat">
+        <action
+            android:id="@+id/action_chatFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_chatRoomFragment"
+            app:destination="@id/chat" />
+    </fragment>
+    <fragment
+        android:id="@+id/chat"
+        android:name="com.team25.event.planner.communication.fragments.ChatRoomFragment"
+        android:label="Chats"
+        tools:layout="@layout/fragment_chat_room">
+        <action
+            android:id="@+id/action_chatRoomFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminReviews"
+        android:name="com.team25.event.planner.review.fragments.AdminReviews"
+        android:label="Admin reviews" />
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.team25.event.planner.user.fragments.EditProfileFragment"
+        android:label="Edit Profile">
+        <action
+            android:id="@+id/action_editProfileFragment_to_nav_graph_registration"
+            app:destination="@id/nav_graph_registration" />
+    </fragment>
+    <fragment
+        android:id="@+id/editCompanyFragment"
+        android:name="com.team25.event.planner.user.fragments.EditCompanyFragment"
+        android:label="Edit Company Info" />
+    <fragment
+        android:id="@+id/passwordChangeFragment"
+        android:name="com.team25.event.planner.user.fragments.PasswordChangeFragment"
+        android:label="Change Password" />
+    <fragment
+        android:id="@+id/favoriteEventsFragment"
+        android:name="com.team25.event.planner.event.fragments.FavoriteEventsFragment"
+        android:label="Favorite Events">
+        <action
+            android:id="@+id/action_favoriteEventsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.team25.event.planner.user.fragments.CalendarFragment"
+        android:label="Calendar" />
+    <fragment
+        android:id="@+id/publicProfileFragment"
+        android:name="com.team25.event.planner.user.fragments.PublicProfileFragment"
+        android:label="User" >
+        <action
+            android:id="@+id/action_publicProfileFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+        <action
+            android:id="@+id/action_publicProfileFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventStatsFragment"
+        android:name="com.team25.event.planner.event.fragments.EventStatsFragment"
+        android:label="Event Statistics">
+        <action
+            android:id="@+id/action_eventStatsFragment_to_publicProfileFragment"
+            app:destination="@id/publicProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/purchaseListFragment"
+        android:name="com.team25.event.planner.event.fragments.PurchaseListFragment"
+        android:label="Purchases"
+        tools:layout="@layout/fragment_purchase_list" >
+        <action
+            android:id="@+id/action_purchaseListFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+        <action
+            android:id="@+id/action_purchaseListFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_purchaseListFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reviewListFragment"
+        android:name="com.team25.event.planner.review.fragments.ReviewListFragment"
+        android:label="Reviews"
+        tools:layout="@layout/fragment_review_list" >
+        <action
+            android:id="@+id/action_reviewListFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+        <action
+            android:id="@+id/action_reviewListFragment_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_reviewListFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteOfferingFragment"
+        android:name="com.team25.event.planner.offering.fragments.FavoriteOfferingFragment"
+        android:label="Favorite offerings" >
+        <action
+            android:id="@+id/action_favoriteOfferingFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
 </navigation>

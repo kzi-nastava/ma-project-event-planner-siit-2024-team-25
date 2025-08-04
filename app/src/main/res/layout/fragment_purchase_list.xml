@@ -1,0 +1,48 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".event.fragments.PurchaseListFragment">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.team25.event.planner.event.viewmodel.PurchaseViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/offeringOrEventNameTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Offering name"
+                    android:textStyle="bold"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:text="Price (EUR)"
+                    android:textStyle="bold"
+                    android:padding="8dp" />
+            </TableRow>
+        </TableLayout>
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            tools:listitem="@layout/purchase_list_item" />
+    </LinearLayout>
+</layout>

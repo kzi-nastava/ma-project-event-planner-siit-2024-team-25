@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/white">
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.team25.event.planner.service.viewModels.ServiceCardsViewModel" />
+    </data>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".product_service.fragments.OwnerHomePage"
+    tools:context=".service.fragments.OwnerHomePage"
     android:id="@+id/mainOwner">
 
 
@@ -23,13 +29,14 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/editTextText2"
+            android:id="@+id/searchText"
             android:layout_width="265dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="text"
-            android:hint="Service name" />
+            android:text="@={viewModel.name}"
+            android:hint="@string/service_name" />
 
         <ImageButton
             android:id="@+id/imageButton"
@@ -40,7 +47,7 @@
             android:background="@color/white"/>
 
         <ImageButton
-            android:id="@+id/imageButton2"
+            android:id="@+id/seacrhButton2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -73,4 +80,5 @@
         android:layout_alignParentEnd="true"
         android:src="@drawable/baseline_add_circle_24"
         android:backgroundTint="@color/white"/>
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,41 @@
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="8dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@android:color/darker_gray"
+    app:cornerRadius="8dp"
+    android:elevation="4dp"
+    android:id="@+id/event_invitation_card_item"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/secondary">
+
+        <TextView
+            android:id="@+id/event_invitation_email"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp" />
+
+        <ImageView
+            android:id="@+id/email_delete_icon"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/primary"
+            android:scaleType="center" />
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

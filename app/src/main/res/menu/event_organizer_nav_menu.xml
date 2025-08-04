@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home" />
+    <item
+        android:id="@id/profileFragment"
+        android:icon="@drawable/ic_person"
+        android:title="@string/profile" />
+    <item
+        android:id="@+id/notificationFragment"
+        android:icon="@drawable/ic_notifications"
+        android:title="@string/notifications" />
+    <item
+        android:id="@id/myEventsFragment"
+        android:icon="@drawable/ic_event"
+        android:title="@string/my_events" />
+    <item
+        android:id="@+id/chat"
+        android:icon="@drawable/chat"
+        android:title="@string/chat"/>
+
+</menu>

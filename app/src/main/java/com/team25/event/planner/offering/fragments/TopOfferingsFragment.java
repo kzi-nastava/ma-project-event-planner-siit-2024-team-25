@@ -15,6 +15,7 @@ import com.team25.event.planner.event.fragments.TopEventsFragment;
 import com.team25.event.planner.offering.model.OfferingCard;
 import com.team25.event.planner.offering.model.ProductCard;
 import com.team25.event.planner.offering.model.ServiceCard;
+import com.team25.event.planner.offering.viewmodel.HomeOfferingViewModel;
 
 import java.util.ArrayList;
 
@@ -23,18 +24,19 @@ public class TopOfferingsFragment extends Fragment {
 
     private ArrayList<OfferingCard> offers = new ArrayList<OfferingCard>();
     private FragmentTopOfferingsBinding binding;
+    private HomeOfferingViewModel _homeOfferingViewModel;
     int currentSelectedIndex;
 
-    public static TopEventsFragment newInstance() {
-        return new TopEventsFragment();
+    public TopOfferingsFragment(HomeOfferingViewModel homeOfferingViewModel){
+        _homeOfferingViewModel = homeOfferingViewModel;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        prepareOffersList(offers);
         binding = FragmentTopOfferingsBinding.inflate(inflater, container, false);
+
         return binding.getRoot();
     }
 
@@ -46,23 +48,12 @@ public class TopOfferingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.i("SADASDASDASD", String.valueOf(currentSelectedIndex));
-        FragmentTransition.to(TopOfferingsListFragment.newInstance(offers), requireActivity(), false, binding.topOffersContainer.getId());
+        FragmentTransition.to(TopOfferingsListFragment.newInstance(_homeOfferingViewModel), requireActivity(), false, binding.topOffersContainer.getId());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    private void prepareOffersList(ArrayList<OfferingCard> OfferingCard){
-        offers.clear();
-        offers.add(new ServiceCard(1, "Service 1", 1200, "Stefan", 5));
-        offers.add(new ProductCard(2, "Product 2", 1200, "Stefan", 5));
-        offers.add(new ServiceCard(3, "Service 3", 1200, "Stefan",5));
-        offers.add(new ServiceCard(4, "Service 4", 1200, "Stefan",5));
-        offers.add(new ProductCard(5, "Product 5", 1200, "Stefan",5));
     }
 }

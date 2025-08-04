@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home" />
+    <item
+        android:id="@id/profileFragment"
+        android:icon="@drawable/ic_person"
+        android:title="@string/profile" />
+    <item
+        android:id="@+id/notificationFragment"
+        android:icon="@drawable/ic_notifications"
+        android:title="@string/notifications" />
+    <item
+        android:id="@id/eventTypeListFragment"
+        android:icon="@drawable/ic_event_note"
+        android:title="@string/event_types" />
+    <item
+        android:id="@+id/offeringCategoryFragment"
+        android:icon="@drawable/filter_icon"
+        android:title="@string/offering_category"/>
+    <item
+        android:id="@+id/reportedUsers"
+        android:icon="@drawable/ic_reported"
+        android:title="@string/reports"/>
+
+    <item
+        android:id="@+id/suspendedUsers"
+        android:icon="@drawable/ic_delete"
+        android:title="@string/suspensions"/>
+
+    <item
+        android:id="@+id/adminReviews"
+        android:icon="@drawable/ic_review"
+        android:title="@string/reviews"/>
+</menu>

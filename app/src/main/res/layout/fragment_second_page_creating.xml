@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
-    tools:context=".product_service.fragments.SecondPageCreatingServiceFragment"
+    tools:context=".service.fragments.SecondPageCreatingServiceFragment"
     >
 
     <data>
         <variable
             name="viewModel"
-            type="com.team25.event.planner.product_service.viewModels.ServiceAddFormViewModel" />
+            type="com.team25.event.planner.service.viewModels.ServiceAddFormViewModel" />
     </data>
 
     <LinearLayout
@@ -113,7 +113,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Select or type category for the service"
-                                >
+
+                                app:errorText="@{viewModel.errors.offeringCategory}">
 
                                 <AutoCompleteTextView
                                     android:id="@+id/autocomplete_dropdown"
@@ -121,7 +122,7 @@
                                     android:layout_height="wrap_content"
                                     android:inputType="text"
                                     android:text="@={viewModel.categoryInput}"
-                                    android:enabled="@{viewModel.categoryInputEnabled}"/>
+                                    android:enabled="@{viewModel.categoryInputEnabled}" />
 
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
@@ -192,6 +193,7 @@
                                         android:layout_centerInParent="true"
                                         android:layout_marginBottom="16dp"
                                         android:max="24"
+                                        android:min="1"
                                         android:progress="@{viewModel.duration}"
                                         app:onSeeking="@{viewModel::onSeeking}"/>
                                 </LinearLayout>
@@ -202,6 +204,11 @@
                                     android:layout_height="wrap_content"
                                     android:padding="16dp"
                                     android:orientation="vertical">
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        app:errorText="@{viewModel.errors.arrangement}"/>
+
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -229,6 +236,7 @@
                                         android:layout_centerInParent="true"
                                         android:layout_marginBottom="16dp"
                                         android:max="24"
+                                        android:min="1"
                                         android:progress="@{viewModel.minArrangement}"
                                         app:onSeeking="@{viewModel::onSeeking}"/>
 
@@ -259,6 +267,7 @@
                                         android:layout_centerInParent="true"
                                         android:layout_marginBottom="16dp"
                                         android:max="24"
+                                        android:min="1"
                                         android:progress="@{viewModel.maxArrangement}"
                                         app:onSeeking="@{viewModel::onSeeking}"/>
                                 </LinearLayout>
@@ -267,114 +276,28 @@
                         </LinearLayout>
 
 
-                        <com.google.android.material.textview.MaterialTextView
+                        <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/chooseEventTypes"
                             android:text="Choose event types for the service"
                             android:layout_gravity="center"
                             android:layout_marginTop="15dp"/>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:errorText="@{viewModel.errors.eventType}"/>
+                        <MultiAutoCompleteTextView
+                            android:id="@+id/eventTypesTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
                         <ScrollView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="16dp"
                             android:layout_marginBottom="20dp">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:weightSum="1"
-                                android:layout_marginBottom="20dp">
-
-                                <com.google.android.material.checkbox.MaterialCheckBox
-                                    android:id="@+id/checkbox_option1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 1"
-                                    android:textColor="@android:color/black"
-                                    android:checked="@={viewModel.option1}"/>
-
-                                <com.google.android.material.checkbox.MaterialCheckBox
-                                    android:id="@+id/checkbox_option2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 2"
-                                    android:textColor="@android:color/black"
-                                    android:checked="@={viewModel.option2}"/>
-
-                                <com.google.android.material.checkbox.MaterialCheckBox
-                                    android:id="@+id/checkbox_option3"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 3"
-                                    android:textColor="@android:color/black"
-                                    android:checked="@={viewModel.option3}"/>
-
-                                <com.google.android.material.checkbox.MaterialCheckBox
-                                    android:id="@+id/checkbox_option4"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 4"
-                                    android:textColor="@android:color/black"/>
-
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-                                <com.google.android.material.checkbox.MaterialCheckBox
-
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Option 5"
-                                    android:textColor="@android:color/black"/>
-
-                                <!-- Add more checkboxes as needed -->
-
-                            </LinearLayout>
+                            
                         </ScrollView>
 
 
@@ -395,7 +318,6 @@
                         android:id="@+id/button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="@{() -> viewModel.SecondToFirst()}"
                         android:text="Back"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -405,7 +327,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Next"
-                        android:onClick="@{() -> viewModel.SecondToThird()}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
